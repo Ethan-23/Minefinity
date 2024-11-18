@@ -57,7 +57,7 @@ public class InteractEvent extends PacketListenerAbstract {
     }
 
     public void blockMasterResponse(Player player){
-        Bukkit.getScheduler().runTask(MinevolutionCore.getCore(), () -> {new BlockGUI().openInventory(player);});
+        Bukkit.getScheduler().runTask(MinevolutionCore.getCore(), () -> new BlockGUI().openInventory(player));
     }
 
 }

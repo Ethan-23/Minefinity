@@ -19,8 +19,6 @@ public class NPCJoinEvent implements Listener {
         NPCManager npcManager = MinevolutionCore.getNpcManager();
         npcManager.getNpcTracker().addPlayer(player.getUniqueId());
 
-        Bukkit.getScheduler().runTaskLater(MinevolutionCore.getCore(), bukkitTask -> {
-            new BlockMaster().prepareBlockMaster(player);
-        }, 20);
+        Bukkit.getScheduler().runTaskLater(MinevolutionCore.getCore(), bukkitTask -> new BlockMaster().prepareBlockMaster(player), 20);
     }
 }

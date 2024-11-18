@@ -9,7 +9,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minevolutionCore.MinevolutionCore;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -34,5 +33,5 @@ public interface ItemBuilder {
         meta.getPersistentDataContainer().set(new NamespacedKey(MinevolutionCore.getCore(), "ItemID"), PersistentDataType.STRING, getID());
         item.setItemMeta(meta);
         return item;
-    };
+    }
 }

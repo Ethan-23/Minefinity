@@ -4,7 +4,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.evasive.me.minevolutionCore.MinevolutionCore;
 import org.evasive.me.minevolutionCore.mining.blocks.block.BlockType;
-import org.evasive.me.minevolutionCore.player.PlayerManager;
 
 public class BlockDataFunctions {
 

@@ -171,9 +171,9 @@ public class MiningFunctions {
         for(float i = 1; i < 31; i++){
             tempProgress = i/30;
             if(tempProgress <= loreProgress)
-                green += "|";
+                green = green.concat("|");
             else
-                red += "|";
+                red = red.concat("|");
         }
 
         lore.set(lore.size()-2, makeText(green, NamedTextColor.GREEN, false).append(makeText(red, NamedTextColor.RED, false)));

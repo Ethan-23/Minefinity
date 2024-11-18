@@ -1,7 +1,5 @@
 package org.evasive.me.minevolutionCore.mining.enchantments.enchants;
 
-import org.evasive.me.minevolutionCore.mining.blocks.block.BlockBuilder;
-
 public enum EnchantType {
     EFFICIENCY(new Efficiency()),
     FORTUNE(new Fortune()),

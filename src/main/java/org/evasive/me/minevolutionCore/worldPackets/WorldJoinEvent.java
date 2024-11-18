@@ -12,8 +12,6 @@ public class WorldJoinEvent implements Listener {
     public void onPlayerJoinEvent(PlayerJoinEvent e){
         Player player = e.getPlayer();
 
-        Bukkit.getScheduler().runTaskLater(MinevolutionCore.getCore(), bukkitTask -> {
-            new MiningBlockHandler().replaceBlockPacketsInRegion(player);
-        }, 20);
+        Bukkit.getScheduler().runTaskLater(MinevolutionCore.getCore(), bukkitTask -> new MiningBlockHandler().replaceBlockPacketsInRegion(player), 20);
     }
 }

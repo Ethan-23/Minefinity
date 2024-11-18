@@ -9,8 +9,6 @@ import org.evasive.me.minevolutionCore.mining.enchantments.enchants.*;
 import org.evasive.me.minevolutionCore.mining.enchantments.gui.EnchantGUI;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Locale;
-
 public class EnchantsCommand implements CommandExecutor {
 
     EnchantFunctions enchantFunctions = new EnchantFunctions();

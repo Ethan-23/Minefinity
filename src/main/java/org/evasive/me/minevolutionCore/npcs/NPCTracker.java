@@ -1,14 +1,11 @@
 package org.evasive.me.minevolutionCore.npcs;
 
-import com.github.retrooper.packetevents.protocol.world.Location;
-import org.bukkit.Bukkit;
-
 import java.util.*;
 
 public class NPCTracker {
 
     //Player UUID, NPC EntityID #, NPC Information
-    private HashMap<UUID, HashMap<Integer, NPC>> npcs = new HashMap<>();
+    final private HashMap<UUID, HashMap<Integer, NPC>> npcs = new HashMap<>();
 
     public List<NPC> getPlayerNpcList(UUID uuid){
         return npcs.getOrDefault(uuid, null).values().stream().toList();
