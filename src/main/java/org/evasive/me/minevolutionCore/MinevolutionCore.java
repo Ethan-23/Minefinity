@@ -4,18 +4,20 @@ import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.evasive.me.minevolutionCore.mining.blocks.BlockCommands;
-import org.evasive.me.minevolutionCore.mining.blocks.gui.BlockGUIEvents;
-import org.evasive.me.minevolutionCore.mining.customItems.ItemCommands;
-import org.evasive.me.minevolutionCore.mining.customItems.ItemMaker;
-import org.evasive.me.minevolutionCore.mining.enchantments.commands.EnchantsCommand;
+import org.evasive.me.minevolutionCore.arcanecrafting.MatrixRightClickEvents;
+import org.evasive.me.minevolutionCore.blocks.BlockCommands;
+import org.evasive.me.minevolutionCore.blocks.gui.BlockGUIEvents;
+import org.evasive.me.minevolutionCore.customItems.ItemCommands;
+import org.evasive.me.minevolutionCore.customItems.ItemMaker;
+import org.evasive.me.minevolutionCore.customItems.TestCommands;
+import org.evasive.me.minevolutionCore.enchantments.commands.EnchantsCommand;
 import org.evasive.me.minevolutionCore.npcs.NPCJoinEvent;
 import org.evasive.me.minevolutionCore.player.PlayerDataCommads;
 import org.evasive.me.minevolutionCore.worldPackets.BlockPacketEvents;
 import org.evasive.me.minevolutionCore.worldPackets.ChunkLoadingEvents;
 import org.evasive.me.minevolutionCore.worldPackets.PlayerMovePacketEvents;
 //import org.evasive.me.minevolutionCore.mining.BlockBreakAnimationPackets;
-import org.evasive.me.minevolutionCore.mining.animation.MiningAnimation;
+import org.evasive.me.minevolutionCore.mining.MiningAnimation;
 import org.evasive.me.minevolutionCore.npcs.InteractEvent;
 import org.evasive.me.minevolutionCore.npcs.NPCManager;
 import org.evasive.me.minevolutionCore.player.PlayerManager;
@@ -61,6 +63,7 @@ public final class MinevolutionCore extends JavaPlugin {
         pluginManager.registerEvents(new WorldJoinEvent(), this);
         pluginManager.registerEvents(new ChunkLoadingEvents(), this);
         pluginManager.registerEvents(new BlockGUIEvents(), this);
+        pluginManager.registerEvents(new MatrixRightClickEvents(), this);
 
         //Managers
         npcManager = new NPCManager();
@@ -70,6 +73,7 @@ public final class MinevolutionCore extends JavaPlugin {
         new EnchantsCommand();
         new PlayerDataCommads();
         new BlockCommands();
+        new TestCommands();
     }
 
     @Override

@@ -15,4 +15,7 @@ commands:
   blocks:
     description: blocks
     usage: /blocks
+  tierup:
+    description: tierup
+    usage: /tierup
 depend: [WorldGuard]

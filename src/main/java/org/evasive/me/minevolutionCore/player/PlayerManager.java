@@ -26,7 +26,7 @@ public class PlayerManager {
 
     public void setBlockTier(Player player, int amount){
         playerDataMap.get(player.getUniqueId()).setBlockTier(amount);
-        new MiningBlockHandler().replaceBlockPacketsInRegion(player);
+        /*new MiningBlockHandler().replaceBlockPacketsInRegion(player);*/
     }
 
     public void addBlocksMined(Player player, int amount){
@@ -52,7 +52,7 @@ public class PlayerManager {
 
     public void setSelectedBlockTier(Player player, int tier){
         getPlayerData(player).setSelectedBlockTier(tier);
-        new MiningBlockHandler().replaceBlockPacketsInRegion(player);
+        new MiningBlockHandler().replaceBlockPacketsInRegion(player, player.getWorld());
     }
 
 

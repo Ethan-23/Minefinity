@@ -8,7 +8,7 @@ import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientIn
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.evasive.me.minevolutionCore.MinevolutionCore;
-import org.evasive.me.minevolutionCore.mining.blocks.gui.BlockGUI;
+import org.evasive.me.minevolutionCore.blocks.gui.BlockGUI;
 
 import java.util.HashMap;
 import java.util.Map;

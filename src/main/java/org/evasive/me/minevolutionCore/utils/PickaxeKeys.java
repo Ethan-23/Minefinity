@@ -9,6 +9,7 @@ public class PickaxeKeys {
     public static final NamespacedKey tierBlocksKey = new NamespacedKey(MinevolutionCore.getCore(), "TierBlocks");
     public static final NamespacedKey tierBlocksCapKey = new NamespacedKey(MinevolutionCore.getCore(), "TierBlocksCap");
     public static final NamespacedKey tierRequirementKey = new NamespacedKey(MinevolutionCore.getCore(), "TierRequirement");
-    public static final NamespacedKey pickaxeTypeKey = new NamespacedKey(MinevolutionCore.getCore(), "PickaxeType");
     public static final NamespacedKey baseSpeedKey = new NamespacedKey(MinevolutionCore.getCore(), "BaseSpeed");
+    public static final NamespacedKey tierSpeedKey = new NamespacedKey(MinevolutionCore.getCore(), "TierSpeed");
+    public static final NamespacedKey itemID = new NamespacedKey(MinevolutionCore.getCore(), "ItemID");
 }

@@ -8,10 +8,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.evasive.me.minevolutionCore.MinevolutionCore;
 
 public class WorldJoinEvent implements Listener {
-    @EventHandler
+    /*@EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent e){
         Player player = e.getPlayer();
 
         Bukkit.getScheduler().runTaskLater(MinevolutionCore.getCore(), bukkitTask -> new MiningBlockHandler().replaceBlockPacketsInRegion(player), 20);
-    }
+    }*/
 }
