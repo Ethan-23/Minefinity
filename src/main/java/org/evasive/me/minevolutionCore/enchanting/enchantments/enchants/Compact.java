@@ -1,41 +1,43 @@
-package org.evasive.me.minevolutionCore.enchantments.enchants;
+package org.evasive.me.minevolutionCore.enchanting.enchantments.enchants;
 
 import org.bukkit.NamespacedKey;
+import org.evasive.me.minevolutionCore.enchanting.enchantments.rarity.Rarity;
 import org.evasive.me.minevolutionCore.utils.EnchantKeys;
 
-public class SuperBreaker implements PickaxeEnchantBuilder {
+public class Compact implements PickaxeEnchantBuilder {
+
     @Override
     public int getMaxLevel() {
         return 5;
     }
-
     @Override
     public String getName() {
-        return "Super Breaker";
+        return "Compact";
     }
 
     @Override
     public String getSymbol() {
-        return "⚡";
+        return "⚙";
     }
 
     @Override
     public String getDescription() {
-        return "Chance to increase mining speed for x amount of blocks for x seconds";
+        return "Increase chance of dropping enchanted materials";
     }
 
     @Override
     public EnchantType getType() {
-        return EnchantType.SUPERBREAKER;
+        return EnchantType.COMPACT;
     }
 
     @Override
     public Rarity getRarity() {
-        return Rarity.RADIANT;
+        return Rarity.PRISTINE;
     }
-
     @Override
     public NamespacedKey getKey(){
-        return EnchantKeys.superbreaker;
+        return EnchantKeys.compact;
     }
+
+
 }

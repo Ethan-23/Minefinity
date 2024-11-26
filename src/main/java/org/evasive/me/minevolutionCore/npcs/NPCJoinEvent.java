@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.evasive.me.minevolutionCore.MinevolutionCore;
+import org.evasive.me.minevolutionCore.npcs.npc.Archmage;
 import org.evasive.me.minevolutionCore.npcs.npc.BlockMaster;
 
 public class NPCJoinEvent implements Listener {
@@ -20,5 +21,6 @@ public class NPCJoinEvent implements Listener {
         npcManager.getNpcTracker().addPlayer(player.getUniqueId());
 
         Bukkit.getScheduler().runTaskLater(MinevolutionCore.getCore(), bukkitTask -> new BlockMaster().prepareBlockMaster(player), 20);
+        Bukkit.getScheduler().runTaskLater(MinevolutionCore.getCore(), bukkitTask -> new Archmage().prepareArchmage(player), 20);
     }
 }

@@ -2,13 +2,11 @@ package org.evasive.me.minevolutionCore.customItems;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.evasive.me.minevolutionCore.MinevolutionCore;
 
 import java.util.List;
 
@@ -21,6 +19,7 @@ public interface ItemBuilder {
     Material getMaterial();
     boolean isGlowing();
     ItemStack getItem();
+
     default ItemStack buildItem(){
         ItemStack item = new ItemStack(getMaterial());
         ItemMeta meta = item.getItemMeta();

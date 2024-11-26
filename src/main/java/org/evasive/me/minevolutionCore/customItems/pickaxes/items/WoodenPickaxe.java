@@ -7,9 +7,6 @@ import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minevolutionCore.customItems.ItemMaker;
 import org.evasive.me.minevolutionCore.customItems.pickaxes.PickaxeItemBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.evasive.me.minevolutionCore.utils.ComponentUtils.makeText;
 
 public class WoodenPickaxe implements PickaxeItemBuilder {

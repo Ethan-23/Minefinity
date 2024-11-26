@@ -22,7 +22,7 @@ public class TestCommands implements CommandExecutor {
 
         ItemStack heldItem = player.getInventory().getItemInMainHand();
 
-        if(!pickaxeStatFunctions.holdingPickaxe(heldItem.getItemMeta())){
+        if(pickaxeStatFunctions.notHoldingPickaxe(heldItem.getItemMeta())){
             player.sendMessage("Player not holding a pickaxe");
             return true;
         }

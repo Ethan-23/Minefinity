@@ -1,6 +1,7 @@
-package org.evasive.me.minevolutionCore.enchantments.enchants;
+package org.evasive.me.minevolutionCore.enchanting.enchantments.enchants;
 
 import org.bukkit.NamespacedKey;
+import org.evasive.me.minevolutionCore.enchanting.enchantments.rarity.Rarity;
 import org.evasive.me.minevolutionCore.utils.EnchantKeys;
 
 public class Wisdom implements PickaxeEnchantBuilder {

@@ -24,10 +24,8 @@ public class ItemCommands implements CommandExecutor {
             commandSender.sendMessage("" + itemList);
             return true;
         }
-        if(!(commandSender instanceof Player))
+        if(!(commandSender instanceof Player player))
             return true;
-
-        Player player = (Player) commandSender;
 
         if(strings.length == 1){
             String itemName = strings[0].toUpperCase();
@@ -35,10 +33,6 @@ public class ItemCommands implements CommandExecutor {
                 player.getInventory().addItem(ItemList.valueOf(itemName).getBuilder().getItem());
                 return true;
             }
-//            if (pickaxeItems.contains(itemName)) {
-//                player.getInventory().addItem(PickaxeType.valueOf(itemName).getPickaxeBuilder().getItem());
-//                return true;
-//            }
 
             player.sendMessage(strings[0] + " Not Found");
             return true;

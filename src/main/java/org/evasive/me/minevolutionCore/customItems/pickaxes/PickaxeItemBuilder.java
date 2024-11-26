@@ -9,13 +9,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minevolutionCore.customItems.ItemBuilder;
-import org.evasive.me.minevolutionCore.enchantments.enchants.*;
+import org.evasive.me.minevolutionCore.enchanting.enchantments.enchants.*;
 import org.evasive.me.minevolutionCore.utils.ComponentUtils;
 
 import org.evasive.me.minevolutionCore.utils.RomanNumeralUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.evasive.me.minevolutionCore.utils.ComponentUtils.makeText;
@@ -36,10 +35,9 @@ public interface PickaxeItemBuilder extends ItemBuilder {
         List<Component> lore = new ArrayList<>();
 
         float miningSpeed = getSpeed(tier);
-        float baseSpeed = getBaseSpeed();
 
         if(meta != null && meta.getPersistentDataContainer().has(efficiency)){
-            miningSpeed = miningSpeed + (baseSpeed * ((meta.getPersistentDataContainer().get(efficiency, PersistentDataType.INTEGER) * 0.1f)));
+            miningSpeed = new PickaxeStatFunctions().getMiningSpeed(meta);
         }
 
         lore.add(makeText("Mining Speed: ", NamedTextColor.GRAY, false).append(makeText(""+Math.round(miningSpeed * 100f)/100f, NamedTextColor.WHITE, true)));
@@ -47,31 +45,21 @@ public interface PickaxeItemBuilder extends ItemBuilder {
         lore.add(makeText("Enchants:", NamedTextColor.GOLD, true));
 
         if(meta != null){
-            List<PickaxeEnchantBuilder> order = Arrays.asList(new Critcal(), new Efficiency(), new Alchemist(), new Fortune(), new SuperBreaker(), new Explosive(), new Wisdom(), new Compact(), new OrbitalMiner());
-
-            for (PickaxeEnchantBuilder tempEnchant : order){
-                if(!meta.getPersistentDataContainer().has(tempEnchant.getKey())) {
+            //List<PickaxeEnchantBuilder> order = Arrays.asList(new Critcal(), new Efficiency(), new Alchemist(), new Fortune(), new SuperBreaker(), new Explosive(), new Wisdom(), new Compact(), new OrbitalMiner());
+            for (EnchantType enchantType : EnchantType.values()){
+                if(!meta.getPersistentDataContainer().has(enchantType.getPickaxeEnchantBuilder().getKey())) {
                     continue;
                 }
-                int tempLevel = meta.getPersistentDataContainer().get(tempEnchant.getKey(), PersistentDataType.INTEGER);
-                TextColor enchantColor = NamedTextColor.RED;
+                int tempLevel = meta.getPersistentDataContainer().get(enchantType.getPickaxeEnchantBuilder().getKey(), PersistentDataType.INTEGER);
                 TextColor symbolColor = NamedTextColor.WHITE;
 
-                switch (tempEnchant.getRarity()){
-                    case MINOR -> enchantColor = TextColor.fromHexString("#BFBFBF");
-                    case UNIQUE -> enchantColor = TextColor.fromHexString("#55FF55");
-                    case RADIANT -> enchantColor = TextColor.fromHexString("#00FFFF");
-                    case EXQUISITE -> enchantColor = TextColor.fromHexString("#AA00AA");
-                    case PRISTINE -> enchantColor = TextColor.fromHexString("#FFAA00");
-                }
-
-                if(tempLevel >= tempEnchant.getMaxLevel()){
+                if(tempLevel >= enchantType.getPickaxeEnchantBuilder().getMaxLevel()){
                     symbolColor = NamedTextColor.RED;
                 }
-
-                Component enchantLore = ComponentUtils.makeText(tempEnchant.getSymbol(), symbolColor, false)
-                        .append(ComponentUtils.makeText(" " + tempEnchant.getName(), enchantColor, false)
-                                .append(ComponentUtils.makeText(" " + RomanNumeralUtil.intToRoman(tempLevel), enchantColor, true)));
+                TextColor rarityColor = enchantType.getPickaxeEnchantBuilder().getRarity().getRarityBuilder().getTextColor();
+                Component enchantLore = ComponentUtils.makeText(enchantType.getPickaxeEnchantBuilder().getSymbol(), symbolColor, false)
+                        .append(ComponentUtils.makeText(" " + enchantType.getPickaxeEnchantBuilder().getName(), rarityColor, false)
+                                .append(ComponentUtils.makeText(" " + RomanNumeralUtil.intToRoman(tempLevel), rarityColor, true)));
 
                 lore.add(enchantLore);
             }

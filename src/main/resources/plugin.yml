@@ -18,4 +18,13 @@ commands:
   tierup:
     description: tierup
     usage: /tierup
+  enchants:
+    description: list of all enchants
+  enchant_action_yes:
+    permission: donotsee
+    description: Handle Yes action
+  enchant_action_no:
+    permission: donotsee
+    description: Handle No action
+
 depend: [WorldGuard]

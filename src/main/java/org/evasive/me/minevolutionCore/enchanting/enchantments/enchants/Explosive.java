@@ -1,23 +1,23 @@
-package org.evasive.me.minevolutionCore.enchantments.enchants;
+package org.evasive.me.minevolutionCore.enchanting.enchantments.enchants;
 
 import org.bukkit.NamespacedKey;
+import org.evasive.me.minevolutionCore.enchanting.enchantments.rarity.Rarity;
 import org.evasive.me.minevolutionCore.utils.EnchantKeys;
 
-public class Alchemist implements PickaxeEnchantBuilder{
-
+public class Explosive implements PickaxeEnchantBuilder{
     @Override
     public int getMaxLevel() {
-        return 3;
+        return 5;
     }
 
     @Override
     public String getName() {
-        return "Alchemist";
+        return "Explosive";
     }
 
     @Override
     public String getSymbol() {
-        return "⚛";
+        return "☢";
     }
 
     @Override
@@ -27,16 +27,16 @@ public class Alchemist implements PickaxeEnchantBuilder{
 
     @Override
     public EnchantType getType() {
-        return EnchantType.ALCHEMIST;
+        return EnchantType.EXPLOSIVE;
     }
 
     @Override
     public Rarity getRarity() {
-        return Rarity.UNIQUE;
+        return Rarity.EXQUISITE;
     }
 
     @Override
     public NamespacedKey getKey() {
-        return EnchantKeys.alchemist;
+        return EnchantKeys.explosive;
     }
 }

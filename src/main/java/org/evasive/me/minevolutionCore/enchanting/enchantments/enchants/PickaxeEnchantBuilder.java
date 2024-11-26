@@ -1,6 +1,7 @@
-package org.evasive.me.minevolutionCore.enchantments.enchants;
+package org.evasive.me.minevolutionCore.enchanting.enchantments.enchants;
 
 import org.bukkit.NamespacedKey;
+import org.evasive.me.minevolutionCore.enchanting.enchantments.rarity.Rarity;
 
 public interface PickaxeEnchantBuilder {
     int getMaxLevel();

@@ -10,8 +10,8 @@ import org.evasive.me.minevolutionCore.player.PlayerManager;
 
 public class BlockGUIEvents implements Listener {
 
-    PlayerManager playerManager = MinevolutionCore.getPlayerManager();
-    BlockGUI blockGUI = new BlockGUI();
+    final PlayerManager playerManager = MinevolutionCore.getPlayerManager();
+    final BlockGUI blockGUI = new BlockGUI();
 
     @EventHandler
     public void blockGUIClick(InventoryClickEvent e){

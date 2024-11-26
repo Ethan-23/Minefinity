@@ -1,9 +1,10 @@
-package org.evasive.me.minevolutionCore.enchantments.enchants;
+package org.evasive.me.minevolutionCore.enchanting.enchantments.enchants;
 
 import org.bukkit.NamespacedKey;
+import org.evasive.me.minevolutionCore.enchanting.enchantments.rarity.Rarity;
 import org.evasive.me.minevolutionCore.utils.EnchantKeys;
 
-public class Efficiency implements PickaxeEnchantBuilder {
+public class Fortune implements PickaxeEnchantBuilder {
 
     @Override
     public int getMaxLevel() {
@@ -12,30 +13,31 @@ public class Efficiency implements PickaxeEnchantBuilder {
 
     @Override
     public String getName() {
-        return "Efficiency";
+        return "Fortune";
     }
 
     @Override
     public String getSymbol() {
-        return "⛏";
+        return "☘";
     }
 
     @Override
     public String getDescription() {
-        return "Increase the mining speed of your pickaxe";
+        return "Increases chance of getting extra block drop";
     }
 
     @Override
     public EnchantType getType() {
-        return EnchantType.EFFICIENCY;
+        return EnchantType.FORTUNE;
     }
 
     @Override
     public Rarity getRarity() {
-        return Rarity.MINOR;
+        return Rarity.UNIQUE;
     }
+
     @Override
     public NamespacedKey getKey(){
-        return EnchantKeys.efficiency;
+        return EnchantKeys.fortune;
     }
 }

@@ -20,9 +20,9 @@ import java.util.List;
 
 public class MiningBlockHandler{
 
-    BlockDataFunctions blockDataFunctions = new BlockDataFunctions();
+    final BlockDataFunctions blockDataFunctions = new BlockDataFunctions();
     List<Material> fakeBlocks = new ArrayList<>(Arrays.asList(Material.WARPED_STEM, Material.WARPED_FENCE, Material.WARPED_SLAB, Material.WARPED_PLANKS));
-    List<Material> blockset1 = new ArrayList<>(Arrays.asList(Material.COBBLESTONE, Material.COBBLESTONE_WALL, Material.COBBLESTONE_SLAB, Material.CHISELED_STONE_BRICKS));
+    final List<Material> blockset1 = new ArrayList<>(Arrays.asList(Material.COBBLESTONE, Material.COBBLESTONE_WALL, Material.COBBLESTONE_SLAB, Material.CHISELED_STONE_BRICKS));
     List<Material> blockset2 = new ArrayList<>(Arrays.asList(Material.STONE, Material.ANDESITE_WALL, Material.STONE_SLAB, Material.CHISELED_STONE_BRICKS));
 
     public void replaceBlockPacketsInRegion(Player player, World world) {

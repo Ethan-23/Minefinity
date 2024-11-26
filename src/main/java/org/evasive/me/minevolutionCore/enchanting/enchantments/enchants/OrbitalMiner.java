@@ -1,41 +1,42 @@
-package org.evasive.me.minevolutionCore.enchantments.enchants;
+package org.evasive.me.minevolutionCore.enchanting.enchantments.enchants;
 
 import org.bukkit.NamespacedKey;
+import org.evasive.me.minevolutionCore.enchanting.enchantments.rarity.Rarity;
 import org.evasive.me.minevolutionCore.utils.EnchantKeys;
 
-public class Critcal implements PickaxeEnchantBuilder{
+public class OrbitalMiner implements PickaxeEnchantBuilder{
     @Override
     public int getMaxLevel() {
-        return 1;
+        return 3;
     }
 
     @Override
     public String getName() {
-        return "Critical";
+        return "Orbital Miner";
     }
 
     @Override
     public String getSymbol() {
-        return "¤";
+        return "☄";
     }
 
     @Override
     public String getDescription() {
-        return "Spawns particles on the block that increase your mining speed when looking at";
+        return "";
     }
 
     @Override
     public EnchantType getType() {
-        return EnchantType.CRITICAL;
+        return EnchantType.ORBITALMINER;
     }
 
     @Override
     public Rarity getRarity() {
-        return Rarity.MINOR;
+        return Rarity.PRISTINE;
     }
 
     @Override
     public NamespacedKey getKey() {
-        return EnchantKeys.critical;
+        return EnchantKeys.orbitalminer;
     }
 }

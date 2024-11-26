@@ -22,7 +22,7 @@ import java.util.List;
 
 public class BlockPacketEvents extends PacketListenerAbstract {
 
-    List<Material> fakeBlocks = new ArrayList<>(Arrays.asList(Material.WARPED_STEM, Material.WARPED_FENCE, Material.WARPED_SLAB, Material.WARPED_PLANKS));
+    final List<Material> fakeBlocks = new ArrayList<>(Arrays.asList(Material.WARPED_STEM, Material.WARPED_FENCE, Material.WARPED_SLAB, Material.WARPED_PLANKS));
 
     @Override
     public void onPacketReceive(PacketReceiveEvent event) {
@@ -48,10 +48,7 @@ public class BlockPacketEvents extends PacketListenerAbstract {
             if (block.getType() == Material.SPONGE || fakeBlocks.contains(block.getType())) {
                 event.setCancelled(true);
 
-                Bukkit.getScheduler().runTask(MinevolutionCore.getCore(), ()-> {
-                    new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, player.getEquipment().getItemInMainHand(), block, player.getTargetBlockFace(5)).callEvent();
-                });
-                }
+                Bukkit.getScheduler().runTask(MinevolutionCore.getCore(), ()-> new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, player.getEquipment().getItemInMainHand(), block, player.getTargetBlockFace(5)).callEvent());}
             copy.cleanUp();
 
         }

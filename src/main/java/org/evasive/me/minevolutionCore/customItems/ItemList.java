@@ -13,7 +13,7 @@ public enum ItemList {
     COPPER_PICKAXE(PickaxeItems.COPPER_PICKAXE.getPickaxeBuilder())
     ;
 
-    private ItemBuilder builder;
+    private final ItemBuilder builder;
 
     ItemList(ItemBuilder itemBuilder) {
         this.builder = itemBuilder;

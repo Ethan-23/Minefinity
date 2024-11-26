@@ -15,18 +15,20 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.evasive.me.minevolutionCore.MinevolutionCore;
 import org.evasive.me.minevolutionCore.blocks.BlockDataFunctions;
 import org.evasive.me.minevolutionCore.customItems.pickaxes.PickaxeStatFunctions;
+import org.evasive.me.minevolutionCore.utils.PickaxeKeys;
 
 public class MiningAnimation extends PacketListenerAbstract {
 
-    MiningMap miningMap = new MiningMap();
-    MiningFunctions miningFunctions = new MiningFunctions();
-    PickaxeStatFunctions pickaxeStatFunctions = new PickaxeStatFunctions();
-    BlockDataFunctions blockDataFunctions = new BlockDataFunctions();
+    final MiningMap miningMap = new MiningMap();
+    final MiningFunctions miningFunctions = new MiningFunctions();
+    final PickaxeStatFunctions pickaxeStatFunctions = new PickaxeStatFunctions();
+    final BlockDataFunctions blockDataFunctions = new BlockDataFunctions();
 
     @Override
     public void onPacketReceive(PacketReceiveEvent event) {
@@ -75,16 +77,16 @@ public class MiningAnimation extends PacketListenerAbstract {
 
         //miningMap.setMining(player, true);
 
-        if(player.getInventory().getItemInMainHand().getType() == Material.AIR || !pickaxeStatFunctions.holdingPickaxe(item.getItemMeta()))
+        if(player.getInventory().getItemInMainHand().getType() == Material.AIR || pickaxeStatFunctions.notHoldingPickaxe(item.getItemMeta()))
             return;
 
         ItemMeta meta = item.getItemMeta();
 
         miningMap.setMining(player, true);
 
-        byte blockProgress = (byte) (miningMap.getProgress(player)/(blockDataFunctions.getBlockHealth(player) / 10));
+        miningMap.addProgress(player, calculateMiningSpeed(meta, player));
 
-        miningMap.addProgress(player, calculateMiningSpeed(player, pickaxeStatFunctions.getBaseMiningSpeed(meta), pickaxeStatFunctions.getTierMiningSpeed(meta), pickaxeStatFunctions.getBaseEfficiencyLevel(meta)));
+        byte blockProgress = (byte) (miningMap.getProgress(player)/(blockDataFunctions.getBlockHealth(player) / 10));
 
         //Send Break Animation Packet
 
@@ -215,14 +217,12 @@ public class MiningAnimation extends PacketListenerAbstract {
         }
     }
 
-    public float calculateMiningSpeed(Player player, float baseMiningSpeed, float tierMiningSpeed, int efficiencyLevel){
-        float efficiencyMultiplier = 0.1f; // 10% increase of base speed per efficiency level
-        float effectiveSpeed = (baseMiningSpeed * (1 + efficiencyMultiplier * efficiencyLevel)) + tierMiningSpeed;
-        //Cap the speed to 5 ticks to break
+    public float calculateMiningSpeed(ItemMeta meta, Player player){
+        float effectiveSpeed = pickaxeStatFunctions.getMiningSpeed(meta);
         effectiveSpeed = Math.min(effectiveSpeed, (float) new BlockDataFunctions().getBlockHealth(player) / 5f);
 
         if(miningFunctions.isSuperbreakerActive(player))
-            effectiveSpeed += baseMiningSpeed;
+            effectiveSpeed += meta.getPersistentDataContainer().get(PickaxeKeys.baseSpeedKey, PersistentDataType.INTEGER);
 
         return effectiveSpeed;
     }

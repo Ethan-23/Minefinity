@@ -20,7 +20,7 @@ import java.util.List;
 
 public class BlockGUI {
 
-    PlayerManager playerManager = MinevolutionCore.getPlayerManager();
+    final PlayerManager playerManager = MinevolutionCore.getPlayerManager();
     Inventory blockGui;
 
     public void createCustomInventory(Player player){

@@ -1,14 +1,14 @@
-package org.evasive.me.minevolutionCore.enchantments.enchants;
+package org.evasive.me.minevolutionCore.enchanting.enchantments.enchants;
 
 public enum EnchantType {
-    EFFICIENCY(new Efficiency()),
     CRITICAL(new Critcal()),
+    EFFICIENCY(new Efficiency()),
     ALCHEMIST(new Alchemist()),
     FORTUNE(new Fortune()),
-    COMPACT(new Compact()),
-    WISDOM(new Wisdom()),
-    EXPLOSIVE(new Explosive()),
     SUPERBREAKER(new SuperBreaker()),
+    EXPLOSIVE(new Explosive()),
+    WISDOM(new Wisdom()),
+    COMPACT(new Compact()),
     ORBITALMINER(new OrbitalMiner())
     ;
 

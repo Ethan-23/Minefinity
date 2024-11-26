@@ -28,8 +28,8 @@ import static org.evasive.me.minevolutionCore.utils.ComponentUtils.makeText;
 
 public class MiningFunctions {
 
-    private Map<UUID, Integer> superbreakerUsers = new HashMap<>();
-    BlockDataFunctions blockDataFunctions = new BlockDataFunctions();
+    private final Map<UUID, Integer> superbreakerUsers = new HashMap<>();
+    final BlockDataFunctions blockDataFunctions = new BlockDataFunctions();
 
     public void mainBlockMined(Player player, Block block){
         PlayerManager playerManager = MinevolutionCore.getPlayerManager();
@@ -39,8 +39,6 @@ public class MiningFunctions {
         ItemStack pickaxe = player.getInventory().getItemInMainHand();
 
         //Check all enchants
-        assert pickaxe != null;
-
         boolean compact = false;
         if(pickaxe.getPersistentDataContainer().has(EnchantKeys.compact))
             compact = compactCheck(player, pickaxe.getPersistentDataContainer().get(EnchantKeys.compact, PersistentDataType.INTEGER));
@@ -114,7 +112,7 @@ public class MiningFunctions {
             }
 
             /*player.spawnParticle(Particle.WAX_ON, block.getLocation(), 10);*/
-            superbreakerUsers.put(player.getUniqueId(), 1 + (superbreakerLevel / 5));
+            superbreakerUsers.put(player.getUniqueId(), 4 + superbreakerLevel);
         }
     }
 
@@ -159,10 +157,6 @@ public class MiningFunctions {
 
         int cap = tierBlockCapContainer.get(PickaxeKeys.tierBlocksCapKey, PersistentDataType.INTEGER);
         int amount = tierBlockContainer.get(PickaxeKeys.tierBlocksKey, PersistentDataType.INTEGER);
-//
-//        if(cap <= amount)
-//            return meta;
-//
 
         amount += 1;
         tierBlockContainer.set(PickaxeKeys.tierBlocksKey, PersistentDataType.INTEGER, amount);

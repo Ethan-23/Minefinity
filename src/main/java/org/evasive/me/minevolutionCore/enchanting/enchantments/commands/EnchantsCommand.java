@@ -1,17 +1,16 @@
-package org.evasive.me.minevolutionCore.enchantments.commands;
+package org.evasive.me.minevolutionCore.enchanting.enchantments.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.evasive.me.minevolutionCore.MinevolutionCore;
-import org.evasive.me.minevolutionCore.enchantments.enchants.*;
-import org.evasive.me.minevolutionCore.enchantments.gui.EnchantGUI;
+import org.evasive.me.minevolutionCore.enchanting.enchantments.enchants.*;
 import org.jetbrains.annotations.NotNull;
 
 public class EnchantsCommand implements CommandExecutor {
 
-    EnchantFunctions enchantFunctions = new EnchantFunctions();
+    final EnchantFunctions enchantFunctions = new EnchantFunctions();
 
     public EnchantsCommand(){
         MinevolutionCore.getCore().getCommand("minechant").setExecutor(this);
@@ -19,15 +18,8 @@ public class EnchantsCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        if(!(commandSender instanceof Player)){
+        if(!(commandSender instanceof Player player)){
             commandSender.sendMessage("This command must be used by a player");
-            return true;
-        }
-
-        Player player = (Player) commandSender;
-
-        if(strings.length == 0){
-            new EnchantGUI().openInventory(player);
             return true;
         }
 

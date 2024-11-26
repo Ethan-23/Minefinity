@@ -21,7 +21,7 @@ import java.util.UUID;
 
 public class NPCManager {
 
-    NPCTracker npcTracker = new NPCTracker();
+    final NPCTracker npcTracker = new NPCTracker();
 
     public void spawnCustomNPC(Player player, Location location, String customName, TextureProperty textureProperty) {
 
