@@ -1,10 +1,12 @@
 package org.evasive.me.minevolutionCore.enchanting.enchantments.enchants;
 
 import org.bukkit.NamespacedKey;
-import org.evasive.me.minevolutionCore.enchanting.enchantments.rarity.Rarity;
+import org.evasive.me.minevolutionCore.enchanting.enchantments.EnchantType;
+import org.evasive.me.minevolutionCore.enchanting.enchantments.PickaxeEnchantBuilder;
+import org.evasive.me.minevolutionCore.enchanting.enchantments.Rarity;
 import org.evasive.me.minevolutionCore.utils.EnchantKeys;
 
-public class OrbitalMiner implements PickaxeEnchantBuilder{
+public class OrbitalMiner implements PickaxeEnchantBuilder {
     @Override
     public int getMaxLevel() {
         return 3;

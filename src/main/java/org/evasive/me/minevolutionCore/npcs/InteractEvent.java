@@ -18,6 +18,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minevolutionCore.MinevolutionCore;
 import org.evasive.me.minevolutionCore.blocks.gui.BlockGUI;
 import org.evasive.me.minevolutionCore.enchanting.runicMatrix.MatrixManager;
+import org.evasive.me.minevolutionCore.forge.gui.ForgeGUIMain;
 import org.evasive.me.minevolutionCore.utils.ComponentUtils;
 import org.evasive.me.minevolutionCore.utils.PickaxeKeys;
 
@@ -65,6 +66,10 @@ public class InteractEvent extends PacketListenerAbstract {
 
             if(npc.getName().equals("Archmage")){
                 archmageResponse(player);
+            }
+
+            if(npc.getName().equals("Blacksmith")){
+                blacksmithResponse(player);
             }
 
             //player.sendMessage("NPC right-clicked: " + npc.getName());
@@ -124,6 +129,10 @@ public class InteractEvent extends PacketListenerAbstract {
 
     public void handleYes(Player player){
         addEnchantingItem(player, new Location(player.getWorld(), 14.5f, 1f, -13.5f));
+    }
+
+    public void blacksmithResponse(Player player){
+        Bukkit.getScheduler().runTask(MinevolutionCore.getCore(), () -> new ForgeGUIMain().openInventory(player));
     }
 
 }

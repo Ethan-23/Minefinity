@@ -20,17 +20,17 @@ public class BlockMaster{
 
     final NPCManager npcManager = MinevolutionCore.getNpcManager();
 
-    public void createBlockMasterPacket(Player player, Location location){
+    public void createNPCPacket(Player player, Location location){
 
         npcManager.spawnCustomNPC(player, location, "BlockMaster", new TextureProperty("textures", value, signature));
     }
 
-    public void prepareBlockMaster(Player player){
+    public void prepareNPC(Player player){
         //Spawn block master at location of quest
         if(MinevolutionCore.getPlayerManager().getQuestLevel(player) == 0){
             //Spawn at front for tutorial
             //player.sendMessage("Quest 0");
-            createBlockMasterPacket(player, new Location(new Vector3d(-1.5f, 1f, -1.5f), 180, 0));
+            createNPCPacket(player, new Location(new Vector3d(-1.5f, 1f, -1.5f), 180, 0));
         }
     }
 }

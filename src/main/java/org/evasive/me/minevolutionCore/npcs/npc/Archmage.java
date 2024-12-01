@@ -15,17 +15,17 @@ public class Archmage {
 
     final NPCManager npcManager = MinevolutionCore.getNpcManager();
 
-    public void createArchmagePacket(Player player, Location location){
+    public void createNPCPacket(Player player, Location location){
 
         npcManager.spawnCustomNPC(player, location, "Archmage", new TextureProperty("textures", value, signature));
     }
 
-    public void prepareArchmage(Player player){
+    public void prepareNPC(Player player){
         //Spawn block master at location of quest
         if(MinevolutionCore.getPlayerManager().getQuestLevel(player) == 0){
             //Spawn at front for tutorial
             //player.sendMessage("Quest 0");
-            createArchmagePacket(player, new Location(new Vector3d(11.5f, 1f, -6.5f), 45, 0));
+            createNPCPacket(player, new Location(new Vector3d(11.5f, 1f, -6.5f), 45, 0));
         }
     }
 

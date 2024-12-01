@@ -4,7 +4,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
@@ -12,9 +11,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Transformation;
 import org.evasive.me.minevolutionCore.MinevolutionCore;
-import org.evasive.me.minevolutionCore.customItems.pickaxes.PickaxeStatFunctions;
+import org.evasive.me.minevolutionCore.mining.PickaxeStatFunctions;
+import org.evasive.me.minevolutionCore.enchanting.enchantments.Rarity;
 import org.evasive.me.minevolutionCore.enchanting.enchantments.commands.EnchantFunctions;
-import org.evasive.me.minevolutionCore.enchanting.enchantments.enchants.EnchantType;
+import org.evasive.me.minevolutionCore.enchanting.enchantments.EnchantType;
 import org.evasive.me.minevolutionCore.enchanting.runicMatrix.objects.EnchantOrb;
 import org.evasive.me.minevolutionCore.enchanting.runicMatrix.objects.EnchantableItem;
 import org.evasive.me.minevolutionCore.enchanting.runicMatrix.objects.RunicMatrix;
@@ -48,14 +48,14 @@ public class MatrixManager {
 
     public void spawnEnchants(Player player, Location location){
         List<Location> locations = new ArrayList<>(Arrays.asList(new Location(location.getWorld(), 4, -0.5 ,0), new Location(location.getWorld(),-4, -0.5, 0), new Location(location.getWorld(),0, -0.5, 4), new Location(location.getWorld(),0, -0.5, -4), new Location(location.getWorld(),3, -0.5, 3),new Location(location.getWorld(),-3, -0.5, 3), new Location(location.getWorld(),-3, -0.5, -3),new Location(location.getWorld(),3, -0.5, -3)));
-        List<ItemStack> rarity = new ArrayList<>(Arrays.asList(new ItemStack(Material.GRAY_DYE), new ItemStack(Material.LIME_DYE), new ItemStack(Material.CYAN_DYE), new ItemStack(Material.PURPLE_DYE), new ItemStack(Material.ORANGE_DYE)));
         List<EnchantType> enchantList = getRandomEnchant(player);
         for (int i = 0; i < enchantList.size(); i++){
             Random random = new Random();
             int rate = random.nextInt(100) + 1;
             EnchantType enchantType = enchantList.get(i);
             Location tempLocation = location.clone().add(locations.get(i));
-            ItemDisplay itemDisplay = sendDisplayEntity(rarity.get(enchantType.getPickaxeEnchantBuilder().getRarity().ordinal()), tempLocation, player);
+            Rarity rarity = enchantType.getPickaxeEnchantBuilder().getRarity();
+            ItemDisplay itemDisplay = sendDisplayEntity(new ItemStack(rarity.getRarityBuilder().getTierMaterial()), tempLocation, player);
             TextDisplay textDisplay = sendTextDisplayEntity(enchantType, tempLocation, player, rate);
             Interaction interaction = sendInteractionEntity(tempLocation.clone().subtract(0f, 0.5f,0f), player, i);
             EnchantOrb enchantOrb = new EnchantOrb(enchantType, rate, itemDisplay, textDisplay, interaction, startRotation(itemDisplay));
@@ -185,15 +185,8 @@ public class MatrixManager {
         if(meta.getPersistentDataContainer().has(enchantType.getPickaxeEnchantBuilder().getKey())){
             level = meta.getPersistentDataContainer().get(enchantType.getPickaxeEnchantBuilder().getKey(), PersistentDataType.INTEGER) + 1;
         }
-
-        TextColor enchantColor = TextColor.fromHexString("#FFFFFF");
-        switch (enchantType.getPickaxeEnchantBuilder().getRarity()){
-            case MINOR -> enchantColor = TextColor.fromHexString("#BFBFBF");
-            case UNIQUE -> enchantColor = TextColor.fromHexString("#55FF55");
-            case RADIANT -> enchantColor = TextColor.fromHexString("#00FFFF");
-            case EXQUISITE -> enchantColor = TextColor.fromHexString("#AA00AA");
-            case PRISTINE -> enchantColor = TextColor.fromHexString("#FFAA00");
-        }
+        Rarity rarity = enchantType.getPickaxeEnchantBuilder().getRarity();
+        TextColor enchantColor = rarity.getRarityBuilder().getTextColor();
         textDisplay.text(ComponentUtils.makeText(enchantType.getPickaxeEnchantBuilder().getName() + " " + RomanNumeralUtil.intToRoman(level), enchantColor, true).append(ComponentUtils.makeText("\n Success Rate: ", NamedTextColor.GOLD, false).append(ComponentUtils.makeText(rate + "% ", NamedTextColor.GREEN, false))));
         textDisplay.setPersistent(true);
         textDisplay.setBillboard(Display.Billboard.CENTER);

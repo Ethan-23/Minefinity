@@ -55,5 +55,4 @@ public class PlayerManager {
         new MiningBlockHandler().replaceBlockPacketsInRegion(player, player.getWorld());
     }
 
-
 }

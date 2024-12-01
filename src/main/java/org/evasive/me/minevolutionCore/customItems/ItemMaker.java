@@ -2,9 +2,6 @@ package org.evasive.me.minevolutionCore.customItems;
 
 import org.bukkit.inventory.ItemStack;
 
-import org.evasive.me.minevolutionCore.customItems.forge.ForgeItems;
-import org.evasive.me.minevolutionCore.customItems.pickaxes.PickaxeItems;
-
 
 public class ItemMaker {
     public static ItemStack woodenCore;
@@ -14,11 +11,13 @@ public class ItemMaker {
     public static ItemStack woodenPickaxe;
     public static ItemStack stonePickaxe;
     public static ItemStack copperPickaxe;
+    public static ItemStack backpack;
 
     public void init(){
-        woodenCore = ForgeItems.WOODEN_CORE.getItemBuilder().buildItem();
-        stoneCore = ForgeItems.STONE_CORE.getForgeItemBuilder().buildItem();
-        copperCore = ForgeItems.COPPER_CORE.getForgeItemBuilder().buildItem();
+        woodenCore = ItemList.WOODEN_CORE.getBuilder().buildItem();
+        stoneCore = ItemList.STONE_CORE.getBuilder().buildItem();
+        copperCore = ItemList.COPPER_CORE.getBuilder().buildItem();
+        backpack = ItemList.BACKPACK.getBuilder().buildItem();
         brokenPickaxe = PickaxeItems.BROKEN_PICKAXE.getPickaxeBuilder().buildItem(1, 0, null);
         woodenPickaxe = PickaxeItems.WOODEN_PICKAXE.getPickaxeBuilder().buildItem(1, 0, null);
         stonePickaxe = PickaxeItems.STONE_PICKAXE.getPickaxeBuilder().buildItem(1, 0, null);

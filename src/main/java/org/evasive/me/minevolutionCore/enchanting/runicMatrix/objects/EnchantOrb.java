@@ -3,7 +3,7 @@ package org.evasive.me.minevolutionCore.enchanting.runicMatrix.objects;
 import org.bukkit.entity.Interaction;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.TextDisplay;
-import org.evasive.me.minevolutionCore.enchanting.enchantments.enchants.EnchantType;
+import org.evasive.me.minevolutionCore.enchanting.enchantments.EnchantType;
 
 public class EnchantOrb {
     private EnchantType enchantType;

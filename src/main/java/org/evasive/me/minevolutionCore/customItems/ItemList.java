@@ -1,12 +1,15 @@
 package org.evasive.me.minevolutionCore.customItems;
 
-import org.evasive.me.minevolutionCore.customItems.forge.ForgeItems;
-import org.evasive.me.minevolutionCore.customItems.pickaxes.PickaxeItems;
+import org.evasive.me.minevolutionCore.customItems.items.components.CopperCore;
+import org.evasive.me.minevolutionCore.customItems.items.components.StoneCore;
+import org.evasive.me.minevolutionCore.customItems.items.components.WoodenCore;
+import org.evasive.me.minevolutionCore.customItems.items.storage.Backpack;
 
 public enum ItemList {
-    WOODEN_CORE(ForgeItems.WOODEN_CORE.getItemBuilder()),
-    STONE_CORE(ForgeItems.STONE_CORE.getItemBuilder()),
-    COPPER_CORE(ForgeItems.COPPER_CORE.getItemBuilder()),
+    WOODEN_CORE(new WoodenCore()),
+    STONE_CORE(new StoneCore()),
+    COPPER_CORE(new CopperCore()),
+    BACKPACK(new Backpack()),
     BROKEN_PICKAXE(PickaxeItems.BROKEN_PICKAXE.getPickaxeBuilder()),
     WOODEN_PICKAXE(PickaxeItems.WOODEN_PICKAXE.getPickaxeBuilder()),
     STONE_PICKAXE(PickaxeItems.STONE_PICKAXE.getPickaxeBuilder()),

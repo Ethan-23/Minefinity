@@ -20,7 +20,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.evasive.me.minevolutionCore.MinevolutionCore;
 import org.evasive.me.minevolutionCore.blocks.BlockDataFunctions;
-import org.evasive.me.minevolutionCore.customItems.pickaxes.PickaxeStatFunctions;
 import org.evasive.me.minevolutionCore.utils.PickaxeKeys;
 
 public class MiningAnimation extends PacketListenerAbstract {
@@ -222,7 +221,7 @@ public class MiningAnimation extends PacketListenerAbstract {
         effectiveSpeed = Math.min(effectiveSpeed, (float) new BlockDataFunctions().getBlockHealth(player) / 5f);
 
         if(miningFunctions.isSuperbreakerActive(player))
-            effectiveSpeed += meta.getPersistentDataContainer().get(PickaxeKeys.baseSpeedKey, PersistentDataType.INTEGER);
+            effectiveSpeed += meta.getPersistentDataContainer().get(PickaxeKeys.baseSpeedKey, PersistentDataType.FLOAT);
 
         return effectiveSpeed;
     }

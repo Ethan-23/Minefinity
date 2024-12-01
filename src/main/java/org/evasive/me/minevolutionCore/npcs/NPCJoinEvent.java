@@ -7,7 +7,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.evasive.me.minevolutionCore.MinevolutionCore;
 import org.evasive.me.minevolutionCore.npcs.npc.Archmage;
+import org.evasive.me.minevolutionCore.npcs.npc.Blacksmith;
 import org.evasive.me.minevolutionCore.npcs.npc.BlockMaster;
+import org.evasive.me.minevolutionCore.npcs.npc.ShopKeeper;
 
 public class NPCJoinEvent implements Listener {
 
@@ -20,7 +22,9 @@ public class NPCJoinEvent implements Listener {
         NPCManager npcManager = MinevolutionCore.getNpcManager();
         npcManager.getNpcTracker().addPlayer(player.getUniqueId());
 
-        Bukkit.getScheduler().runTaskLater(MinevolutionCore.getCore(), bukkitTask -> new BlockMaster().prepareBlockMaster(player), 20);
-        Bukkit.getScheduler().runTaskLater(MinevolutionCore.getCore(), bukkitTask -> new Archmage().prepareArchmage(player), 20);
+        Bukkit.getScheduler().runTaskLater(MinevolutionCore.getCore(), bukkitTask -> new BlockMaster().prepareNPC(player), 20);
+        Bukkit.getScheduler().runTaskLater(MinevolutionCore.getCore(), bukkitTask -> new Archmage().prepareNPC(player), 20);
+        Bukkit.getScheduler().runTaskLater(MinevolutionCore.getCore(), bukkitTask -> new Blacksmith().prepareNPC(player), 20);
+        Bukkit.getScheduler().runTaskLater(MinevolutionCore.getCore(), bukkitTask -> new ShopKeeper().prepareNPC(player), 20);
     }
 }

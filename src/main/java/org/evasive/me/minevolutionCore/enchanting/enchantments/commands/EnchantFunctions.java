@@ -4,9 +4,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.evasive.me.minevolutionCore.customItems.pickaxes.PickaxeItems;
-import org.evasive.me.minevolutionCore.customItems.pickaxes.PickaxeStatFunctions;
-import org.evasive.me.minevolutionCore.enchanting.enchantments.enchants.*;
+import org.evasive.me.minevolutionCore.customItems.PickaxeItems;
+import org.evasive.me.minevolutionCore.mining.PickaxeStatFunctions;
+import org.evasive.me.minevolutionCore.enchanting.enchantments.EnchantType;
+import org.evasive.me.minevolutionCore.enchanting.enchantments.PickaxeEnchantBuilder;
 import org.evasive.me.minevolutionCore.utils.PickaxeKeys;
 
 public class EnchantFunctions {

@@ -1,7 +1,10 @@
 package org.evasive.me.minevolutionCore.player;
 
 import org.bukkit.entity.Player;
+import org.evasive.me.minevolutionCore.forge.ForgeItem;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class PlayerData {
@@ -11,6 +14,8 @@ public class PlayerData {
     private int blockTier;
     private int selectedBlockTier;
     private int quest;
+    private int selectedForge;
+    private Map<Integer, ForgeItem> forgeItems = new HashMap<>();
 
     public PlayerData(Player player) {
         this.uuid = player.getUniqueId();
@@ -60,5 +65,19 @@ public class PlayerData {
         this.selectedBlockTier = selectedBlockTier;
     }
 
+    public Map<Integer, ForgeItem> getForgeItems() {
+        return forgeItems;
+    }
 
+    public void setForgeItems(Map<Integer, ForgeItem> forgeItems) {
+        this.forgeItems = forgeItems;
+    }
+
+    public int getSelectedForge() {
+        return selectedForge;
+    }
+
+    public void setSelectedForge(int selectedForge) {
+        this.selectedForge = selectedForge;
+    }
 }
