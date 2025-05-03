@@ -15,6 +15,7 @@ Project Overview
 Showcase:
 -
 **Enchanting**
+
 ![Minevolution Enchanting](https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExazRwZ3M2dDFrNjVlZnBxMXhkejMyNTNtb29jN241bDRianh2MjNhNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IBbLHRGTtho4jXvqlR/giphy.gif)
 
 **The Forge**
