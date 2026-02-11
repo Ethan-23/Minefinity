@@ -12,15 +12,14 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.evasive.me.minevolutionCore.MinevolutionCore;
-import org.evasive.me.minevolutionCore.blocks.BlockDataFunctions;
+import org.evasive.me.minevolutionCore.resourceblock.block.BlockDataFunctions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MiningBlockHandler{
+public class MiningBlockHandler {
 
-    final BlockDataFunctions blockDataFunctions = new BlockDataFunctions();
     List<Material> fakeBlocks = new ArrayList<>(Arrays.asList(Material.WARPED_STEM, Material.WARPED_FENCE, Material.WARPED_SLAB, Material.WARPED_PLANKS));
     final List<Material> blockset1 = new ArrayList<>(Arrays.asList(Material.COBBLESTONE, Material.COBBLESTONE_WALL, Material.COBBLESTONE_SLAB, Material.CHISELED_STONE_BRICKS));
     List<Material> blockset2 = new ArrayList<>(Arrays.asList(Material.STONE, Material.ANDESITE_WALL, Material.STONE_SLAB, Material.CHISELED_STONE_BRICKS));
@@ -56,7 +55,7 @@ public class MiningBlockHandler{
         }
 
         // Process each category of blocks in batches
-        processBlocksInBatches(player, spongeBlocks, loc -> sendFakeBlockChange(player, loc, blockDataFunctions.getBlockMaterial(player)));
+        processBlocksInBatches(player, spongeBlocks, loc -> sendFakeBlockChange(player, loc, BlockDataFunctions.getBlockMaterial(player)));
         processBlocksInBatches(player, warpedPlanksBlocks, loc -> sendFakeBlockChange(player, loc, blockset1.getFirst()));
         processBlocksInBatches(player, warpedFenceBlocks, loc -> sendFakeBlockChange(player, loc, blockset1.get(1)));
         processBlocksInBatches(player, warpedSlabBlocks, loc -> sendFakeBlockChange(player, loc, blockset1.get(2)));

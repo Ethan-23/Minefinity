@@ -1,7 +1,11 @@
 package org.evasive.me.minevolutionCore.player;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.evasive.me.minevolutionCore.forge.ForgeItem;
+import org.evasive.me.minevolutionCore.automation.miner.data.AutoMiner;
+import org.evasive.me.minevolutionCore.resourceblock.BlockType;
+import org.evasive.me.minevolutionCore.resourceblock.milestones.Milestone;
+import org.evasive.me.minevolutionCore.forge.data.ForgeItem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,12 +14,20 @@ import java.util.UUID;
 public class PlayerData {
 
     private UUID uuid;
-    private int blocksMined;
+
+    private int quest;
+
     private int blockTier;
     private int selectedBlockTier;
-    private int quest;
+    private int blocksMined;
+    private Map<Material, Milestone> blockMilestones = new HashMap<>();
+
+    private final AutoMiner autoMiner;
+
+    private Map<String, Integer> backpackStorage =  new HashMap<>();
+
     private int selectedForge;
-    private Map<Integer, ForgeItem> forgeItems = new HashMap<>();
+    private final Map<Integer, ForgeItem> forgeItems = new HashMap<>();
 
     public PlayerData(Player player) {
         this.uuid = player.getUniqueId();
@@ -23,6 +35,10 @@ public class PlayerData {
         this.blockTier = 0;
         this.selectedBlockTier = 0;
         this.quest = 0;
+        this.autoMiner = new AutoMiner();
+        for(BlockType blockType : BlockType.values()){
+            blockMilestones.put(blockType.getBlock().material(), new Milestone(0, 0));
+        }
     }
 
     public UUID getUuid() {
@@ -69,15 +85,32 @@ public class PlayerData {
         return forgeItems;
     }
 
-    public void setForgeItems(Map<Integer, ForgeItem> forgeItems) {
-        this.forgeItems = forgeItems;
-    }
-
     public int getSelectedForge() {
         return selectedForge;
     }
 
     public void setSelectedForge(int selectedForge) {
         this.selectedForge = selectedForge;
+    }
+
+    //Change to a view only map
+    public Map<Material, Milestone> getBlockMilestones() {
+        return blockMilestones;
+    }
+
+    public void setBlockMilestones(Map<Material, Milestone> blockMilestones) {
+        this.blockMilestones = blockMilestones;
+    }
+
+    public AutoMiner getAutoMiner() {
+        return autoMiner;
+    }
+
+    public Map<String, Integer> getBackpackStorage() {
+        return backpackStorage;
+    }
+
+    public void clearBackpack() {
+        backpackStorage = new HashMap<>();
     }
 }

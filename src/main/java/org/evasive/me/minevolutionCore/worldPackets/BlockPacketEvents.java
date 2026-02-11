@@ -26,16 +26,21 @@ public class BlockPacketEvents extends PacketListenerAbstract {
 
     @Override
     public void onPacketReceive(PacketReceiveEvent event) {
-        Player player = (Player) event.getPlayer();
-        if(player != null && player.getGameMode() == GameMode.CREATIVE)
+        Player player = event.getPlayer();
+
+        //Player is null sometimes
+        if(player == null) return;
+
+        if(player.getGameMode() == GameMode.CREATIVE)
             return;
 
         if (event.getPacketType() == PacketType.Play.Client.USE_ITEM) {
-            PacketReceiveEvent copy = event.clone();
-            WrapperPlayClientUseItem packet = new WrapperPlayClientUseItem(copy);
-
             Block block = player.getTargetBlockExact(5);
-            if (block != null && block.getType() != Material.SPONGE && !fakeBlocks.contains(block.getType())) return;
+
+            if(block == null) return;
+
+            if (block.getType() != Material.SPONGE || !fakeBlocks.contains(block.getType())) return;
+
             event.setCancelled(true);
         }
 
@@ -47,8 +52,9 @@ public class BlockPacketEvents extends PacketListenerAbstract {
 
             if (block.getType() == Material.SPONGE || fakeBlocks.contains(block.getType())) {
                 event.setCancelled(true);
-
-                Bukkit.getScheduler().runTask(MinevolutionCore.getCore(), ()-> new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, player.getEquipment().getItemInMainHand(), block, player.getTargetBlockFace(5)).callEvent());}
+                //Random error fix later
+                Bukkit.getScheduler().runTask(MinevolutionCore.getCore(), ()-> new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, player.getEquipment().getItemInMainHand(), block, player.getTargetBlockFace(5)).callEvent());
+            }
             copy.cleanUp();
 
         }

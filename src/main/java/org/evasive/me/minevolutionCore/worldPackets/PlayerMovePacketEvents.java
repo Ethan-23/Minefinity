@@ -15,29 +15,21 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
-import org.evasive.me.minevolutionCore.MinevolutionCore;
-import org.evasive.me.minevolutionCore.npcs.NPC;
-import org.evasive.me.minevolutionCore.npcs.NPCManager;
+import org.evasive.me.minevolutionCore.npcs.NpcInstance;
 
 public class PlayerMovePacketEvents extends PacketListenerAbstract {
 
     @Override
     public void onPacketReceive(PacketReceiveEvent event) {
-
         if(event.getPacketType() == PacketType.Play.Client.PLAYER_POSITION_AND_ROTATION || event.getPacketType() == PacketType.Play.Client.PLAYER_POSITION || event.getPacketType() == PacketType.Play.Client.PLAYER_ROTATION){
 
-            NPCManager npcManager = MinevolutionCore.getNpcManager();
             Player player = event.getPlayer();
 
-            if(player == null){
+            /*if(npcManager.getNpcTracker().getPlayerNpcList(player.getUniqueId()) == null){
                 return;
             }
 
-            if(npcManager.getNpcTracker().getPlayerNpcList(player.getUniqueId()) == null){
-                return;
-            }
-
-            for(NPC npc: npcManager.getNpcTracker().getPlayerNpcList(player.getUniqueId())){
+            for(NpcInstance npc: npcManager.getNpcTracker().getPlayerNpcList(player.getUniqueId())){
                 Location location = npc.getLocation();
                 if(player.getLocation().distance(new org.bukkit.Location(player.getWorld(), location.getX(), location.getY(), location.getZ())) > 15)
                     continue;
@@ -46,22 +38,22 @@ public class PlayerMovePacketEvents extends PacketListenerAbstract {
                 npcManager.lookAtPlayer(player, npc);
 
             }
-
+*/
             checkForMiningRegion(player);
         }
     }
 
     public void checkForMiningRegion(Player player){
-        if(player.getAttribute(Attribute.PLAYER_BLOCK_BREAK_SPEED) == null) {
-            player.registerAttribute(Attribute.PLAYER_BLOCK_BREAK_SPEED);
+        if(player.getAttribute(Attribute.BLOCK_BREAK_SPEED) == null) {
+            player.registerAttribute(Attribute.BLOCK_BREAK_SPEED);
         }
         //Makes it so if you enter the area of the main block break speed attr set to 0
         if(getRegionAtLocation(player.getLocation()) == null)
             return;
         if(getRegionAtLocation(player.getLocation()).getId().equals("mainblock")){
-            player.getAttribute(Attribute.PLAYER_BLOCK_BREAK_SPEED).setBaseValue(0);
+            player.getAttribute(Attribute.BLOCK_BREAK_SPEED).setBaseValue(0);
         }else{
-            player.getAttribute(Attribute.PLAYER_BLOCK_BREAK_SPEED).setBaseValue(1);
+            player.getAttribute(Attribute.BLOCK_BREAK_SPEED).setBaseValue(1);
         }
     }
 
