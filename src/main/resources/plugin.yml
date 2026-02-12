@@ -1,6 +1,6 @@
-name: MinevolutionCore
+name: Minefinity
 version: '1.0'
-main: org.evasive.me.minevolutionCore.MinevolutionCore
+main: org.evasive.me.minefinity.Minefinity
 api-version: '1.21'
 commands:
   mgive:
