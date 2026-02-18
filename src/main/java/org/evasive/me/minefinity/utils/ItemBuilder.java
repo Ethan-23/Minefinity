@@ -5,9 +5,11 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.Minefinity;
 
@@ -66,12 +68,12 @@ public class ItemBuilder {
 
             // Calculate visible length of the word (ignoring color tags)
             int wordVisibleLength = PlainTextComponentSerializer.plainText()
-                    .serialize(Messages.parse(word))
+                    .serialize(TextConversions.parse(word))
                     .length();
 
             // Wrap line if adding this word would exceed MAX_LORE_CHARACTERS
             if (visibleLength > 0 && visibleLength + 1 + wordVisibleLength > MAX_LORE_CHARACTERS) {
-                lore.add(Messages.parse(currentLine.toString()));
+                lore.add(TextConversions.parse(currentLine.toString()));
                 currentLine.setLength(0);
                 visibleLength = 0;
 
@@ -98,7 +100,7 @@ public class ItemBuilder {
 
         // Add any remaining text
         if (!currentLine.isEmpty()) {
-            lore.add(Messages.parse(currentLine.toString()));
+            lore.add(TextConversions.parse(currentLine.toString()));
         }
 
         return this;
@@ -130,8 +132,13 @@ public class ItemBuilder {
     }
 
     public ItemBuilder addBlank() {
-        lore.add(Messages.parse(""));
+        lore.add(TextConversions.parse(""));
         return this; // allow chaining
+    }
+
+    public ItemBuilder addUnbreakable() {
+        meta.setUnbreakable(true);
+        return this;
     }
 
     public ItemBuilder addGlow() {
@@ -147,6 +154,17 @@ public class ItemBuilder {
 
     public ItemBuilder addPersistentDataContainer(NamespacedKey namespacedKey, String value) {
         meta.getPersistentDataContainer().set(namespacedKey, PersistentDataType.STRING, value);
+        return this;
+    }
+
+    public ItemBuilder addSkullMeta(Player player){
+        if(!(meta instanceof SkullMeta skullMeta)) return this;
+        skullMeta.setOwningPlayer(player);
+        return this;
+    }
+
+    public ItemBuilder setAmount(int amount) {
+        this.itemStack.setAmount(amount);
         return this;
     }
 

@@ -3,21 +3,93 @@ version: '1.0'
 main: org.evasive.me.minefinity.Minefinity
 api-version: '1.21'
 commands:
-  mgive:
-    description: admin give command
-  mdata:
-    description: admin data command
-  mspawnnpc:
-    description: used to spawn npcs
-  mpickaxeadd:
+  minegive:
+    aliases: [mgive]
+    permission: minefinity.minegive
+    description: used to give minefinity items
+  minedata:
+    aliases: [mdata]
+    permission: minefinity.minedata
+    description: used to change player data in game
+  minespawn:
+    aliases: [mspawn]
+    permission: minefinity.minespawn
+    description: used to spawn custom npcs
+  minepickaxeadd:
+    aliases: [mpickaxeadd]
+    permission: minefinity.mineaddpickaxe
     description: used to add components to pickaxes
   pickaxeanvil:
-    description: opens the pickaxe anvil
-  forge:
-    description: opens the forge
+    aliases: [panvil]
+    permission: minefinity.pickaxeanvil
+    description: opens the pickaxe anvil gui
   blocks:
-    description: block list command
+    aliases: [blockmaster, bm]
+    description: opens the blocks gui
+    permission: minefinity.blocks
   milestone:
     description: block milestone command
+    permission: minefinity.milestone
+  pay:
+    description: used to pay player to player
+    permission: minefinity.pay
+  gamemode:
+    aliases: [ gm ]
+    permission: minefinity.gamemode
+    description: used to set gamemode
+  vanish:
+    aliases: [ v ]
+    permission: minefinity.vanish
+    description: toggles player to visible/invisible
+  staffmode:
+    aliases: [ sm ]
+    permission: minefinity.staffmode
+    description: sets player to staff mode
+  balance:
+    aliases: [ bal ]
+    permission: minefinity.balance
+    description: checks the balance of a player
+  economy:
+    aliases: [ eco ]
+    permission: minefinity.economy
+    description: set/change player balance
+  rename:
+    permission: minefinity.rename
+    description: sets the name of the item in your hand
 
-depend: [WorldGuard, Essentials]
+permissions:
+  minefinity.gamemode:
+    description: Allows the use of /gamemode
+    default: op
+  minefinity.staffmode:
+    description: Allows the use of /staffmode
+    default: op
+  minefinity.vanish:
+    description: Allows the use of /vanish
+    default: op
+  minefinity.minedata:
+    description: Allows the use of /minedata
+    default: op
+  minefinity.pay:
+    description: Allows the use of /pay
+    default: true
+  minefinity.balance:
+    description: Allows the use of /balance
+    default: true
+  minefinity.balancetop:
+    description: Allows the use of /balancetop
+    default: true
+  minefinity.blocks:
+    description: Allows the use of /blocks
+    default: true
+  minefinity.pickaxeanvil:
+    description: Allows the use of /pickaxeanvil
+    default: true
+  minefinity.economy:
+    description: Allows the use of /economy
+    default: op
+  minefinity.rename:
+    description: Allows the use of /rename
+    default: op
+
+depend: [WorldGuard]

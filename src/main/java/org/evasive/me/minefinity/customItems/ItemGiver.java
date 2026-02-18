@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.customItems.backpack.BackpackCollect;
-import org.evasive.me.minefinity.utils.Messages;
+import org.evasive.me.minefinity.utils.TextConversions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +41,7 @@ public class ItemGiver {
 
     private int addToBackpack(Player player, String itemId, String backpackId, int amount){
 
-        int total = Minefinity.playerManager.getBackpackStoredItemAmount(player, itemId);
+        int total = Minefinity.getCore().getBackpackService().getBackpackStoredItemAmount(player, itemId);
         final int max = backpackCollect.getTotalBackpackStorage(player, backpackId);
 
         int space = max - total;
@@ -50,11 +50,11 @@ public class ItemGiver {
             return amount;
 
         if(space >= amount){
-            Minefinity.playerManager.addBackpackItem(player, itemId, amount);
+            Minefinity.getCore().getBackpackService().addBackpackItem(player, itemId, amount);
             return 0;
         }
 
-        Minefinity.playerManager.addBackpackItem(player, itemId, space);
+        Minefinity.getCore().getBackpackService().addBackpackItem(player, itemId, space);
         return amount - space;
 
     }
@@ -88,7 +88,7 @@ public class ItemGiver {
         lastNotification.put(uuid, now);
 
         player.playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 1, 1);
-        player.showTitle(Title.title(Messages.parse("<red>INVENTORY FULL!!!"), Messages.parse("")));
+        player.showTitle(Title.title(TextConversions.parse("<red>INVENTORY FULL!!!"), TextConversions.parse("")));
     }
 
 }

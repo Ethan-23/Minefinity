@@ -8,9 +8,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
-import org.evasive.me.minefinity.forge.data.ForgeManager;
+import org.evasive.me.minefinity.player.sevices.ForgeService;
 import org.evasive.me.minefinity.utils.ItemBuilder;
-import org.evasive.me.minefinity.utils.Messages;
+import org.evasive.me.minefinity.utils.TextConversions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -30,16 +30,15 @@ public class ForgeGui extends BaseGui {
             4, Set.of(5, 14, 32, 41),
             5, Set.of(6, 15, 33, 42)
     );
-    ForgeManager forgeManager;
+    ForgeService forgeService = Minefinity.getCore().getForgeService();
 
     public ForgeGui(Player player) {
-        super(player, INVENTORY_SIZE, Messages.parse("Forge"));
+        super(player, INVENTORY_SIZE, TextConversions.parse("Forge"));
         build();
     }
 
     @Override
     protected void build() {
-        forgeManager = new ForgeManager();
         buildFrame();
         buildProgressPanes(player);
         buildForgeSlots(player);
@@ -71,15 +70,15 @@ public class ForgeGui extends BaseGui {
             int key = entry.getKey();
             Set<Integer> value = entry.getValue();
 
-            if(!forgeManager.hasForgeItem(player, key)){
+            if(!forgeService.hasForgeItem(player, key)){
                 for (int slot : value)
                     inventory.setItem(slot, emptyPane);
                 continue;
             }
 
-            long milliseconds = forgeManager.getMilisecondsRemaining(player, key);
+            long milliseconds = forgeService.getMilisecondsRemaining(player, key);
 
-            if(forgeManager.isFinished(player, key)){
+            if(forgeService.isFinished(player, key)){
                 for (int slot : value)
                     inventory.setItem(slot, donePane);
             } else {
@@ -92,14 +91,14 @@ public class ForgeGui extends BaseGui {
     }
 
     public ItemStack buildForgeButton(Player player, int forgeNum){
-        if(forgeManager.hasForgeItem(player, forgeNum)){
-            ItemBuilder pendingForge = new ItemBuilder(forgeManager.getForgeItemStack(player, forgeNum));
-            if(!forgeManager.isFinished(player, forgeNum))
-                pendingForge.addLore("<gold>Time Remaining: <yellow>" + getString(forgeManager.getMilisecondsRemaining(player, forgeNum)));
+        if(forgeService.hasForgeItem(player, forgeNum)){
+            ItemBuilder pendingForge = new ItemBuilder(forgeService.getForgeItemStack(player, forgeNum));
+            if(!forgeService.isFinished(player, forgeNum))
+                pendingForge.addLore("<gold>Time Remaining: <yellow>" + getString(forgeService.getMilisecondsRemaining(player, forgeNum)));
             return pendingForge.build();
 
         }else{
-            ItemBuilder forgeButton = new ItemBuilder(Material.FURNACE, Messages.parse("<yellow>Empty Forge Slot</yellow>"));
+            ItemBuilder forgeButton = new ItemBuilder(Material.FURNACE, TextConversions.parse("<yellow>Empty Forge Slot</yellow>"));
             forgeButton.addLore("<gray>Click to select a forge recipe");
             return forgeButton.build();
         }

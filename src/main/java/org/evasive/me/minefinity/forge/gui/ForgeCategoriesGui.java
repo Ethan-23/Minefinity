@@ -5,13 +5,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.gui.BaseGui;
-import org.evasive.me.minefinity.customItems.CustomItemRegistry;
 import org.evasive.me.minefinity.core.items.CustomItem;
 import org.evasive.me.minefinity.forge.data.ForgeCategories;
-import org.evasive.me.minefinity.forge.recipes.BaseCrafting;
+import org.evasive.me.minefinity.forge.recipes.BaseForgeRecipe;
 import org.evasive.me.minefinity.forge.recipes.ForgeRecipes;
 import org.evasive.me.minefinity.utils.ItemBuilder;
-import org.evasive.me.minefinity.utils.Messages;
+import org.evasive.me.minefinity.utils.TextConversions;
 import org.evasive.me.minefinity.utils.TimeCalculator;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,8 +21,8 @@ import java.util.Objects;
 
 import static org.evasive.me.minefinity.customItems.ItemFunctions.getItemId;
 import static org.evasive.me.minefinity.customItems.ItemFunctions.hasItemId;
-import static org.evasive.me.minefinity.customItems.ItemNameBuilder.formatItemName;
 import static org.evasive.me.minefinity.utils.GenericGuiItems.*;
+import static org.evasive.me.minefinity.utils.TextConversions.formatItemName;
 
 public class ForgeCategoriesGui extends BaseGui {
 
@@ -38,7 +37,7 @@ public class ForgeCategoriesGui extends BaseGui {
     private final ForgeCategories forgeCategory;
 
     public ForgeCategoriesGui(Player player, ForgeCategories category) {
-        super(player, INVENTORY_SIZE, Messages.parse("Forge Categories"));
+        super(player, INVENTORY_SIZE, TextConversions.parse("Forge Categories"));
         this.forgeCategory = category;
         build();
     }
@@ -90,21 +89,20 @@ public class ForgeCategoriesGui extends BaseGui {
      */
     private void buildRecipes(){
         List<ForgeRecipes> categoryList = Arrays.stream(ForgeRecipes.values())
-                .filter(r -> r.getCrafting().getForgeCategories() == this.forgeCategory)
+                .filter(r -> r.getCrafting().getForgeCategory() == this.forgeCategory)
                 .toList();
 
         for(int slot = 0; slot < RECIPE_SLOTS.size(); slot++){
 
             if(slot >= categoryList.size()) break;
 
-            BaseCrafting forgeCrafting = categoryList.get(slot).getCrafting();
+            BaseForgeRecipe forgeCrafting = categoryList.get(slot).getCrafting();
 
-            ItemBuilder forgeItem = new ItemBuilder(forgeCrafting.getResult().clone());
+            ItemBuilder forgeItem = new ItemBuilder(forgeCrafting.getResult().getBuilder().buildItem().clone());
             forgeItem.addBlank().addLore("<bold><gold>Recipe:");
 
-            for (Map.Entry<String, Integer> entry : forgeCrafting.getRecipe().entrySet()) {
-                String itemId = entry.getKey();
-                CustomItem customItem = CustomItemRegistry.getByID(itemId);
+            for (Map.Entry<CustomItem, Integer> entry : forgeCrafting.getRecipe().entrySet()) {
+                CustomItem customItem = entry.getKey();
                 ItemStack recipeItem = customItem.getBuilder().buildItem();
                 int amount = entry.getValue();
                 String name = hasItemId(recipeItem)

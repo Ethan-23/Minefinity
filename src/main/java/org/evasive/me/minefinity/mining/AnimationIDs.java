@@ -9,7 +9,11 @@ public class AnimationIDs {
     private final Queue<Integer> recycledIds = new LinkedList<>();
 
     public int getUniqueAnimationId() {
-        return recycledIds.isEmpty() ? nextId-- : recycledIds.poll();
+        Integer id = recycledIds.poll();
+        if (id != null) {
+            return id;
+        }
+        return nextId--;
     }
 
     public void releaseAnimationId(int id) {

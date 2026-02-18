@@ -9,15 +9,16 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.resourceblock.block.BlockDataFunctions;
 import org.evasive.me.minefinity.customItems.pickaxe.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.pickaxe.PickaxeItem;
 import org.evasive.me.minefinity.customItems.ItemFunctions;
+import org.evasive.me.minefinity.player.sevices.BlockTierService;
 
 import java.util.UUID;
 
 public class BlockProgress {
 
+    BlockTierService blockTierService = Minefinity.core.getBlockTierService();
     BlockBreak blockBreak = new BlockBreak();
 
     final public static int MAX_SPEED_DENOMINATION = 4;
@@ -27,7 +28,7 @@ public class BlockProgress {
         UUID uuid = player.getUniqueId();
         float progress = calculateMiningProgress(uuid);
 
-        int health = BlockDataFunctions.getBlockHealth(player);
+        int health = blockTierService.getBlockTier(player).getBlock().health();
 
         if(progress > (float) health /MAX_SPEED_DENOMINATION)
             progress = (float) health /MAX_SPEED_DENOMINATION;

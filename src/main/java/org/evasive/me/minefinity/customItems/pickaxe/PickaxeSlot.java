@@ -4,6 +4,7 @@ import org.bukkit.NamespacedKey;
 import org.evasive.me.minefinity.customItems.items.CustomItemType;
 
 import static org.evasive.me.minefinity.customItems.ItemFunctions.*;
+import static org.evasive.me.minefinity.customItems.pickaxe.BasePickaxeItem.*;
 
 public enum PickaxeSlot {
     HEAD("head", headKey, CustomItemType.PICKAXE_HEAD),

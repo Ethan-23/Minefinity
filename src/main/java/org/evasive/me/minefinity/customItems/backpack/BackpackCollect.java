@@ -5,12 +5,15 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.customItems.CustomItemRegistry;
+import org.evasive.me.minefinity.player.sevices.BackpackService;
 
 import java.util.Set;
 
 import static org.evasive.me.minefinity.customItems.ItemFunctions.*;
 
 public class BackpackCollect {
+
+    BackpackService backpackService = Minefinity.getCore().getBackpackService();
 
     public String findBackpackItem(Player player, String itemId){
         Inventory inventory = player.getInventory();
@@ -27,7 +30,7 @@ public class BackpackCollect {
 
             storageAmount += baseBackpackItem.getStoredItemAmount();
 
-            if(storageAmount <= Minefinity.playerManager.getBackpackStoredItemAmount(player, itemId)) continue;
+            if(storageAmount <= backpackService.getBackpackStoredItemAmount(player, itemId)) continue;
 
             return baseBackpackItem.getID();
         }
@@ -69,16 +72,16 @@ public class BackpackCollect {
             if(!storedItemIds.contains(itemId)) continue;
 
             int amount = item.getAmount();
-            int currentStorage = Minefinity.playerManager.getBackpackStoredItemAmount(player, itemId);
+            int currentStorage = backpackService.getBackpackStoredItemAmount(player, itemId);
             int remainingStorage = maxItemStorage - currentStorage;
 
             if(remainingStorage == 0)continue;
 
             if(amount <= remainingStorage){
-                Minefinity.playerManager.addBackpackItem(player, itemId, amount);
+                backpackService.addBackpackItem(player, itemId, amount);
                 item.setAmount(0);
             }else {
-                Minefinity.playerManager.addBackpackItem(player, itemId, remainingStorage);
+                backpackService.addBackpackItem(player, itemId, remainingStorage);
                 item.setAmount(amount - remainingStorage);
             }
         }
@@ -88,7 +91,7 @@ public class BackpackCollect {
         BaseBackpackItem baseBackpackItem = (BaseBackpackItem) CustomItemRegistry.getByID(backpackId).getBuilder();
 
         int max = baseBackpackItem.getStoredItemAmount();
-        int total = Minefinity.playerManager.getBackpackStoredItemAmount(player, itemId);
+        int total = backpackService.getBackpackStoredItemAmount(player, itemId);
         return total <= max;
     }
 

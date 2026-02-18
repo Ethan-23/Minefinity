@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.utils.ItemBuilder;
-import org.evasive.me.minefinity.utils.Messages;
+import org.evasive.me.minefinity.utils.TextConversions;
 
 import java.util.List;
 
@@ -16,10 +16,10 @@ public class MerchantGui extends BaseGui {
     private static final int INVENTORY_SIZE = 27;
     private static final int SELL_INVENTORY_SLOT = 12;
     private static final int SELL_BACKPACK_SLOT = 14;
-    MerchantHandler merchantHandler;
+    private final MerchantHandler merchantHandler;
 
     public MerchantGui(Player player) {
-        super(player, INVENTORY_SIZE, Messages.parse("Merchant"));
+        super(player, INVENTORY_SIZE, TextConversions.parse("Merchant"));
         build();
         merchantHandler = new MerchantHandler();
     }
@@ -38,8 +38,8 @@ public class MerchantGui extends BaseGui {
     }
 
     private void addButtons(){
-        inventory.setItem(SELL_INVENTORY_SLOT, new ItemBuilder(Material.CHEST, Messages.parse("Sell Inventory")).build());
-        inventory.setItem(SELL_BACKPACK_SLOT, new ItemBuilder(Material.BUNDLE, Messages.parse("Sell Backpacks")).build());
+        inventory.setItem(SELL_INVENTORY_SLOT, new ItemBuilder(Material.CHEST, TextConversions.parse("Sell Inventory")).build());
+        inventory.setItem(SELL_BACKPACK_SLOT, new ItemBuilder(Material.BUNDLE, TextConversions.parse("Sell Backpacks")).build());
     }
 
     @Override

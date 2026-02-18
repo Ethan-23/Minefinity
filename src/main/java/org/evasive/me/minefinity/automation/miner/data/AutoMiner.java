@@ -1,9 +1,15 @@
 package org.evasive.me.minefinity.automation.miner.data;
 
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.evasive.me.minefinity.mining.BlockProgress;
 import org.evasive.me.minefinity.resourceblock.BlockType;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,13 +63,17 @@ public class AutoMiner {
         }
     }
 
+    public void setItemStorage(Map<String, Integer> itemStorage) {
+        this.itemStorage = itemStorage;
+    }
+
     public Map<String, Integer> getItemStorage() {
         return Collections.unmodifiableMap(itemStorage);
     }
 
     public void addItemStorage(String itemId, int amount) {
         if(!itemStorage.containsKey(itemId)){
-            itemStorage.put(itemId, amount);
+            itemStorage.put(itemId, 0);
         }
 
         int amountStored = itemStorage.get(itemId);
@@ -103,12 +113,24 @@ public class AutoMiner {
         return offlineProgress;
     }
 
+    public void setOfflineProgress(int offlineProgress) {
+        this.offlineProgress = offlineProgress;
+    }
+
     public int getStorageCap() {
         return storageCap;
     }
 
+    public void setStorageCap(int storageCap) {
+        this.storageCap = storageCap;
+    }
+
     public float getStoredProgress() {
         return storedProgress;
+    }
+
+    public void setStoredProgress(float storedProgress) {
+        this.storedProgress = storedProgress;
     }
 
     public int getStoredBlockAmount(){
@@ -121,5 +143,34 @@ public class AutoMiner {
 
     public boolean isFull() {
         return getStoredBlockAmount() >= storageCap;
+    }
+
+    public String serializePickaxe() {
+        try {
+            ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+            BukkitObjectOutputStream out = new BukkitObjectOutputStream(byteOut);
+            out.writeObject(pickaxe);
+            out.close();
+            return Base64.getEncoder().encodeToString(byteOut.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public ItemStack deserializePickaxe(String data) {
+
+        if(data == null) return null;
+
+        try {
+            byte[] bytes = Base64.getDecoder().decode(data);
+            ByteArrayInputStream byteIn = new ByteArrayInputStream(bytes);
+            BukkitObjectInputStream in = new BukkitObjectInputStream(byteIn);
+            ItemStack item = (ItemStack) in.readObject();
+            in.close();
+            return item;
+        } catch (IOException | ClassNotFoundException e) {
+            return null;
+        }
     }
 }

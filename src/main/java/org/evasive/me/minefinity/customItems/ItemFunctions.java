@@ -12,17 +12,10 @@ import org.evasive.me.minefinity.customItems.pickaxe.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.pickaxe.PickaxeComponent;
 import org.evasive.me.minefinity.customItems.pickaxe.PickaxeItem;
 
+import static org.evasive.me.minefinity.core.items.BaseCustomItem.itemIDKey;
+
 public class ItemFunctions {
 
-    public static final NamespacedKey itemIDKey = new NamespacedKey(Minefinity.getCore(), "ItemID");
-    private static final NamespacedKey valueKey = new NamespacedKey(Minefinity.getCore(), "Value");
-    public static final NamespacedKey headKey = new NamespacedKey(Minefinity.getCore(), "Head");
-    public static final NamespacedKey coreKey = new NamespacedKey(Minefinity.getCore(), "Core");
-    public static final NamespacedKey handleKey = new NamespacedKey(Minefinity.getCore(), "Handle");
-
-    public static void setItemId(ItemMeta itemMeta, String id){
-        itemMeta.getPersistentDataContainer().set(itemIDKey, PersistentDataType.STRING, id);
-    }
 
     public static String getItemId(ItemStack itemStack){
         return itemStack.getItemMeta().getPersistentDataContainer().get(itemIDKey, PersistentDataType.STRING);
@@ -31,10 +24,6 @@ public class ItemFunctions {
     public static boolean hasItemId(ItemStack itemStack){
         if(itemStack == null || !itemStack.hasItemMeta() || !itemStack.getItemMeta().getPersistentDataContainer().has(itemIDKey)) return false;
         return itemStack.getItemMeta().getPersistentDataContainer().has(itemIDKey);
-    }
-
-    public static boolean hasValueKey(ItemStack itemStack){
-        return itemStack.getItemMeta().getPersistentDataContainer().has(valueKey);
     }
 
     public static boolean isPickaxe(ItemStack itemStack){

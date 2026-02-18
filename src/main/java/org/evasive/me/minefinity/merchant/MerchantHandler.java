@@ -7,20 +7,21 @@ import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.items.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.CustomItemRegistry;
 import org.evasive.me.minefinity.customItems.items.ResourceItem;
-import org.evasive.me.minefinity.utils.EconUtils;
-import org.evasive.me.minefinity.utils.Messages;
+import org.evasive.me.minefinity.player.sevices.EconomyService;
+import org.evasive.me.minefinity.utils.TextConversions;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.evasive.me.minefinity.customItems.ItemFunctions.getItemId;
 import static org.evasive.me.minefinity.customItems.ItemFunctions.hasItemId;
-import static org.evasive.me.minefinity.customItems.ItemNameBuilder.buildRarityColor;
+import static org.evasive.me.minefinity.utils.TextConversions.buildRarityColor;
 
 public class MerchantHandler {
 
+    EconomyService economyService = Minefinity.core.getEconomyService();
+
     public void handleInventorySell(Player player){
-        float totalCost = 0;
         Inventory inventory = player.getInventory();
 
         Map<String, Integer> salesMap = new HashMap<>();
@@ -48,9 +49,9 @@ public class MerchantHandler {
     }
 
     public void handleBackpackSell(Player player){
-        Map<String, Integer> playerBackpackMap = Minefinity.playerManager.getBackpackStorage(player);
+        Map<String, Integer> playerBackpackMap = Minefinity.getCore().getBackpackService().getBackpackStorage(player);
         sellMapData(player, playerBackpackMap);
-        Minefinity.playerManager.clearBackpackStorage(player);
+        Minefinity.getCore().getBackpackService().clearBackpackStorage(player);
     }
 
     public void sellMapData(Player player, Map<String, Integer> playerSaleMap){
@@ -62,12 +63,12 @@ public class MerchantHandler {
             int stackSize = entry.getValue();
             if(stackSize <= 0 || singleCost <= 0) continue;
             totalCost += stackSize * singleCost;
-            player.sendMessage(Messages.parse("<gray>Sold " + buildRarityColor(itemId, baseCustomItem.getRarity()) + " <gray>x" + stackSize + " for <green>$" + stackSize * singleCost));
+            player.sendMessage(TextConversions.parse("<gray>Sold " + buildRarityColor(itemId, baseCustomItem.getRarity()) + " <gray>x" + stackSize + " for <green>$" + stackSize * singleCost));
         }
         if(totalCost == 0)
-            player.sendMessage(Messages.parse("<red>You do not have any items to sell"));
+            player.sendMessage(TextConversions.parse("<red>You do not have any items to sell"));
         else
-            EconUtils.addMoney(player.getUniqueId(), totalCost);
+            economyService.addBalance(player, totalCost);
     }
 
 }

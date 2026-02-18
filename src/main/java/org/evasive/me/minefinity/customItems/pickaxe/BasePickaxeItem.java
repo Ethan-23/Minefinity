@@ -5,22 +5,27 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.items.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.items.CustomItemType;
 import org.evasive.me.minefinity.rarity.Rarity;
 import org.evasive.me.minefinity.utils.ItemBuilder;
-import org.evasive.me.minefinity.utils.Messages;
+import org.evasive.me.minefinity.utils.TextConversions;
 
 import java.util.List;
 import java.util.Objects;
 
 import static org.evasive.me.minefinity.customItems.ItemFunctions.*;
-import static org.evasive.me.minefinity.customItems.ItemNameBuilder.buildItemRarity;
-import static org.evasive.me.minefinity.customItems.ItemNameBuilder.formatItemName;
+import static org.evasive.me.minefinity.utils.TextConversions.buildItemRarity;
+import static org.evasive.me.minefinity.utils.TextConversions.formatItemName;
 
 public class BasePickaxeItem extends BaseCustomItem {
 
     private final float baseMiningSpeed;
+
+    public static final NamespacedKey headKey = new NamespacedKey(Minefinity.getCore(), "Head");
+    public static final NamespacedKey coreKey = new NamespacedKey(Minefinity.getCore(), "Core");
+    public static final NamespacedKey handleKey = new NamespacedKey(Minefinity.getCore(), "Handle");
 
     public BasePickaxeItem(String id, Material material, Rarity rarity, CustomItemType itemType, float baseMiningSpeed) {
         super(id, material, rarity, itemType, -1);
@@ -33,7 +38,7 @@ public class BasePickaxeItem extends BaseCustomItem {
 
     @Override
     protected Component getName() {
-        return Messages.parse("<gray>Pickaxe");
+        return TextConversions.parse("<gray>Pickaxe");
     }
 
     @Override
@@ -57,6 +62,7 @@ public class BasePickaxeItem extends BaseCustomItem {
                 .addPersistentDataContainer(coreKey, "NONE")
                 .addPersistentDataContainer(handleKey, "NONE")
                 .addLore(getLore())
+                .addUnbreakable()
                 .build();
     }
 
@@ -69,21 +75,21 @@ public class BasePickaxeItem extends BaseCustomItem {
 
         if(!Objects.equals(headId, "NONE")){
             String color = PickaxeComponent.valueOf(headId).getBuilder().getColorCode();
-            builder.setDisplayName(Messages.parse("<color:<color>><type> Pickaxe", Placeholder.parsed("color", color), Placeholder.parsed("type", formatItemName(headId).split(" ")[0])));
+            builder.setDisplayName(TextConversions.parse("<color:<color>><type> Pickaxe", Placeholder.parsed("color", color), Placeholder.parsed("type", formatItemName(headId).split(" ")[0])));
         }
 
         float totalSpeed = baseMiningSpeed;
 
         List<Component> lore = List.of(
-                Messages.parse("<gray>Mining Speed: <white><speed>",
+                TextConversions.parse("<gray>Mining Speed: <white><speed>",
                         Placeholder.parsed("speed", String.format("%.2f", totalSpeed))),
-                Messages.parse(""),
-                Messages.parse("<gray>Components:"),
+                TextConversions.parse(""),
+                TextConversions.parse("<gray>Components:"),
                 componentLine(headId),
                 componentLine(coreId),
                 componentLine(handleId),
-                Messages.parse(""),
-                Messages.parse("<bold><gray>" + formatItemName(getID()))
+                TextConversions.parse(""),
+                TextConversions.parse("<bold><gray>" + formatItemName(getID()))
                 //buildItemRarity(getRarity())
         );
 
@@ -95,7 +101,7 @@ public class BasePickaxeItem extends BaseCustomItem {
         String part = value.equals("NONE") ? "Empty" : value;
         String color = value.equals("NONE") ? "gray" : PickaxeComponent.valueOf(part.toUpperCase()).getBuilder().getColorCode();
 
-        return Messages.parse("<gray>[<color:<pcolor>><part><gray>]",
+        return TextConversions.parse("<gray>[<color:<pcolor>><part><gray>]",
                 Placeholder.parsed("part", formatItemName(part)),
                 Placeholder.parsed("pcolor", color)
         );

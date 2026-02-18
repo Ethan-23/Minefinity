@@ -11,13 +11,13 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.npcs.NpcInstance;
 import org.evasive.me.minefinity.npcs.npc.NpcType;
-import org.evasive.me.minefinity.utils.Messages;
+import org.evasive.me.minefinity.utils.TextConversions;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.evasive.me.minefinity.customItems.ItemNameBuilder.formatItemName;
+import static org.evasive.me.minefinity.utils.TextConversions.formatItemName;
 
 public class SpawnPackets {
 
@@ -35,7 +35,7 @@ public class SpawnPackets {
                 true,
                 0,
                 GameMode.CREATIVE,
-                Messages.parse(formatItemName(name)),
+                TextConversions.parse(formatItemName(name)),
                 null
         );
 
@@ -50,7 +50,7 @@ public class SpawnPackets {
         );
 
         PacketEvents.getAPI().getPlayerManager().sendPacket(player, addPlayerPacket);
-        PacketEvents.getAPI().getPlayerManager().sendPacket(player, addPlayerListed);
+        //PacketEvents.getAPI().getPlayerManager().sendPacket(player, addPlayerListed);
 
         WrapperPlayServerSpawnEntity spawnPlayer = new WrapperPlayServerSpawnEntity(
                 npcInstance.getEntityId(),

@@ -6,6 +6,8 @@ import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.automation.miner.data.AutoMiner;
 import org.evasive.me.minefinity.automation.miner.gui.selection.MinerBlockSelectionGui;
+import org.evasive.me.minefinity.player.sevices.AutoMinerService;
+import org.evasive.me.minefinity.player.sevices.BlockTierService;
 
 import java.util.Map;
 
@@ -14,20 +16,19 @@ import static org.evasive.me.minefinity.customItems.ItemFunctions.*;
 
 public class MinerMainHandler {
 
+    AutoMinerService autoMinerService = Minefinity.core.getAutoMinerService();
 
     public void handleCollectSlot(InventoryClickEvent event, Player player) {
         event.setCancelled(true);
 
-        AutoMiner miner = Minefinity.playerManager.getPlayerData(player).getAutoMiner();
-
-        Map<String, Integer> itemMap = miner.getItemStorage();
+        Map<String, Integer> itemMap = autoMinerService.getAutoMinerStorage(player);
 
         for (Map.Entry<String, Integer> entry : itemMap.entrySet()) {
             int remaining = entry.getValue();
 
             int overflow = Minefinity.itemGiver.givePlayerDrops(player, entry.getKey(), remaining);
 
-            miner.removeItemStorage(entry.getKey(), remaining - overflow);
+            autoMinerService.removeAutoMinerStorage(player, entry.getKey(), remaining - overflow);
 
         }
     }
@@ -39,11 +40,11 @@ public class MinerMainHandler {
         }
 
         if(cursorItem.isEmpty()){
-            Minefinity.playerManager.getPlayerData(player).getAutoMiner().setPickaxe(null);
+            autoMinerService.setAutoMinerPickaxe(player, null);
             return true;
         }
 
-        Minefinity.playerManager.getPlayerData(player).getAutoMiner().setPickaxe(cursorItem.clone());
+        autoMinerService.setAutoMinerPickaxe(player, cursorItem.clone());
         return true;
 
     }

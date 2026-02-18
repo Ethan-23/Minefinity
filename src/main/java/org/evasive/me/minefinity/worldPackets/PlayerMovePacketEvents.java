@@ -22,21 +22,6 @@ public class PlayerMovePacketEvents extends PacketListenerAbstract {
         if(event.getPacketType() == PacketType.Play.Client.PLAYER_POSITION_AND_ROTATION || event.getPacketType() == PacketType.Play.Client.PLAYER_POSITION || event.getPacketType() == PacketType.Play.Client.PLAYER_ROTATION){
 
             Player player = event.getPlayer();
-
-            /*if(npcManager.getNpcTracker().getPlayerNpcList(player.getUniqueId()) == null){
-                return;
-            }
-
-            for(NpcInstance npc: npcManager.getNpcTracker().getPlayerNpcList(player.getUniqueId())){
-                Location location = npc.getLocation();
-                if(player.getLocation().distance(new org.bukkit.Location(player.getWorld(), location.getX(), location.getY(), location.getZ())) > 15)
-                    continue;
-
-                //If the player is within 15 blocks of a npc
-                npcManager.lookAtPlayer(player, npc);
-
-            }
-*/
             checkForMiningRegion(player);
         }
     }
@@ -46,12 +31,13 @@ public class PlayerMovePacketEvents extends PacketListenerAbstract {
             player.registerAttribute(Attribute.BLOCK_BREAK_SPEED);
         }
         //Makes it so if you enter the area of the main block break speed attr set to 0
-        if(getRegionAtLocation(player.getLocation()) == null)
-            return;
-        if(getRegionAtLocation(player.getLocation()).getId().equals("mainblock")){
-            player.getAttribute(Attribute.BLOCK_BREAK_SPEED).setBaseValue(0);
-        }else{
+        if(getRegionAtLocation(player.getLocation()) == null){
             player.getAttribute(Attribute.BLOCK_BREAK_SPEED).setBaseValue(1);
+            return;
+        }
+
+        if(getRegionAtLocation(player.getLocation()).getId().equals("minefinity_town_center")){
+            player.getAttribute(Attribute.BLOCK_BREAK_SPEED).setBaseValue(0);
         }
     }
 

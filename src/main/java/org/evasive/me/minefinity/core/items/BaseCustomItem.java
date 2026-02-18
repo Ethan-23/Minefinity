@@ -2,20 +2,24 @@ package org.evasive.me.minefinity.core.items;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.customItems.items.CustomItemType;
 import org.evasive.me.minefinity.rarity.Rarity;
 import org.evasive.me.minefinity.utils.ItemBuilder;
-import org.evasive.me.minefinity.utils.Messages;
+import org.evasive.me.minefinity.utils.TextConversions;
 
 import java.util.List;
 
-import static org.evasive.me.minefinity.customItems.ItemFunctions.itemIDKey;
-import static org.evasive.me.minefinity.customItems.ItemNameBuilder.*;
+import static org.evasive.me.minefinity.utils.TextConversions.*;
 
 public class BaseCustomItem implements CustomItem {
 
     protected ItemStack cachedStack;
+
+    public static final NamespacedKey itemIDKey = new NamespacedKey(Minefinity.getCore(), "ItemID");
+    private static final NamespacedKey valueKey = new NamespacedKey(Minefinity.getCore(), "Value");
 
     private final String id;
     private final Material material;
@@ -52,7 +56,7 @@ public class BaseCustomItem implements CustomItem {
     }
 
     protected Component getName() {
-        return Messages.parse(buildRarityColor(getId(), getRarity()));
+        return TextConversions.parse(buildRarityColor(getId(), getRarity()));
     }
 
     protected List<String> getLore() {

@@ -13,6 +13,7 @@ import org.evasive.me.minefinity.utils.ItemBuilder;
 import static org.evasive.me.minefinity.customItems.ItemFunctions.*;
 import static org.evasive.me.minefinity.customItems.ItemFunctions.getPickaxeComponent;
 import static org.evasive.me.minefinity.customItems.ItemFunctions.isPickaxe;
+import static org.evasive.me.minefinity.customItems.pickaxe.BasePickaxeItem.*;
 
 public class PickaxeAnvilHandler {
 

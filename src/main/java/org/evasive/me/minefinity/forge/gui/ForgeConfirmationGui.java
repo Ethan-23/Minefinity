@@ -6,11 +6,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.gui.BaseGui;
-import org.evasive.me.minefinity.customItems.CustomItemRegistry;
+import org.evasive.me.minefinity.core.items.CustomItem;
 import org.evasive.me.minefinity.forge.data.ForgeCategories;
-import org.evasive.me.minefinity.forge.recipes.BaseCrafting;
+import org.evasive.me.minefinity.forge.recipes.BaseForgeRecipe;
 import org.evasive.me.minefinity.utils.ItemBuilder;
-import org.evasive.me.minefinity.utils.Messages;
+import org.evasive.me.minefinity.utils.TextConversions;
 import org.evasive.me.minefinity.utils.TimeCalculator;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,12 +28,12 @@ public class ForgeConfirmationGui extends BaseGui {
     public static final int EXIT_BUTTON_SLOT = 49;
     private static final int INVENTORY_SIZE = 54;
     private static final int STACK_SIZE = 64;
-    private final BaseCrafting crafting;
+    private final BaseForgeRecipe crafting;
     ForgeHandler forgeHandler = new ForgeHandler();
 
 
-    public ForgeConfirmationGui(Player player, BaseCrafting crafting) {
-        super(player, INVENTORY_SIZE, Messages.parse("Forge Confirmation"));
+    public ForgeConfirmationGui(Player player, BaseForgeRecipe crafting) {
+        super(player, INVENTORY_SIZE, TextConversions.parse("Forge Confirmation"));
         this.crafting = crafting;
         build();
     }
@@ -54,7 +54,7 @@ public class ForgeConfirmationGui extends BaseGui {
     }
 
     private void buildResult(){
-        inventory.setItem(RESULT_PREVIEW_SLOT, crafting.getResult().clone());
+        inventory.setItem(RESULT_PREVIEW_SLOT, crafting.getResult().getBuilder().buildItem().clone());
     }
 
     private void buildButtons(){
@@ -64,18 +64,17 @@ public class ForgeConfirmationGui extends BaseGui {
     }
 
     private ItemStack buildStartButton() {
-        return new ItemBuilder(Material.FURNACE, Messages.parse("<bold><green>START")).addBlank()
+        return new ItemBuilder(Material.FURNACE, TextConversions.parse("<bold><green>START")).addBlank()
                 .addLore("<gold>Forge Time: <yellow>" + TimeCalculator.getString(crafting.getCraftTime() * 1000L))
                 .build();
     }
 
     private void buildRecipePreview(){
         int slotIndex = 0;
-        for (Map.Entry<String, Integer> entry : crafting.getRecipe().entrySet()) {
+        for (Map.Entry<CustomItem, Integer> entry : crafting.getRecipe().entrySet()) {
             if (slotIndex >= RECIPE_SLOTS.size()) break;
 
-            String itemId = entry.getKey();
-            ItemStack item = CustomItemRegistry.getByID(itemId).getBuilder().buildItem();
+            ItemStack item = entry.getKey().getBuilder().buildItem();
             int amount = entry.getValue();
 
             while (amount > 0) {

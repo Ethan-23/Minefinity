@@ -2,7 +2,7 @@ package org.evasive.me.minefinity.forge.data;
 
 import org.bukkit.Material;
 import org.evasive.me.minefinity.utils.ItemBuilder;
-import org.evasive.me.minefinity.utils.Messages;
+import org.evasive.me.minefinity.utils.TextConversions;
 
 public enum ForgeCategories {
     MATERIALS(Material.COBBLESTONE, "Materials"),
@@ -19,6 +19,6 @@ public enum ForgeCategories {
     }
 
     public ItemBuilder toItemBuilder() {
-        return new ItemBuilder(material, Messages.parse("<yellow>" + name + "</yellow>"));
+        return new ItemBuilder(material, TextConversions.parse("<yellow>" + name + "</yellow>"));
     }
 }

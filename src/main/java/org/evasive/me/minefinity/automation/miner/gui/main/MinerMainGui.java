@@ -1,28 +1,33 @@
 package org.evasive.me.minefinity.automation.miner.gui.main;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.automation.miner.data.AutoMiner;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.customItems.CustomItemRegistry;
+import org.evasive.me.minefinity.player.sevices.AutoMinerService;
+import org.evasive.me.minefinity.resourceblock.BlockType;
 import org.evasive.me.minefinity.utils.ItemBuilder;
-import org.evasive.me.minefinity.utils.Messages;
+import org.evasive.me.minefinity.utils.TextConversions;
 
 import java.util.List;
 import java.util.Map;
 
-import static org.evasive.me.minefinity.customItems.ItemNameBuilder.buildRarityColor;
 import static org.evasive.me.minefinity.utils.GenericGuiItems.fillerPane;
 import static org.evasive.me.minefinity.utils.GenericGuiItems.noneBarrier;
+import static org.evasive.me.minefinity.utils.TextConversions.buildRarityColor;
+import static org.evasive.me.minefinity.utils.TextConversions.intToRoman;
 
 
 public class MinerMainGui extends BaseGui {
 
     MinerMainHandler minerMainEvents = new MinerMainHandler();
+
+    private final AutoMinerService autoMinerService;
 
     private static final int INVENTORY_SIZE = 27;
     public static final int PICKAXE_SLOT = 11;
@@ -31,7 +36,8 @@ public class MinerMainGui extends BaseGui {
     public static final int COLLECT_SLOT = 22;
 
     public MinerMainGui(Player player) {
-        super(player, INVENTORY_SIZE, Messages.parse("Miner"));
+        super(player, INVENTORY_SIZE, TextConversions.parse("Miner"));
+        autoMinerService = Minefinity.getCore().getAutoMinerService();
         build();
     }
 
@@ -43,26 +49,36 @@ public class MinerMainGui extends BaseGui {
     }
 
     private void addButtons(Player player){
-        AutoMiner miner = Minefinity.playerManager.getPlayerData(player).getAutoMiner();
-
-        ItemStack pickaxe = miner.getPickaxe();
-        inventory.setItem(PICKAXE_SLOT, pickaxe != null ? pickaxe : new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, Messages.parse("Pickaxe Slot")).build()); // Stored pickaxe
-        inventory.setItem(BLOCK_SLOT, miner.getBlockType() != null ? ItemStack.of(miner.getBlockType().getBlock().material()) : noneBarrier); // Stored selected block
-        inventory.setItem(UPGRADE_SLOT, new ItemBuilder(Material.INK_SAC, Messages.parse("INK")).build()); // Stored upgrade
+        ItemStack pickaxe = autoMinerService.getAutoMinerPickaxe(player);
+        BlockType blockType = autoMinerService.getAutoMinerBlockType(player);
+        inventory.setItem(PICKAXE_SLOT, pickaxe != null ? pickaxe : new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, TextConversions.parse("Pickaxe Slot")).build()); // Stored pickaxe
+        inventory.setItem(BLOCK_SLOT, blockType != null ? createBlockButton(blockType) : noneBarrier); // Stored selected block
+        inventory.setItem(UPGRADE_SLOT, new ItemBuilder(Material.INK_SAC, TextConversions.parse("INK")).build()); // Stored upgrade
         inventory.setItem(COLLECT_SLOT, createCollectButton(player)); // Stored upgrade
     }
 
+    private ItemStack createBlockButton(BlockType blockType){
+        Component name = TextConversions.parse("<gray>(<white>" + intToRoman(blockType.ordinal()+1) +"<gray>) <white>" + blockType.getBlock().name());
+
+        return new ItemBuilder(blockType.getBlock().material(), name).addLore(
+                List.of(
+                        "<gray>Block Health: <white>" + blockType.getBlock().health(),
+                        "",
+                        "<#a1a1a1>Left-Click <gray>to Change"
+                )
+        ).build();
+    }
+
+
     private ItemStack createCollectButton(Player player){
 
-        AutoMiner autoMiner = Minefinity.playerManager.getPlayerData(player).getAutoMiner();
+        String storageAmountString = "<gray>(" + autoMinerService.getAutoMinerStoredBlockAmount(player) + "/" + autoMinerService.getAutoMinerStorageCap(player) + ")";
 
-        String storageAmountString = "<gray>(" + autoMiner.getStoredBlockAmount() + "/" + autoMiner.getStorageCap() + ")";
-
-        ItemBuilder collectBuilder = new ItemBuilder(Material.CHEST_MINECART, Messages.parse("<gold><bold>Block Storage</bold>"));
+        ItemBuilder collectBuilder = new ItemBuilder(Material.CHEST_MINECART, TextConversions.parse("<gold><bold>Block Storage</bold>"));
 
         collectBuilder.addLore(storageAmountString).addBlank();
 
-        Map<String, Integer> itemStorage = autoMiner.getItemStorage();
+        Map<String, Integer> itemStorage = autoMinerService.getAutoMinerStorage(player);
 
         for (Map.Entry<String, Integer> entry : itemStorage.entrySet()) {
             if(entry.getValue() == 0) continue;

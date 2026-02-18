@@ -7,15 +7,15 @@ import org.evasive.me.minefinity.core.items.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.items.CustomItemType;
 import org.evasive.me.minefinity.rarity.Rarity;
 import org.evasive.me.minefinity.utils.ItemBuilder;
-import org.evasive.me.minefinity.utils.Messages;
+import org.evasive.me.minefinity.utils.TextConversions;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.evasive.me.minefinity.customItems.ItemNameBuilder.buildItemRarity;
-import static org.evasive.me.minefinity.customItems.ItemNameBuilder.formatItemName;
+import static org.evasive.me.minefinity.utils.TextConversions.buildItemRarity;
+import static org.evasive.me.minefinity.utils.TextConversions.formatItemName;
 
 public class BaseBackpackItem extends BaseCustomItem {
 
@@ -32,7 +32,7 @@ public class BaseBackpackItem extends BaseCustomItem {
 
     @Override
     protected Component getName() {
-        return Messages.parse(formatItemName(getID())).color(getRarity().getRarityBuilder().getTextColor());
+        return TextConversions.parse(formatItemName(getID())).color(getRarity().getRarityBuilder().getTextColor());
     }
 
     //Update lore to take multiple lines if too long

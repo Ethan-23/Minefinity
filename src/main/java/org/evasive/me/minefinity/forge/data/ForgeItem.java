@@ -10,4 +10,12 @@ public class ForgeItem {
         this.timeFinished = timeFinished;
         this.itemStack = itemStack;
     }
+
+    public long getTimeFinished() {
+        return timeFinished;
+    }
+
+    public ItemStack getItemStack() {
+        return itemStack;
+    }
 }
