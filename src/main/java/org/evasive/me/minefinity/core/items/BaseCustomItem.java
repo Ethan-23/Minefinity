@@ -5,7 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.customItems.items.CustomItemType;
+import org.evasive.me.minefinity.customItems.types.CustomItemType;
 import org.evasive.me.minefinity.rarity.Rarity;
 import org.evasive.me.minefinity.utils.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;

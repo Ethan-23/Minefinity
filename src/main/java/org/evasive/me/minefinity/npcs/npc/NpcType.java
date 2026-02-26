@@ -1,5 +1,6 @@
 package org.evasive.me.minefinity.npcs.npc;
 
+import org.evasive.me.minefinity.npcs.framework.NpcBehavior;
 import org.evasive.me.minefinity.npcs.npc.passive.*;
 
 import java.util.function.Supplier;

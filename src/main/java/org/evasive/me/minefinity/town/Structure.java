@@ -1,50 +1,38 @@
 package org.evasive.me.minefinity.town;
 
 import org.bukkit.Material;
-import org.evasive.me.minefinity.core.items.BaseItemRecipe;
-import org.evasive.me.minefinity.customItems.items.ResourceItem;
-import org.evasive.me.minefinity.workshop.WorkshopToolsTiers;
+import org.evasive.me.minefinity.core.recipe.BaseItemRecipe;
+import org.evasive.me.minefinity.customItems.types.ResourceItem;
 
 import java.util.List;
 import java.util.Map;
 
 public enum Structure {
-    TOWNHALL(5,
-            List.of(
-                    new BaseItemRecipe(Map.of(ResourceItem.OAK_PLANK, 0, ResourceItem.COBBLESTONE, 0, ResourceItem.GRAVEL, 0)),
-                    new BaseItemRecipe(Map.of(ResourceItem.OAK_PLANK, 10, ResourceItem.COBBLESTONE, 10, ResourceItem.GRAVEL, 10)),
-                    new BaseItemRecipe(Map.of(ResourceItem.OAK_PLANK, 1000, ResourceItem.COBBLESTONE, 500, ResourceItem.GRAVEL, 2000)),
-                    new BaseItemRecipe(Map.of(ResourceItem.OAK_PLANK, 1000, ResourceItem.COBBLESTONE, 500, ResourceItem.GRAVEL, 2000))
+    TOWNHALL(List.of(
+                    new BaseItemRecipe(Map.of(ResourceItem.TIMBER, 0, ResourceItem.ROCKY_STONE, 0)),
+                    new BaseItemRecipe(Map.of(ResourceItem.TIMBER, 30, ResourceItem.ROCKY_STONE, 30)),
+                    new BaseItemRecipe(Map.of(ResourceItem.MOSSY_TIMBER, 100, ResourceItem.ROCKY_STONE, 100))
                     ),
             Material.LECTERN
     ),
-    MERCHANT(5,
-            List.of(
-                    new BaseItemRecipe(Map.of(ResourceItem.OAK_PLANK, 1000, ResourceItem.COBBLESTONE, 500, ResourceItem.GRAVEL, 2000)),
-                    new BaseItemRecipe(Map.of(ResourceItem.OAK_PLANK, 1000, ResourceItem.COBBLESTONE, 500, ResourceItem.GRAVEL, 2000)),
-                    new BaseItemRecipe(Map.of(ResourceItem.OAK_PLANK, 1000, ResourceItem.COBBLESTONE, 500, ResourceItem.GRAVEL, 2000)),
-                    new BaseItemRecipe(Map.of(ResourceItem.OAK_PLANK, 1000, ResourceItem.COBBLESTONE, 500, ResourceItem.GRAVEL, 2000)),
-                    new BaseItemRecipe(Map.of(ResourceItem.OAK_PLANK, 1000, ResourceItem.COBBLESTONE, 500, ResourceItem.GRAVEL, 2000))
+    MERCHANT(List.of(
+                    new BaseItemRecipe(Map.of(ResourceItem.TIMBER, 0, ResourceItem.ROCKY_STONE, 0)),
+                    new BaseItemRecipe(Map.of(ResourceItem.TIMBER, 30, ResourceItem.ROCKY_STONE, 30)),
+                    new BaseItemRecipe(Map.of(ResourceItem.MOSSY_TIMBER, 100, ResourceItem.ROCKY_STONE, 100))
             ),
             Material.CHEST
     ),
-    FORGE(5,
-            List.of(
-                    new BaseItemRecipe(Map.of(ResourceItem.OAK_PLANK, 1000, ResourceItem.COBBLESTONE, 500, ResourceItem.GRAVEL, 2000)),
-                    new BaseItemRecipe(Map.of(ResourceItem.OAK_PLANK, 1000, ResourceItem.COBBLESTONE, 500, ResourceItem.GRAVEL, 2000)),
-                    new BaseItemRecipe(Map.of(ResourceItem.OAK_PLANK, 1000, ResourceItem.COBBLESTONE, 500, ResourceItem.GRAVEL, 2000)),
-                    new BaseItemRecipe(Map.of(ResourceItem.OAK_PLANK, 1000, ResourceItem.COBBLESTONE, 500, ResourceItem.GRAVEL, 2000)),
-                    new BaseItemRecipe(Map.of(ResourceItem.OAK_PLANK, 1000, ResourceItem.COBBLESTONE, 500, ResourceItem.GRAVEL, 2000))
+    FORGE(List.of(
+                    new BaseItemRecipe(Map.of(ResourceItem.TIMBER, 0, ResourceItem.ROCKY_STONE, 0)),
+                    new BaseItemRecipe(Map.of(ResourceItem.TIMBER, 30, ResourceItem.ROCKY_STONE, 30)),
+                    new BaseItemRecipe(Map.of(ResourceItem.MOSSY_TIMBER, 100, ResourceItem.ROCKY_STONE, 100))
             ),
             Material.FURNACE
             ),
-    WORKSHOP(5,
-            List.of(
-                    new BaseItemRecipe(Map.of(ResourceItem.OAK_PLANK, 1000, ResourceItem.COBBLESTONE, 500, ResourceItem.GRAVEL, 2000)),
-                    new BaseItemRecipe(Map.of(ResourceItem.OAK_PLANK, 1000, ResourceItem.COBBLESTONE, 500, ResourceItem.GRAVEL, 2000)),
-                    new BaseItemRecipe(Map.of(ResourceItem.OAK_PLANK, 1000, ResourceItem.COBBLESTONE, 500, ResourceItem.GRAVEL, 2000)),
-                    new BaseItemRecipe(Map.of(ResourceItem.OAK_PLANK, 1000, ResourceItem.COBBLESTONE, 500, ResourceItem.GRAVEL, 2000)),
-                    new BaseItemRecipe(Map.of(ResourceItem.OAK_PLANK, 1000, ResourceItem.COBBLESTONE, 500, ResourceItem.GRAVEL, 2000))
+    WORKSHOP(List.of(
+                    new BaseItemRecipe(Map.of(ResourceItem.TIMBER, 0, ResourceItem.ROCKY_STONE, 0)),
+                    new BaseItemRecipe(Map.of(ResourceItem.TIMBER, 30, ResourceItem.ROCKY_STONE, 30)),
+                    new BaseItemRecipe(Map.of(ResourceItem.MOSSY_TIMBER, 100, ResourceItem.ROCKY_STONE, 100))
             ),
             Material.STONECUTTER
     ),
@@ -52,8 +40,8 @@ public enum Structure {
 
     final BaseStructure baseStructure;
 
-    Structure(int maxLevel, List<BaseItemRecipe> upgradeMaps, Material displayMaterial) {
-        this.baseStructure = new BaseStructure(maxLevel, upgradeMaps, displayMaterial);
+    Structure(List<BaseItemRecipe> upgradeMaps, Material displayMaterial) {
+        this.baseStructure = new BaseStructure(upgradeMaps, displayMaterial);
     }
 
     public BaseStructure getBaseStructure(){

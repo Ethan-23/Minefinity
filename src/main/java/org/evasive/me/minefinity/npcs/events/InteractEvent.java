@@ -66,8 +66,8 @@ public class InteractEvent extends PacketListenerAbstract {
     }
 
     private void adminInteract(Player player, NpcInstance npc) {
-        player.sendMessage("Removed Npc: " + npc.getType().name() + "With UUID: " + npc.getNpcUuid());
-
+        player.sendMessage("Removed Npc: " + npc.getType().name() + " With UUID: " + npc.getNpcUuid());
+        player.sendMessage("NPC STAND: " + npc.getStand().toString());
         Bukkit.getScheduler().runTask(Minefinity.getCore(), () -> npc.getStand().remove());
 
 

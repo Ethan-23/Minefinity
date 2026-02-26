@@ -4,7 +4,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.items.BaseCustomItem;
-import org.evasive.me.minefinity.customItems.items.CustomItemType;
+import org.evasive.me.minefinity.customItems.types.CustomItemType;
 import org.evasive.me.minefinity.rarity.Rarity;
 import org.evasive.me.minefinity.utils.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;

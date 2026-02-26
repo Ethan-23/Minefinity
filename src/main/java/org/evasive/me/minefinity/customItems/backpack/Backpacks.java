@@ -2,8 +2,9 @@ package org.evasive.me.minefinity.customItems.backpack;
 
 import org.bukkit.Material;
 import org.evasive.me.minefinity.core.items.CustomItem;
-import org.evasive.me.minefinity.customItems.items.CustomItemType;
-import org.evasive.me.minefinity.customItems.items.ResourceItem;
+import org.evasive.me.minefinity.customItems.types.CustomItemType;
+import org.evasive.me.minefinity.customItems.types.FuelItem;
+import org.evasive.me.minefinity.customItems.types.ResourceItem;
 import org.evasive.me.minefinity.rarity.Rarity;
 
 import java.util.Set;
@@ -19,14 +20,24 @@ public enum Backpacks implements CustomItem {
                     ResourceItem.CLAY_BALL.getID(),
                     ResourceItem.COBBLESTONE.getID(),
                     ResourceItem.ANDESITE.getID(),
+                    ResourceItem.TUFF.getID(),
                     ResourceItem.GRANITE.getID(),
                     ResourceItem.MOSSY_COBBLESTONE.getID(),
                     ResourceItem.DIORITE.getID(),
-                    ResourceItem.TUFF.getID(),
-                    ResourceItem.DEEPSLATE.getID(),
                     ResourceItem.CALCITE.getID(),
+                    ResourceItem.DEEPSLATE.getID(),
                     ResourceItem.OBSIDIAN.getID(),
                     ResourceItem.REINFORCED_DEEPSLATE.getID()
+            )
+    ),
+    SPECIAL_BACKPACK(Material.SUGAR,
+            Material.GREEN_BUNDLE,
+            Rarity.UNIQUE,
+            640,
+            Set.of(
+                    ResourceItem.FLINT.getID(),
+                    ResourceItem.ROCK.getID(),
+                    ResourceItem.MOSS.getID()
             )
     ),
     ORE_BACKPACK(Material.SUGAR,
@@ -38,6 +49,9 @@ public enum Backpacks implements CustomItem {
                     ResourceItem.COPPER_INGOT.getID(),
                     ResourceItem.RAW_IRON.getID(),
                     ResourceItem.IRON_INGOT.getID(),
+                    ResourceItem.RAW_TIN.getID(),
+                    ResourceItem.TIN_INGOT.getID(),
+                    ResourceItem.BRONZE_INGOT.getID(),
                     ResourceItem.LAPIS.getID(),
                     ResourceItem.REDSTONE.getID(),
                     ResourceItem.RAW_GOLD.getID(),
@@ -47,6 +61,31 @@ public enum Backpacks implements CustomItem {
                     ResourceItem.EMERALD.getID(),
                     ResourceItem.DIAMOND_ORE.getID(),
                     ResourceItem.EMERALD_ORE.getID()
+            )
+    ),
+    CRAFTABLES_BACKPACK(Material.SUGAR,
+            Material.RED_BUNDLE,
+            Rarity.RADIANT,
+            640,
+            Set.of(
+                    ResourceItem.TIMBER.getID(),
+                    ResourceItem.MOSSY_TIMBER.getID(),
+                    ResourceItem.ROCKY_STONE.getID(),
+                    ResourceItem.TOUGH_STONE.getID(),
+                    ResourceItem.BRICK.getID(),
+                    ResourceItem.STONE.getID()
+            )
+    ),
+    FUEL_BACKPACK(Material.SUGAR,
+            Material.BLACK_BUNDLE,
+            Rarity.EXQUISITE,
+            640,
+            Set.of(
+                    FuelItem.BARK.getID(),
+                    FuelItem.CHARCOAL.getID(),
+                    FuelItem.COAL.getID(),
+                    FuelItem.ENRICHED_COAL.getID(),
+                    FuelItem.MAGMA_COAL.getID()
             )
     ),
 

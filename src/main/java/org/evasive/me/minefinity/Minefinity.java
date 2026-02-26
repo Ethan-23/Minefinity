@@ -4,39 +4,53 @@ import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.checkerframework.checker.units.qual.A;
 import org.evasive.me.minefinity.admin.commands.*;
+import org.evasive.me.minefinity.admin.events.VanishListener;
 import org.evasive.me.minefinity.admin.commands.economy.Economy;
+import org.evasive.me.minefinity.admin.service.VanishService;
 import org.evasive.me.minefinity.anvil.commands.PickaxeAnvilCommand;
 import org.evasive.me.minefinity.core.gui.GuiListener;
-import org.evasive.me.minefinity.customItems.ItemGiver;
+import org.evasive.me.minefinity.customItems.backpack.BackpackService;
+import org.evasive.me.minefinity.customItems.framework.ItemGiver;
 import org.evasive.me.minefinity.customItems.backpack.Backpacks;
-import org.evasive.me.minefinity.customItems.backpack.events.ItemPickupEvent;
-import org.evasive.me.minefinity.customItems.backpack.events.OpenBackpackEvent;
+import org.evasive.me.minefinity.customItems.backpack.events.ItemPickupListener;
+import org.evasive.me.minefinity.customItems.backpack.events.OpenBackpackListener;
 import org.evasive.me.minefinity.customItems.pickaxe.PickaxeComponent;
-import org.evasive.me.minefinity.automation.AutomationTimer;
-import org.evasive.me.minefinity.customItems.CustomItemRegistry;
-import org.evasive.me.minefinity.customItems.items.FuelItem;
+import org.evasive.me.minefinity.core.RepeatingTick;
+import org.evasive.me.minefinity.customItems.framework.CustomItemRegistry;
+import org.evasive.me.minefinity.customItems.types.FuelItem;
 import org.evasive.me.minefinity.customItems.pickaxe.PickaxeItem;
-import org.evasive.me.minefinity.customItems.items.ResourceItem;
+import org.evasive.me.minefinity.customItems.types.ResourceItem;
 import org.evasive.me.minefinity.database.DatabaseManager;
 import org.evasive.me.minefinity.database.ServerDataHandler;
 import org.evasive.me.minefinity.database.repository.PlayerRepository;
+import org.evasive.me.minefinity.database.service.AutosaveService;
+import org.evasive.me.minefinity.database.service.DirtyPlayerService;
+import org.evasive.me.minefinity.economy.EconomyService;
 import org.evasive.me.minefinity.economy.commands.balance.Balance;
 import org.evasive.me.minefinity.economy.commands.Pay;
-import org.evasive.me.minefinity.events.ServerJoinEvent;
-import org.evasive.me.minefinity.mining.AnimationIDs;
-import org.evasive.me.minefinity.mining.MiningDataMap;
-import org.evasive.me.minefinity.mining.SelectedBlockMap;
-import org.evasive.me.minefinity.mining.SwingPacketEvents;
+import org.evasive.me.minefinity.core.events.ServerJoinEvent;
+import org.evasive.me.minefinity.forge.service.ForgeService;
+import org.evasive.me.minefinity.miner.events.AutoMinerEvents;
+import org.evasive.me.minefinity.miner.service.AutoMinerService;
+import org.evasive.me.minefinity.mining.service.AnimationIDs;
+import org.evasive.me.minefinity.mining.service.MiningDataMap;
+import org.evasive.me.minefinity.mining.service.SelectedBlockMap;
+import org.evasive.me.minefinity.mining.events.SwingPacketEvents;
 import org.evasive.me.minefinity.npcs.NpcInstanceMap;
 import org.evasive.me.minefinity.player.sevices.*;
-import org.evasive.me.minefinity.resourceblock.BlockCommands;
-import org.evasive.me.minefinity.customItems.ItemMaker;
+import org.evasive.me.minefinity.resourceblock.commands.BlockCommands;
 import org.evasive.me.minefinity.npcs.events.NpcLoadEvents;
 import org.evasive.me.minefinity.scoreboard.Scoreboard;
-import org.evasive.me.minefinity.worldPackets.BlockPacketEvents;
-import org.evasive.me.minefinity.worldPackets.ChunkLoadingEvents;
-import org.evasive.me.minefinity.worldPackets.PlayerMovePacketEvents;
+import org.evasive.me.minefinity.smelter.events.SmelterEvents;
+import org.evasive.me.minefinity.smelter.recipes.SmelterRecipeRegistry;
+import org.evasive.me.minefinity.smelter.service.SmelterService;
+import org.evasive.me.minefinity.town.service.TownService;
+import org.evasive.me.minefinity.workshop.service.EngineerService;
+import org.evasive.me.minefinity.worldPackets.events.BlockPacketEvents;
+import org.evasive.me.minefinity.worldPackets.events.ChunkLoadingEvents;
+import org.evasive.me.minefinity.worldPackets.events.PlayerMovePacketEvents;
 import org.evasive.me.minefinity.npcs.events.InteractEvent;
 import org.evasive.me.minefinity.player.PlayerManager;
 
@@ -55,8 +69,13 @@ public final class Minefinity extends JavaPlugin {
     private AutoMinerService autoMinerService;
     private ForgeService forgeService;
     private EngineerService engineerService;
+    private SmelterService smelterService;
+    private DirtyPlayerService dirtyPlayerService;
+    private AutosaveService autosaveService;
 
-    private Vanish vanish;
+    private Scoreboard scoreboard;
+
+    private VanishService vanishService;
 
     //Npc load data
     public static NpcInstanceMap npcInstanceMap;
@@ -74,7 +93,12 @@ public final class Minefinity extends JavaPlugin {
     @Override
     public void onLoad(){
         core = this;
+
         playerManager = new PlayerManager();
+
+        dirtyPlayerService = new DirtyPlayerService();
+        serverDataHandler = new ServerDataHandler(playerManager, new PlayerRepository(), dirtyPlayerService);
+        autosaveService = new AutosaveService(serverDataHandler);
 
         townService = new TownService(playerManager);
         blockTierService = new BlockTierService(playerManager);
@@ -84,6 +108,10 @@ public final class Minefinity extends JavaPlugin {
         autoMinerService = new AutoMinerService(playerManager);
         forgeService = new ForgeService(playerManager);
         engineerService = new EngineerService(playerManager);
+        smelterService = new SmelterService(playerManager);
+
+
+
 
         com.github.retrooper.packetevents.PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
         //On Bukkit, calling this here is essential, hence the name "load"
@@ -103,14 +131,16 @@ public final class Minefinity extends JavaPlugin {
         worldGuardCheck();
         com.github.retrooper.packetevents.PacketEvents.getAPI().init();
 
-        vanish = new Vanish();
+        vanishService = new VanishService();
+        scoreboard = new Scoreboard();
 
         registerDataMaps();
         registerCustomItems();
+        registerSmelterRecipes();
         registerEvents();
         registerCommands();
 
-        serverDataHandler = new ServerDataHandler(playerManager, new PlayerRepository());
+
 
         try {
             databaseConnect();
@@ -122,14 +152,14 @@ public final class Minefinity extends JavaPlugin {
         databaseManager.closePool();
 
         //Automated Functions
-        new AutomationTimer().startAutomation();
+        new RepeatingTick().startAutomation();
 
         //Scoreboard
-        new Scoreboard().repeatingScoreboardUpdate();
+        scoreboard.repeatingScoreboardUpdate();
 
     }
 
-    private void databaseConnect() throws SQLException {
+    public void databaseConnect() throws SQLException {
         databaseManager.setup("127.0.0.1", 3306, "minefinity", "admin", "jdf7tA@tf");
     }
 
@@ -152,10 +182,12 @@ public final class Minefinity extends JavaPlugin {
         pluginManager.registerEvents(new NpcLoadEvents(), this);
         pluginManager.registerEvents(new ChunkLoadingEvents(), this);
         pluginManager.registerEvents(new GuiListener(), this);
-        pluginManager.registerEvents(new OpenBackpackEvent(), this);
-        pluginManager.registerEvents(new ItemPickupEvent(), this);
-        pluginManager.registerEvents(vanish, this);
+        pluginManager.registerEvents(new OpenBackpackListener(), this);
+        pluginManager.registerEvents(new ItemPickupListener(), this);
         pluginManager.registerEvents(new ServerJoinEvent(), this);
+        pluginManager.registerEvents(new AutoMinerEvents(), this);
+        pluginManager.registerEvents(new SmelterEvents(), this);
+        pluginManager.registerEvents(new VanishListener(), this);
     }
 
     private void registerCommands(){
@@ -171,7 +203,7 @@ public final class Minefinity extends JavaPlugin {
         new Economy();
         new StaffMode();
         new Rename();
-        //new Vanish();
+        new Vanish();
     }
 
     private void registerCustomItems(){
@@ -180,7 +212,11 @@ public final class Minefinity extends JavaPlugin {
         CustomItemRegistry.registerEnumItems(PickaxeItem.values());
         CustomItemRegistry.registerEnumItems(PickaxeComponent.values());
         CustomItemRegistry.registerEnumItems(Backpacks.values());
-        new ItemMaker().init();
+        CustomItemRegistry.init();
+    }
+
+    private void registerSmelterRecipes(){
+        SmelterRecipeRegistry.loadRecipes();
     }
 
     public static Minefinity getCore() {
@@ -219,6 +255,10 @@ public final class Minefinity extends JavaPlugin {
         return forgeService;
     }
 
+    public SmelterService getSmelterService() {
+        return smelterService;
+    }
+
     public EngineerService getEngineerService() {
         return engineerService;
     }
@@ -227,8 +267,24 @@ public final class Minefinity extends JavaPlugin {
         return databaseManager;
     }
 
-    public Vanish getVanish(){
-        return vanish;
+    public VanishService getVanishService(){
+        return vanishService;
+    }
+
+    public Scoreboard getScoreboard(){
+        return this.scoreboard;
+    }
+
+    public DirtyPlayerService getDirtyPlayerService(){
+        return dirtyPlayerService;
+    }
+
+    public ServerDataHandler getServerDataHandler(){
+        return serverDataHandler;
+    }
+
+    public AutosaveService getAutosaveService(){
+        return autosaveService;
     }
 
     @Override
@@ -236,9 +292,10 @@ public final class Minefinity extends JavaPlugin {
 
         try {
             databaseConnect();
-            serverDataHandler.saveAll(); // save first
+            serverDataHandler.saveDirty();
         } catch (Exception e) {
             Bukkit.getConsoleSender().sendMessage("FAILED TO SAVE");
+            e.printStackTrace();
         }
 
         databaseManager.closePool();

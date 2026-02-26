@@ -6,7 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.customItems.CustomItemRegistry;
+import org.evasive.me.minefinity.customItems.framework.CustomItemRegistry;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

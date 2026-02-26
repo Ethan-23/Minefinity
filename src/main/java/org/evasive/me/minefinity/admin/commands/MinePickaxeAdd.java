@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.customItems.ItemFunctions;
+import org.evasive.me.minefinity.customItems.framework.ItemFunctions;
 import org.evasive.me.minefinity.customItems.pickaxe.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.pickaxe.PickaxeComponent;
 import org.evasive.me.minefinity.customItems.pickaxe.PickaxeItem;
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-import static org.evasive.me.minefinity.customItems.ItemFunctions.getItemId;
+import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.getItemId;
 
 public class MinePickaxeAdd implements CommandExecutor {
 
@@ -77,8 +77,8 @@ public class MinePickaxeAdd implements CommandExecutor {
 
     private void setPickaxePart(Player player, ItemStack itemStack, NamespacedKey namespacedKey, String partId){
         BasePickaxeItem pickaxe = PickaxeItem.valueOf(getItemId(itemStack)).getBuilder();
-        ItemStack updatedPickaxe = pickaxe.addPart(itemStack, namespacedKey, partId);
-        player.getInventory().setItemInMainHand(updatedPickaxe);
+        //ItemStack updatedPickaxe = pickaxe.addPart(itemStack, namespacedKey, partId);
+        //player.getInventory().setItemInMainHand(updatedPickaxe);
     }
 
 

@@ -1,6 +1,6 @@
 package org.evasive.me.minefinity.forge.recipes;
 
-import org.evasive.me.minefinity.core.items.BaseItemRecipe;
+import org.evasive.me.minefinity.core.recipe.BaseItemRecipe;
 import org.evasive.me.minefinity.core.items.CustomItem;
 import org.evasive.me.minefinity.forge.data.ForgeCategories;
 

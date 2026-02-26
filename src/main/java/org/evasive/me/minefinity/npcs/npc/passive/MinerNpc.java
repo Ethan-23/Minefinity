@@ -1,8 +1,8 @@
 package org.evasive.me.minefinity.npcs.npc.passive;
 
 import org.bukkit.entity.Player;
-import org.evasive.me.minefinity.automation.miner.gui.main.MinerMainGui;
-import org.evasive.me.minefinity.npcs.npc.NpcBehavior;
+import org.evasive.me.minefinity.miner.gui.main.MinerMainGui;
+import org.evasive.me.minefinity.npcs.framework.NpcBehavior;
 
 public class MinerNpc implements NpcBehavior {
 

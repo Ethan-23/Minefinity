@@ -9,10 +9,27 @@ import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.utils.TextConversions;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Gamemode implements CommandExecutor {
+
+    private static final Map<String, GameMode> GAMEMODES = Map.ofEntries(
+            Map.entry("creative", GameMode.CREATIVE),
+            Map.entry("c", GameMode.CREATIVE),
+            Map.entry("1", GameMode.CREATIVE),
+
+            Map.entry("survival", GameMode.SURVIVAL),
+            Map.entry("s", GameMode.SURVIVAL),
+            Map.entry("0", GameMode.SURVIVAL),
+
+            Map.entry("adventure", GameMode.ADVENTURE),
+            Map.entry("a", GameMode.ADVENTURE),
+            Map.entry("2", GameMode.ADVENTURE),
+
+            Map.entry("spectator", GameMode.SPECTATOR),
+            Map.entry("sp", GameMode.SPECTATOR),
+            Map.entry("3", GameMode.SPECTATOR)
+    );
 
     public Gamemode(){
         Objects.requireNonNull(Minefinity.getCore().getCommand("gamemode")).setExecutor(this);
@@ -20,33 +37,25 @@ public class Gamemode implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
-        if(!(sender instanceof Player player))return true;
+        if(!(sender instanceof Player player))
+            return true;
+
         if(args.length != 1){
             player.sendMessage(TextConversions.parse("<red>Invalid Usage of command"));
             return true;
         }
 
-        String gamemode = args[0];
+        String input = args[0].toLowerCase(Locale.ROOT);
+        GameMode mode = GAMEMODES.get(input);
 
-        if(List.of("creative", "1", "c").contains(gamemode.toLowerCase())){
-            player.sendMessage("Game mode has been set to creative");
-            player.setGameMode(GameMode.CREATIVE);
-            return true;
-        }else if(List.of("survival", "0", "s").contains(gamemode.toLowerCase())){
-            player.sendMessage("Game mode has been set to survival");
-            player.setGameMode(GameMode.SURVIVAL);
-            return true;
-        }else if(List.of("adventure", "2", "a").contains(gamemode.toLowerCase())){
-            player.sendMessage("Game mode has been set to adventure");
-            player.setGameMode(GameMode.ADVENTURE);
-            return true;
-        }else if(List.of("spectator", "3", "sp").contains(gamemode.toLowerCase())){
-            player.sendMessage("Game mode has been set to spectator");
-            player.setGameMode(GameMode.SPECTATOR);
-            return true;
-        }else{
+        if (mode == null) {
             player.sendMessage(TextConversions.parse("<red>Invalid Usage of command"));
             return true;
         }
+
+        player.setGameMode(mode);
+        player.sendMessage("Game mode has been set to " + TextConversions.formatItemName(mode.name()));
+
+        return true;
     }
 }

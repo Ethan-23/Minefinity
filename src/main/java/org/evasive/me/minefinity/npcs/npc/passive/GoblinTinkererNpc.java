@@ -1,7 +1,7 @@
 package org.evasive.me.minefinity.npcs.npc.passive;
 
 import org.bukkit.entity.Player;
-import org.evasive.me.minefinity.npcs.npc.NpcBehavior;
+import org.evasive.me.minefinity.npcs.framework.NpcBehavior;
 
 public class GoblinTinkererNpc implements NpcBehavior {
     @Override

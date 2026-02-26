@@ -8,7 +8,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
-import org.evasive.me.minefinity.player.sevices.ForgeService;
+import org.evasive.me.minefinity.forge.service.ForgeHandler;
+import org.evasive.me.minefinity.forge.service.ForgeService;
 import org.evasive.me.minefinity.utils.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;
 import org.jetbrains.annotations.NotNull;
@@ -21,15 +22,9 @@ import static org.evasive.me.minefinity.utils.TimeCalculator.getString;
 public class ForgeGui extends BaseGui {
 
     private static final int INVENTORY_SIZE = 54;
-    private static final List<Integer> FUEL_SLOTS = List.of(47, 48, 49, 50, 51);
-    public static final List<Integer> FORGE_SLOTS = List.of(20, 21, 22, 23, 24);
-    private static final Map<Integer, Set<Integer>> FORGE_PANES = Map.of(
-            1, Set.of(2, 11, 29, 38),
-            2, Set.of(3, 12, 30, 39),
-            3, Set.of(4, 13, 31, 40),
-            4, Set.of(5, 14, 32, 41),
-            5, Set.of(6, 15, 33, 42)
-    );
+    private static final int INFORMATION_SLOT = 49;
+    public static final List<Integer> FORGE_SLOTS = List.of(11, 12, 13, 14, 15);
+    private static final List<Integer> FORGE_PANES = List.of(20, 21, 22, 23, 24);
     ForgeService forgeService = Minefinity.getCore().getForgeService();
 
     public ForgeGui(Player player) {
@@ -42,7 +37,7 @@ public class ForgeGui extends BaseGui {
         buildFrame();
         buildProgressPanes(player);
         buildForgeSlots(player);
-        buildFuelSlots();
+        buildInformationSlot();
         createRefresh(player);
     }
 
@@ -52,10 +47,10 @@ public class ForgeGui extends BaseGui {
         }
     }
 
-    private void buildFuelSlots(){
-        for (int fuelSlot : FUEL_SLOTS) {
-            inventory.setItem(fuelSlot, new ItemStack(Material.GRAY_DYE));
-        }
+    private void buildInformationSlot(){
+        ItemBuilder itemBuilder = new ItemBuilder(Material.KNOWLEDGE_BOOK, TextConversions.parse("<bold><gold>Miner"));
+        itemBuilder.addLore("<gray>This is the miner. He be mining the blocks and stuff. He be mining all night and day. Might be a 'worker' if you catch my drift. 3 Netherite Ingots!");
+        inventory.setItem(INFORMATION_SLOT, itemBuilder.build());
     }
 
     private void buildForgeSlots(Player player){
@@ -66,26 +61,21 @@ public class ForgeGui extends BaseGui {
 
     private void buildProgressPanes(Player player){
 
-        for (Map.Entry<Integer, Set<Integer>> entry : FORGE_PANES.entrySet()) {
-            int key = entry.getKey();
-            Set<Integer> value = entry.getValue();
+        for(int i = 0; i < FORGE_PANES.size(); i++){
+            int forgeId = i+1;
 
-            if(!forgeService.hasForgeItem(player, key)){
-                for (int slot : value)
-                    inventory.setItem(slot, emptyPane);
+            if(!forgeService.hasForgeItem(player, forgeId)) {
+                inventory.setItem(FORGE_PANES.get(i), emptyPane);
                 continue;
             }
 
-            long milliseconds = forgeService.getMilisecondsRemaining(player, key);
-
-            if(forgeService.isFinished(player, key)){
-                for (int slot : value)
-                    inventory.setItem(slot, donePane);
+            long milliseconds = forgeService.getMilisecondsRemaining(player, forgeId);
+            if(forgeService.isFinished(player, forgeId)){
+                inventory.setItem(FORGE_PANES.get(i), donePane);
             } else {
                 ItemBuilder progressPaneBuilder = new ItemBuilder(progressPane.clone());
                 progressPaneBuilder.addLore("<gold>" + getString(milliseconds));
-                for (int slot : value)
-                    inventory.setItem(slot, progressPaneBuilder.build());
+                inventory.setItem(FORGE_PANES.get(i), progressPaneBuilder.build());
             }
         }
     }

@@ -2,7 +2,7 @@ package org.evasive.me.minefinity.npcs.npc.passive;
 
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.forge.gui.ForgeGui;
-import org.evasive.me.minefinity.npcs.npc.NpcBehavior;
+import org.evasive.me.minefinity.npcs.framework.NpcBehavior;
 
 public class BlacksmithNpc implements NpcBehavior {
     @Override

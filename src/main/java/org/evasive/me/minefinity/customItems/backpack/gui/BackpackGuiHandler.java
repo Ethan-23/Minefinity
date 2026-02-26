@@ -5,9 +5,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.customItems.CustomItemRegistry;
+import org.evasive.me.minefinity.customItems.framework.CustomItemRegistry;
 import org.evasive.me.minefinity.customItems.backpack.Backpacks;
-import org.evasive.me.minefinity.customItems.backpack.BackpackCollect;
+import org.evasive.me.minefinity.customItems.backpack.BackpackHandler;
 
 public class BackpackGuiHandler {
 
@@ -22,7 +22,7 @@ public class BackpackGuiHandler {
     }
 
     public void handleInsertAll(Player player, String backpackId){
-        new BackpackCollect().insertInventoryToBackpack(player, backpackId);
+        new BackpackHandler().insertInventoryToBackpack(player, backpackId);
     }
 
     public void handleTakeStack(Player player, String itemId) {

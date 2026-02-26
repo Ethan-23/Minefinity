@@ -5,11 +5,13 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.items.CustomItem;
-import org.evasive.me.minefinity.mining.BlockProgress;
+import org.evasive.me.minefinity.database.service.DirtyPlayerService;
+import org.evasive.me.minefinity.mining.service.BlockProgress;
 import org.evasive.me.minefinity.player.PlayerManager;
-import org.evasive.me.minefinity.resourceblock.BlockType;
-import org.evasive.me.minefinity.worldPackets.MassBlockPacketSender;
+import org.evasive.me.minefinity.resourceblock.framework.BlockType;
+import org.evasive.me.minefinity.worldPackets.service.MassBlockPacketSender;
 
 import java.util.Map;
 
@@ -23,6 +25,8 @@ public class BlockTierService {
     private final BlockProgress blockProgress;
     private final MassBlockPacketSender massBlockPacketSender = new MassBlockPacketSender();
 
+    DirtyPlayerService dirtyPlayerService = Minefinity.getCore().getDirtyPlayerService();
+
     public BlockTierService(PlayerManager playerManager) {
         this.playerManager = playerManager;
         this.blockProgress = new BlockProgress();
@@ -33,6 +37,7 @@ public class BlockTierService {
     }
 
     public void setBlockTier(Player player, BlockType blockType) {
+        dirtyPlayerService.addDirtyPlayer(player);
         playerManager.get(player).setBlockTier(blockType);
     }
 
@@ -49,6 +54,7 @@ public class BlockTierService {
     }
 
     public void setSelectedBlockTier(Player player, int tier){
+        dirtyPlayerService.addDirtyPlayer(player);
         playerManager.get(player).setSelectedBlockTier(tier);
         clearMiningProgress(player);
         handleMainBlock(player);
@@ -63,6 +69,7 @@ public class BlockTierService {
     }
 
     private void clearMiningProgress(Player player){
+        dirtyPlayerService.addDirtyPlayer(player);
         Block block = selectedBlockMap.getSelectedBlock(player.getUniqueId());
         if(block == null || !miningMap.containsBlockLocation(block.getLocation()) || !miningMap.containsPlayerAtLocation(block.getLocation(), player.getUniqueId()))return;
         blockProgress.sendCleanPacket(player, block);

@@ -2,14 +2,15 @@ package org.evasive.me.minefinity.core.gui;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.evasive.me.minefinity.Minefinity;
+import org.evasive.me.minefinity.core.items.CustomItem;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseGui implements InventoryHolder {
@@ -29,6 +30,7 @@ public abstract class BaseGui implements InventoryHolder {
     }
 
     /* Hooks */
+    public void onOpen(InventoryOpenEvent e) {}
     public void onClick(InventoryClickEvent e) {}
     public void onDrag(InventoryDragEvent e) {}
     public void onClose(InventoryCloseEvent e) {}

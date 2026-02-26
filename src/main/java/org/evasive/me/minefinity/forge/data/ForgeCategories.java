@@ -5,10 +5,10 @@ import org.evasive.me.minefinity.utils.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;
 
 public enum ForgeCategories {
-    MATERIALS(Material.COBBLESTONE, "Materials"),
-    COMPONENTS(Material.NETHER_STAR, "Components"),
-    PICKAXES(Material.WOODEN_PICKAXE, "Pickaxes"),
-    STORAGE(Material.PLAYER_HEAD, "Storage");
+    PICKAXE_TEMPLATES(Material.IRON_PICKAXE, "Pickaxe Templates"),
+    PICKAXE_HEADS(Material.IRON_INGOT, "Pickaxe Heads"),
+    PICKAXE_CORES(Material.NETHER_STAR, "Pickaxe Cores"),
+    PICKAXE_HANDLES(Material.STICK, "Pickaxe Handles");
 
     private final Material material;
     private final String name;

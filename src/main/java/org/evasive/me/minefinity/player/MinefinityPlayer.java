@@ -1,33 +1,33 @@
 package org.evasive.me.minefinity.player;
 
-import org.bukkit.Material;
-import org.evasive.me.minefinity.automation.miner.data.AutoMiner;
-import org.evasive.me.minefinity.ranks.PlayerRank;
-import org.evasive.me.minefinity.ranks.StaffRank;
-import org.evasive.me.minefinity.resourceblock.BlockType;
-import org.evasive.me.minefinity.forge.data.ForgeItem;
-import org.evasive.me.minefinity.resourceblock.ResourceData;
+import org.bukkit.Bukkit;
+import org.evasive.me.minefinity.Minefinity;
+import org.evasive.me.minefinity.customItems.backpack.BackpackStorage;
+import org.evasive.me.minefinity.database.service.DirtyPlayerService;
+import org.evasive.me.minefinity.forge.service.ForgeMap;
+import org.evasive.me.minefinity.miner.AutoMiner;
+import org.evasive.me.minefinity.resourceblock.framework.BlockType;
+import org.evasive.me.minefinity.smelter.Smelter;
 import org.evasive.me.minefinity.town.Town;
-import org.evasive.me.minefinity.workshop.data.Engineer;
+import org.evasive.me.minefinity.workshop.Engineer;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class MinefinityPlayer {
 
     private final UUID uuid;
-    private Town town;
-    private double balance;
+    private final String username;
     private BlockType blockType;
     private int selectedBlockTier;
-    private long blocksMined;
+    private double balance;
 
-    private Map<BlockType, ResourceData> blockMilestones;
-    private final AutoMiner autoMiner;
+    private Town town;
+    private BlockMilestone blockMilestones;
+    private AutoMiner autoMiner;
     private Engineer engineer;
-    private Map<String, Integer> backpackStorage;
-    private final Map<Integer, ForgeItem> forgeItems;
+    private Smelter smelter;
+    private BackpackStorage backpackStorage;
+    private ForgeMap forgeItems;
 
     //Not implemented yet
     private int quest;
@@ -36,35 +36,34 @@ public class MinefinityPlayer {
 
     public MinefinityPlayer(UUID uuid) {
         this.uuid = uuid;
+        this.username = Bukkit.getOfflinePlayer(uuid).getName();
         this.blockType = BlockType.OAK_LOG;
         this.selectedBlockTier = 0;
-        this.blocksMined = 0;
         this.balance = 0;
         this.autoMiner = new AutoMiner();
         this.engineer = new Engineer();
+        this.smelter = new Smelter();
         this.town = new Town();
         this.quest = 0;
-        this.blockMilestones = new HashMap<>();
-        for(BlockType blockType : BlockType.values()){
-            blockMilestones.put(blockType, new ResourceData(1, 0, 0));
-        }
-        this.backpackStorage = new HashMap<>();
-        this.forgeItems = new HashMap<>();
+        this.blockMilestones = new BlockMilestone();
+        this.backpackStorage = new BackpackStorage();
+        this.forgeItems = new ForgeMap();
     }
 
-    public MinefinityPlayer(UUID uuid, BlockType blockType, int selectedBlockTier, long blocksMined, double balance) {
+    public MinefinityPlayer(UUID uuid, BlockType blockType, int selectedBlockTier, double balance) {
         this.uuid = uuid;
+        this.username = Bukkit.getOfflinePlayer(uuid).getName();
         this.blockType = blockType;
         this.selectedBlockTier = selectedBlockTier;
         this.balance = balance;
-        this.blocksMined = blocksMined;
         this.autoMiner = new AutoMiner();
         this.engineer = new Engineer();
         this.town = new Town();
+        this.smelter = new Smelter();
         this.quest = 0;
-        this.blockMilestones = new HashMap<>();
-        this.backpackStorage = new HashMap<>();
-        this.forgeItems = new HashMap<>();
+        this.blockMilestones = new BlockMilestone();
+        this.backpackStorage = new BackpackStorage();
+        this.forgeItems = new ForgeMap();
     }
 
     public UUID getUuid() {
@@ -77,6 +76,14 @@ public class MinefinityPlayer {
 
     public void setTown(Town town) {
         this.town = town;
+    }
+
+    public Smelter getSmelter() {
+        return smelter;
+    }
+
+    public void setSmelter(Smelter smelter) {
+        this.smelter = smelter;
     }
 
     public double getBalance() {
@@ -103,19 +110,11 @@ public class MinefinityPlayer {
         this.selectedBlockTier = selectedBlockTier;
     }
 
-    public long getBlocksMined() {
-        return blocksMined;
-    }
-
-    public void setBlocksMined(long blocksMined) {
-        this.blocksMined = blocksMined;
-    }
-
-    public Map<BlockType, ResourceData> getBlockMilestones() {
+    public BlockMilestone getBlockMilestones() {
         return blockMilestones;
     }
 
-    public void setBlockMilestones(Map<BlockType, ResourceData> blockMilestones) {
+    public void setBlockMilestones(BlockMilestone blockMilestones) {
         this.blockMilestones = blockMilestones;
     }
 
@@ -123,16 +122,24 @@ public class MinefinityPlayer {
         return autoMiner;
     }
 
-    public Map<String, Integer> getBackpackStorage() {
+    public BackpackStorage getBackpackStorage() {
         return backpackStorage;
     }
 
-    public void setBackpackStorage(Map<String, Integer> backpackStorage) {
+    public void setBackpackStorage(BackpackStorage backpackStorage) {
         this.backpackStorage = backpackStorage;
     }
 
-    public Map<Integer, ForgeItem> getForgeItems() {
-        return forgeItems;
+    public ForgeMap getForgeItems() {
+        return this.forgeItems;
+    }
+
+    public void setForgeItems(ForgeMap forgeItems) {
+        this.forgeItems = forgeItems;
+    }
+
+    public void setAutoMiner(AutoMiner autoMiner) {
+        this.autoMiner = autoMiner;
     }
 
     public int getQuest() {
@@ -167,4 +174,7 @@ public class MinefinityPlayer {
         this.engineer = engineer;
     }
 
+    public String getUsername() {
+        return username;
+    }
 }

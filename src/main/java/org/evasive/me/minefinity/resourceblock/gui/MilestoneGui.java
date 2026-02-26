@@ -9,7 +9,7 @@ import org.bukkit.inventory.Inventory;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.player.sevices.MilestoneService;
-import org.evasive.me.minefinity.resourceblock.BlockType;
+import org.evasive.me.minefinity.resourceblock.framework.BlockType;
 import org.evasive.me.minefinity.utils.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;
 import org.jetbrains.annotations.NotNull;

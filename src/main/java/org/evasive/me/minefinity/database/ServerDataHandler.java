@@ -1,23 +1,28 @@
 package org.evasive.me.minefinity.database;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.database.repository.PlayerRepository;
+import org.evasive.me.minefinity.database.service.DirtyPlayerService;
 import org.evasive.me.minefinity.player.MinefinityPlayer;
 import org.evasive.me.minefinity.player.PlayerManager;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class ServerDataHandler {
 
     private final PlayerManager playerManager;
     private final PlayerRepository playerRepository;
+    private final DirtyPlayerService dirtyPlayerService;
 
-    public ServerDataHandler(PlayerManager playerManager, PlayerRepository playerRepository) {
+    public ServerDataHandler(PlayerManager playerManager, PlayerRepository playerRepository, DirtyPlayerService dirtyPlayerService) {
         this.playerManager = playerManager;
         this.playerRepository = playerRepository;
+        this.dirtyPlayerService = dirtyPlayerService;
     }
 
     // Load all players into memory
@@ -26,23 +31,27 @@ public class ServerDataHandler {
             List<UUID> uuids = playerRepository.getAllPlayerUUIDs();
 
             for (UUID uuid : uuids) {
-                //Bukkit.getConsoleSender().sendMessage("RUNNING FOR " + uuid.toString());
                 MinefinityPlayer player = playerRepository.load(uuid);
                 playerManager.registerPlayer(uuid, player);
-                //Bukkit.getConsoleSender().sendMessage("DONE FOR " + uuid.toString());
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    // Save all players from memory to database
-    public void saveAll() {
-        try {
-            playerManager.getAll().values().forEach(playerRepository::save);
-        } finally {
-            // Disconnect after all saves are done
+    public boolean haveDirty(){
+        return !dirtyPlayerService.getDirtyPlayers().isEmpty();
+    }
+
+    public void saveDirty(){
+        Set<UUID> dirtyPlayers = dirtyPlayerService.getDirtyPlayers();
+
+        if(dirtyPlayers.isEmpty()) return;
+
+        for(UUID uuid : dirtyPlayers){
+            playerRepository.save(uuid);
         }
+        dirtyPlayerService.clearDirtyPlayers();
     }
 
 }

@@ -4,8 +4,8 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.player.sevices.BlockTierService;
-import org.evasive.me.minefinity.player.sevices.EconomyService;
-import org.evasive.me.minefinity.resourceblock.BlockType;
+import org.evasive.me.minefinity.economy.EconomyService;
+import org.evasive.me.minefinity.resourceblock.framework.BlockType;
 import org.evasive.me.minefinity.utils.TextConversions;
 
 

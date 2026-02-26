@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.database.DatabaseManager;
 import org.evasive.me.minefinity.player.MinefinityPlayer;
+import org.evasive.me.minefinity.player.PlayerManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,34 +17,17 @@ import java.util.UUID;
 
 public class PlayerRepository {
 
-    private final PlayerTableRepository playerTableRepo = new PlayerTableRepository();
-    private final MilestoneRepository milestoneRepo = new MilestoneRepository();
-    private final AutoMinerRepository autoMinerRepo = new AutoMinerRepository();
-    private final BackpackRepository backpackRepo = new BackpackRepository();
-    private final ForgeRepository forgeRepo = new ForgeRepository();
-    private final TownRepository townRepo = new TownRepository();
+    private final PlayerManager playerManager = Minefinity.getCore().getPlayerManager();
+    private final PlayerSaveRepository playerSaveRepository = new PlayerSaveRepository();
 
-    public void save(MinefinityPlayer player) {
-
-        playerTableRepo.save(player);
-        backpackRepo.save(player);
-        milestoneRepo.save(player);
-        autoMinerRepo.saveMiner(player);
-        forgeRepo.save(player);
-        townRepo.save(player);
+    public void save(UUID uuid) {
+        playerSaveRepository.save(playerManager.get(uuid));
 
     }
 
     public MinefinityPlayer load(UUID uuid) {
 
-        MinefinityPlayer minefinityPlayer = playerTableRepo.load(uuid);
-        milestoneRepo.loadInto(minefinityPlayer);
-        autoMinerRepo.loadMiner(minefinityPlayer);
-        backpackRepo.load(minefinityPlayer);
-        forgeRepo.load(minefinityPlayer);
-        townRepo.load(minefinityPlayer);
-
-        return minefinityPlayer;
+        return playerSaveRepository.load(uuid);
     }
 
     public List<UUID> getAllPlayerUUIDs() {
@@ -69,7 +53,7 @@ public class PlayerRepository {
                 }
             }
 
-        } catch (Exception e) { // NOT just SQLException
+        } catch (Exception e) {
             Minefinity.getCore().getLogger().severe("Failed to load players from database");
             e.printStackTrace();
         }

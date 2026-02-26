@@ -7,11 +7,11 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.admin.commands.Vanish;
+import org.evasive.me.minefinity.admin.service.VanishService;
 import org.evasive.me.minefinity.player.sevices.BlockTierService;
-import org.evasive.me.minefinity.player.sevices.EconomyService;
-import org.evasive.me.minefinity.resourceblock.BaseBlock;
-import org.evasive.me.minefinity.resourceblock.BlockType;
+import org.evasive.me.minefinity.economy.EconomyService;
+import org.evasive.me.minefinity.resourceblock.framework.BaseBlock;
+import org.evasive.me.minefinity.resourceblock.framework.BlockType;
 import org.evasive.me.minefinity.utils.TextConversions;
 
 import java.time.LocalDateTime;
@@ -22,7 +22,7 @@ public class Scoreboard {
 
     BlockTierService blockTierService = Minefinity.getCore().getBlockTierService();
     EconomyService economyService = Minefinity.getCore().getEconomyService();
-    Vanish vanish = Minefinity.getCore().getVanish();
+    VanishService vanishService = Minefinity.getCore().getVanishService();
 
     public void setupMainScoreboard(Player player) {
         ScoreboardManager manager = Bukkit.getScoreboardManager();
@@ -50,7 +50,7 @@ public class Scoreboard {
         // Here you can add other main stats (e.g., player currency, login time, etc.)
         addScore(board, objective, "§r", 9);
         addScore(board, objective, "§e§lAccount", 8);
-        addScore(board, objective, String.format("  %s",vanish.isVanished(player) ? "§7(§bV§7) §r" + player.getName() : player.getName()), 7);
+        addScore(board, objective, String.format("  %s",vanishService.isVanished(player) ? "§7(§bV§7) §r" + player.getName() : player.getName()), 7);
         addScore(board, objective, "§r ", 6);
         addScore(board, objective, "§6§lBlock Tier", 5);
         addScore(board, objective, "  §l" + blockTierRoman + " §r" + block.name(), 4);

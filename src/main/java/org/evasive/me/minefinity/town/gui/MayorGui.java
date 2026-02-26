@@ -6,17 +6,14 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
-import org.evasive.me.minefinity.customItems.items.ResourceItem;
-import org.evasive.me.minefinity.player.sevices.TownService;
+import org.evasive.me.minefinity.core.recipe.RecipeService;
+import org.evasive.me.minefinity.town.service.TownService;
 import org.evasive.me.minefinity.town.Structure;
-import org.evasive.me.minefinity.utils.InventoryItemPurchase;
 import org.evasive.me.minefinity.utils.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;
 
 import java.util.List;
-import java.util.Map;
 
-import static org.evasive.me.minefinity.customItems.ItemFunctions.hasItemId;
 import static org.evasive.me.minefinity.utils.GenericGuiItems.fillerPane;
 import static org.evasive.me.minefinity.utils.TextConversions.buildRarityColor;
 
@@ -26,12 +23,12 @@ public class MayorGui extends BaseGui {
     private static final int PLAYER_STATS = 13;
     private static final List<Integer> townListing = List.of(28, 29, 30, 31, 32, 33, 34);
     private final TownService townService;
-    private final InventoryItemPurchase inventoryItemPurchase;
+    private final RecipeService recipeService;
 
     public MayorGui(Player player) {
         super(player, INVENTORY_SIZE, TextConversions.parse("Town Manager"));
         townService = Minefinity.getCore().getTownService();
-        inventoryItemPurchase = new InventoryItemPurchase();
+        recipeService = new RecipeService();
         build();
     }
 
@@ -86,7 +83,7 @@ public class MayorGui extends BaseGui {
         Structure structure = Structure.values()[townListing.indexOf(slot)];
         int currentLevel = townService.getStructureLevel(player, structure);
 
-        boolean completedPurchase = inventoryItemPurchase.tryPurchaseItem(player, structure.getUpgradeMap(currentLevel));
+        boolean completedPurchase = recipeService.tryPurchaseItem(player, structure.getUpgradeMap(currentLevel));
 
         if(!completedPurchase){
             player.sendMessage(TextConversions.parse("<red>You do not have the correct materials!"));

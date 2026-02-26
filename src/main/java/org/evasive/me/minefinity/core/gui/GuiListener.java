@@ -3,10 +3,7 @@ package org.evasive.me.minefinity.core.gui;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.InventoryHolder;
 
 public class GuiListener implements Listener {
@@ -14,20 +11,19 @@ public class GuiListener implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent e) {
         InventoryHolder holder = e.getView().getTopInventory().getHolder();
+
         if (!(holder instanceof BaseGui gui)) return;
 
         if(e.getClickedInventory() == null)
             return;
 
-        if (e.isShiftClick()) {
-            e.setCancelled(true);
-            return;
-        }
-
         if(e.getClick() == ClickType.DOUBLE_CLICK) {
             e.setCancelled(true);
             return;
         }
+
+        if(e.getClickedInventory() == e.getView().getBottomInventory() && e.getClick().isShiftClick())
+            e.setCancelled(true);
 
         if(e.getView().getTopInventory() != e.getClickedInventory())
             return;
@@ -54,6 +50,14 @@ public class GuiListener implements Listener {
         InventoryHolder holder = e.getInventory().getHolder();
         if (holder instanceof BaseGui gui) {
             gui.onClose(e);
+        }
+    }
+
+    @EventHandler
+    public void onOpen(InventoryOpenEvent e) {
+        InventoryHolder holder = e.getInventory().getHolder();
+        if (holder instanceof BaseGui gui) {
+            gui.onOpen(e);
         }
     }
 

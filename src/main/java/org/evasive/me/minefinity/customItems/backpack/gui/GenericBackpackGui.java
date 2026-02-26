@@ -8,9 +8,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
-import org.evasive.me.minefinity.customItems.CustomItemRegistry;
+import org.evasive.me.minefinity.customItems.framework.CustomItemRegistry;
 import org.evasive.me.minefinity.customItems.backpack.Backpacks;
-import org.evasive.me.minefinity.customItems.backpack.BackpackCollect;
+import org.evasive.me.minefinity.customItems.backpack.BackpackHandler;
 import org.evasive.me.minefinity.utils.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;
 import org.jetbrains.annotations.NotNull;
@@ -18,8 +18,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Set;
 
-import static org.evasive.me.minefinity.customItems.ItemFunctions.getItemId;
-import static org.evasive.me.minefinity.customItems.ItemFunctions.hasItemId;
+import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.getItemId;
+import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.hasItemId;
 import static org.evasive.me.minefinity.utils.GenericGuiItems.fillerPane;
 import static org.evasive.me.minefinity.utils.TextConversions.formatItemName;
 
@@ -60,13 +60,13 @@ public class GenericBackpackGui extends BaseGui {
     private ItemStack createItemStorage(String backpackId, Player player, String itemId){
         ItemStack customItem = CustomItemRegistry.getByID(itemId).getBuilder().buildItem();
         int amount = Minefinity.getCore().getBackpackService().getBackpackStoredItemAmount(player, itemId);
-        int totalStorage = new BackpackCollect().getTotalBackpackStorage(player, backpackId);
+        int totalStorage = new BackpackHandler().getTotalBackpackStorage(player, backpackId);
         ItemBuilder storageBlock = new ItemBuilder(customItem).setLore(
                 List.of(
-                        TextConversions.parse("<gray>" + formatItemName(backpackId)),
-                        TextConversions.parse(""),
-                        TextConversions.parse("<gray>Stored: <#555555>" + amount + "<gray>/" + totalStorage),
-                        TextConversions.parse("")
+                        "<gray>" + formatItemName(backpackId),
+                        "",
+                        "<gray>Stored: <#555555>" + amount + "<gray>/" + totalStorage,
+                        ""
                 )
         );
         if(amount == 0)

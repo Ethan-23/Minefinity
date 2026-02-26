@@ -115,9 +115,9 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder setLore(List<Component> lines) {
+    public ItemBuilder setLore(List<String> lines) {
         lore.clear();
-        lore.addAll(lines);
+        addLore(lines);
         return this;
     }
 

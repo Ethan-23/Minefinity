@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static org.evasive.me.minefinity.customItems.ItemFunctions.getItemId;
-import static org.evasive.me.minefinity.customItems.ItemFunctions.hasItemId;
+import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.getItemId;
+import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.hasItemId;
 import static org.evasive.me.minefinity.utils.GenericGuiItems.*;
 import static org.evasive.me.minefinity.utils.TextConversions.formatItemName;
 
@@ -56,10 +56,10 @@ public class ForgeCategoriesGui extends BaseGui {
     private void buildFrame(){
         for (int i = 0; i < INVENTORY_SIZE; i++) {
             switch (i){
-                case MATERIAL_CATEGORY_SLOT -> inventory.setItem(i, buildCategory(ForgeCategories.MATERIALS, this.forgeCategory));
-                case COMPONENT_CATEGORY_SLOT -> inventory.setItem(i, buildCategory(ForgeCategories.COMPONENTS, this.forgeCategory));
-                case PICKAXE_CATEGORY_SLOT -> inventory.setItem(i, buildCategory(ForgeCategories.PICKAXES, this.forgeCategory));
-                case STORAGE_CATEGORY_SLOT -> inventory.setItem(i, buildCategory(ForgeCategories.STORAGE, this.forgeCategory));
+                case MATERIAL_CATEGORY_SLOT -> inventory.setItem(i, buildCategory(ForgeCategories.PICKAXE_TEMPLATES, this.forgeCategory));
+                case COMPONENT_CATEGORY_SLOT -> inventory.setItem(i, buildCategory(ForgeCategories.PICKAXE_HEADS, this.forgeCategory));
+                case PICKAXE_CATEGORY_SLOT -> inventory.setItem(i, buildCategory(ForgeCategories.PICKAXE_CORES, this.forgeCategory));
+                case STORAGE_CATEGORY_SLOT -> inventory.setItem(i, buildCategory(ForgeCategories.PICKAXE_HANDLES, this.forgeCategory));
                 case BACK_SLOT -> inventory.setItem(i, backPage);
                 case EXIT_SLOT -> inventory.setItem(i, exit);
                 default -> inventory.setItem(i, fillerPane);
@@ -89,14 +89,14 @@ public class ForgeCategoriesGui extends BaseGui {
      */
     private void buildRecipes(){
         List<ForgeRecipes> categoryList = Arrays.stream(ForgeRecipes.values())
-                .filter(r -> r.getCrafting().getForgeCategory() == this.forgeCategory)
+                .filter(r -> r.getBaseForgeRecipe().getForgeCategory() == this.forgeCategory)
                 .toList();
 
         for(int slot = 0; slot < RECIPE_SLOTS.size(); slot++){
 
             if(slot >= categoryList.size()) break;
 
-            BaseForgeRecipe forgeCrafting = categoryList.get(slot).getCrafting();
+            BaseForgeRecipe forgeCrafting = categoryList.get(slot).getBaseForgeRecipe();
 
             ItemBuilder forgeItem = new ItemBuilder(forgeCrafting.getResult().getBuilder().buildItem().clone());
             forgeItem.addBlank().addLore("<bold><gold>Recipe:");
@@ -146,7 +146,7 @@ public class ForgeCategoriesGui extends BaseGui {
             if(!Objects.requireNonNull(e.getCurrentItem()).hasItemMeta() || !(hasItemId(e.getCurrentItem())))
                 return;
 
-            new ForgeConfirmationGui(player, ForgeRecipes.valueOf(getItemId(e.getCurrentItem())).getCrafting()).openInventory(player);
+            new ForgeConfirmationGui(player, ForgeRecipes.valueOf(getItemId(e.getCurrentItem())).getBaseForgeRecipe()).openInventory(player);
         }
 
         if(selectedSlot >= ForgeCategoriesGui.MATERIAL_CATEGORY_SLOT && selectedSlot <= ForgeCategoriesGui.STORAGE_CATEGORY_SLOT){

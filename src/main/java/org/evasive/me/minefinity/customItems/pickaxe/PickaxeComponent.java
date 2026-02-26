@@ -1,28 +1,30 @@
 package org.evasive.me.minefinity.customItems.pickaxe;
 
-import org.bukkit.Material;
 import org.evasive.me.minefinity.core.items.CustomItem;
-import org.evasive.me.minefinity.customItems.items.CustomItemType;
+import org.evasive.me.minefinity.customItems.types.CustomItemType;
+import org.evasive.me.minefinity.customItems.types.ResourceItem;
 import org.evasive.me.minefinity.rarity.Rarity;
 
 public enum PickaxeComponent implements CustomItem {
-    WOOD_HEAD(Material.OAK_PLANKS, Rarity.MINOR, CustomItemType.PICKAXE_HEAD, PickaxeItem.WOODEN_TEMPLATE, "#AF855C"),
-    WOOD_CORE(Material.OAK_PLANKS, Rarity.MINOR, CustomItemType.PICKAXE_CORE, PickaxeItem.WOODEN_TEMPLATE, "#AF855C"),
-    WOOD_HANDLE(Material.OAK_PLANKS, Rarity.MINOR, CustomItemType.PICKAXE_HANDLE, PickaxeItem.WOODEN_TEMPLATE, "#AF855C"),
-    STONE_HEAD(Material.COBBLESTONE, Rarity.MINOR, CustomItemType.PICKAXE_HEAD, PickaxeItem.WOODEN_TEMPLATE, "#B2BEB5"),
-    CLAY_HANDLE(Material.CLAY, Rarity.MINOR, CustomItemType.PICKAXE_HANDLE, PickaxeItem.WOODEN_TEMPLATE, "#D3D3D3"),
-    BRICK_CORE(Material.BRICK, Rarity.MINOR, CustomItemType.PICKAXE_CORE, PickaxeItem.WOODEN_TEMPLATE, "#BC4A3C"),
-    FLINT_HEAD(Material.FLINT, Rarity.MINOR, CustomItemType.PICKAXE_HEAD, PickaxeItem.WOODEN_TEMPLATE, "#6F6A61"),
-    ANDESITE_CORE(Material.ANDESITE, Rarity.MINOR,  CustomItemType.PICKAXE_CORE, PickaxeItem.WOODEN_TEMPLATE, "#777C7C"),
-    COPPER_HEAD(Material.COPPER_INGOT, Rarity.UNIQUE, CustomItemType.PICKAXE_HEAD, PickaxeItem.COPPER_TEMPLATE, "#B87333"),
-    COPPER_CORE(Material.COPPER_INGOT, Rarity.UNIQUE, CustomItemType.PICKAXE_CORE, PickaxeItem.COPPER_TEMPLATE, "#B87333"),
-    COPPER_HANDLE(Material.COPPER_INGOT, Rarity.UNIQUE, CustomItemType.PICKAXE_HANDLE, PickaxeItem.COPPER_TEMPLATE, "#B87333"),
+    FLINT_HEAD(ResourceItem.FLINT, Rarity.MINOR, CustomItemType.PICKAXE_HEAD, PickaxeItem.WOODEN_TEMPLATE, "#6e6e6e"),
+    BRICK_CORE(ResourceItem.BRICK, Rarity.MINOR, CustomItemType.PICKAXE_CORE, PickaxeItem.WOODEN_TEMPLATE, "#ab5e59"),
+    CLAY_HANDLE(ResourceItem.CLAY_BALL, Rarity.MINOR, CustomItemType.PICKAXE_HANDLE, PickaxeItem.WOODEN_TEMPLATE, "#d1d1d1"),
+
+    ANDESITE_CORE(ResourceItem.ANDESITE, Rarity.MINOR, CustomItemType.PICKAXE_CORE, PickaxeItem.STONE_TEMPLATE, "#adadad"),
+    ROCK_HANDLE(ResourceItem.ROCK, Rarity.MINOR, CustomItemType.PICKAXE_HANDLE, PickaxeItem.STONE_TEMPLATE, "#696969"),
+
+    TUFF_HEAD(ResourceItem.TUFF, Rarity.UNIQUE, CustomItemType.PICKAXE_HEAD, PickaxeItem.COPPER_TEMPLATE, "#3d3d3d"),
+    BRONZE_HEAD(ResourceItem.BRONZE_INGOT, Rarity.UNIQUE, CustomItemType.PICKAXE_HEAD, PickaxeItem.COPPER_TEMPLATE, "#bd921c"),
+    TOUGH_STONE_CORE(ResourceItem.TOUGH_STONE, Rarity.UNIQUE, CustomItemType.PICKAXE_CORE, PickaxeItem.COPPER_TEMPLATE, "#54594a"),
+    DIORITE_CORE(ResourceItem.DIORITE, Rarity.UNIQUE, CustomItemType.PICKAXE_CORE, PickaxeItem.COPPER_TEMPLATE, "#e6e6e6"),
+    MOSSY_TIMBER_HANDLE(ResourceItem.MOSSY_TIMBER, Rarity.UNIQUE, CustomItemType.PICKAXE_HANDLE, PickaxeItem.COPPER_TEMPLATE, "#706311"),
+
     ;
 
     private final BasePickaxeComponent builder;
 
-    PickaxeComponent(Material material, Rarity rarity, CustomItemType partType, PickaxeItem minimumRequiredTemplateTier, String colorCode) {
-        this.builder = new BasePickaxeComponent(this.name(), material, rarity, partType, minimumRequiredTemplateTier, colorCode);
+    PickaxeComponent(ResourceItem resourceItem, Rarity rarity, CustomItemType partType, PickaxeItem minimumRequiredTemplateTier, String colorCode) {
+        this.builder = new BasePickaxeComponent(this.name(), resourceItem.getBuilder().getMaterial(), rarity, partType, minimumRequiredTemplateTier, colorCode);
     }
 
     public static boolean contains(String value) {

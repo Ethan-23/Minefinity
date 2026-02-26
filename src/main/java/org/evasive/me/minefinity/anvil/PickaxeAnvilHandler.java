@@ -2,18 +2,16 @@ package org.evasive.me.minefinity.anvil;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.customItems.CustomItemRegistry;
-import org.evasive.me.minefinity.customItems.items.CustomItemType;
+import org.evasive.me.minefinity.anvil.gui.PickaxeAnvilGui;
+import org.evasive.me.minefinity.customItems.types.CustomItemType;
 import org.evasive.me.minefinity.customItems.pickaxe.BasePickaxeComponent;
 import org.evasive.me.minefinity.customItems.pickaxe.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.pickaxe.PickaxeComponent;
 import org.evasive.me.minefinity.customItems.pickaxe.PickaxeItem;
-import org.evasive.me.minefinity.utils.ItemBuilder;
 
-import static org.evasive.me.minefinity.customItems.ItemFunctions.*;
-import static org.evasive.me.minefinity.customItems.ItemFunctions.getPickaxeComponent;
-import static org.evasive.me.minefinity.customItems.ItemFunctions.isPickaxe;
-import static org.evasive.me.minefinity.customItems.pickaxe.BasePickaxeItem.*;
+import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.*;
+import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.getPickaxeComponent;
+import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.isPickaxe;
 
 public class PickaxeAnvilHandler {
 
@@ -57,6 +55,7 @@ public class PickaxeAnvilHandler {
     public void handlePickaxeSlot(InventoryClickEvent e) {
 
         PickaxeAnvilGui pickaxeAnvilGui = (PickaxeAnvilGui) e.getInventory().getHolder();
+        assert pickaxeAnvilGui != null;
 
         ItemStack cursorItem = e.getCursor();
         ItemStack currentItem = e.getCurrentItem();
@@ -78,14 +77,11 @@ public class PickaxeAnvilHandler {
     }
 
     public ItemStack updatePickaxeItem(ItemStack pickaxe, ItemStack head, ItemStack core, ItemStack handle){
-        ItemStack newPickaxe = new ItemBuilder(pickaxe)
-                .addPersistentDataContainer(headKey, hasItemId(head) ? getItemId(head) : "NONE")
-                .addPersistentDataContainer(coreKey, hasItemId(core) ? getItemId(core) : "NONE")
-                .addPersistentDataContainer(handleKey, hasItemId(handle) ? getItemId(handle) : "NONE")
-                .build();
-
-        BasePickaxeItem basePickaxeItem = (BasePickaxeItem) CustomItemRegistry.getByID(getItemId(newPickaxe)).getBuilder();
-        return basePickaxeItem.rebuildPickaxe(newPickaxe);
+        BasePickaxeItem basePickaxeItem = new BasePickaxeItem(pickaxe);
+        basePickaxeItem.setPickaxeHead(hasItemId(head) ? PickaxeComponent.valueOf(getItemId(head)) : null);
+        basePickaxeItem.setPickaxeCore(hasItemId(core) ? PickaxeComponent.valueOf(getItemId(core)) : null);
+        basePickaxeItem.setPickaxeHandle(hasItemId(handle) ? PickaxeComponent.valueOf(getItemId(handle)) : null);
+        return basePickaxeItem.createBasePickaxe();
     }
 
 }

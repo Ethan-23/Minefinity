@@ -5,7 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.anvil.PickaxeAnvilGui;
+import org.evasive.me.minefinity.anvil.gui.PickaxeAnvilGui;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

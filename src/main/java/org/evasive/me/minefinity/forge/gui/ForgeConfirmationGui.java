@@ -9,6 +9,7 @@ import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.items.CustomItem;
 import org.evasive.me.minefinity.forge.data.ForgeCategories;
 import org.evasive.me.minefinity.forge.recipes.BaseForgeRecipe;
+import org.evasive.me.minefinity.forge.service.ForgeHandler;
 import org.evasive.me.minefinity.utils.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;
 import org.evasive.me.minefinity.utils.TimeCalculator;
@@ -114,7 +115,7 @@ public class ForgeConfirmationGui extends BaseGui {
         }
 
         if (clickedSlot == ForgeConfirmationGui.BACK_BUTTON_SLOT) {
-            new ForgeCategoriesGui(player, ForgeCategories.MATERIALS).open();
+            new ForgeCategoriesGui(player, ForgeCategories.PICKAXE_TEMPLATES).open();
         }
 
         if (clickedSlot == ForgeConfirmationGui.EXIT_BUTTON_SLOT) {

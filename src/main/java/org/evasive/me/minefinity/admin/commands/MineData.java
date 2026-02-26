@@ -6,14 +6,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.player.PlayerManager;
 import org.evasive.me.minefinity.player.sevices.BlockTierService;
-import org.evasive.me.minefinity.player.sevices.TownService;
+import org.evasive.me.minefinity.town.service.TownService;
 import org.evasive.me.minefinity.town.Structure;
 import org.evasive.me.minefinity.utils.TextConversions;
 import org.jetbrains.annotations.NotNull;
-
-import java.security.PrivateKey;
 
 public class MineData implements CommandExecutor {
 
