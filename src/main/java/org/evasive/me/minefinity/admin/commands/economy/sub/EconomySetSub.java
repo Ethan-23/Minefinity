@@ -8,6 +8,8 @@ import org.evasive.me.minefinity.core.SubCommand;
 import org.evasive.me.minefinity.economy.EconomyService;
 import org.evasive.me.minefinity.utils.CommandFeedback;
 
+import static org.evasive.me.minefinity.utils.economy.EconNumberUtils.*;
+
 public class EconomySetSub implements SubCommand {
 
     EconomyService economyService = Minefinity.getCore().getEconomyService();
@@ -22,7 +24,8 @@ public class EconomySetSub implements SubCommand {
 
         String playerName = args[1];
         Player target = Bukkit.getPlayerExact(playerName);
-        int amount = Integer.parseInt(args[2]);
+
+        double amount = Double.parseDouble(args[2]);
 
         economyService.setBalance(target, amount);
 

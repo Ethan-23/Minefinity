@@ -20,13 +20,17 @@ public class ServerJoinEvent implements Listener {
     VanishService vanishService = Minefinity.getCore().getVanishService();
     Scoreboard scoreboard = Minefinity.getCore().getScoreboard();
 
+    private static final String WELCOME_MESSAGE = "<#55FFFF>Welcome to Minefinity!";
+    private static final String PLAYER_JOIN = "<gray>[<#555555>+<gray>] <#55FFFF>";
+    private static final String PLAYER_LEAVE = "<gray>[<#555555>-<gray>] <#55FFFF>";
+
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         if(!Minefinity.getCore().getPlayerManager().getAll().containsKey(uuid))
             firstJoin(player);
-        event.joinMessage(vanishService.isVanished(player) ? null : TextConversions.parse("<gray>[<#555555>+<gray>] <#55FFFF>" + player.getName()));
+        event.joinMessage(vanishService.isVanished(player) ? null : TextConversions.parse(PLAYER_JOIN + player.getName()));
         scoreboard.setupMainScoreboard(player);
 
     }
@@ -34,12 +38,12 @@ public class ServerJoinEvent implements Listener {
     @EventHandler
     public void onLeave(PlayerQuitEvent event){
         Player player = event.getPlayer();
-        event.quitMessage(vanishService.isVanished(player) ? null : TextConversions.parse("<gray>[<#555555>-<gray>] <#55FFFF>" + player.getName()));
+        event.quitMessage(vanishService.isVanished(player) ? null : TextConversions.parse(PLAYER_LEAVE + player.getName()));
     }
 
     private void firstJoin(Player player){
         player.getInventory().addItem(buildStartingPickaxe());
-        player.sendMessage(TextConversions.parse("<#55FFFF>Welcome to Minefinity!"));
+        player.sendMessage(TextConversions.parse(WELCOME_MESSAGE));
         Minefinity.getCore().getPlayerManager().registerPlayer(player.getUniqueId());
     }
 

@@ -1,4 +1,4 @@
-package org.evasive.me.minefinity.economy.commands.balance;
+package org.evasive.me.minefinity.commands.balance;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -6,8 +6,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.SubCommand;
-import org.evasive.me.minefinity.economy.commands.balance.sub.BalanceOtherSub;
-import org.evasive.me.minefinity.economy.commands.balance.sub.BalanceSelfSub;
+import org.evasive.me.minefinity.commands.balance.sub.BalanceOtherSub;
+import org.evasive.me.minefinity.commands.balance.sub.BalanceSelfSub;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;

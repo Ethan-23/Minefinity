@@ -3,14 +3,21 @@ package org.evasive.me.minefinity.ranks;
 import net.kyori.adventure.text.Component;
 import org.evasive.me.minefinity.utils.TextConversions;
 
+import java.util.Set;
+
 public enum StaffRank {
-    HELPER(TextConversions.parse("<bold><purple>Helper")),
-    MOD(TextConversions.parse("<bold><green>Mod")),
-    ADMIN(TextConversions.parse("<bold><red>Admin"));
+    HELPER("HELPER", Set.of()),
+    MOD("MOD", Set.of()),
+    ADMIN("ADMIN", Set.of())
+    ;
 
-    final Component tag;
+    private Rank rank;
 
-    StaffRank(Component tag) {
-        this.tag = tag;
+    StaffRank(String prefix, Set<String> permission) {
+        this.rank = new Rank(this.name(), prefix, this.ordinal(), permission);
+    }
+
+    public Rank getRank() {
+        return rank;
     }
 }

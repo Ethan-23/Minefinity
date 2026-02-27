@@ -1,4 +1,4 @@
-package org.evasive.me.minefinity.admin.commands;
+package org.evasive.me.minefinity.admin.commands.gamemode;
 
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;

@@ -1,4 +1,4 @@
-package org.evasive.me.minefinity.economy.commands;
+package org.evasive.me.minefinity.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -7,10 +7,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.economy.EconomyService;
+import org.evasive.me.minefinity.utils.CommandFeedback;
 import org.evasive.me.minefinity.utils.TextConversions;
+import org.evasive.me.minefinity.utils.economy.EconNumberUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+
+import static java.lang.Double.parseDouble;
+import static org.evasive.me.minefinity.utils.economy.EconNumberUtils.*;
 
 public class Pay implements CommandExecutor {
 
@@ -30,12 +35,24 @@ public class Pay implements CommandExecutor {
         }
 
         String playerName = args[0];
-        int amount;
-        try {
-             amount = (int) Double.parseDouble(args[1]);
-        }catch (NumberFormatException e) {
-            player.sendMessage(TextConversions.parse("<red>Amount must be a number"));
-            return true;
+
+
+
+        double amount;
+
+        if(hasSuffix(args[1])) {
+            amount = suffixToNumber(args[1]);
+            if(amount < 0) {
+                sender.sendMessage(CommandFeedback.INVALID_AMOUNT);
+                return true;
+            }
+        } else {
+            try{
+                amount = round(Double.parseDouble(args[1]));
+            }catch (NumberFormatException e){
+                sender.sendMessage(CommandFeedback.INVALID_AMOUNT);
+                return true;
+            }
         }
 
         Player target = Bukkit.getPlayerExact(playerName);
@@ -65,8 +82,8 @@ public class Pay implements CommandExecutor {
         economyService.subBalance(player, amount);
         economyService.addBalance(target, amount);
 
-        player.sendMessage(TextConversions.parse("<yellow>You have payed " + target.getName() + " <green>$" + amount));
-        target.sendMessage(TextConversions.parse("<yellow>You received <green>$" + amount + " <yellow>from " + player.getName()));
+        player.sendMessage(TextConversions.parse("<yellow>You have payed " + target.getName() + " <green>$" + balanceSuffix(amount)));
+        target.sendMessage(TextConversions.parse("<yellow>You received <green>$" + balanceSuffix(amount) + " <yellow>from " + player.getName()));
 
         return true;
     }

@@ -4,13 +4,19 @@ import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.checkerframework.checker.units.qual.A;
 import org.evasive.me.minefinity.admin.commands.*;
+import org.evasive.me.minefinity.admin.commands.gamemode.Gamemode;
+import org.evasive.me.minefinity.admin.commands.gamemode.GamemodeCreative;
+import org.evasive.me.minefinity.admin.commands.gamemode.GamemodeSpectator;
+import org.evasive.me.minefinity.admin.commands.gamemode.GamemodeSurvival;
 import org.evasive.me.minefinity.admin.events.VanishListener;
 import org.evasive.me.minefinity.admin.commands.economy.Economy;
 import org.evasive.me.minefinity.admin.service.VanishService;
 import org.evasive.me.minefinity.anvil.commands.PickaxeAnvilCommand;
+import org.evasive.me.minefinity.commands.Spawn;
+import org.evasive.me.minefinity.core.events.ServerSpawnEvents;
 import org.evasive.me.minefinity.core.gui.GuiListener;
+import org.evasive.me.minefinity.core.service.SpawnService;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
 import org.evasive.me.minefinity.customItems.framework.ItemGiver;
 import org.evasive.me.minefinity.customItems.backpack.Backpacks;
@@ -28,8 +34,8 @@ import org.evasive.me.minefinity.database.repository.PlayerRepository;
 import org.evasive.me.minefinity.database.service.AutosaveService;
 import org.evasive.me.minefinity.database.service.DirtyPlayerService;
 import org.evasive.me.minefinity.economy.EconomyService;
-import org.evasive.me.minefinity.economy.commands.balance.Balance;
-import org.evasive.me.minefinity.economy.commands.Pay;
+import org.evasive.me.minefinity.commands.balance.Balance;
+import org.evasive.me.minefinity.commands.Pay;
 import org.evasive.me.minefinity.core.events.ServerJoinEvent;
 import org.evasive.me.minefinity.forge.service.ForgeService;
 import org.evasive.me.minefinity.miner.events.AutoMinerEvents;
@@ -72,6 +78,7 @@ public final class Minefinity extends JavaPlugin {
     private SmelterService smelterService;
     private DirtyPlayerService dirtyPlayerService;
     private AutosaveService autosaveService;
+    private SpawnService spawnService;
 
     private Scoreboard scoreboard;
 
@@ -109,6 +116,7 @@ public final class Minefinity extends JavaPlugin {
         forgeService = new ForgeService(playerManager);
         engineerService = new EngineerService(playerManager);
         smelterService = new SmelterService(playerManager);
+        spawnService = new SpawnService();
 
 
 
@@ -127,6 +135,7 @@ public final class Minefinity extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
+        saveDefaultConfig();
 
         worldGuardCheck();
         com.github.retrooper.packetevents.PacketEvents.getAPI().init();
@@ -188,6 +197,7 @@ public final class Minefinity extends JavaPlugin {
         pluginManager.registerEvents(new AutoMinerEvents(), this);
         pluginManager.registerEvents(new SmelterEvents(), this);
         pluginManager.registerEvents(new VanishListener(), this);
+        pluginManager.registerEvents(new ServerSpawnEvents(spawnService), this);
     }
 
     private void registerCommands(){
@@ -204,6 +214,14 @@ public final class Minefinity extends JavaPlugin {
         new StaffMode();
         new Rename();
         new Vanish();
+        new PacketRefresh();
+        new SetSpawn(spawnService);
+        new Spawn();
+        new Speed();
+        new Invesee();
+        new GamemodeSpectator();
+        new GamemodeCreative();
+        new GamemodeSurvival();
     }
 
     private void registerCustomItems(){
@@ -285,6 +303,10 @@ public final class Minefinity extends JavaPlugin {
 
     public AutosaveService getAutosaveService(){
         return autosaveService;
+    }
+
+    public SpawnService getSpawnService(){
+        return spawnService;
     }
 
     @Override

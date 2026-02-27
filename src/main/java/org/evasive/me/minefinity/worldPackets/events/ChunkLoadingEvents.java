@@ -31,6 +31,10 @@ public class ChunkLoadingEvents implements Listener {
             townService.handleTownhallArea(player);
         if(hasRegion(player, chunk, townService.MERCHANT_REGION))
             townService.handleMerchantArea(player);
+        if(hasRegion(player, chunk, townService.FORGE_REGION))
+            townService.handleForgeArea(player);
+        if(hasRegion(player, chunk, townService.WORKSHOP_REGION))
+            townService.handleWorkshopArea(player);
     }
 
     private boolean hasRegion(Player player, Chunk chunk, String regionName) {

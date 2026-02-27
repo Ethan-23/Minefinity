@@ -1,8 +1,10 @@
 package org.evasive.me.minefinity.admin.commands.economy;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.admin.commands.economy.sub.EconomyAddSub;
@@ -11,17 +13,21 @@ import org.evasive.me.minefinity.admin.commands.economy.sub.EconomySubSub;
 import org.evasive.me.minefinity.core.SubCommand;
 import org.evasive.me.minefinity.utils.CommandFeedback;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public class Economy implements CommandExecutor {
+import static org.evasive.me.minefinity.utils.command.TabCompletionUtils.getOnlinePlayers;
+import static org.evasive.me.minefinity.utils.economy.EconNumberUtils.*;
+
+public class Economy implements CommandExecutor, TabCompleter {
 
     private final Map<String, SubCommand> subCommands = new HashMap<>();
 
     public Economy() {
         Objects.requireNonNull(Minefinity.getCore().getCommand("economy")).setExecutor(this);
+        Objects.requireNonNull(Minefinity.getCore().getCommand("economy")).setTabCompleter(this);
 
         register(new EconomySetSub());
         register(new EconomyAddSub());
@@ -49,19 +55,30 @@ public class Economy implements CommandExecutor {
             return true;
         }
 
-        int amount;
+        double amount;
 
-        try{
-            amount = Integer.parseInt(args[2]);
-        }catch (NumberFormatException e){
-            sender.sendMessage(CommandFeedback.INVALID_AMOUNT);
-            return true;
+        if(hasSuffix(args[2])) {
+            amount = suffixToNumber(args[2]);
+            if(amount < 0) {
+                sender.sendMessage(CommandFeedback.INVALID_AMOUNT);
+                return true;
+            }
+        } else {
+            try{
+                amount = round(Double.parseDouble(args[2]));
+            }catch (NumberFormatException e){
+                sender.sendMessage(CommandFeedback.INVALID_AMOUNT);
+                return true;
+            }
         }
+
 
         if(amount < 0){
             sender.sendMessage(CommandFeedback.UNDER_ZERO);
             return true;
         }
+
+        args[2] = String.valueOf(amount);
 
         if(type.equalsIgnoreCase("set"))
             subCommands.get("seteconomy").execute(sender, args);
@@ -71,5 +88,16 @@ public class Economy implements CommandExecutor {
             subCommands.get("subeconomy").execute(sender, args);
 
         return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
+        if(args.length == 1)
+            return List.of("set", "add", "sub");
+
+        if(args.length == 2)
+            return getOnlinePlayers(args[1]);
+
+        return Collections.emptyList();
     }
 }

@@ -56,6 +56,40 @@ commands:
   rename:
     permission: minefinity.rename
     description: sets the name of the item in your hand
+  packetrefresh:
+    aliases: [pr]
+    permission: minefinity.packetrefresh
+    description: refreshes the packets for a player
+  setspawn:
+    permission: minefinity.setspawn
+    description: sets the spawn of the world
+  spawn:
+    permission: minefinity.spawn
+    description: Brings a player to spawn
+  speed:
+    permission: minefinity.speed
+    description: sets the players movement speed
+  invesee:
+    permission: minefinity.invesee
+    description: Allows player to see the inventory of another player and edit it
+  gamemodecreative:
+    aliases: [gmc]
+    permission: minefinity.gamemode
+    description: Alternate creative command
+  gamemodesurvival:
+    aliases: [gms]
+    permission: minefinity.gamemode
+    description: Alternate survival command
+  gamemodespectator:
+    aliases: [gmsp]
+    permission: minefinity.gamemode
+    description: Alternate spectator command
+  warp:
+    permission: minefinity.warp
+    description: Shows list of warps
+  setwarp:
+    permission: minefinity.setwarp
+    description: Creates a warp for players to use
 
 permissions:
   minefinity.gamemode:
@@ -90,6 +124,27 @@ permissions:
     default: op
   minefinity.rename:
     description: Allows the use of /rename
+    default: op
+  minfinity.packetrefresh:
+    description: Allows the use of /packetrefresh
+    default: op
+  minefinity.setspawn:
+    description: Allows use of /setspawn
+    default: op
+  minefinity.spawn:
+    description: Allows use of /spawn
+    default: true
+  minefinity.speed:
+    description: Allows use of /speed
+    default: op
+  minefinity.invesee:
+    description: Allows use of /invesee
+    default: op
+  minefinity.warp:
+    description: Allows use of /warp
+    default: true
+  minefinity.setwarp:
+    description: Allows use of /setwarp
     default: op
 
 depend: [WorldGuard]

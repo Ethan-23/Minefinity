@@ -17,6 +17,7 @@ import org.evasive.me.minefinity.utils.TextConversions;
 import java.time.LocalDateTime;
 
 import static org.evasive.me.minefinity.utils.TextConversions.intToRoman;
+import static org.evasive.me.minefinity.utils.economy.EconNumberUtils.balanceSuffix;
 
 public class Scoreboard {
 
@@ -56,7 +57,7 @@ public class Scoreboard {
         addScore(board, objective, "  §l" + blockTierRoman + " §r" + block.name(), 4);
         addScore(board, objective, "§r  ", 3);
         addScore(board, objective, "§a§lBalance", 2);
-        addScore(board, objective, "  $"+ economyService.getBalance(player), 1);
+        addScore(board, objective, "  $"+ balanceSuffix(economyService.getBalance(player)), 1);
         // Other main stats can go here
     }
 
