@@ -10,7 +10,7 @@ import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.forge.service.ForgeHandler;
 import org.evasive.me.minefinity.forge.service.ForgeService;
-import org.evasive.me.minefinity.utils.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;
 import org.jetbrains.annotations.NotNull;
 

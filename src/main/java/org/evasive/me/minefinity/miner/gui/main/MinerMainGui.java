@@ -8,10 +8,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
-import org.evasive.me.minefinity.customItems.framework.CustomItemRegistry;
+import org.evasive.me.minefinity.customItems.itembuilder.data.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.miner.service.AutoMinerService;
+import org.evasive.me.minefinity.player.sevices.BlockTierService;
 import org.evasive.me.minefinity.resourceblock.framework.BlockType;
-import org.evasive.me.minefinity.utils.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;
 
 import java.util.List;
@@ -25,9 +27,8 @@ import static org.evasive.me.minefinity.utils.TextConversions.intToRoman;
 
 public class MinerMainGui extends BaseGui {
 
-    MinerMainHandler minerMainEvents = new MinerMainHandler();
-
     private final AutoMinerService autoMinerService;
+    private MinerMainHandler minerMainEvents;
 
     private static final int INVENTORY_SIZE = 54;
     public static final int PICKAXE_SLOT = 20;
@@ -36,9 +37,10 @@ public class MinerMainGui extends BaseGui {
     public static final int COLLECT_SLOT = 31;
     public static final int INFORMATION_SLOT = 49;
 
-    public MinerMainGui(Player player) {
+    public MinerMainGui(Player player, AutoMinerService autoMinerService, BlockTierService blockTierService) {
         super(player, INVENTORY_SIZE, TextConversions.parse("Miner"));
-        autoMinerService = Minefinity.getCore().getAutoMinerService();
+        this.autoMinerService = autoMinerService;
+        minerMainEvents = new MinerMainHandler(autoMinerService, blockTierService);
         build();
     }
 
@@ -87,7 +89,8 @@ public class MinerMainGui extends BaseGui {
 
             String itemId = entry.getKey();
 
-            collectBuilder.addLore("<white>" + buildRarityColor(itemId, CustomItemRegistry.getByID(itemId).getBuilder().getRarity()) + "<gray> ×<blue>" + entry.getValue());
+            BaseCustomItem baseCustomItem = (BaseCustomItem) CustomItemRegistry.getByID(itemId).getBaseItem();
+            collectBuilder.addLore("<white>" + buildRarityColor(itemId, baseCustomItem.getRarity()) + "<gray> ×<blue>" + entry.getValue());
         }
 
         collectBuilder.addBlank().addLore("<green>Click to collect");

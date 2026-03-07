@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.merchant.service.MerchantHandler;
-import org.evasive.me.minefinity.utils.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;
 
 import java.util.List;

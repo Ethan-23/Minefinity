@@ -1,6 +1,6 @@
 package org.evasive.me.minefinity.core.recipe;
 
-import org.evasive.me.minefinity.core.items.CustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
 
 import java.util.Map;
 

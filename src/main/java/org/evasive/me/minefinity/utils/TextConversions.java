@@ -37,6 +37,10 @@ public class TextConversions {
         return "<"+rarity.getRarityBuilder().getTextColor().asHexString()+">" + formatItemName(name);
     }
 
+    public static String setRarityColor(String name, Rarity rarity){
+        return "<"+rarity.getRarityBuilder().getTextColor().asHexString()+">" + name;
+    }
+
     public static String buildColor(String name, String hexCode){
         return "<"+hexCode+">" + formatItemName(name);
     }

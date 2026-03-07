@@ -6,6 +6,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 import org.evasive.me.minefinity.Minefinity;
+import org.evasive.me.minefinity.scoreboard.ScoreboardService;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -14,17 +15,18 @@ import java.util.UUID;
 
 public class VanishService {
 
+    private final ScoreboardService scoreboardService;
     private final Set<UUID> vanished = new HashSet<>();
     private final Team vanishTeam;
 
-    public VanishService() {
-        ScoreboardManager manager = Bukkit.getScoreboardManager();
-        Scoreboard board = manager.getMainScoreboard();
+    public VanishService(ScoreboardManager scoreboardManager, ScoreboardService scoreboardService) {
+        this.scoreboardService = scoreboardService;
+        Scoreboard scoreboard = scoreboardManager.getMainScoreboard();
 
-        Team team = board.getTeam("vanish");
+        Team team = scoreboard.getTeam("vanish");
 
         if (team == null) {
-            team = board.registerNewTeam("vanish");
+            team = scoreboard.registerNewTeam("vanish");
             team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         }
 
@@ -42,7 +44,7 @@ public class VanishService {
         }
 
         vanishTeam.addEntry(player.getName());
-        Minefinity.getCore().getScoreboard().setupMainScoreboard(player);
+        scoreboardService.setupMainScoreboard(player);
     }
 
     public void show(Player player) {
@@ -56,7 +58,7 @@ public class VanishService {
         }
 
         vanishTeam.removeEntry(player.getName());
-        Minefinity.getCore().getScoreboard().setupMainScoreboard(player);
+        scoreboardService.setupMainScoreboard(player);
     }
 
     public boolean isVanished(Player player) {

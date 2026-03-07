@@ -15,9 +15,9 @@ public class Spawn implements CommandExecutor {
 
     SpawnService spawnService;
 
-    public Spawn() {
+    public Spawn(SpawnService spawnService) {
         Objects.requireNonNull(Minefinity.getCore().getCommand("spawn")).setExecutor(this);
-        spawnService = Minefinity.getCore().getSpawnService();
+        this.spawnService = spawnService;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class Spawn implements CommandExecutor {
         if (!(sender instanceof Player player))
             return true;
 
-        player.teleport(spawnService.getSpawnLocation(player.getWorld()));
+        player.teleport(spawnService.getSpawnLocation());
         player.sendMessage(TextConversions.parse("<yellow>You have been teleported to spawn"));
 
         return true;

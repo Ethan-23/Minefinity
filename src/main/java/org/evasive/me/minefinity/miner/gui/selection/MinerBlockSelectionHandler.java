@@ -9,8 +9,13 @@ import org.evasive.me.minefinity.resourceblock.framework.BlockType;
 
 public class MinerBlockSelectionHandler {
 
-    BlockTierService blockTierService = Minefinity.core.getBlockTierService();
-    AutoMinerService autoMinerService = Minefinity.core.getAutoMinerService();
+    private final BlockTierService blockTierService;
+    private final AutoMinerService autoMinerService;
+
+    public MinerBlockSelectionHandler(BlockTierService blockTierService, AutoMinerService autoMinerService) {
+        this.blockTierService = blockTierService;
+        this.autoMinerService = autoMinerService;
+    }
 
     public void handleBlockSelection(Player player, int clickedSlot){
         int clickedBlockTier = clickedSlot - 1;
@@ -24,7 +29,7 @@ public class MinerBlockSelectionHandler {
     }
 
     public void handleBackButton(Player player){
-        new MinerMainGui(player).open();
+        new MinerMainGui(player, autoMinerService, blockTierService).open();
     }
 
 }

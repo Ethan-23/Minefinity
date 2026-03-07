@@ -2,15 +2,12 @@ package org.evasive.me.minefinity.core.gui;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.core.items.CustomItem;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseGui implements InventoryHolder {

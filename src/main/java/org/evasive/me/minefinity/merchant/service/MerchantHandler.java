@@ -4,17 +4,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.core.items.BaseCustomItem;
-import org.evasive.me.minefinity.customItems.framework.CustomItemRegistry;
-import org.evasive.me.minefinity.customItems.types.ResourceItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.economy.EconomyService;
 import org.evasive.me.minefinity.utils.TextConversions;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.getItemId;
-import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.hasItemId;
+import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.*;
 import static org.evasive.me.minefinity.utils.TextConversions.buildRarityColor;
 
 public class MerchantHandler {
@@ -27,16 +25,18 @@ public class MerchantHandler {
         Map<String, Integer> salesMap = new HashMap<>();
 
         for(ItemStack item : inventory.getContents()){
-            if(!hasItemId(item)) continue;
 
-            String itemId = getItemId(item);
-            if(!ResourceItem.contains(itemId)) continue;
+            BaseCustomItem baseCustomItem = getRegisteredItem(item);
+
+            if(baseCustomItem == null)
+                continue;
 
             int stackSize = item.getAmount();
+            float singleCost = baseCustomItem.getValue().isPresent() ? baseCustomItem.getValue().get() : 0;
 
-            BaseCustomItem baseCustomItem = CustomItemRegistry.getByID(itemId).getBuilder();
-            float singleCost = baseCustomItem.getBuilder().getValue();
             if(singleCost <= 0) continue;
+
+            String itemId = baseCustomItem.getID();
 
             if(salesMap.containsKey(itemId))
                 salesMap.put(itemId, salesMap.get(itemId) + stackSize);
@@ -58,8 +58,8 @@ public class MerchantHandler {
         float totalCost = 0;
         for (Map.Entry<String, Integer> entry : playerSaleMap.entrySet()) {
             String itemId = entry.getKey();
-            BaseCustomItem baseCustomItem = CustomItemRegistry.getByID(itemId).getBuilder();
-            float singleCost = baseCustomItem.getBuilder().getValue();
+            BaseCustomItem baseCustomItem = CustomItemRegistry.getByID(itemId).getBaseItem();
+            float singleCost = baseCustomItem.getValue().isPresent() ? baseCustomItem.getValue().get() : 0;
             int stackSize = entry.getValue();
             if(stackSize <= 0 || singleCost <= 0) continue;
             totalCost += stackSize * singleCost;

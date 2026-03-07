@@ -8,9 +8,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
+import org.evasive.me.minefinity.customItems.itembuilder.data.BaseCustomItem;
 import org.evasive.me.minefinity.player.sevices.MilestoneService;
 import org.evasive.me.minefinity.resourceblock.framework.BlockType;
-import org.evasive.me.minefinity.utils.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,7 +52,8 @@ public class MilestoneGui extends BaseGui {
             if (!TRACK.contains(i)) this.inventory.setItem(i, fillerPane);
         }
 
-        inventory.setItem(BLOCK_DISPLAY, new ItemBuilder(blockType.getBlock().material(), TextConversions.parse(buildRarityColor(blockType.name(), blockType.getBlock().blockDrop().getBuilder().getRarity()))).build());
+        BaseCustomItem baseCustomItem = (BaseCustomItem) blockType.getBlock().blockDrop().getBaseItem();
+        inventory.setItem(BLOCK_DISPLAY, new ItemBuilder(blockType.getBlock().material(), TextConversions.parse(buildRarityColor(blockType.name(), baseCustomItem.getRarity()))).build());
 
         inventory.setItem(BACK_BUTTON, backPage);
 

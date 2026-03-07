@@ -1,8 +1,7 @@
 package org.evasive.me.minefinity.forge.data;
 
 import org.bukkit.Material;
-import org.evasive.me.minefinity.utils.ItemBuilder;
-import org.evasive.me.minefinity.utils.TextConversions;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 
 public enum ForgeCategories {
     PICKAXE_TEMPLATES(Material.IRON_PICKAXE, "Pickaxe Templates"),
@@ -19,6 +18,6 @@ public enum ForgeCategories {
     }
 
     public ItemBuilder toItemBuilder() {
-        return new ItemBuilder(material, TextConversions.parse("<yellow>" + name + "</yellow>"));
+        return new ItemBuilder(material, "<yellow>" + name + "</yellow>");
     }
 }

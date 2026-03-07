@@ -1,11 +1,11 @@
 package org.evasive.me.minefinity.smelter.service;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.core.items.CustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.BaseFuelItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
 import org.evasive.me.minefinity.customItems.framework.CustomItemStack;
-import org.evasive.me.minefinity.customItems.types.FuelItem;
+import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.database.service.DirtyPlayerService;
 import org.evasive.me.minefinity.player.PlayerManager;
 import org.evasive.me.minefinity.smelter.Smelter;
@@ -28,13 +28,13 @@ public class SmelterService {
         return playerManager.get(player).getSmelter();
     }
 
-    public FuelItem getFuelTier(Player player){
-        return getSmelter(player).getFuelTier();
+    public String getFuelId(Player player){
+        return getSmelter(player).getFuelId();
     }
 
-    public void setFuelTier(Player player, FuelItem fuelItem){
-        dirtyPlayerService.addDirtyPlayer(player);
-        getSmelter(player).setFuelTier(fuelItem);
+    public void setFuelTier(Player player, String fuelId){
+        setLastUpdated(player);
+        getSmelter(player).setFuelId(fuelId);
     }
 
     public int getTotalFuel(Player player){
@@ -42,7 +42,7 @@ public class SmelterService {
     }
 
     public void setTotalFuel(Player player, int amount){
-        dirtyPlayerService.addDirtyPlayer(player);
+        setLastUpdated(player);
         getSmelter(player).setTotalFuel(amount);
     }
 
@@ -51,7 +51,6 @@ public class SmelterService {
     }
 
     public void setFuelEfficiency(Player player, int amount){
-        dirtyPlayerService.addDirtyPlayer(player);
         getSmelter(player).setRemainingFuelEfficiency(amount);
     }
 
@@ -60,22 +59,21 @@ public class SmelterService {
     }
 
     public void setCurrentSmeltProgress(Player player, int amount){
-        dirtyPlayerService.addDirtyPlayer(player);
         getSmelter(player).setCurrentSmeltProgress(amount);
     }
 
-    public void setFuel(Player player, FuelItem fuelItem, int amount){
-        dirtyPlayerService.addDirtyPlayer(player);
-        setFuelTier(player, fuelItem);
+    public void setFuel(Player player, String fuelId, int amount){
+        setLastUpdated(player);
+        setFuelTier(player, fuelId);
         if(getFuelEfficiency(player) <= 0){
-            setFuelEfficiency(player, fuelItem.getBuilder().getFuelAmount());
+            setFuelEfficiency(player, ((BaseFuelItem)CustomItemRegistry.getByID(fuelId).getBaseItem()).getFuelAmount());
             amount--;
         }
         setTotalFuel(player, amount);
     }
 
     public void addFuel(Player player, int amount){
-        dirtyPlayerService.addDirtyPlayer(player);
+        setLastUpdated(player);
         setTotalFuel(player, getTotalFuel(player) + amount);
     }
 
@@ -84,7 +82,7 @@ public class SmelterService {
     }
 
     public void setInventoryItem(Player player, CustomItemStack item, int slot){
-        dirtyPlayerService.addDirtyPlayer(player);
+        setLastUpdated(player);
         getSmelter(player).getInventoryItems()[slot] = item;
     }
 
@@ -93,7 +91,7 @@ public class SmelterService {
     }
 
     public void setInventory(Player player, CustomItemStack[] items){
-        dirtyPlayerService.addDirtyPlayer(player);
+        setLastUpdated(player);
         getSmelter(player).setInventoryItems(items);
     }
 
@@ -114,13 +112,13 @@ public class SmelterService {
     }
 
     public void setCurrentlySmelting(Player player, String itemId){
-        dirtyPlayerService.addDirtyPlayer(player);
+        setLastUpdated(player);
         getSmelter(player).setCurrentlySmelting(itemId);
     }
 
     //Smelting Process
     public void attemptSmelt(Player player, int progressTime){
-        setLastUpdated(player);
+
         String currentId = getCurrentlySmelting(player);
 
         if(currentId == null && isEmpty(player))
@@ -145,10 +143,10 @@ public class SmelterService {
 
         int currentProgress = getCurrentSmeltProgress(player);
 
-        int totalFuelCost = SmelterRecipes.valueOf(currentId).getSmelterRecipe().getFuelCost();
-        int remainingCost = totalFuelCost - currentProgress;
+        //int totalFuelCost = SmelterRecipes.valueOf(currentId).getSmelterRecipe().getFuelCost();
+        //int remainingCost = totalFuelCost - currentProgress;
         int fuelToBurn = Math.min(progressTime, remainingFuel);
-        fuelToBurn = Math.min(fuelToBurn, remainingCost);
+        //fuelToBurn = Math.min(fuelToBurn, remainingCost);
         int progress = currentProgress + fuelToBurn;
 
         setCurrentSmeltProgress(player, progress);
@@ -158,7 +156,9 @@ public class SmelterService {
 
         attemptRefuel(player);
 
-        if(progress < SmelterRecipes.valueOf(currentId).getSmelterRecipe().getFuelCost()) return true;
+        setLastUpdated(player);
+
+        //if(progress < SmelterRecipes.valueOf(currentId).getSmelterRecipe().getFuelCost()) return true;
 
         setCurrentSmeltProgress(player, 0);
         getOutput(player).put(currentId, getOutput(player).getOrDefault(currentId, 0) + 1);
@@ -177,7 +177,7 @@ public class SmelterService {
 
         if(remainingFuel <= 0){
             setTotalFuel(player, getTotalFuel(player) - 1);
-            setFuelEfficiency(player, getFuelTier(player).getBuilder().getFuelAmount());
+            setFuelEfficiency(player, ((BaseFuelItem)CustomItemRegistry.getByID(getFuelId(player))).getFuelAmount());
             remainingFuel = getFuelEfficiency(player);
         }
         return remainingFuel;
@@ -194,12 +194,12 @@ public class SmelterService {
 
             if(recipe == null) continue;
 
-            Map<CustomItem, Integer> smelterRecipe = recipe.getSmelterRecipe().getRecipe();
+            //Map<CustomItem, Integer> smelterRecipe = recipe.getSmelterRecipe().getRecipe();
 
-            if(amount < smelterRecipe.get(customItem)) continue;
+            //if(amount < smelterRecipe.get(customItem)) continue;
 
-            customItemStack.setAmount(customItemStack.getAmount() - smelterRecipe.get(customItemStack.getCustomItem()));
-            setCurrentlySmelting(player, recipe.getSmelterRecipe().getResult().getID());
+            //customItemStack.setAmount(customItemStack.getAmount() - smelterRecipe.get(customItemStack.getCustomItem()));
+            //setCurrentlySmelting(player, recipe.getSmelterRecipe().getResult().getID());
             return;
         }
 
@@ -211,10 +211,10 @@ public class SmelterService {
 
         int progressTime = Math.toIntExact(System.currentTimeMillis() / 1000 - getLastUpdated(player) / 1000);
 
-        FuelItem fuelType = getFuelTier(player);
-        if(getTotalFuel(player) == 0 && getFuelEfficiency(player) == 0 || fuelType == null) return;
+        String fuelId = getFuelId(player);
+        if(getTotalFuel(player) == 0 && getFuelEfficiency(player) == 0 || fuelId == null) return;
 
-        int totalFuelValue = getFuelEfficiency(player) + getTotalFuel(player) * fuelType.getBuilder().getFuelAmount();
+        int totalFuelValue = getFuelEfficiency(player) + getTotalFuel(player) * ((BaseFuelItem)CustomItemRegistry.getByID(fuelId).getBaseItem()).getFuelAmount();
 
         for(int i = 0; i < getInventory(player).length; i++){
 
@@ -227,15 +227,15 @@ public class SmelterService {
 
             if(smelterRecipes == null) continue;
 
-            int fuelCost = smelterRecipes.getSmelterRecipe().getFuelCost();
-            int amountPerCraft = smelterRecipes.getSmelterRecipe().getRecipe().get(customItemStack.getCustomItem());
-            int amount = customItemStack.getAmount() / amountPerCraft;
+            //int fuelCost = smelterRecipes.getSmelterRecipe().getFuelCost();
+            //int amountPerCraft = smelterRecipes.getSmelterRecipe().getRecipe().get(customItemStack.getCustomItem());
+            //int amount = customItemStack.getAmount() / amountPerCraft;
 
-            if(amount == 0) continue;
+            //if(amount == 0) continue;
 
-            String outputId = smelterRecipes.getSmelterRecipe().getResult().getID();
+            //String outputId = smelterRecipes.getSmelterRecipe().getResult().getID();
 
-            if(fuelCost * amount > totalFuelValue || fuelCost * amount > progressTime){
+            /*if(fuelCost * amount > totalFuelValue || fuelCost * amount > progressTime){
                 int smeltableCount = Math.min(totalFuelValue / fuelCost, progressTime / fuelCost);
                 if(smeltableCount == 0) continue;
                 bulkSmelt(player, smeltableCount, customItemStack, i, outputId);
@@ -252,12 +252,15 @@ public class SmelterService {
             customItemStack.setAmount(customItemStack.getAmount() % amountPerCraft);
             setInventoryItem(player, customItemStack, i);
             madeProgress = true;
+            */
         }
 
         if(!madeProgress) return;
 
-        setTotalFuel(player, totalFuelValue / fuelType.getBuilder().getFuelAmount());
-        setFuelEfficiency(player, totalFuelValue % fuelType.getBuilder().getFuelAmount());
+        BaseFuelItem baseFuelItem = (BaseFuelItem) CustomItemRegistry.getByID(fuelId);
+
+        setTotalFuel(player, totalFuelValue / baseFuelItem.getFuelAmount());
+        setFuelEfficiency(player, totalFuelValue % baseFuelItem.getFuelAmount());
         player.sendMessage(TextConversions.parse("<gold>Smelter has made progress while you were offline!"));
     }
 
@@ -267,7 +270,7 @@ public class SmelterService {
     }
 
     public void addOutput(Player player, String itemId, int amount){
-        dirtyPlayerService.addDirtyPlayer(player);
+        setLastUpdated(player);
         int current = getOutput(player).getOrDefault(itemId, 0);
         getOutput(player).put(itemId, current + amount);
     }

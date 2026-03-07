@@ -5,11 +5,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.gui.BaseGui;
-import org.evasive.me.minefinity.core.items.CustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
 import org.evasive.me.minefinity.forge.data.ForgeCategories;
 import org.evasive.me.minefinity.forge.recipes.BaseForgeRecipe;
 import org.evasive.me.minefinity.forge.recipes.ForgeRecipes;
-import org.evasive.me.minefinity.utils.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;
 import org.evasive.me.minefinity.utils.TimeCalculator;
 import org.jetbrains.annotations.NotNull;
@@ -98,17 +99,17 @@ public class ForgeCategoriesGui extends BaseGui {
 
             BaseForgeRecipe forgeCrafting = categoryList.get(slot).getBaseForgeRecipe();
 
-            ItemBuilder forgeItem = new ItemBuilder(forgeCrafting.getResult().getBuilder().buildItem().clone());
+            ItemBuilder forgeItem = new ItemBuilder(forgeCrafting.getResult().getBaseItem().buildItem().clone());
             forgeItem.addBlank().addLore("<bold><gold>Recipe:");
 
             for (Map.Entry<CustomItem, Integer> entry : forgeCrafting.getRecipe().entrySet()) {
-                CustomItem customItem = entry.getKey();
-                ItemStack recipeItem = customItem.getBuilder().buildItem();
+                BaseCustomItem customItem = (BaseCustomItem) entry.getKey();
+                ItemStack recipeItem = customItem.getBaseItem().buildItem();
                 int amount = entry.getValue();
                 String name = hasItemId(recipeItem)
                         ? formatItemName(getItemId(recipeItem))
                         : recipeItem.getType().name();
-                forgeItem.addLore("<"+customItem.getBuilder().getRarity().getRarityBuilder().getTextColor().asHexString()+">" + name + "<white> x" + amount).build();
+                forgeItem.addLore("<"+customItem.getRarity().getRarityBuilder().getTextColor().asHexString()+">" + name + "<white> x" + amount).build();
             }
 
             forgeItem.addBlank().addLore("<bold><gold>Forge Time:" );

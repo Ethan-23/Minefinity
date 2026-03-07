@@ -17,7 +17,7 @@ public class ServerSpawnEvents implements Listener {
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent e) {
         Player p = e.getPlayer();
-        e.setRespawnLocation(spawnService.getSpawnLocation(p.getWorld()));
+        e.setRespawnLocation(spawnService.getSpawnLocation());
     }
 
 }

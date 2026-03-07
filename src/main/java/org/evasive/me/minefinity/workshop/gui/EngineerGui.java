@@ -30,9 +30,8 @@ public class EngineerGui extends BaseGui {
     EngineerClickHandler engineerClickHandler;
 
 
-    public EngineerGui(Player player, WorkshopMode workshopMode) {
+    public EngineerGui(Player player, WorkshopMode workshopMode, EngineerService engineerService) {
         super(player, INVENTORY_SIZE, TextConversions.parse(formatItemName(workshopMode.name())));
-        EngineerService engineerService = Minefinity.getCore().getEngineerService();
         renderer = new EngineerGuiRenderer(player, workshopMode, engineerService);
         engineerClickHandler = new EngineerClickHandler(player, workshopMode, engineerService);
         build();

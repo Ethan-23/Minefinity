@@ -1,0 +1,12 @@
+ranks:
+  admin:
+    category: staff
+    prefix: "&c[Admin]"
+    permissions:
+      - minefinity.admin
+      - minefinity.staff
+  vip:
+    category: donor
+    prefix: "&a[VIP]"
+    permissions:
+      - minefinity.vip

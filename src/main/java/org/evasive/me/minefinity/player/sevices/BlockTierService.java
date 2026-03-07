@@ -6,9 +6,9 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.core.items.CustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
 import org.evasive.me.minefinity.database.service.DirtyPlayerService;
-import org.evasive.me.minefinity.mining.service.BlockProgress;
+import org.evasive.me.minefinity.mining.handlers.BlockProgressHandler;
 import org.evasive.me.minefinity.player.PlayerManager;
 import org.evasive.me.minefinity.resourceblock.framework.BlockType;
 import org.evasive.me.minefinity.worldPackets.service.MassBlockPacketSender;
@@ -22,14 +22,14 @@ public class BlockTierService {
 
     public final String MAIN_BLOCK_REGION = "minefinity_block";
     private final PlayerManager playerManager;
-    private final BlockProgress blockProgress;
+    private final BlockProgressHandler blockProgress;
     private final MassBlockPacketSender massBlockPacketSender = new MassBlockPacketSender();
 
     DirtyPlayerService dirtyPlayerService = Minefinity.getCore().getDirtyPlayerService();
 
     public BlockTierService(PlayerManager playerManager) {
         this.playerManager = playerManager;
-        this.blockProgress = new BlockProgress();
+        this.blockProgress = new BlockProgressHandler();
     }
 
     private BlockType getBlockType(Player player){

@@ -4,7 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.core.items.CustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
 
 public class SwapItems
 {
@@ -13,7 +13,7 @@ public class SwapItems
         ItemStack returnItem = new ItemStack(Material.AIR);
 
         if(customItem != null){
-            returnItem = new ItemStack(customItem.getBuilder().buildItem());
+            returnItem = new ItemStack(customItem.getBaseItem().buildItem());
             returnItem.setAmount(amount);
         }
         if(e.getClick() == ClickType.SHIFT_LEFT && e.getView().getBottomInventory().firstEmpty() != -1){

@@ -6,9 +6,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
+import org.evasive.me.minefinity.utils.TextConversions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+
+import static org.evasive.me.minefinity.utils.command.CommandFeedback.SET_PLAYERS_GAMEMODE;
 
 public class GamemodeCreative implements CommandExecutor {
 
@@ -23,6 +26,8 @@ public class GamemodeCreative implements CommandExecutor {
             return true;
 
         player.setGameMode(GameMode.CREATIVE);
+
+        player.sendMessage(SET_PLAYERS_GAMEMODE(player.getGameMode()));
 
         return true;
     }

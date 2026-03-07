@@ -4,10 +4,11 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.core.items.CustomItem;
-import org.evasive.me.minefinity.customItems.types.ResourceItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.rarity.Rarity;
-import org.evasive.me.minefinity.utils.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;
 import org.evasive.me.minefinity.workshop.WorkshopMode;
 import org.evasive.me.minefinity.workshop.recipes.BaseWorkshopRecipe;
@@ -80,7 +81,7 @@ public class EngineerGuiRenderer {
     }
 
     private void renderInfo(Inventory inventory){
-        ItemBuilder itemBuilder = new ItemBuilder(Material.KNOWLEDGE_BOOK, TextConversions.parse(INFORMATION_TITLE));
+        ItemBuilder itemBuilder = new ItemBuilder(Material.KNOWLEDGE_BOOK, INFORMATION_TITLE);
         itemBuilder.addLore(INFORMATION_LORE);
         inventory.setItem(INFORMATION_SLOT, itemBuilder.build());
     }
@@ -89,7 +90,7 @@ public class EngineerGuiRenderer {
 
         boolean isCarpentry = mode == WorkshopMode.CARPENTRY;
 
-        ItemBuilder skillHeader = new ItemBuilder(isCarpentry ? Material.COPPER_AXE : Material.COPPER_SPEAR, TextConversions.parse("<bold><gold>" + formatItemName(mode.name())));
+        ItemBuilder skillHeader = new ItemBuilder(isCarpentry ? Material.COPPER_AXE : Material.COPPER_SPEAR, "<bold><gold>" + formatItemName(mode.name()));
         skillHeader.addLore(isCarpentry ? WOODWORKING_HEADER_LORE : STONEWORKING_HEADER_LORE);
         inventory.setItem(HEADER_SLOT,  skillHeader.build());
     }
@@ -103,13 +104,13 @@ public class EngineerGuiRenderer {
             return;
         }
 
-        ItemBuilder itemBuilder = new ItemBuilder(ResourceItem.valueOf(storedResource.name()).getBuilder().buildItem());
+        ItemBuilder itemBuilder = new ItemBuilder(CustomItemRegistry.getByID(storedResource.name()).getBaseItem().buildItem());
         itemBuilder.setAmount(service.getWorkshopCurrentResourceCount(player, mode));
         inventory.setItem(RESOURCE_SLOT, itemBuilder.build());
     }
 
     private ItemStack buildEmptyResource(){
-        ItemBuilder emptyResourceSlot = new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, TextConversions.parse(EMPTY_RESOURCE_TITLE));
+        ItemBuilder emptyResourceSlot = new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, EMPTY_RESOURCE_TITLE);
         emptyResourceSlot.addLore(EMPTY_RESOURCE_LORE);
         for(int i = 0; WorkshopToolsTiers.values().length > i; i++) {
             emptyResourceSlot.addLore(buildRarityColor(WorkshopToolsTiers.values()[i].name(), Rarity.values()[i]) + " <gray>x4");
@@ -122,14 +123,14 @@ public class EngineerGuiRenderer {
         WorkshopToolsTiers toolType = service.getWorkshopToolType(player, mode);
 
         if(toolType == null){
-            ItemBuilder emptyTool = new ItemBuilder(Material.IRON_BARS, TextConversions.parse(EMPTY_TOOL_TITLE));
+            ItemBuilder emptyTool = new ItemBuilder(Material.IRON_BARS, EMPTY_TOOL_TITLE);
             emptyTool.addLore(EMPTY_TOOL_LORE);
             inventory.setItem(TOOL_SLOT, emptyTool.build());
             return;
         }
 
         int durability = service.getWorkshopToolDurability(player, mode);
-        ItemBuilder tool = new ItemBuilder(ResourceItem.valueOf(toolType.name()).getBuilder().buildItem());
+        ItemBuilder tool = new ItemBuilder(CustomItemRegistry.getByID(toolType.name()).getBaseItem().buildItem());
         tool.setLore(new ArrayList<>());
         tool.addLore("<gray>Durability: <yellow>" + durability);
         tool.addBlank().addLore("<gray>Shift Right-Click to trash tool.");
@@ -137,7 +138,7 @@ public class EngineerGuiRenderer {
 
         int toolTier = service.getWorkshopToolType(player, mode).ordinal();
         tool.setItemModel(mode == WorkshopMode.CARPENTRY ? carpentryToolMaterials.get(toolTier).getKey() :  stoneworkingToolMaterials.get(toolTier).getKey());
-        tool.setDisplayName(TextConversions.parse("<bold>"+ TextConversions.buildRarityColor(service.getWorkshopToolType(player, mode).name().replace("_INGOT", ""), ResourceItem.valueOf(service.getWorkshopToolType(player, mode).name()).getBuilder().getRarity()) + (mode == WorkshopMode.CARPENTRY ? " Axe" : " Chisel")));
+        tool.setDisplayName("<bold>"+ TextConversions.buildRarityColor(service.getWorkshopToolType(player, mode).name().replace("_INGOT", ""), CustomItemRegistry.getByID(service.getWorkshopToolType(player, mode).name()).getBaseItem().getRarity()) + (mode == WorkshopMode.CARPENTRY ? " Axe" : " Chisel"));
 
         inventory.setItem(TOOL_SLOT, tool.build());
     }
@@ -153,7 +154,7 @@ public class EngineerGuiRenderer {
 
     private void renderSwapButton(Inventory inventory){
         boolean isCarpentry = mode == WorkshopMode.CARPENTRY;
-        ItemBuilder itemBuilder = new ItemBuilder(isCarpentry ? Material.GRINDSTONE : Material.STONECUTTER, TextConversions.parse("<yellow>Swap to <bold><gold>"+formatItemName(isCarpentry ? WorkshopMode.STONEWORKING.name() : WorkshopMode.CARPENTRY.name())));
+        ItemBuilder itemBuilder = new ItemBuilder(isCarpentry ? Material.GRINDSTONE : Material.STONECUTTER, "<yellow>Swap to <bold><gold>"+formatItemName(isCarpentry ? WorkshopMode.STONEWORKING.name() : WorkshopMode.CARPENTRY.name()));
         inventory.setItem(SWAP_SLOT, itemBuilder.build());
     }
 
@@ -163,9 +164,9 @@ public class EngineerGuiRenderer {
         for(WorkshopRecipes recipe : WorkshopRecipes.values()){
             BaseWorkshopRecipe workshopRecipe = recipe.getRecipe();
 
-            ItemBuilder shopItem = new ItemBuilder(workshopRecipe.getResult().getBuilder().buildItem());
+            ItemBuilder shopItem = new ItemBuilder(workshopRecipe.getResult().getBaseItem().buildItem());
             shopItem.setLore(new ArrayList<>());
-            shopItem.addLore("<gray>Required Tool: " + buildRarityColor(workshopRecipe.getRequiredToolsTier().name(), ResourceItem.valueOf(workshopRecipe.getRequiredToolsTier().name()).getBuilder().getRarity()));
+            shopItem.addLore("<gray>Required Tool: " + buildRarityColor(workshopRecipe.getRequiredToolsTier().name(), CustomItemRegistry.getByID(workshopRecipe.getRequiredToolsTier().name()).getBaseItem().getRarity()));
             shopItem.addLore("<gray>Durability Usage: <yellow>" + workshopRecipe.getDurabilityUsage());
             shopItem.addLore("<gray>Recipe:");
 
@@ -173,7 +174,7 @@ public class EngineerGuiRenderer {
                 String itemName = entry.getKey().getID();
                 int amount = entry.getValue();
                 CustomItem customItem = entry.getKey();
-                shopItem.addLore("<gray>- " + buildRarityColor(itemName, customItem.getBuilder().getRarity()) + " <gray>x" + amount);
+                shopItem.addLore("<gray>- " + buildRarityColor(itemName, ((BaseCustomItem)customItem.getBaseItem()).getRarity()) + " <gray>x" + amount);
             }
 
             if(workshopRecipe.getRequiredToolType() != mode)

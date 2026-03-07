@@ -1,6 +1,6 @@
 package org.evasive.me.minefinity.miner;
 
-import org.evasive.me.minefinity.customItems.pickaxe.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.BasePickaxeItem;
 import org.evasive.me.minefinity.resourceblock.framework.BlockType;
 
 import java.util.Collections;

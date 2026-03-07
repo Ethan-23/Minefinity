@@ -5,13 +5,12 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.miner.service.AutoMinerService;
 import org.evasive.me.minefinity.player.sevices.BlockTierService;
 import org.evasive.me.minefinity.resourceblock.framework.BaseBlock;
 import org.evasive.me.minefinity.resourceblock.framework.BlockType;
-import org.evasive.me.minefinity.utils.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,14 +26,15 @@ public class MinerBlockSelectionGui extends BaseGui {
     public static final int BACK_SLOT = 45;
     public static final int NONE_SLOT = TRACK.getFirst();
 
-    MinerBlockSelectionHandler minerBlockSelectionHandler = new MinerBlockSelectionHandler();
+    private final MinerBlockSelectionHandler minerBlockSelectionHandler;
     private final AutoMinerService autoMinerService;
     private final BlockTierService blockTierService;
 
-    public MinerBlockSelectionGui(Player player) {
+    public MinerBlockSelectionGui(Player player, AutoMinerService autoMinerService, BlockTierService blockTierService) {
         super(player, INVENTORY_SIZE, TextConversions.parse("Block Selection"));
-        autoMinerService = Minefinity.getCore().getAutoMinerService();
-        blockTierService = Minefinity.getCore().getBlockTierService();
+        this.autoMinerService = autoMinerService;
+        this.blockTierService = blockTierService;
+        this.minerBlockSelectionHandler = new MinerBlockSelectionHandler(this.blockTierService, this.autoMinerService);
         build();
     }
 

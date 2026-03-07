@@ -8,7 +8,6 @@ import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
 
-import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.getItemId;
 import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.hasItemId;
 
 public class ItemPickupListener implements Listener {
@@ -21,7 +20,7 @@ public class ItemPickupListener implements Listener {
 
         Player player = e.getPlayer();
 
-        int overflow = Minefinity.itemGiver.givePlayerDrops(player, getItemId(itemStack), itemStack.getAmount());
+        int overflow = Minefinity.itemGiver.givePlayerDrops(player, itemStack, itemStack.getAmount());
 
         if(overflow == itemStack.getAmount()) return;
 

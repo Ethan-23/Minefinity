@@ -7,8 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.utils.ItemBuilder;
-import org.evasive.me.minefinity.utils.TextConversions;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -31,7 +30,7 @@ public class Rename implements CommandExecutor {
 
         String name = String.join(" ", args);
 
-        ItemBuilder itemBuilder = new ItemBuilder(item).setDisplayName(TextConversions.parse(name));
+        ItemBuilder itemBuilder = new ItemBuilder(item).setDisplayName(name);
 
         player.getInventory().setItemInMainHand(itemBuilder.build());
 

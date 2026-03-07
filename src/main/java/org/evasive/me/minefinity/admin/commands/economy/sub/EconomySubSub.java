@@ -6,9 +6,7 @@ import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.SubCommand;
 import org.evasive.me.minefinity.economy.EconomyService;
-import org.evasive.me.minefinity.utils.CommandFeedback;
-
-import static org.evasive.me.minefinity.utils.economy.EconNumberUtils.*;
+import org.evasive.me.minefinity.utils.command.CommandFeedback;
 
 public class EconomySubSub implements SubCommand {
 

@@ -5,7 +5,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.recipe.RecipeService;
-import org.evasive.me.minefinity.customItems.types.ResourceItem;
+import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.utils.TextConversions;
 import org.evasive.me.minefinity.workshop.WorkshopMode;
 import org.evasive.me.minefinity.workshop.gui.EngineerGui;
@@ -61,7 +61,7 @@ public class EngineerClickHandler {
     }
 
     private void handleSwapSlot(){
-        new EngineerGui(player, this.workshopMode == WorkshopMode.CARPENTRY ? WorkshopMode.STONEWORKING : WorkshopMode.CARPENTRY).open();
+        new EngineerGui(player, this.workshopMode == WorkshopMode.CARPENTRY ? WorkshopMode.STONEWORKING : WorkshopMode.CARPENTRY, this.engineerService).open();
     }
 
     private void handleResourceSlot(InventoryClickEvent e){
@@ -73,7 +73,7 @@ public class EngineerClickHandler {
             return;
 
         if(replacementWorkshopResource == null || currentWorkshopResource != replacementWorkshopResource){
-            swapCursor(e, noResource ? null : ResourceItem.valueOf(engineerService.getWorkshopCurrentResource(player, workshopMode).name()), noResource ? 0 : engineerService.getWorkshopCurrentResourceCount(player, workshopMode));
+            swapCursor(e, noResource ? null : CustomItemRegistry.getByID(engineerService.getWorkshopCurrentResource(player, workshopMode).name()), noResource ? 0 : engineerService.getWorkshopCurrentResourceCount(player, workshopMode));
             engineerService.setWorkshopCurrentResource(player, workshopMode, replacementWorkshopResource);
             engineerService.setWorkshopCurrentResourceCount(player, workshopMode, cursorItem.getAmount());
         } else {

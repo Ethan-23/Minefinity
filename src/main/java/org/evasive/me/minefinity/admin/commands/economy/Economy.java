@@ -11,12 +11,11 @@ import org.evasive.me.minefinity.admin.commands.economy.sub.EconomyAddSub;
 import org.evasive.me.minefinity.admin.commands.economy.sub.EconomySetSub;
 import org.evasive.me.minefinity.admin.commands.economy.sub.EconomySubSub;
 import org.evasive.me.minefinity.core.SubCommand;
-import org.evasive.me.minefinity.utils.CommandFeedback;
+import org.evasive.me.minefinity.utils.command.CommandFeedback;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.evasive.me.minefinity.utils.command.TabCompletionUtils.getOnlinePlayers;
 import static org.evasive.me.minefinity.utils.economy.EconNumberUtils.*;
@@ -42,7 +41,7 @@ public class Economy implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
         if (args.length != 3) {
-            sender.sendMessage(CommandFeedback.INVALID_ARGUMENTS);
+            sender.sendMessage(CommandFeedback.INVALID_USAGE);
             return true;
         }
 

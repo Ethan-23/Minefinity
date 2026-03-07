@@ -33,10 +33,7 @@ public class PlayerMovePacketEvents extends PacketListenerAbstract {
         //Makes it so if you enter the area of the main block break speed attr set to 0
         if(getRegionAtLocation(player.getLocation()) == null){
             player.getAttribute(Attribute.BLOCK_BREAK_SPEED).setBaseValue(1);
-            return;
-        }
-
-        if(getRegionAtLocation(player.getLocation()).getId().equals("minefinity_town_center")){
+        } else if(getRegionAtLocation(player.getLocation()).getId().equals("minefinity_town_center")){
             player.getAttribute(Attribute.BLOCK_BREAK_SPEED).setBaseValue(0);
         }
     }

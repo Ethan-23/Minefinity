@@ -4,14 +4,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.customItems.framework.CustomItemRegistry;
+import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-public class MineGive implements CommandExecutor {
+public class MineGive implements CommandExecutor, TabCompleter {
 
     public MineGive(){
         Objects.requireNonNull(Minefinity.getCore().getCommand("minegive")).setExecutor(this);
@@ -48,6 +53,21 @@ public class MineGive implements CommandExecutor {
             player.sendMessage(itemName + " not found.");
             return;
         }
-        player.getInventory().addItem(CustomItemRegistry.getByID(itemName).getBuilder().buildItem());
+        player.getInventory().addItem(CustomItemRegistry.getByID(itemName).getBaseItem().buildItem());
+    }
+
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
+        if(args.length == 1){
+            List<String> completions = new ArrayList<>();
+            StringUtil.copyPartialMatches(
+                    args[0],
+                    CustomItemRegistry.getAllItemIDs(),
+                    completions
+            );
+            return completions;
+        }
+        return List.of();
     }
 }

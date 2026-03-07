@@ -7,9 +7,10 @@ import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.recipe.RecipeService;
+import org.evasive.me.minefinity.customItems.itembuilder.data.BaseCustomItem;
 import org.evasive.me.minefinity.town.service.TownService;
 import org.evasive.me.minefinity.town.Structure;
-import org.evasive.me.minefinity.utils.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;
 
 import java.util.List;
@@ -55,7 +56,7 @@ public class MayorGui extends BaseGui {
             } else {
                 structureItem.addLore("<yellow>Upgrade Cost:");
                 structure.getUpgradeMap(structureLevel).getRecipe().forEach((key, value) -> {
-                    structureItem.addLore("<gray>- " + buildRarityColor(key.getID(), key.getBuilder().getRarity()) + " <gray>x" + value);
+                    structureItem.addLore("<gray>- " + buildRarityColor(key.getID(), ((BaseCustomItem) key.getBaseItem()).getRarity()) + " <gray>x" + value);
                 });
             }
             inventory.setItem(townListing.get(structure.ordinal()), structureItem.build());

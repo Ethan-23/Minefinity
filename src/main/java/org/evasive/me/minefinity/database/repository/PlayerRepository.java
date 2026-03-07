@@ -1,41 +1,56 @@
 package org.evasive.me.minefinity.database.repository;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.database.DatabaseManager;
 import org.evasive.me.minefinity.player.MinefinityPlayer;
 import org.evasive.me.minefinity.player.PlayerManager;
+import org.evasive.me.minefinity.ranks.PlayerRanks;
+import org.evasive.me.minefinity.ranks.RankManager;
+import org.evasive.me.minefinity.ranks.RankRegistry;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class PlayerRepository {
 
-    private final PlayerManager playerManager = Minefinity.getCore().getPlayerManager();
-    private final PlayerSaveRepository playerSaveRepository = new PlayerSaveRepository();
+    private final PlayerManager playerManager;
+    private final PlayerSaveRepository playerSaveRepository;
+    private final PlayerRankSaveRepository playerRankSaveRepository;
+    private final RankManager rankManager;
+
+    public PlayerRepository(PlayerManager playerManager, RankRegistry rankRegistry, RankManager rankManager) {
+        this.playerManager = playerManager;
+        this.rankManager = rankManager;
+        this.playerRankSaveRepository = new PlayerRankSaveRepository(rankRegistry);
+        this.playerSaveRepository = new PlayerSaveRepository();
+    }
 
     public void save(UUID uuid) {
         playerSaveRepository.save(playerManager.get(uuid));
-
     }
 
-    public MinefinityPlayer load(UUID uuid) {
+    public void saveRanks(UUID uuid) {
+        playerRankSaveRepository.save(uuid, rankManager.getRanks(uuid));
+    }
+
+    public MinefinityPlayer loadMinefinityPlayer(UUID uuid) {
 
         return playerSaveRepository.load(uuid);
     }
 
-    public List<UUID> getAllPlayerUUIDs() {
+    public PlayerRanks loadPlayerRanks(UUID uuid){
+        return playerRankSaveRepository.load(uuid);
+    }
+
+    public List<UUID> getAllPlayerUUIDs(Connection connection) {
         List<UUID> uuids = new ArrayList<>();
 
         String sql = "SELECT uuid FROM players";
 
-        try (Connection conn = Minefinity.getDatabaseManager().getConnection();
+        try (Connection conn = connection;
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 

@@ -69,8 +69,8 @@ commands:
   speed:
     permission: minefinity.speed
     description: sets the players movement speed
-  invesee:
-    permission: minefinity.invesee
+  invsee:
+    permission: minefinity.invsee
     description: Allows player to see the inventory of another player and edit it
   gamemodecreative:
     aliases: [gmc]
@@ -90,11 +90,25 @@ commands:
   setwarp:
     permission: minefinity.setwarp
     description: Creates a warp for players to use
+  deletewarp:
+    aliases: [delwarp]
+    permission: minefinity.deletewarp
+    description: Deletes a player warp
+  minerank:
+    permission: minefinity.minerank
+    description: Sets the input players donor rank
+  createcustomitem:
+    alias: [createitem, cci]
+    permission: minefinity.createcustomitem
+    description: Creates a custom item from nothing
+  deletecustomitem:
+    alias: [deleteitem, dci]
+    permission: minefinity.createcustomitem
+    description: Creates a custom item from nothing
 
 permissions:
   minefinity.gamemode:
     description: Allows the use of /gamemode
-    default: op
   minefinity.staffmode:
     description: Allows the use of /staffmode
     default: op
@@ -137,7 +151,7 @@ permissions:
   minefinity.speed:
     description: Allows use of /speed
     default: op
-  minefinity.invesee:
+  minefinity.invsee:
     description: Allows use of /invesee
     default: op
   minefinity.warp:
@@ -146,5 +160,16 @@ permissions:
   minefinity.setwarp:
     description: Allows use of /setwarp
     default: op
-
+  minefinity.deletewarp:
+    description: Allows use of /deletewarp
+    default: op
+  minefinity.minerank:
+    description: Allows use of /minerank
+    default: op
+  minefinity.createcustomitem:
+    description: Allows use of /createcustomitem
+    default: op
+  minefinity.deletecustomitem:
+    description: Allows use of /deletecustomitem
+    default: op
 depend: [WorldGuard]

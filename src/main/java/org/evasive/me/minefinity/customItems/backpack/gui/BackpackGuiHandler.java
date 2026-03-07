@@ -5,8 +5,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.customItems.framework.CustomItemRegistry;
-import org.evasive.me.minefinity.customItems.backpack.Backpacks;
+import org.evasive.me.minefinity.customItems.itembuilder.data.BaseBackpackItem;
+import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.customItems.backpack.BackpackHandler;
 
 public class BackpackGuiHandler {
@@ -32,7 +32,7 @@ public class BackpackGuiHandler {
     }
 
     private void takeBlocks(Player player, String itemId) {
-        ItemStack item = CustomItemRegistry.getByID(itemId).getBuilder().buildItem();
+        ItemStack item = CustomItemRegistry.getByID(itemId).getBaseItem().buildItem();
         int withdrawAmount = Math.min(item.getMaxStackSize(), Minefinity.getCore().getBackpackService().getBackpackStoredItemAmount(player, itemId));
         item.setAmount(withdrawAmount);
         Minefinity.getCore().getBackpackService().removeBackpackItem(player, itemId, withdrawAmount);
@@ -41,7 +41,7 @@ public class BackpackGuiHandler {
     }
 
     public int calculateBackpackSize(String backpackId){
-        int inventorySize = Backpacks.valueOf(backpackId).getBuilder().getStoredItemIdList().size();
+        int inventorySize = ((BaseBackpackItem) CustomItemRegistry.getByID(backpackId).getBaseItem()).getStoredItemIdList().size();
         int INVENTORY_ROW_SIZE = 9;
         if(inventorySize % 9 == 0){
             inventorySize = inventorySize / INVENTORY_ROW_SIZE * INVENTORY_ROW_SIZE + INVENTORY_ROW_SIZE;

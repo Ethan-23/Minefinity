@@ -9,10 +9,12 @@ import org.evasive.me.minefinity.npcs.npc.NpcType;
 import org.evasive.me.minefinity.npcs.spawning.CreateNpc;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public class MineSpawn implements CommandExecutor {
 
     public MineSpawn(){
-        Minefinity.getCore().getCommand("minespawn").setExecutor(this);
+        Objects.requireNonNull(Minefinity.getCore().getCommand("minespawn")).setExecutor(this);
     }
 
     @Override

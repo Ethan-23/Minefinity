@@ -7,9 +7,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.utils.TextConversions;
+import org.evasive.me.minefinity.utils.command.CommandFeedback;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+
+import static org.evasive.me.minefinity.utils.command.CommandFeedback.SET_PLAYERS_GAMEMODE;
 
 public class Gamemode implements CommandExecutor {
 
@@ -41,7 +44,7 @@ public class Gamemode implements CommandExecutor {
             return true;
 
         if(args.length != 1){
-            player.sendMessage(TextConversions.parse("<red>Invalid Usage of command"));
+            player.sendMessage(CommandFeedback.INVALID_USAGE);
             return true;
         }
 
@@ -49,12 +52,12 @@ public class Gamemode implements CommandExecutor {
         GameMode mode = GAMEMODES.get(input);
 
         if (mode == null) {
-            player.sendMessage(TextConversions.parse("<red>Invalid Usage of command"));
+            player.sendMessage(CommandFeedback.INVALID_USAGE);
             return true;
         }
 
         player.setGameMode(mode);
-        player.sendMessage("Game mode has been set to " + TextConversions.formatItemName(mode.name()));
+        player.sendMessage(SET_PLAYERS_GAMEMODE(player.getGameMode()));
 
         return true;
     }

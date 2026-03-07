@@ -9,26 +9,33 @@ import org.evasive.me.minefinity.admin.commands.gamemode.Gamemode;
 import org.evasive.me.minefinity.admin.commands.gamemode.GamemodeCreative;
 import org.evasive.me.minefinity.admin.commands.gamemode.GamemodeSpectator;
 import org.evasive.me.minefinity.admin.commands.gamemode.GamemodeSurvival;
+import org.evasive.me.minefinity.admin.commands.rank.MineRank;
+import org.evasive.me.minefinity.admin.commands.warp.DeleteWarp;
+import org.evasive.me.minefinity.admin.commands.warp.SetWarp;
 import org.evasive.me.minefinity.admin.events.VanishListener;
 import org.evasive.me.minefinity.admin.commands.economy.Economy;
 import org.evasive.me.minefinity.admin.service.VanishService;
 import org.evasive.me.minefinity.anvil.commands.PickaxeAnvilCommand;
 import org.evasive.me.minefinity.commands.Spawn;
+import org.evasive.me.minefinity.commands.Warp;
 import org.evasive.me.minefinity.core.events.ServerSpawnEvents;
 import org.evasive.me.minefinity.core.gui.GuiListener;
 import org.evasive.me.minefinity.core.service.SpawnService;
+import org.evasive.me.minefinity.core.service.WarpService;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
+import org.evasive.me.minefinity.customItems.itembuilder.command.DeleteCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.registry.config.ItemRegistryConfigManager;
+import org.evasive.me.minefinity.customItems.itembuilder.listener.PlayerInputListener;
+import org.evasive.me.minefinity.customItems.itembuilder.command.CreateCustomItem;
 import org.evasive.me.minefinity.customItems.framework.ItemGiver;
-import org.evasive.me.minefinity.customItems.backpack.Backpacks;
 import org.evasive.me.minefinity.customItems.backpack.events.ItemPickupListener;
 import org.evasive.me.minefinity.customItems.backpack.events.OpenBackpackListener;
-import org.evasive.me.minefinity.customItems.pickaxe.PickaxeComponent;
 import org.evasive.me.minefinity.core.RepeatingTick;
-import org.evasive.me.minefinity.customItems.framework.CustomItemRegistry;
-import org.evasive.me.minefinity.customItems.types.FuelItem;
-import org.evasive.me.minefinity.customItems.pickaxe.PickaxeItem;
-import org.evasive.me.minefinity.customItems.types.ResourceItem;
-import org.evasive.me.minefinity.database.DatabaseManager;
+import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
+import org.evasive.me.minefinity.customItems.itembuilder.registry.config.RegistryConfigHandler;
+import org.evasive.me.minefinity.database.GameDatabaseManager;
+import org.evasive.me.minefinity.database.RankDataHandler;
+import org.evasive.me.minefinity.database.RankDatabaseManager;
 import org.evasive.me.minefinity.database.ServerDataHandler;
 import org.evasive.me.minefinity.database.repository.PlayerRepository;
 import org.evasive.me.minefinity.database.service.AutosaveService;
@@ -40,15 +47,22 @@ import org.evasive.me.minefinity.core.events.ServerJoinEvent;
 import org.evasive.me.minefinity.forge.service.ForgeService;
 import org.evasive.me.minefinity.miner.events.AutoMinerEvents;
 import org.evasive.me.minefinity.miner.service.AutoMinerService;
-import org.evasive.me.minefinity.mining.service.AnimationIDs;
-import org.evasive.me.minefinity.mining.service.MiningDataMap;
-import org.evasive.me.minefinity.mining.service.SelectedBlockMap;
-import org.evasive.me.minefinity.mining.events.SwingPacketEvents;
+import org.evasive.me.minefinity.mining.utils.AnimationIDs;
+import org.evasive.me.minefinity.mining.data.MiningDataMap;
+import org.evasive.me.minefinity.mining.data.SelectedBlockMap;
+import org.evasive.me.minefinity.mining.listeners.SwingPacketEvents;
 import org.evasive.me.minefinity.npcs.NpcInstanceMap;
 import org.evasive.me.minefinity.player.sevices.*;
+import org.evasive.me.minefinity.ranks.PermissionService;
+import org.evasive.me.minefinity.ranks.RankManager;
+import org.evasive.me.minefinity.ranks.RankRegistry;
+import org.evasive.me.minefinity.ranks.config.PermissionConfigManager;
+import org.evasive.me.minefinity.ranks.config.PermissionLoader;
+import org.evasive.me.minefinity.ranks.events.ChatEvent;
+import org.evasive.me.minefinity.ranks.events.PlayerRankJoinEvent;
 import org.evasive.me.minefinity.resourceblock.commands.BlockCommands;
 import org.evasive.me.minefinity.npcs.events.NpcLoadEvents;
-import org.evasive.me.minefinity.scoreboard.Scoreboard;
+import org.evasive.me.minefinity.scoreboard.ScoreboardService;
 import org.evasive.me.minefinity.smelter.events.SmelterEvents;
 import org.evasive.me.minefinity.smelter.recipes.SmelterRecipeRegistry;
 import org.evasive.me.minefinity.smelter.service.SmelterService;
@@ -79,10 +93,18 @@ public final class Minefinity extends JavaPlugin {
     private DirtyPlayerService dirtyPlayerService;
     private AutosaveService autosaveService;
     private SpawnService spawnService;
+    private WarpService warpService;
+    private RankManager rankManager;
+    private RankRegistry rankRegistry;
+    private PermissionConfigManager permissionConfigManager;
+    private RegistryConfigHandler registryConfigHandler;
 
-    private Scoreboard scoreboard;
+    private ScoreboardService scoreboardService;
 
     private VanishService vanishService;
+    private PermissionService permissionService;
+
+    private PlayerInputListener playerInputListener;
 
     //Npc load data
     public static NpcInstanceMap npcInstanceMap;
@@ -93,9 +115,11 @@ public final class Minefinity extends JavaPlugin {
     //Item Collection System
     public static ItemGiver itemGiver;
 
-
-    private static final DatabaseManager databaseManager = new DatabaseManager();
+    private static final GameDatabaseManager databaseManager = new GameDatabaseManager();
+    private static final RankDatabaseManager rankDatabaseManager = new RankDatabaseManager();
     ServerDataHandler serverDataHandler;
+    RankDataHandler rankDataHandler;
+    PlayerRepository playerRepository;
 
     @Override
     public void onLoad(){
@@ -104,7 +128,12 @@ public final class Minefinity extends JavaPlugin {
         playerManager = new PlayerManager();
 
         dirtyPlayerService = new DirtyPlayerService();
-        serverDataHandler = new ServerDataHandler(playerManager, new PlayerRepository(), dirtyPlayerService);
+        permissionService = new PermissionService(this);
+        registerDataMaps();
+
+        playerRepository = new PlayerRepository(playerManager, rankRegistry, rankManager);
+        rankDataHandler = new RankDataHandler(rankManager, playerRepository);
+        serverDataHandler = new ServerDataHandler(playerManager, playerRepository, dirtyPlayerService);
         autosaveService = new AutosaveService(serverDataHandler);
 
         townService = new TownService(playerManager);
@@ -116,10 +145,6 @@ public final class Minefinity extends JavaPlugin {
         forgeService = new ForgeService(playerManager);
         engineerService = new EngineerService(playerManager);
         smelterService = new SmelterService(playerManager);
-        spawnService = new SpawnService();
-
-
-
 
         com.github.retrooper.packetevents.PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
         //On Bukkit, calling this here is essential, hence the name "load"
@@ -129,7 +154,6 @@ public final class Minefinity extends JavaPlugin {
         com.github.retrooper.packetevents.PacketEvents.getAPI().getEventManager().registerListener(new BlockPacketEvents());
         com.github.retrooper.packetevents.PacketEvents.getAPI().getEventManager().registerListener(new InteractEvent());
         com.github.retrooper.packetevents.PacketEvents.getAPI().getEventManager().registerListener(new PlayerMovePacketEvents());
-
     }
 
     @Override
@@ -140,36 +164,51 @@ public final class Minefinity extends JavaPlugin {
         worldGuardCheck();
         com.github.retrooper.packetevents.PacketEvents.getAPI().init();
 
-        vanishService = new VanishService();
-        scoreboard = new Scoreboard();
+        spawnService = new SpawnService();
+        warpService = new WarpService();
+        vanishService = new VanishService(getServer().getScoreboardManager(), scoreboardService);
+        scoreboardService = new ScoreboardService();
 
-        registerDataMaps();
-        registerCustomItems();
+        loadConfigs();
+        CustomItemRegistry.init();
+
         registerSmelterRecipes();
         registerEvents();
         registerCommands();
 
+        //Loading Ranks
+        try {
+            rankDatabaseConnect();
+            rankDataHandler.loadRanks();
+        } catch (SQLException e) {
+            Bukkit.getConsoleSender().sendMessage("FAILED LOAD RANKS");
+        }
+        rankDatabaseManager.closePool();
 
-
+        //Loading Data
         try {
             databaseConnect();
             serverDataHandler.loadAll();
         } catch (SQLException e) {
             Bukkit.getConsoleSender().sendMessage("FAILED LOAD ALL");
         }
-
         databaseManager.closePool();
 
         //Automated Functions
         new RepeatingTick().startAutomation();
 
         //Scoreboard
-        scoreboard.repeatingScoreboardUpdate();
+        scoreboardService.repeatingScoreboardUpdate();
 
     }
 
+    //Move to respective database files
     public void databaseConnect() throws SQLException {
         databaseManager.setup("127.0.0.1", 3306, "minefinity", "admin", "jdf7tA@tf");
+    }
+
+    public void rankDatabaseConnect() throws SQLException {
+        rankDatabaseManager.setup("127.0.0.1", 3306, "minefinity_ranks", "admin", "jdf7tA@tf");
     }
 
     private void registerDataMaps(){
@@ -178,6 +217,22 @@ public final class Minefinity extends JavaPlugin {
         npcInstanceMap = new NpcInstanceMap();
         selectedBlockMap = new SelectedBlockMap();
         itemGiver = new ItemGiver();
+        rankManager = new RankManager(permissionService);
+        rankRegistry = new RankRegistry();
+    }
+
+    private void loadConfigs(){
+
+        PermissionConfigManager permissionConfigManager = new PermissionConfigManager();
+        permissionConfigManager.createPermissionConfig();
+        new PermissionLoader(permissionConfigManager, rankRegistry).loadRanks();
+
+        ItemRegistryConfigManager itemRegistryConfigManager = new ItemRegistryConfigManager();
+        registryConfigHandler = new RegistryConfigHandler(itemRegistryConfigManager);
+        itemRegistryConfigManager.createItemRegistryConfig();
+        CustomItemRegistry.registerConfigItems(itemRegistryConfigManager);
+
+
     }
 
 
@@ -193,16 +248,19 @@ public final class Minefinity extends JavaPlugin {
         pluginManager.registerEvents(new GuiListener(), this);
         pluginManager.registerEvents(new OpenBackpackListener(), this);
         pluginManager.registerEvents(new ItemPickupListener(), this);
-        pluginManager.registerEvents(new ServerJoinEvent(), this);
+        pluginManager.registerEvents(new ServerJoinEvent(playerManager, vanishService, scoreboardService), this);
         pluginManager.registerEvents(new AutoMinerEvents(), this);
         pluginManager.registerEvents(new SmelterEvents(), this);
         pluginManager.registerEvents(new VanishListener(), this);
         pluginManager.registerEvents(new ServerSpawnEvents(spawnService), this);
+        pluginManager.registerEvents(new PlayerRankJoinEvent(rankManager, permissionService), this);
+        pluginManager.registerEvents(new ChatEvent(rankManager), this);
+        playerInputListener =  new PlayerInputListener();
+        pluginManager.registerEvents(playerInputListener, this);
     }
 
     private void registerCommands(){
         new MineGive();
-        new MinePickaxeAdd();
         new MineData(this, townService, blockTierService);
         new Gamemode();
         new PickaxeAnvilCommand();
@@ -214,24 +272,22 @@ public final class Minefinity extends JavaPlugin {
         new StaffMode();
         new Rename();
         new Vanish();
-        new PacketRefresh();
+        new PacketRefresh(townService, blockTierService);
         new SetSpawn(spawnService);
-        new Spawn();
+        new Spawn(spawnService);
         new Speed();
-        new Invesee();
+        new Invsee();
         new GamemodeSpectator();
         new GamemodeCreative();
         new GamemodeSurvival();
+        new SetWarp(warpService);
+        new Warp(warpService);
+        new DeleteWarp(warpService);
+        new MineRank(rankManager, rankRegistry);
+        new CreateCustomItem(this, registryConfigHandler);
+        new DeleteCustomItem(this, registryConfigHandler);
     }
 
-    private void registerCustomItems(){
-        CustomItemRegistry.registerEnumItems(ResourceItem.values());
-        CustomItemRegistry.registerEnumItems(FuelItem.values());
-        CustomItemRegistry.registerEnumItems(PickaxeItem.values());
-        CustomItemRegistry.registerEnumItems(PickaxeComponent.values());
-        CustomItemRegistry.registerEnumItems(Backpacks.values());
-        CustomItemRegistry.init();
-    }
 
     private void registerSmelterRecipes(){
         SmelterRecipeRegistry.loadRecipes();
@@ -239,10 +295,6 @@ public final class Minefinity extends JavaPlugin {
 
     public static Minefinity getCore() {
         return core;
-    }
-
-    public PlayerManager getPlayerManager() {
-        return playerManager;
     }
 
     public BlockTierService getBlockTierService() {
@@ -281,36 +333,40 @@ public final class Minefinity extends JavaPlugin {
         return engineerService;
     }
 
-    public static DatabaseManager getDatabaseManager(){
+    public static GameDatabaseManager getDatabaseManager(){
         return databaseManager;
+    }
+
+    public static RankDatabaseManager getRankDatabaseManager(){
+        return rankDatabaseManager;
     }
 
     public VanishService getVanishService(){
         return vanishService;
     }
 
-    public Scoreboard getScoreboard(){
-        return this.scoreboard;
-    }
-
     public DirtyPlayerService getDirtyPlayerService(){
         return dirtyPlayerService;
-    }
-
-    public ServerDataHandler getServerDataHandler(){
-        return serverDataHandler;
     }
 
     public AutosaveService getAutosaveService(){
         return autosaveService;
     }
 
-    public SpawnService getSpawnService(){
-        return spawnService;
+    public RankDataHandler getRankDataHandler(){
+        return rankDataHandler;
     }
+
+    public PlayerInputListener getPlayerInputListener(){
+        return playerInputListener;
+    }
+
 
     @Override
     public void onDisable() {
+
+        warpService.saveWarpLocations();
+        registryConfigHandler.saveEntireRegistry();
 
         try {
             databaseConnect();
@@ -321,6 +377,7 @@ public final class Minefinity extends JavaPlugin {
         }
 
         databaseManager.closePool();
+
 
         com.github.retrooper.packetevents.PacketEvents.getAPI().terminate();
     }

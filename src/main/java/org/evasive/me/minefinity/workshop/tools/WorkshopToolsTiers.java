@@ -1,6 +1,7 @@
 package org.evasive.me.minefinity.workshop.tools;
 
 public enum WorkshopToolsTiers {
+    //Make into a config
     FLINT(5),
     BRONZE_INGOT(10),
     STEEL_INGOT(20),

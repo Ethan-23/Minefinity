@@ -6,8 +6,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.customItems.backpack.Backpacks;
 import org.evasive.me.minefinity.customItems.backpack.gui.GenericBackpackGui;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
+import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
 
 import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.getItemId;
 import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.hasItemId;
@@ -27,7 +28,10 @@ public class OpenBackpackListener implements Listener {
 
         String itemId = getItemId(item);
 
-        if(!Backpacks.contains(itemId))return;
+        if(!CustomItemRegistry.isRegistered(itemId))return;
+
+       if(CustomItemRegistry.getByID(itemId).getBaseItem().getCustomItemType() != CustomItemType.STORAGE)
+           return;
 
         Player player = event.getPlayer();
 

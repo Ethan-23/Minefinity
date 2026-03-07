@@ -3,10 +3,10 @@ package org.evasive.me.minefinity.miner.service;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.customItems.pickaxe.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.BasePickaxeItem;
 import org.evasive.me.minefinity.database.service.DirtyPlayerService;
 import org.evasive.me.minefinity.miner.AutoMiner;
-import org.evasive.me.minefinity.mining.service.BlockProgress;
+import org.evasive.me.minefinity.mining.handlers.BlockProgressHandler;
 import org.evasive.me.minefinity.player.PlayerManager;
 import org.evasive.me.minefinity.resourceblock.framework.BlockType;
 import org.evasive.me.minefinity.utils.TextConversions;
@@ -35,9 +35,13 @@ public class AutoMinerService {
         return getAutoMiner(player).getBlockType();
     }
 
-    public void setAutoMinerPickaxe(Player player, ItemStack itemStack) {
+    public void setAutoMinerPickaxe(Player player, BasePickaxeItem basePickaxeItem) {
         dirtyPlayerService.addDirtyPlayer(player);
-        getAutoMiner(player).setPickaxe(itemStack == null ? null : new BasePickaxeItem(itemStack));
+        getAutoMiner(player).setPickaxe(basePickaxeItem);
+    }
+
+    public boolean hasAutoMinerPickaxe(Player player) {
+        return !(getAutoMiner(player).getPickaxe() == null);
     }
 
     public ItemStack getAutoMinerPickaxe(Player player) {
@@ -93,8 +97,8 @@ public class AutoMinerService {
         float blockHardness = blockType.getBlock().health();
         float progressPerTick = autoMiner.getPickaxe().getBaseMiningSpeed();
 
-        if(progressPerTick > blockHardness / BlockProgress.MAX_SPEED_DENOMINATION)
-            progressPerTick = blockHardness / BlockProgress.MAX_SPEED_DENOMINATION;
+        if(progressPerTick > blockHardness / BlockProgressHandler.MAX_SPEED_DENOMINATION)
+            progressPerTick = blockHardness / BlockProgressHandler.MAX_SPEED_DENOMINATION;
 
         float storedProgress = autoMiner.getStoredProgress();
 
@@ -105,9 +109,8 @@ public class AutoMinerService {
         if (blocksMined > 0) {
             autoMiner.setStoredProgress(storedProgress - blocksMined * blockHardness);
             autoMiner.addItemStorage(blockType.getBlock().blockDrop().getID(), blocksMined);
+            setLastUpdated(player);
         }
-
-        setLastUpdated(player);
     }
 
     public boolean isStorageFull(Player player) {
@@ -115,7 +118,7 @@ public class AutoMinerService {
     }
 
     public void addOfflineProgress(Player player){
-        if(getAutoMinerBlockType(player) == null || getAutoMinerPickaxe(player) == null || isStorageFull(player)) return;
+        if(getAutoMinerBlockType(player) == null || hasAutoMinerPickaxe(player) || isStorageFull(player)) return;
         int offlineTimeCap = getAutoMiner(player).getOfflineProgress();
         long secondsSinceLastUpdate = Math.min(offlineTimeCap * 60L, System.currentTimeMillis()/1000 - getLastUpdated(player)/1000);
         addProgress(player, secondsSinceLastUpdate);
@@ -123,7 +126,7 @@ public class AutoMinerService {
     }
 
     public void attemptAutomine(Player player, int progressTime){
-        if(getAutoMinerBlockType(player) == null || getAutoMinerPickaxe(player) == null || isStorageFull(player)) return;
+        if(getAutoMinerBlockType(player) == null || hasAutoMinerPickaxe(player) || isStorageFull(player)) return;
         addProgress(player, progressTime);
     }
 }

@@ -1,7 +1,7 @@
 package org.evasive.me.minefinity.resourceblock.framework;
 
 import org.bukkit.Material;
-import org.evasive.me.minefinity.core.items.CustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
 
 import java.util.List;
 

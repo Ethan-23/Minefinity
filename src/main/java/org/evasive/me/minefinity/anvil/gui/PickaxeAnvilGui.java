@@ -9,17 +9,18 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.anvil.PickaxeAnvilHandler;
 import org.evasive.me.minefinity.core.gui.BaseGui;
-import org.evasive.me.minefinity.customItems.types.CustomItemType;
-import org.evasive.me.minefinity.customItems.pickaxe.PickaxeComponent;
+import org.evasive.me.minefinity.customItems.itembuilder.data.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
+import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.utils.GenericGuiItems;
-import org.evasive.me.minefinity.utils.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;
 
 import java.util.List;
 import java.util.Objects;
 
+import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemKeys.*;
 import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.*;
-import static org.evasive.me.minefinity.customItems.pickaxe.BasePickaxeItem.*;
 
 public class PickaxeAnvilGui extends BaseGui {
 
@@ -37,10 +38,10 @@ public class PickaxeAnvilGui extends BaseGui {
 
     public PickaxeAnvilGui(Player player) {
         super(player, INVENTORY_SIZE, TextConversions.parse("Pickaxe Anvil"));
-        EMPTY_HEAD_SLOT = new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, TextConversions.parse("<yellow>Head Slot")).build();
-        EMPTY_CORE_SLOT = new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, TextConversions.parse("<yellow>Core Slot")).build();
-        EMPTY_HANDLE_SLOT = new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, TextConversions.parse("<yellow>Handle Slot")).build();
-        EMPTY_SLOT = new ItemBuilder(Material.RED_STAINED_GLASS_PANE, TextConversions.parse("<red>Please insert an item")).build();
+        EMPTY_HEAD_SLOT = new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, "<yellow>Head Slot").build();
+        EMPTY_CORE_SLOT = new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, "<yellow>Core Slot").build();
+        EMPTY_HANDLE_SLOT = new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, "<yellow>Handle Slot").build();
+        EMPTY_SLOT = new ItemBuilder(Material.RED_STAINED_GLASS_PANE, "<red>Please insert an item").build();
         build();
     }
 
@@ -63,13 +64,13 @@ public class PickaxeAnvilGui extends BaseGui {
     }
 
     public void addPickaxeParts(ItemStack itemStack){
-        String headId = getStringPDC(itemStack, headKey);
-        String coreId = getStringPDC(itemStack, coreKey);
-        String handleId = getStringPDC(itemStack, handleKey);
+        String headId = getStringPDC(itemStack, PICKAXE_HEAD_KEY);
+        String coreId = getStringPDC(itemStack, PICKAXE_CORE_KEY);
+        String handleId = getStringPDC(itemStack, PICKAXE_HANDLE_KEY);
 
-        inventory.setItem(HEAD_SLOT, Objects.equals(headId, "NONE") ? EMPTY_HEAD_SLOT : PickaxeComponent.valueOf(headId).getBuilder().buildItem());
-        inventory.setItem(CORE_SLOT, Objects.equals(coreId, "NONE") ? EMPTY_CORE_SLOT : PickaxeComponent.valueOf(coreId).getBuilder().buildItem());
-        inventory.setItem(HANDLE_SLOT, Objects.equals(handleId, "NONE") ? EMPTY_HANDLE_SLOT : PickaxeComponent.valueOf(handleId).getBuilder().buildItem());
+        inventory.setItem(HEAD_SLOT, Objects.equals(headId, "NONE") || !CustomItemRegistry.isRegistered(headId) ? EMPTY_HEAD_SLOT : CustomItemRegistry.getByID(headId).getBaseItem().buildItem());
+        inventory.setItem(CORE_SLOT, Objects.equals(coreId, "NONE") || !CustomItemRegistry.isRegistered(coreId) ? EMPTY_CORE_SLOT : CustomItemRegistry.getByID(coreId).getBaseItem().buildItem());
+        inventory.setItem(HANDLE_SLOT, Objects.equals(handleId, "NONE") || !CustomItemRegistry.isRegistered(handleId)? EMPTY_HANDLE_SLOT : CustomItemRegistry.getByID(handleId).getBaseItem().buildItem());
     }
 
     public void resetSlots(){
@@ -84,7 +85,7 @@ public class PickaxeAnvilGui extends BaseGui {
         ItemStack handle = inventory.getItem(HANDLE_SLOT);
         ItemStack pickaxe = inventory.getItem(PICKAXE_SLOT);
 
-        inventory.setItem(PICKAXE_SLOT,  pickaxeAnvilHandler.updatePickaxeItem(pickaxe, head, core, handle));
+        //inventory.setItem(PICKAXE_SLOT,  pickaxeAnvilHandler.updatePickaxeItem(pickaxe, head, core, handle));
     }
 
     @Override
@@ -129,7 +130,8 @@ public class PickaxeAnvilGui extends BaseGui {
     public void onClose(InventoryCloseEvent e) {
         ItemStack checkedItem = e.getInventory().getItem(PickaxeAnvilGui.PICKAXE_SLOT);
 
-        if(!isPickaxe(checkedItem)) return;
+        if(!(getRegisteredItem(checkedItem) instanceof BasePickaxeItem))
+            return;
 
         Player player = (Player) e.getPlayer();
 

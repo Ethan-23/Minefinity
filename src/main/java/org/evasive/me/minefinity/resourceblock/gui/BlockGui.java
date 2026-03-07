@@ -11,7 +11,7 @@ import org.evasive.me.minefinity.player.sevices.BlockTierService;
 import org.evasive.me.minefinity.player.sevices.MilestoneService;
 import org.evasive.me.minefinity.resourceblock.framework.BaseBlock;
 import org.evasive.me.minefinity.resourceblock.framework.BlockType;
-import org.evasive.me.minefinity.utils.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;
 import org.jetbrains.annotations.NotNull;
 

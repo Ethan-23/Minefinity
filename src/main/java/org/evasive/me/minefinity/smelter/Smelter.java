@@ -1,14 +1,13 @@
 package org.evasive.me.minefinity.smelter;
 
 import org.evasive.me.minefinity.customItems.framework.CustomItemStack;
-import org.evasive.me.minefinity.customItems.types.FuelItem;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Smelter {
     private CustomItemStack[] inventoryItems; // set size to 9
-    private FuelItem fuelTier;
+    private String fuelId;
     private int totalFuel;
     private int remainingFuelEfficiency;
     private String currentlySmelting;
@@ -19,7 +18,7 @@ public class Smelter {
 
     public Smelter(){
         this.inventoryItems = new CustomItemStack[9];
-        this.fuelTier = null;
+        this.fuelId = null;
         this.totalFuel = 0;
         this.remainingFuelEfficiency = 0;
         this.currentlySmelting = null;
@@ -36,12 +35,12 @@ public class Smelter {
         this.inventoryItems = inventoryItems;
     }
 
-    public FuelItem getFuelTier() {
-        return fuelTier;
+    public String getFuelId() {
+        return fuelId;
     }
 
-    public void setFuelTier(FuelItem fuelTier) {
-        this.fuelTier = fuelTier;
+    public void setFuelId(String fuelId) {
+        this.fuelId = fuelId;
     }
 
     public int getTotalFuel() {

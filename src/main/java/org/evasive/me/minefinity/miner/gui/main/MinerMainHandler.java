@@ -4,8 +4,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
+import org.evasive.me.minefinity.customItems.itembuilder.data.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.BasePickaxeItem;
 import org.evasive.me.minefinity.miner.gui.selection.MinerBlockSelectionGui;
 import org.evasive.me.minefinity.miner.service.AutoMinerService;
+import org.evasive.me.minefinity.player.sevices.BlockTierService;
 
 import java.util.Map;
 
@@ -14,7 +17,13 @@ import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.*;
 
 public class MinerMainHandler {
 
-    AutoMinerService autoMinerService = Minefinity.core.getAutoMinerService();
+    private final AutoMinerService autoMinerService;
+    private final BlockTierService blockTierService;
+
+    public MinerMainHandler(AutoMinerService autoMinerService,BlockTierService blockTierService) {
+        this.autoMinerService = autoMinerService;
+        this.blockTierService = blockTierService;
+    }
 
     public void handleCollectSlot(InventoryClickEvent event, Player player) {
         event.setCancelled(true);
@@ -33,22 +42,27 @@ public class MinerMainHandler {
 
     public boolean handlePickaxeSlot(Player player, ItemStack cursorItem) {
 
-        if(!isPickaxe(cursorItem) && !cursorItem.isEmpty()) {
+        if(!cursorItem.isEmpty()) {
             return false;
         }
+
+        BaseCustomItem baseCustomItem = getRegisteredItem(cursorItem);
+
+        if(!(baseCustomItem instanceof BasePickaxeItem basePickaxeItem))
+            return false;
 
         if(cursorItem.isEmpty()){
             autoMinerService.setAutoMinerPickaxe(player, null);
             return true;
         }
 
-        autoMinerService.setAutoMinerPickaxe(player, cursorItem.clone());
+        autoMinerService.setAutoMinerPickaxe(player, basePickaxeItem);
         return true;
 
     }
 
     public void handleBlockSlot(Player player){
-        new MinerBlockSelectionGui(player).open();
+        new MinerBlockSelectionGui(player, autoMinerService, blockTierService).open();
     }
 
 

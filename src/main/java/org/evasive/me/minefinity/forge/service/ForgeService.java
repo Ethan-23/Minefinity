@@ -3,7 +3,7 @@ package org.evasive.me.minefinity.forge.service;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.customItems.framework.CustomItemRegistry;
+import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.database.service.DirtyPlayerService;
 import org.evasive.me.minefinity.forge.data.BaseForgeItem;
 import org.evasive.me.minefinity.player.PlayerManager;
@@ -47,7 +47,7 @@ public class ForgeService {
     }
 
     public ItemStack getForgeItemStack(Player player, int slot){
-        return CustomItemRegistry.getByID(getForgeItem(player, slot).getResultItemId()).getBuilder().buildItem().clone();
+        return CustomItemRegistry.getByID(getForgeItem(player, slot).getResultItemId()).getBaseItem().buildItem().clone();
     }
 
     public void setSelectedForge(Player player, int forgeSlot){

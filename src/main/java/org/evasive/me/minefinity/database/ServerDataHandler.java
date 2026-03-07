@@ -1,7 +1,5 @@
 package org.evasive.me.minefinity.database;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.database.repository.PlayerRepository;
 import org.evasive.me.minefinity.database.service.DirtyPlayerService;
@@ -28,10 +26,10 @@ public class ServerDataHandler {
     // Load all players into memory
     public void loadAll() throws SQLException {
         try {
-            List<UUID> uuids = playerRepository.getAllPlayerUUIDs();
+            List<UUID> uuids = playerRepository.getAllPlayerUUIDs(Minefinity.getDatabaseManager().getConnection());
 
             for (UUID uuid : uuids) {
-                MinefinityPlayer player = playerRepository.load(uuid);
+                MinefinityPlayer player = playerRepository.loadMinefinityPlayer(uuid);
                 playerManager.registerPlayer(uuid, player);
             }
         } catch (Exception e) {

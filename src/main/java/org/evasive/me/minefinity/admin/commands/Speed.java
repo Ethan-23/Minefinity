@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.utils.TextConversions;
+import org.evasive.me.minefinity.utils.command.CommandFeedback;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -21,7 +22,7 @@ public class Speed implements CommandExecutor {
         if(!(sender instanceof Player player)) return true;
 
         if(args.length != 1){
-            player.sendMessage(TextConversions.parse("<red>Usage: /speed <1-10>"));
+            player.sendMessage(CommandFeedback.INVALID_USAGE);
             return true;
         }
 
@@ -30,12 +31,12 @@ public class Speed implements CommandExecutor {
         try{
             speed = Integer.parseInt(args[0]);
         }catch (NumberFormatException e){
-            player.sendMessage(TextConversions.parse("<red>Invalid number!"));
+            player.sendMessage(CommandFeedback.INVALID_NUMBER);
             return true;
         }
 
         if(speed < 1 || speed > 10){
-            player.sendMessage(TextConversions.parse("<red>Invalid speed. Must be between 1 and 10!"));
+            player.sendMessage(CommandFeedback.INVALID_NUMBER);
             return true;
         }
 
@@ -43,11 +44,11 @@ public class Speed implements CommandExecutor {
         float playerSpeed = speed / 10f;
 
         if(flying){
-            player.sendMessage("Flying speed set to " + playerSpeed);
-            player.setFlySpeed(speed);
+            player.sendMessage("Flying speed set to " + speed);
+            player.setFlySpeed(playerSpeed);
         }else {
-            player.sendMessage("Walking speed set to " + playerSpeed);
-            player.setWalkSpeed(speed);
+            player.sendMessage("Walking speed set to " + speed);
+            player.setWalkSpeed(playerSpeed);
         }
 
         return true;

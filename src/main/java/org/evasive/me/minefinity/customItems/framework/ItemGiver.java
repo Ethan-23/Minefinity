@@ -1,16 +1,20 @@
 package org.evasive.me.minefinity.customItems.framework;
 
 import net.kyori.adventure.title.Title;
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.customItems.backpack.BackpackHandler;
+import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.utils.TextConversions;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.getItemId;
 
 public class ItemGiver {
 
@@ -18,6 +22,30 @@ public class ItemGiver {
 
     private final Map<UUID, Long> lastNotification = new HashMap<>();
     private static final long COOLDOWN_MS = 3000;
+
+    //Need to rework this entire system to go off itemStacks because if id doesn't exist it dies
+
+    public int givePlayerDrops(Player player, ItemStack itemStack, int amount){
+
+        String dropId = getItemId(itemStack);
+
+        String backpackId = backpackCollect.findBackpackItem(player, dropId);
+
+        if(player.getInventory().firstEmpty() == -1 && (backpackId == null || !backpackCollect.canHoldItem(player, backpackId, dropId))){
+            fullInventoryNotification(player);
+            return amount;
+        }
+
+        if (backpackId != null)
+            amount = addToBackpack(player, dropId, backpackId, amount);
+
+        amount = giveMultipleItems(player, itemStack, amount);
+
+        if(amount > 0)
+            fullInventoryNotification(player);
+
+        return amount;
+    }
 
     public int givePlayerDrops(Player player, String dropId, int amount){
 
@@ -31,7 +59,8 @@ public class ItemGiver {
         if (backpackId != null)
             amount = addToBackpack(player, dropId, backpackId, amount);
 
-        amount = giveMultipleItems(player, dropId, amount);
+        if(CustomItemRegistry.isRegistered(dropId))
+            amount = giveMultipleItems(player, CustomItemRegistry.getByID(dropId).getBaseItem().buildItem(), amount);
 
         if(amount > 0)
             fullInventoryNotification(player);
@@ -59,8 +88,15 @@ public class ItemGiver {
 
     }
 
-    private int giveMultipleItems(Player player, String itemId, int total){
-        ItemStack customItem = CustomItemRegistry.getByID(itemId).getBuilder().buildItem();
+    private int giveMultipleItems(Player player, ItemStack itemStack, int total){
+        String itemId = getItemId(itemStack);
+        if(!CustomItemRegistry.isRegistered(itemId)){
+            Bukkit.getConsoleSender().sendMessage("Unregistered Item Id: " + itemId);
+            player.getInventory().addItem(itemStack);
+            return 0;
+        }
+
+        ItemStack customItem = CustomItemRegistry.getByID(itemId).getBaseItem().buildItem();
 
         final int MAX_STACK_SIZE = customItem.getMaxStackSize();
 

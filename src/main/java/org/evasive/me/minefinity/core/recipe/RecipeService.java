@@ -4,10 +4,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.core.items.CustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
-import org.evasive.me.minefinity.customItems.types.ResourceItem;
-import org.evasive.me.minefinity.forge.recipes.BaseForgeRecipe;
+import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.forge.recipes.ForgeRecipes;
 
 import java.util.HashMap;
@@ -34,7 +33,7 @@ public class RecipeService {
 
             if(!isValidResource(stack)) continue;
 
-            CustomItem item = ResourceItem.valueOf(getItemId(stack));
+            CustomItem item = CustomItemRegistry.getByID(getItemId(stack));
 
             Integer needed = remaining.get(item);
 
@@ -49,7 +48,7 @@ public class RecipeService {
             if(allRequirementsMet(remaining)){
                 removeRequiredItems(player, slotUsage, backpackUsage);
                 if(recipe.getResult() != null && !(ForgeRecipes.contains(recipe.getResult().getID())))
-                    player.getInventory().addItem(recipe.getResult().getBuilder().buildItem());
+                    player.getInventory().addItem(recipe.getResult().getBaseItem().buildItem());
                 return true;
             }
         }
@@ -69,7 +68,7 @@ public class RecipeService {
             if(allRequirementsMet(remaining)){
                 removeRequiredItems(player, slotUsage, backpackUsage);
                 if(recipe.getResult() != null && !(ForgeRecipes.contains(recipe.getResult().getID())))
-                    player.getInventory().addItem(recipe.getResult().getBuilder().buildItem());
+                    player.getInventory().addItem(recipe.getResult().getBaseItem().buildItem());
                 return true;
             }
         }
@@ -100,7 +99,7 @@ public class RecipeService {
         return stack != null
                 && stack.hasItemMeta()
                 && hasItemId(stack)
-                && ResourceItem.contains(getItemId(stack));
+                && CustomItemRegistry.isRegistered(getItemId(stack));
     }
 
 }

@@ -7,14 +7,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.economy.EconomyService;
-import org.evasive.me.minefinity.utils.CommandFeedback;
+import org.evasive.me.minefinity.utils.command.CommandFeedback;
 import org.evasive.me.minefinity.utils.TextConversions;
-import org.evasive.me.minefinity.utils.economy.EconNumberUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-import static java.lang.Double.parseDouble;
 import static org.evasive.me.minefinity.utils.economy.EconNumberUtils.*;
 
 public class Pay implements CommandExecutor {

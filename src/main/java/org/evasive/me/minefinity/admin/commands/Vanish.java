@@ -1,25 +1,16 @@
 package org.evasive.me.minefinity.admin.commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
-import org.bukkit.scoreboard.Team;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.admin.service.VanishService;
-import org.evasive.me.minefinity.utils.CommandFeedback;
+import org.evasive.me.minefinity.utils.command.CommandFeedback;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
 
 public class Vanish implements CommandExecutor, Listener {
 

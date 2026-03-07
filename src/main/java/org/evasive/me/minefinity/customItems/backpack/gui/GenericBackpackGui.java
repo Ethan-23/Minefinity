@@ -8,15 +8,14 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
-import org.evasive.me.minefinity.customItems.framework.CustomItemRegistry;
-import org.evasive.me.minefinity.customItems.backpack.Backpacks;
+import org.evasive.me.minefinity.customItems.itembuilder.data.BaseBackpackItem;
+import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.customItems.backpack.BackpackHandler;
-import org.evasive.me.minefinity.utils.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Set;
 
 import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.getItemId;
 import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.hasItemId;
@@ -41,7 +40,7 @@ public class GenericBackpackGui extends BaseGui {
 
     @Override
     protected void build() {
-        Set<String> storedItemIdList = Backpacks.valueOf(backpackId).getBuilder().getStoredItemIdList();
+        List<String> storedItemIdList = ((BaseBackpackItem)CustomItemRegistry.getByID(backpackId)).getStoredItemIdList();
         List<String> sortedStoredItemIdList = storedItemIdList.stream().sorted().toList();
         for(int i = 0; i < sortedStoredItemIdList.size(); i++){
             inventory.setItem(i, createItemStorage(backpackId, player, sortedStoredItemIdList.get(i)));
@@ -54,11 +53,11 @@ public class GenericBackpackGui extends BaseGui {
         for(int i = inventorySize - 1; i > inventorySize - 10; i--){
             inventory.setItem(i, fillerPane);
         }
-        inventory.setItem(insertButton, new ItemBuilder(Material.CHEST, TextConversions.parse("<green>Insert Inventory")).build());
+        inventory.setItem(insertButton, new ItemBuilder(Material.CHEST, "<green>Insert Inventory").build());
     }
 
     private ItemStack createItemStorage(String backpackId, Player player, String itemId){
-        ItemStack customItem = CustomItemRegistry.getByID(itemId).getBuilder().buildItem();
+        ItemStack customItem = CustomItemRegistry.getByID(itemId).getBaseItem().buildItem();
         int amount = Minefinity.getCore().getBackpackService().getBackpackStoredItemAmount(player, itemId);
         int totalStorage = new BackpackHandler().getTotalBackpackStorage(player, backpackId);
         ItemBuilder storageBlock = new ItemBuilder(customItem).setLore(

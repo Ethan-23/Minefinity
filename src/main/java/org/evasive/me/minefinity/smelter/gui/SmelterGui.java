@@ -8,19 +8,20 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
-import org.evasive.me.minefinity.core.items.CustomItem;
-import org.evasive.me.minefinity.customItems.framework.CustomItemRegistry;
+import org.evasive.me.minefinity.customItems.itembuilder.data.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.BaseFuelItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.customItems.framework.CustomItemStack;
-import org.evasive.me.minefinity.customItems.types.FuelItem;
-import org.evasive.me.minefinity.customItems.types.ResourceItem;
 import org.evasive.me.minefinity.smelter.service.SmelterHandler;
 import org.evasive.me.minefinity.smelter.recipes.SmelterRecipes;
 import org.evasive.me.minefinity.smelter.service.SmelterService;
-import org.evasive.me.minefinity.utils.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.*;
 import static org.evasive.me.minefinity.utils.GenericGuiItems.fillerPane;
@@ -67,7 +68,7 @@ public class SmelterGui extends BaseGui {
             }
 
 
-            ItemStack itemStack = customItemStack.getCustomItem().getBuilder().buildItem();
+            ItemStack itemStack = customItemStack.getCustomItem().getBaseItem().buildItem();
             itemStack.setAmount(customItemStack.getAmount());
 
             inventory.setItem(INPUT_SLOTS.get(i), itemStack);
@@ -85,9 +86,9 @@ public class SmelterGui extends BaseGui {
         CustomItem currentSmelt = CustomItemRegistry.getByID(smelterService.getCurrentlySmelting(player));
 
         if(currentSmelt != null) {
-            itemBuilder.setDisplayName(TextConversions.parse("<yellow>Smelting")).setItemModel(Material.CAMPFIRE.getKey());
-            itemBuilder.addLore("<gray>Item: <green>" + currentSmelt.getItemNameRarity());
-            itemBuilder.addLore("<gray>Time Left: <gold>" + (SmelterRecipes.valueOf(currentSmelt.getID()).getSmelterRecipe().getFuelCost() - smelterService.getCurrentSmeltProgress(player)) + "s");
+            itemBuilder.setDisplayName("<yellow>Smelting").setItemModel(Material.CAMPFIRE.getKey());
+            itemBuilder.addLore("<gray>Item: <green>" + currentSmelt.getID());
+            //itemBuilder.addLore("<gray>Time Left: <gold>" + (SmelterRecipes.valueOf(currentSmelt.getID()).getSmelterRecipe().getFuelCost() - smelterService.getCurrentSmeltProgress(player)) + "s");
         }
 
         if(smelterService.getTotalFuel(player) <= 0 && smelterService.getFuelEfficiency(player) <= 0){
@@ -101,15 +102,17 @@ public class SmelterGui extends BaseGui {
 
     private void buildFuel() {
 
-        FuelItem fuelTier = smelterService.getFuelTier(player);
+        String fuelId = smelterService.getFuelId(player);
         int totalFuel = smelterService.getTotalFuel(player);
 
-        if(fuelTier == null || totalFuel == 0){
+        BaseFuelItem baseFuelItem = (BaseFuelItem) CustomItemRegistry.getByID(fuelId);
+
+        if(baseFuelItem == null || totalFuel == 0){
             ItemBuilder itemBuilder = new ItemBuilder(Material.RED_STAINED_GLASS_PANE, TextConversions.parse("<bold><gold>Fuel Input"));
             inventory.setItem(FUEL_SLOT, itemBuilder.build());
         } else {
 
-            ItemStack fuelItem = fuelTier.getBuilder().buildItem();
+            ItemStack fuelItem = baseFuelItem.buildItem();
             fuelItem.setAmount(smelterService.getTotalFuel(player));
             inventory.setItem(FUEL_SLOT, fuelItem);
         }
@@ -122,7 +125,7 @@ public class SmelterGui extends BaseGui {
         itemBuilder.addLore("<gray>Items:");
         for (Map.Entry<String, Integer> entry : smelterService.getOutput(player).entrySet()) {
             if(entry.getValue() == 0) continue;
-            itemBuilder.addLore(CustomItemRegistry.getByID(entry.getKey()).getItemNameRarity() + " x" + entry.getValue());
+            itemBuilder.addLore(CustomItemRegistry.getByID(entry.getKey()).getID() + " x" + entry.getValue());
         }
         inventory.setItem(OUTPUT_SLOT, itemBuilder.build());
     }
@@ -159,7 +162,7 @@ public class SmelterGui extends BaseGui {
         }
 
         if(INPUT_SLOTS.contains(slot)){
-            if(!cursorItem.isEmpty() && !isResource(cursorItem))
+            if(getRegisteredItem(cursorItem) == null)
                 return;
             updateInventorySlot(e, slot);
         }
@@ -173,23 +176,23 @@ public class SmelterGui extends BaseGui {
 
         ItemStack cursorItem = e.getCursor();
 
-        FuelItem replacementFuelItem = cursorItem.isEmpty() ? null : FuelItem.valueOf(getItemId(cursorItem));
-        FuelItem currentFuelItem = smelterService.getFuelTier(player);
+        BaseFuelItem replacementFuelItem = (BaseFuelItem) getRegisteredItem(cursorItem);
+        BaseFuelItem currentFuelItem = (BaseFuelItem) CustomItemRegistry.getByID(smelterService.getFuelId(player));
 
         if(replacementFuelItem == null && currentFuelItem == null) return;
 
-        if(replacementFuelItem == null || currentFuelItem == null || smelterService.getFuelTier(player) != FuelItem.valueOf(replacementFuelItem.getID())) {
+        if(replacementFuelItem == null || currentFuelItem == null || !Objects.equals(smelterService.getFuelId(player), replacementFuelItem.getID())) {
             if(currentFuelItem == null)
                 swapCursor(e, null, 0);
             else
                 swapCursor(e, currentFuelItem, smelterService.getTotalFuel(player));
 
-            smelterService.setFuel(player, replacementFuelItem, cursorItem.getAmount());
-        } else if(smelterService.getFuelTier(player) == FuelItem.valueOf(replacementFuelItem.getID())){
+            smelterService.setFuel(player, replacementFuelItem.getID(), cursorItem.getAmount());
+        } else if(Objects.equals(smelterService.getFuelId(player), replacementFuelItem.getID())){
             int currentAmount = smelterService.getTotalFuel(player);
             int addingAmount = cursorItem.getAmount();
             cursorItem.setAmount(Math.max(currentAmount + addingAmount - 64, 0));
-            smelterService.setFuel(player, replacementFuelItem, Math.min(currentAmount + addingAmount, 64));
+            smelterService.setFuel(player, replacementFuelItem.getID(), Math.min(currentAmount + addingAmount, 64));
         }
         rebuildInventory();
     }
@@ -198,7 +201,7 @@ public class SmelterGui extends BaseGui {
         int inventorySlot = INPUT_SLOTS.indexOf(slot);
         ItemStack cursorItem = e.getCursor();
         CustomItemStack currentCustomItemStack = smelterService.getInventoryItem(player, inventorySlot);
-        CustomItemStack replacementCustomItemStack = cursorItem.isEmpty() ? null : new CustomItemStack(ResourceItem.valueOf(getItemId(cursorItem)), cursorItem.getAmount());
+        CustomItemStack replacementCustomItemStack = cursorItem.isEmpty() ? null : new CustomItemStack((BaseCustomItem) CustomItemRegistry.getByID(getItemId(cursorItem)), cursorItem.getAmount());
 
         if(currentCustomItemStack == null && replacementCustomItemStack == null) return;
 

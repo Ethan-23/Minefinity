@@ -1,7 +1,7 @@
 package org.evasive.me.minefinity.workshop.recipes;
 
 import org.evasive.me.minefinity.core.recipe.BaseItemRecipe;
-import org.evasive.me.minefinity.core.items.CustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
 import org.evasive.me.minefinity.workshop.WorkshopMode;
 import org.evasive.me.minefinity.workshop.tools.WorkshopToolsTiers;
 

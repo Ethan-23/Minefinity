@@ -10,12 +10,13 @@ import org.evasive.me.minefinity.player.sevices.BlockTierService;
 import org.evasive.me.minefinity.town.service.TownService;
 import org.evasive.me.minefinity.town.Structure;
 import org.evasive.me.minefinity.utils.TextConversions;
+import org.evasive.me.minefinity.utils.command.CommandFeedback;
 import org.jetbrains.annotations.NotNull;
 
 public class MineData implements CommandExecutor {
 
-    private BlockTierService blockTierService;
-    private TownService townService;
+    private final BlockTierService blockTierService;
+    private final TownService townService;
 
     public MineData(Minefinity minefinity, TownService townService, BlockTierService blockTierService) {
         this.townService = townService;
@@ -35,7 +36,7 @@ public class MineData implements CommandExecutor {
 
             String structureName = strings[0].toUpperCase();
             if(!Structure.contains(structureName)) {
-                commandSender.sendMessage(TextConversions.parse("<red>Invalid Structure!"));
+                commandSender.sendMessage(CommandFeedback.INVALID_STRUCTURE);
                 return true;
             }
 

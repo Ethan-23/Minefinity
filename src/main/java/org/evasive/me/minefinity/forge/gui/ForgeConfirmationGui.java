@@ -6,11 +6,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.gui.BaseGui;
-import org.evasive.me.minefinity.core.items.CustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
 import org.evasive.me.minefinity.forge.data.ForgeCategories;
 import org.evasive.me.minefinity.forge.recipes.BaseForgeRecipe;
 import org.evasive.me.minefinity.forge.service.ForgeHandler;
-import org.evasive.me.minefinity.utils.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;
 import org.evasive.me.minefinity.utils.TimeCalculator;
 import org.jetbrains.annotations.NotNull;
@@ -55,7 +55,7 @@ public class ForgeConfirmationGui extends BaseGui {
     }
 
     private void buildResult(){
-        inventory.setItem(RESULT_PREVIEW_SLOT, crafting.getResult().getBuilder().buildItem().clone());
+        inventory.setItem(RESULT_PREVIEW_SLOT, crafting.getResult().getBaseItem().buildItem().clone());
     }
 
     private void buildButtons(){
@@ -75,7 +75,7 @@ public class ForgeConfirmationGui extends BaseGui {
         for (Map.Entry<CustomItem, Integer> entry : crafting.getRecipe().entrySet()) {
             if (slotIndex >= RECIPE_SLOTS.size()) break;
 
-            ItemStack item = entry.getKey().getBuilder().buildItem();
+            ItemStack item = entry.getKey().getBaseItem().buildItem();
             int amount = entry.getValue();
 
             while (amount > 0) {

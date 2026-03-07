@@ -2,38 +2,21 @@ package org.evasive.me.minefinity.town;
 
 import org.bukkit.Material;
 import org.evasive.me.minefinity.core.recipe.BaseItemRecipe;
-import org.evasive.me.minefinity.customItems.types.ResourceItem;
 
 import java.util.List;
 import java.util.Map;
 
 public enum Structure {
-    TOWNHALL(List.of(
-                    new BaseItemRecipe(Map.of(ResourceItem.TIMBER, 0, ResourceItem.ROCKY_STONE, 0)),
-                    new BaseItemRecipe(Map.of(ResourceItem.TIMBER, 30, ResourceItem.ROCKY_STONE, 30)),
-                    new BaseItemRecipe(Map.of(ResourceItem.MOSSY_TIMBER, 100, ResourceItem.ROCKY_STONE, 100))
-                    ),
+    TOWNHALL(List.of(),
             Material.LECTERN
     ),
-    MERCHANT(List.of(
-                    new BaseItemRecipe(Map.of(ResourceItem.TIMBER, 0, ResourceItem.ROCKY_STONE, 0)),
-                    new BaseItemRecipe(Map.of(ResourceItem.TIMBER, 30, ResourceItem.ROCKY_STONE, 30)),
-                    new BaseItemRecipe(Map.of(ResourceItem.MOSSY_TIMBER, 100, ResourceItem.ROCKY_STONE, 100))
-            ),
+    MERCHANT(List.of(),
             Material.CHEST
     ),
-    FORGE(List.of(
-                    new BaseItemRecipe(Map.of(ResourceItem.TIMBER, 0, ResourceItem.ROCKY_STONE, 0)),
-                    new BaseItemRecipe(Map.of(ResourceItem.TIMBER, 30, ResourceItem.ROCKY_STONE, 30)),
-                    new BaseItemRecipe(Map.of(ResourceItem.MOSSY_TIMBER, 100, ResourceItem.ROCKY_STONE, 100))
-            ),
+    FORGE(List.of(),
             Material.FURNACE
             ),
-    WORKSHOP(List.of(
-                    new BaseItemRecipe(Map.of(ResourceItem.TIMBER, 0, ResourceItem.ROCKY_STONE, 0)),
-                    new BaseItemRecipe(Map.of(ResourceItem.TIMBER, 30, ResourceItem.ROCKY_STONE, 30)),
-                    new BaseItemRecipe(Map.of(ResourceItem.MOSSY_TIMBER, 100, ResourceItem.ROCKY_STONE, 100))
-            ),
+    WORKSHOP(List.of(),
             Material.STONECUTTER
     ),
     /*DUNGEON(1, List.of(Map.of()), Material.SKELETON_SKULL)*/;

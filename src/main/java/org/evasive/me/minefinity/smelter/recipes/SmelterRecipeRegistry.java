@@ -1,6 +1,6 @@
 package org.evasive.me.minefinity.smelter.recipes;
 
-import org.evasive.me.minefinity.core.items.CustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,8 +11,8 @@ public class SmelterRecipeRegistry {
 
     public static void loadRecipes(){
         for (SmelterRecipes smelterRecipes : SmelterRecipes.values() ) {
-            smelterRecipes.getSmelterRecipe().getRecipe().forEach((key, value) ->
-                    loadedSmelterRecipes.put(key, smelterRecipes));
+            //smelterRecipes.getSmelterRecipe().getRecipe().forEach((key, value) ->
+           //        loadedSmelterRecipes.put(key, smelterRecipes));
 
         }
     }

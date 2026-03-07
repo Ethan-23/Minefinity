@@ -1,8 +1,6 @@
 package org.evasive.me.minefinity.database.service;
 
-import org.bukkit.Bukkit;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.database.DatabaseManager;
 import org.evasive.me.minefinity.database.ServerDataHandler;
 
 import java.sql.SQLException;
@@ -30,11 +28,9 @@ public class AutosaveService {
     public void save() throws SQLException {
         if(!serverDataHandler.haveDirty()) return;
         Minefinity.getCore().databaseConnect();
-        Bukkit.getConsoleSender().sendMessage("Saving Dirty Players...");
         lastSave = System.currentTimeMillis();
         calculateNextSave();
         serverDataHandler.saveDirty();
-        Bukkit.getConsoleSender().sendMessage("Finished Saving Dirty Players");
         Minefinity.getDatabaseManager().closePool();
     }
 
