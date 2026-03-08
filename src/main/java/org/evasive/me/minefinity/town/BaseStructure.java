@@ -1,7 +1,7 @@
 package org.evasive.me.minefinity.town;
 
 import org.bukkit.Material;
-import org.evasive.me.minefinity.core.recipe.BaseItemRecipe;
+import org.evasive.me.minefinity.customItems.recipebuilder.data.BaseItemRecipe;
 
 import java.util.List;
 

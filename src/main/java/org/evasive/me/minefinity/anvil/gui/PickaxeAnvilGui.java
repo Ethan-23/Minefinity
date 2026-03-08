@@ -130,7 +130,7 @@ public class PickaxeAnvilGui extends BaseGui {
     public void onClose(InventoryCloseEvent e) {
         ItemStack checkedItem = e.getInventory().getItem(PickaxeAnvilGui.PICKAXE_SLOT);
 
-        if(!(getRegisteredItem(checkedItem) instanceof BasePickaxeItem))
+        if(!(getRegisteredBaseItem(checkedItem) instanceof BasePickaxeItem))
             return;
 
         Player player = (Player) e.getPlayer();

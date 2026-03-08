@@ -28,39 +28,39 @@ public class RegistryConfigHandler {
         CustomItemType customItemType = item.getCustomItemType();
 
         individualItemSection.set("material", item.getMaterial().name());
-        individualItemSection.set("display_name", item.getDisplayName());
-        individualItemSection.set("custom_item_type", customItemType.name());
+        individualItemSection.set("display-name", item.getDisplayName());
+        individualItemSection.set("custom-item-type", customItemType.name());
         individualItemSection.set("rarity", item.getRarity().name());
 
         Optional<Float> value = item.getValue();
-        value.ifPresent(aFloat -> individualItemSection.set("sell_value", aFloat));
+        value.ifPresent(aFloat -> individualItemSection.set("sell-value", aFloat));
         Optional<Material> visualMaterial = item.getVisualMaterial();
-        visualMaterial.ifPresent(aMaterial -> individualItemSection.set("visual_material", aMaterial.name()));
+        visualMaterial.ifPresent(aMaterial -> individualItemSection.set("visual-material", aMaterial.name()));
         Optional<String> flavorText = item.getFlavorText();
-        flavorText.ifPresent(aFlavor -> individualItemSection.set("flavor_text", aFlavor));
+        flavorText.ifPresent(aFlavor -> individualItemSection.set("flavor-text", aFlavor));
         Optional<Boolean> glowing = item.isGlowing();
         glowing.ifPresent(aGlowing -> individualItemSection.set("glowing", aGlowing));
         Optional<Boolean> soulbound = item.isSoulbound();
         soulbound.ifPresent(aSoulbound -> individualItemSection.set("soulbound", aSoulbound));
         Optional<Integer> stackSize = item.getStackSize();
-        stackSize.ifPresent(aStackSize -> individualItemSection.set("stack_size", aStackSize));
+        stackSize.ifPresent(aStackSize -> individualItemSection.set("stack-size", aStackSize));
 
 
 
         switch (item) {
             case BasePickaxeItem basePickaxeItem -> {
-                individualItemSection.set("mining_speed", basePickaxeItem.getBaseMiningSpeed());
-                individualItemSection.set("pickaxe_head", basePickaxeItem.getPickaxeHeadId());
-                individualItemSection.set("pickaxe_core", basePickaxeItem.getPickaxeCoreId());
-                individualItemSection.set("pickaxe_handle", basePickaxeItem.getPickaxeHandleId());
+                individualItemSection.set("mining-speed", basePickaxeItem.getBaseMiningSpeed());
+                individualItemSection.set("pickaxe-head", basePickaxeItem.getPickaxeHeadId());
+                individualItemSection.set("pickaxe-core", basePickaxeItem.getPickaxeCoreId());
+                individualItemSection.set("pickaxe-handle", basePickaxeItem.getPickaxeHandleId());
             }
             case BasePickaxeComponent basePickaxeComponent ->
-                    individualItemSection.set("pickaxe_abilities", basePickaxeComponent.getPickaxeAbilityList());
+                    individualItemSection.set("pickaxe-abilities", basePickaxeComponent.getPickaxeAbilityList());
             case BaseFuelItem baseFuelItem ->
-                    individualItemSection.set("fuel_amount", baseFuelItem.getFuelAmount());
+                    individualItemSection.set("fuel-amount", baseFuelItem.getFuelAmount());
             case BaseBackpackItem baseBackpackItem -> {
-                individualItemSection.set("storage_amount", baseBackpackItem.getStoredItemAmount());
-                individualItemSection.set("storage_list", baseBackpackItem.getStoredItemIdList());
+                individualItemSection.set("storage-amount", baseBackpackItem.getStoredItemAmount());
+                individualItemSection.set("storage-list", baseBackpackItem.getStoredItemIdList());
             }
             default -> {
             }

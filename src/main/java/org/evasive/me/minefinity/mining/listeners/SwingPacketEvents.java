@@ -12,10 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.customItems.framework.ItemFunctions;
-import org.evasive.me.minefinity.customItems.itembuilder.data.BasePickaxeComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.data.BasePickaxeItem;
 import org.evasive.me.minefinity.mining.handlers.BlockProgressHandler;
 import org.evasive.me.minefinity.mining.data.MiningBlockData;
@@ -23,8 +20,7 @@ import org.evasive.me.minefinity.mining.data.MiningBlockData;
 import java.util.Objects;
 import java.util.UUID;
 
-import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.getItemId;
-import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.getRegisteredItem;
+import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.getRegisteredBaseItem;
 
 public class SwingPacketEvents extends PacketListenerAbstract {
 
@@ -78,7 +74,7 @@ public class SwingPacketEvents extends PacketListenerAbstract {
     }
 
     public boolean validateItemInHand(ItemStack itemStack){
-        return getRegisteredItem(itemStack) instanceof BasePickaxeItem;
+        return getRegisteredBaseItem(itemStack) instanceof BasePickaxeItem;
     }
 
     public boolean checkForCorrectGameMode(Player player){

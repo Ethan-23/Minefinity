@@ -1,12 +1,12 @@
 package org.evasive.me.minefinity.smelter.recipes;
 
-import org.evasive.me.minefinity.core.recipe.BaseItemRecipe;
+import org.evasive.me.minefinity.customItems.recipebuilder.data.BaseItemRecipe;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
 
 import java.util.Map;
 
 public class BaseSmelterRecipe extends BaseItemRecipe {
-    public BaseSmelterRecipe(Map<CustomItem, Integer> recipe) {
+    public BaseSmelterRecipe(Map<String, Integer> recipe) {
         super(recipe);
     }
 

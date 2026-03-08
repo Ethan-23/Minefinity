@@ -4,13 +4,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.core.recipe.RecipeService;
+import org.evasive.me.minefinity.customItems.recipebuilder.service.RecipeService;
 import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.utils.TextConversions;
 import org.evasive.me.minefinity.workshop.WorkshopMode;
 import org.evasive.me.minefinity.workshop.gui.EngineerGui;
 import org.evasive.me.minefinity.workshop.recipes.BaseWorkshopRecipe;
-import org.evasive.me.minefinity.workshop.recipes.WorkshopRecipes;
+import org.evasive.me.minefinity.workshop.recipes.WorkshopRecipeManager;
 import org.evasive.me.minefinity.workshop.tools.WorkshopToolsTiers;
 
 import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.getItemId;
@@ -25,14 +25,16 @@ public class EngineerClickHandler {
     private final EngineerService engineerService;
     private final EngineerCraftingService engineerCraftingService;
     private final RecipeService recipeService;
+    private final WorkshopRecipeManager workshopRecipeManager;
 
     private static final String TOOL_CRAFT_FAILED = "<red>You need to craft a tool.";
     private static final String INCORRECT_RESOURCE_AMOUNT = "<red>You do not have the correct amount of resources.";
 
-    public EngineerClickHandler(Player player, WorkshopMode workshopMode, EngineerService engineerService) {
+    public EngineerClickHandler(Player player, WorkshopMode workshopMode, EngineerService engineerService, WorkshopRecipeManager workshopRecipeManager) {
         this.player = player;
         this.workshopMode = workshopMode;
         this.engineerService = engineerService;
+        this.workshopRecipeManager = workshopRecipeManager;
         recipeService = new RecipeService();
         this.engineerCraftingService = new EngineerCraftingService(engineerService,  player, workshopMode);
     }
@@ -61,7 +63,7 @@ public class EngineerClickHandler {
     }
 
     private void handleSwapSlot(){
-        new EngineerGui(player, this.workshopMode == WorkshopMode.CARPENTRY ? WorkshopMode.STONEWORKING : WorkshopMode.CARPENTRY, this.engineerService).open();
+        new EngineerGui(player, this.workshopMode == WorkshopMode.CARPENTRY ? WorkshopMode.STONEWORKING : WorkshopMode.CARPENTRY, this.engineerService, workshopRecipeManager).open();
     }
 
     private void handleResourceSlot(InventoryClickEvent e){
@@ -91,7 +93,7 @@ public class EngineerClickHandler {
     private void handleShopSlots(InventoryClickEvent e){
         ItemStack currentItem = e.getCurrentItem();
         if(!hasItemId(currentItem)) return;
-        BaseWorkshopRecipe workshopRecipe = WorkshopRecipes.valueOf(getItemId(currentItem)).baseWorkshopRecipe;
+        BaseWorkshopRecipe workshopRecipe = workshopRecipeManager.getRecipe(getItemId(currentItem));
 
         int toolDurability = engineerService.getWorkshopToolDurability(player, workshopMode);
 

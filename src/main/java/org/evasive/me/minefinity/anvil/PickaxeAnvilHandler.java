@@ -27,7 +27,7 @@ public class PickaxeAnvilHandler {
     public boolean verifyPartChange(ItemStack pickaxe, ItemStack cursorItem, ItemStack currentItem, CustomItemType itemType){
 
 
-        if(!(getRegisteredItem(pickaxe) instanceof BasePickaxeItem))
+        if(!(getRegisteredBaseItem(pickaxe) instanceof BasePickaxeItem))
             return false;
 
         boolean correctItemTypeCursor = isCorrectComponentType(cursorItem, itemType);
@@ -59,8 +59,8 @@ public class PickaxeAnvilHandler {
         ItemStack cursorItem = e.getCursor();
         ItemStack currentItem = e.getCurrentItem();
 
-        boolean cursorPickaxe = (getRegisteredItem(cursorItem) instanceof BasePickaxeItem);
-        boolean currentPickaxe = (getRegisteredItem(currentItem) instanceof BasePickaxeItem);
+        boolean cursorPickaxe = (getRegisteredBaseItem(cursorItem) instanceof BasePickaxeItem);
+        boolean currentPickaxe = (getRegisteredBaseItem(currentItem) instanceof BasePickaxeItem);
 
         if (!cursorPickaxe && !currentPickaxe) {
             e.setCancelled(true);

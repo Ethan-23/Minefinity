@@ -9,6 +9,7 @@ import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
 import org.evasive.me.minefinity.forge.data.ForgeCategories;
 import org.evasive.me.minefinity.forge.recipes.BaseForgeRecipe;
+import org.evasive.me.minefinity.forge.recipes.ForgeRecipeManager;
 import org.evasive.me.minefinity.forge.service.ForgeHandler;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;
@@ -18,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 
+import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.getRegisteredItemStack;
 import static org.evasive.me.minefinity.utils.GenericGuiItems.*;
 
 public class ForgeConfirmationGui extends BaseGui {
@@ -30,12 +32,15 @@ public class ForgeConfirmationGui extends BaseGui {
     private static final int INVENTORY_SIZE = 54;
     private static final int STACK_SIZE = 64;
     private final BaseForgeRecipe crafting;
-    ForgeHandler forgeHandler = new ForgeHandler();
+    private final ForgeRecipeManager forgeRecipeManager;
+    ForgeHandler forgeHandler;
 
 
-    public ForgeConfirmationGui(Player player, BaseForgeRecipe crafting) {
+    public ForgeConfirmationGui(Player player, BaseForgeRecipe crafting, ForgeRecipeManager forgeRecipeManager) {
         super(player, INVENTORY_SIZE, TextConversions.parse("Forge Confirmation"));
         this.crafting = crafting;
+        this.forgeRecipeManager = forgeRecipeManager;
+        forgeHandler = new ForgeHandler(forgeRecipeManager);
         build();
     }
 
@@ -55,7 +60,7 @@ public class ForgeConfirmationGui extends BaseGui {
     }
 
     private void buildResult(){
-        inventory.setItem(RESULT_PREVIEW_SLOT, crafting.getResult().getBaseItem().buildItem().clone());
+        inventory.setItem(RESULT_PREVIEW_SLOT, getRegisteredItemStack(crafting.getResult()));
     }
 
     private void buildButtons(){
@@ -72,10 +77,10 @@ public class ForgeConfirmationGui extends BaseGui {
 
     private void buildRecipePreview(){
         int slotIndex = 0;
-        for (Map.Entry<CustomItem, Integer> entry : crafting.getRecipe().entrySet()) {
+        for (Map.Entry<String, Integer> entry : crafting.getRecipe().entrySet()) {
             if (slotIndex >= RECIPE_SLOTS.size()) break;
 
-            ItemStack item = entry.getKey().getBaseItem().buildItem();
+            ItemStack item = getRegisteredItemStack(entry.getKey());
             int amount = entry.getValue();
 
             while (amount > 0) {
@@ -115,7 +120,7 @@ public class ForgeConfirmationGui extends BaseGui {
         }
 
         if (clickedSlot == ForgeConfirmationGui.BACK_BUTTON_SLOT) {
-            new ForgeCategoriesGui(player, ForgeCategories.PICKAXE_TEMPLATES).open();
+            new ForgeCategoriesGui(player, ForgeCategories.PICKAXE_TEMPLATES, forgeRecipeManager).open();
         }
 
         if (clickedSlot == ForgeConfirmationGui.EXIT_BUTTON_SLOT) {

@@ -12,8 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.*;
-
 public class CustomItemRegistry {
 
     private static final Map<String, CustomItem> ITEMS_BY_ID = new HashMap<>();
@@ -97,40 +95,40 @@ public class CustomItemRegistry {
             if(customItemSection == null) continue;
 
             Material material = Material.valueOf(customItemSection.getString("material"));
-            String displayName = customItemSection.getString("display_name");
+            String displayName = customItemSection.getString("display-name");
             Rarity rarity = Rarity.valueOf(customItemSection.getString("rarity"));
 
-            CustomItemType customItemType = CustomItemType.valueOf(customItemSection.getString("custom_item_type"));
+            CustomItemType customItemType = CustomItemType.valueOf(customItemSection.getString("custom-item-type"));
             BaseCustomItem baseCustomItem = customItemType.create(itemID, material, displayName, rarity);
 
-            if(customItemSection.get("sell_value") != null)
-                baseCustomItem.setValue((float) customItemSection.getDouble("sell_value"));
-            if(customItemSection.get("visual_material") != null)
-                baseCustomItem.setVisualMaterial(Material.valueOf(customItemSection.getString("visual_material")));
-            if(customItemSection.get("flavor_text") != null)
-                baseCustomItem.setFlavorText(customItemSection.getString("flavor_text"));
+            if(customItemSection.get("sell-value") != null)
+                baseCustomItem.setValue((float) customItemSection.getDouble("sell-value"));
+            if(customItemSection.get("visual-material") != null)
+                baseCustomItem.setVisualMaterial(Material.valueOf(customItemSection.getString("visual-material")));
+            if(customItemSection.get("flavor-text") != null)
+                baseCustomItem.setFlavorText(customItemSection.getString("flavor-text"));
             if(customItemSection.get("glowing") != null)
                 baseCustomItem.setGlowing(customItemSection.getBoolean("glowing"));
             if(customItemSection.get("soulbound") != null)
                 baseCustomItem.setSoulbound(customItemSection.getBoolean("soulbound"));
-            if(customItemSection.get("stack_size") != null)
-                baseCustomItem.setStackSize(customItemSection.getInt("stack_size"));
+            if(customItemSection.get("stack-size") != null)
+                baseCustomItem.setStackSize(customItemSection.getInt("stack-size"));
 
 
             if(baseCustomItem instanceof BasePickaxeItem){
-                ((BasePickaxeItem) baseCustomItem).setBaseMiningSpeed((float) customItemSection.getDouble("mining_speed"));
-                ((BasePickaxeItem) baseCustomItem).setPickaxeHeadId(customItemSection.getString("pickaxe_head"));
-                ((BasePickaxeItem) baseCustomItem).setPickaxeCoreId(customItemSection.getString("pickaxe_core"));
-                ((BasePickaxeItem) baseCustomItem).setPickaxeHandleId(customItemSection.getString("pickaxe_handle"));
+                ((BasePickaxeItem) baseCustomItem).setBaseMiningSpeed((float) customItemSection.getDouble("mining-speed"));
+                ((BasePickaxeItem) baseCustomItem).setPickaxeHeadId(customItemSection.getString("pickaxe-head"));
+                ((BasePickaxeItem) baseCustomItem).setPickaxeCoreId(customItemSection.getString("pickaxe-core"));
+                ((BasePickaxeItem) baseCustomItem).setPickaxeHandleId(customItemSection.getString("pickaxe-handle"));
             }else if(baseCustomItem instanceof BasePickaxeComponent){
-                for (String string : customItemSection.getStringList("pickaxe_abilities")) {
+                for (String string : customItemSection.getStringList("pickaxe-abilities")) {
                     ((BasePickaxeComponent) baseCustomItem).changePickaxeAbilityList(PickaxeAbilities.valueOf(string));
                 }
             }else if(baseCustomItem instanceof BaseFuelItem){
-                ((BaseFuelItem) baseCustomItem).setFuelAmount(customItemSection.getInt("fuel_amount"));
+                ((BaseFuelItem) baseCustomItem).setFuelAmount(customItemSection.getInt("fuel-amount"));
             }else if(baseCustomItem instanceof BaseBackpackItem){
-                ((BaseBackpackItem) baseCustomItem).setStoredItemAmount(customItemSection.getInt("storage_amount"));
-                for (String string : customItemSection.getStringList("storage_list")) {
+                ((BaseBackpackItem) baseCustomItem).setStoredItemAmount(customItemSection.getInt("storage-amount"));
+                for (String string : customItemSection.getStringList("storage-list")) {
                     ((BaseBackpackItem) baseCustomItem).changeStoredItemIdList(string);
                 }
             }

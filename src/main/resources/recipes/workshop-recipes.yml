@@ -1,0 +1,31 @@
+recipes:
+  TIMBER:
+    workshop-mode: CARPENTRY
+    workshop-tool-tier: FLINT
+    unlock-level: 1
+    durability-usage: 1
+    recipe:
+      OAK_PLANK: 5
+  MOSSY_TIMBER:
+    workshop-mode: CARPENTRY
+    workshop-tool-tier: BRONZE
+    unlock-level: 2
+    durability-usage: 2
+    recipe:
+      TIMBER: 5
+      MOSS: 10
+  ROCKY_STONE:
+    workshop-mode: STONEWORKING
+    workshop-tool-tier: FLINT
+    unlock-level: 1
+    durability-usage: 1
+    recipe:
+      ROCKS: 5
+  TOUGH_STONE:
+    workshop-mode: STONEWORKING
+    workshop-tool-tier: BRONZE
+    unlock-level: 2
+    durability-usage: 2
+    recipe:
+      ROCKY_STONE: 5
+      TUFF: 10

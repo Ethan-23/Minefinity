@@ -44,6 +44,8 @@ import org.evasive.me.minefinity.economy.EconomyService;
 import org.evasive.me.minefinity.commands.balance.Balance;
 import org.evasive.me.minefinity.commands.Pay;
 import org.evasive.me.minefinity.core.events.ServerJoinEvent;
+import org.evasive.me.minefinity.forge.recipes.ForgeRecipeManager;
+import org.evasive.me.minefinity.forge.recipes.config.ForgeRecipeConfig;
 import org.evasive.me.minefinity.forge.service.ForgeService;
 import org.evasive.me.minefinity.miner.events.AutoMinerEvents;
 import org.evasive.me.minefinity.miner.service.AutoMinerService;
@@ -67,6 +69,8 @@ import org.evasive.me.minefinity.smelter.events.SmelterEvents;
 import org.evasive.me.minefinity.smelter.recipes.SmelterRecipeRegistry;
 import org.evasive.me.minefinity.smelter.service.SmelterService;
 import org.evasive.me.minefinity.town.service.TownService;
+import org.evasive.me.minefinity.workshop.recipes.WorkshopRecipeManager;
+import org.evasive.me.minefinity.workshop.recipes.config.WorkshopRecipeConfig;
 import org.evasive.me.minefinity.workshop.service.EngineerService;
 import org.evasive.me.minefinity.worldPackets.events.BlockPacketEvents;
 import org.evasive.me.minefinity.worldPackets.events.ChunkLoadingEvents;
@@ -120,6 +124,8 @@ public final class Minefinity extends JavaPlugin {
     ServerDataHandler serverDataHandler;
     RankDataHandler rankDataHandler;
     PlayerRepository playerRepository;
+    private ForgeRecipeManager forgeRecipeManager;
+    private WorkshopRecipeManager workshopRecipeManager;
 
     @Override
     public void onLoad(){
@@ -129,12 +135,16 @@ public final class Minefinity extends JavaPlugin {
 
         dirtyPlayerService = new DirtyPlayerService();
         permissionService = new PermissionService(this);
+
         registerDataMaps();
+        loadRecipesMaps();
 
         playerRepository = new PlayerRepository(playerManager, rankRegistry, rankManager);
         rankDataHandler = new RankDataHandler(rankManager, playerRepository);
         serverDataHandler = new ServerDataHandler(playerManager, playerRepository, dirtyPlayerService);
         autosaveService = new AutosaveService(serverDataHandler);
+
+
 
         townService = new TownService(playerManager);
         blockTierService = new BlockTierService(playerManager);
@@ -168,6 +178,9 @@ public final class Minefinity extends JavaPlugin {
         warpService = new WarpService();
         vanishService = new VanishService(getServer().getScoreboardManager(), scoreboardService);
         scoreboardService = new ScoreboardService();
+
+        //Has to run before configs
+
 
         loadConfigs();
         CustomItemRegistry.init();
@@ -232,7 +245,13 @@ public final class Minefinity extends JavaPlugin {
         itemRegistryConfigManager.createItemRegistryConfig();
         CustomItemRegistry.registerConfigItems(itemRegistryConfigManager);
 
+        new ForgeRecipeConfig(this, forgeRecipeManager).loadForgeRecipes();
+        new WorkshopRecipeConfig(this, workshopRecipeManager).loadWorkshopRecipes();
+    }
 
+    private void loadRecipesMaps(){
+        this.forgeRecipeManager = new ForgeRecipeManager();
+        this.workshopRecipeManager = new WorkshopRecipeManager();
     }
 
 
@@ -359,6 +378,14 @@ public final class Minefinity extends JavaPlugin {
 
     public PlayerInputListener getPlayerInputListener(){
         return playerInputListener;
+    }
+
+    public ForgeRecipeManager getForgeRecipeManager() {
+        return forgeRecipeManager;
+    }
+
+    public WorkshopRecipeManager getWorkshopRecipeManager() {
+        return workshopRecipeManager;
     }
 
 

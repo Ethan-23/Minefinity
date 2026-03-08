@@ -46,7 +46,7 @@ public class MinerMainHandler {
             return false;
         }
 
-        BaseCustomItem baseCustomItem = getRegisteredItem(cursorItem);
+        BaseCustomItem baseCustomItem = getRegisteredBaseItem(cursorItem);
 
         if(!(baseCustomItem instanceof BasePickaxeItem basePickaxeItem))
             return false;

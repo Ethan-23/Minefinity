@@ -25,7 +25,7 @@ public class BasePickaxeComponent extends BaseCustomItem {
             ItemOptions.MINEFINITY_ID,
             ItemOptions.RARITY,
             ItemOptions.COMPONENT_ABILITY,
-            ItemOptions.PICKAXE_TIER
+            ItemOptions.COMPONENT_TIER
     );
 
     private int requiredPickaxeTier;

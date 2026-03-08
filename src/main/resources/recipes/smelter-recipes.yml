@@ -1,0 +1,7 @@
+recipes:
+  CHARCOAL:
+    unlock-level: 1
+    fuel-usage: 1
+    required-fuel-tier: 1
+    recipe:
+      OAK_PLANK: 5

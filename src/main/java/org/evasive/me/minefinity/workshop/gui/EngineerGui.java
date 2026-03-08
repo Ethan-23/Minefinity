@@ -6,6 +6,7 @@ import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.utils.TextConversions;
 import org.evasive.me.minefinity.workshop.*;
+import org.evasive.me.minefinity.workshop.recipes.WorkshopRecipeManager;
 import org.evasive.me.minefinity.workshop.service.EngineerClickHandler;
 import org.evasive.me.minefinity.workshop.service.EngineerService;
 
@@ -29,11 +30,10 @@ public class EngineerGui extends BaseGui {
     private final EngineerGuiRenderer renderer;
     EngineerClickHandler engineerClickHandler;
 
-
-    public EngineerGui(Player player, WorkshopMode workshopMode, EngineerService engineerService) {
+    public EngineerGui(Player player, WorkshopMode workshopMode, EngineerService engineerService, WorkshopRecipeManager workshopRecipeManager) {
         super(player, INVENTORY_SIZE, TextConversions.parse(formatItemName(workshopMode.name())));
-        renderer = new EngineerGuiRenderer(player, workshopMode, engineerService);
-        engineerClickHandler = new EngineerClickHandler(player, workshopMode, engineerService);
+        renderer = new EngineerGuiRenderer(player, workshopMode, engineerService, workshopRecipeManager);
+        engineerClickHandler = new EngineerClickHandler(player, workshopMode, engineerService, workshopRecipeManager);
         build();
     }
 

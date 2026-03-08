@@ -8,6 +8,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
+import org.evasive.me.minefinity.forge.recipes.ForgeRecipeManager;
 import org.evasive.me.minefinity.forge.service.ForgeHandler;
 import org.evasive.me.minefinity.forge.service.ForgeService;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
@@ -25,10 +26,12 @@ public class ForgeGui extends BaseGui {
     private static final int INFORMATION_SLOT = 49;
     public static final List<Integer> FORGE_SLOTS = List.of(11, 12, 13, 14, 15);
     private static final List<Integer> FORGE_PANES = List.of(20, 21, 22, 23, 24);
-    ForgeService forgeService = Minefinity.getCore().getForgeService();
+    private final ForgeService forgeService = Minefinity.getCore().getForgeService();
+    private final ForgeRecipeManager forgeRecipeManager;
 
-    public ForgeGui(Player player) {
+    public ForgeGui(Player player, ForgeRecipeManager forgeRecipeManager) {
         super(player, INVENTORY_SIZE, TextConversions.parse("Forge"));
+        this.forgeRecipeManager = forgeRecipeManager;
         build();
     }
 
@@ -110,6 +113,6 @@ public class ForgeGui extends BaseGui {
     public void onClick(InventoryClickEvent e) {
         super.onClick(e);
         e.setCancelled(true);
-        new ForgeHandler().handleMainForge(player, e.getSlot());
+        new ForgeHandler(forgeRecipeManager).handleMainForge(player, e.getSlot());
     }
 }

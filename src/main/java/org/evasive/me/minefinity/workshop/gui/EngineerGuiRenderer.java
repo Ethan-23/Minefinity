@@ -12,7 +12,7 @@ import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;
 import org.evasive.me.minefinity.workshop.WorkshopMode;
 import org.evasive.me.minefinity.workshop.recipes.BaseWorkshopRecipe;
-import org.evasive.me.minefinity.workshop.recipes.WorkshopRecipes;
+import org.evasive.me.minefinity.workshop.recipes.WorkshopRecipeManager;
 import org.evasive.me.minefinity.workshop.service.EngineerService;
 import org.evasive.me.minefinity.workshop.tools.WorkshopToolsTiers;
 
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.getRegisteredItemStack;
 import static org.evasive.me.minefinity.utils.GenericGuiItems.fillerPane;
 import static org.evasive.me.minefinity.utils.TextConversions.buildRarityColor;
 import static org.evasive.me.minefinity.utils.TextConversions.formatItemName;
@@ -58,11 +59,13 @@ public class EngineerGuiRenderer {
     private final Player player;
     private final WorkshopMode mode;
     private final EngineerService service;
+    private final WorkshopRecipeManager workshopRecipeManager;
 
-    public EngineerGuiRenderer(Player player, WorkshopMode mode, EngineerService service) {
+    public EngineerGuiRenderer(Player player, WorkshopMode mode, EngineerService service, WorkshopRecipeManager workshopRecipeManager) {
         this.player = player;
         this.mode = mode;
         this.service = service;
+        this.workshopRecipeManager = workshopRecipeManager;
     }
 
     public void render(Inventory inventory, int inventorySize) {
@@ -104,7 +107,7 @@ public class EngineerGuiRenderer {
             return;
         }
 
-        ItemBuilder itemBuilder = new ItemBuilder(CustomItemRegistry.getByID(storedResource.name()).getBaseItem().buildItem());
+        ItemBuilder itemBuilder = new ItemBuilder(getRegisteredItemStack(storedResource.name()));
         itemBuilder.setAmount(service.getWorkshopCurrentResourceCount(player, mode));
         inventory.setItem(RESOURCE_SLOT, itemBuilder.build());
     }
@@ -130,7 +133,7 @@ public class EngineerGuiRenderer {
         }
 
         int durability = service.getWorkshopToolDurability(player, mode);
-        ItemBuilder tool = new ItemBuilder(CustomItemRegistry.getByID(toolType.name()).getBaseItem().buildItem());
+        ItemBuilder tool = new ItemBuilder(getRegisteredItemStack(toolType.name()));
         tool.setLore(new ArrayList<>());
         tool.addLore("<gray>Durability: <yellow>" + durability);
         tool.addBlank().addLore("<gray>Shift Right-Click to trash tool.");
@@ -161,24 +164,32 @@ public class EngineerGuiRenderer {
     private void renderShopOptions(Inventory inventory){
 
         int resourceCount = 0;
-        for(WorkshopRecipes recipe : WorkshopRecipes.values()){
-            BaseWorkshopRecipe workshopRecipe = recipe.getRecipe();
 
-            ItemBuilder shopItem = new ItemBuilder(workshopRecipe.getResult().getBaseItem().buildItem());
-            shopItem.setLore(new ArrayList<>());
-            shopItem.addLore("<gray>Required Tool: " + buildRarityColor(workshopRecipe.getRequiredToolsTier().name(), CustomItemRegistry.getByID(workshopRecipe.getRequiredToolsTier().name()).getBaseItem().getRarity()));
-            shopItem.addLore("<gray>Durability Usage: <yellow>" + workshopRecipe.getDurabilityUsage());
-            shopItem.addLore("<gray>Recipe:");
-
-            for(Map.Entry<CustomItem, Integer> entry : workshopRecipe.getRecipe().entrySet()){
-                String itemName = entry.getKey().getID();
-                int amount = entry.getValue();
-                CustomItem customItem = entry.getKey();
-                shopItem.addLore("<gray>- " + buildRarityColor(itemName, ((BaseCustomItem)customItem.getBaseItem()).getRarity()) + " <gray>x" + amount);
-            }
+        for (BaseWorkshopRecipe workshopRecipe : workshopRecipeManager.getRecipes().values()) {
 
             if(workshopRecipe.getRequiredToolType() != mode)
                 continue;
+
+            ItemBuilder shopItem = new ItemBuilder(getRegisteredItemStack(workshopRecipe.getResult()));
+            shopItem.setLore(new ArrayList<>());
+            shopItem.addLore("<gray>Required Tool: " + workshopRecipe.getRequiredToolsTier().name());
+            shopItem.addLore("<gray>Durability Usage: <yellow>" + workshopRecipe.getDurabilityUsage());
+            shopItem.addLore("<gray>Recipe:");
+
+            for(Map.Entry<String, Integer> entry : workshopRecipe.getRecipe().entrySet()){
+                String itemId = entry.getKey();
+                int amount = entry.getValue();
+
+                CustomItem customItem = CustomItemRegistry.getByID(itemId);
+
+                if(customItem != null){
+                    shopItem.addLore("<gray>- " + ((BaseCustomItem) customItem).getDisplayName() + " <gray>x" + amount);
+                }else {
+                    shopItem.addLore("<gray>- Unknown Item <bold><red>" +  itemId);
+                }
+
+
+            }
 
             inventory.setItem(SHOP_SLOTS.get(resourceCount), shopItem.build());
             resourceCount++;

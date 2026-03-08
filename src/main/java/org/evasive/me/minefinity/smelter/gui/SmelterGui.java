@@ -14,7 +14,6 @@ import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.customItems.framework.CustomItemStack;
 import org.evasive.me.minefinity.smelter.service.SmelterHandler;
-import org.evasive.me.minefinity.smelter.recipes.SmelterRecipes;
 import org.evasive.me.minefinity.smelter.service.SmelterService;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.utils.TextConversions;
@@ -162,7 +161,7 @@ public class SmelterGui extends BaseGui {
         }
 
         if(INPUT_SLOTS.contains(slot)){
-            if(getRegisteredItem(cursorItem) == null)
+            if(getRegisteredBaseItem(cursorItem) == null)
                 return;
             updateInventorySlot(e, slot);
         }
@@ -176,7 +175,7 @@ public class SmelterGui extends BaseGui {
 
         ItemStack cursorItem = e.getCursor();
 
-        BaseFuelItem replacementFuelItem = (BaseFuelItem) getRegisteredItem(cursorItem);
+        BaseFuelItem replacementFuelItem = (BaseFuelItem) getRegisteredBaseItem(cursorItem);
         BaseFuelItem currentFuelItem = (BaseFuelItem) CustomItemRegistry.getByID(smelterService.getFuelId(player));
 
         if(replacementFuelItem == null && currentFuelItem == null) return;

@@ -26,7 +26,7 @@ public class MerchantHandler {
 
         for(ItemStack item : inventory.getContents()){
 
-            BaseCustomItem baseCustomItem = getRegisteredItem(item);
+            BaseCustomItem baseCustomItem = getRegisteredBaseItem(item);
 
             if(baseCustomItem == null)
                 continue;

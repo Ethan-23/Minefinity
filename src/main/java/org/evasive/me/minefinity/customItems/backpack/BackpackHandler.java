@@ -22,7 +22,7 @@ public class BackpackHandler {
 
         for(ItemStack item : inventory.getContents()){
 
-            if(!(getRegisteredItem(item) instanceof BaseBackpackItem baseBackpackItem))
+            if(!(getRegisteredBaseItem(item) instanceof BaseBackpackItem baseBackpackItem))
                 continue;
 
             if(!baseBackpackItem.getStoredItemIdList().contains(itemId)) continue;
@@ -44,7 +44,7 @@ public class BackpackHandler {
 
         for(ItemStack item : inventory.getContents()){
 
-            if(!(getRegisteredItem(item) instanceof BaseBackpackItem baseBackpackItem))
+            if(!(getRegisteredBaseItem(item) instanceof BaseBackpackItem baseBackpackItem))
                 continue;
 
             storageAmount += baseBackpackItem.getStoredItemAmount();

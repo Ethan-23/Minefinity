@@ -9,7 +9,7 @@ import org.evasive.me.minefinity.workshop.WorkshopMode;
 public class EngineerNpc implements NpcBehavior {
     @Override
     public void onInteract(Player player) {
-        new EngineerGui(player, WorkshopMode.CARPENTRY, Minefinity.getCore().getEngineerService()).open();
+        new EngineerGui(player, WorkshopMode.CARPENTRY, Minefinity.getCore().getEngineerService(), Minefinity.getCore().getWorkshopRecipeManager()).open();
     }
 
     @Override
