@@ -2,7 +2,10 @@ package org.evasive.me.minefinity.customItems.itembuilder.data;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.rarity.Rarity;
+import org.evasive.me.minefinity.core.rarity.Rarity;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.*;
+import org.evasive.me.minefinity.customItems.itembuilder.factories.ItemStackFactory;
+import org.evasive.me.minefinity.customItems.itembuilder.factories.NewItemFactory;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -3,17 +3,21 @@ package org.evasive.me.minefinity.customItems.backpack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.customItems.itembuilder.data.BaseBackpackItem;
-import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseBackpackItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 
 import java.util.List;
 
-import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.*;
-
 public class BackpackHandler {
 
-    BackpackService backpackService = Minefinity.getCore().getBackpackService();
+    private final CustomItemRegistryService customItemRegistryService;
+    private final BackpackService backpackService;
+
+    public BackpackHandler(CustomItemRegistryService customItemRegistryService, BackpackService backpackService) {
+        this.customItemRegistryService = customItemRegistryService;
+        this.backpackService = backpackService;
+    }
 
     public String findBackpackItem(Player player, String itemId){
         Inventory inventory = player.getInventory();
@@ -22,7 +26,17 @@ public class BackpackHandler {
 
         for(ItemStack item : inventory.getContents()){
 
-            if(!(getRegisteredBaseItem(item) instanceof BaseBackpackItem baseBackpackItem))
+            if(item == null || customItemRegistryService.getItemId(item) == null)
+                continue;
+            BaseCustomItem baseCustomItem;
+            try {
+                 baseCustomItem = customItemRegistryService.getRegisteredBaseItem(item);
+            }catch (Exception e){
+                throw new IllegalArgumentException("<red>Unregistered Item ID");
+            }
+
+
+            if(!(baseCustomItem instanceof BaseBackpackItem baseBackpackItem))
                 continue;
 
             if(!baseBackpackItem.getStoredItemIdList().contains(itemId)) continue;
@@ -38,13 +52,25 @@ public class BackpackHandler {
     }
 
     public int getTotalBackpackStorage(Player player, String backPackId){
+
         Inventory inventory = player.getInventory();
 
         int storageAmount = 0;
 
         for(ItemStack item : inventory.getContents()){
 
-            if(!(getRegisteredBaseItem(item) instanceof BaseBackpackItem baseBackpackItem))
+            BaseCustomItem baseCustomItem;
+
+            try {
+                baseCustomItem = customItemRegistryService.getRegisteredBaseItem(item);
+            }catch (Exception e){
+                continue;
+            }
+
+            if(!(baseCustomItem instanceof BaseBackpackItem baseBackpackItem))
+                continue;
+
+            if(!baseCustomItem.getID().equals(backPackId))
                 continue;
 
             storageAmount += baseBackpackItem.getStoredItemAmount();
@@ -59,13 +85,13 @@ public class BackpackHandler {
 
         Inventory inventory = player.getInventory();
 
-        BaseBackpackItem baseBackpackItem = (BaseBackpackItem) CustomItemRegistry.getByID(backPackId).getBaseItem();
+        BaseBackpackItem baseBackpackItem = (BaseBackpackItem) customItemRegistryService.getBaseItemById(backPackId).getBaseItem();
         List<String> storedItemIds = baseBackpackItem.getStoredItemIdList();
 
         for(ItemStack item : inventory.getContents()){
-            if(!hasItemId(item))continue;
+            if(!customItemRegistryService.isRegistered(item))continue;
 
-            String itemId = getItemId(item);
+            String itemId = customItemRegistryService.getItemId(item);
 
             if(!storedItemIds.contains(itemId)) continue;
 
@@ -86,7 +112,7 @@ public class BackpackHandler {
     }
 
     public boolean canHoldItem(Player player, String backpackId, String itemId){
-        BaseBackpackItem baseBackpackItem = (BaseBackpackItem) CustomItemRegistry.getByID(backpackId).getBaseItem();
+        BaseBackpackItem baseBackpackItem = (BaseBackpackItem) customItemRegistryService.getBaseItemById(backpackId);
 
         int max = baseBackpackItem.getStoredItemAmount();
         int total = backpackService.getBackpackStoredItemAmount(player, itemId);

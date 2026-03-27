@@ -6,21 +6,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
-import org.evasive.me.minefinity.customItems.itembuilder.data.BaseBackpackItem;
-import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
+import org.evasive.me.minefinity.customItems.backpack.BackpackService;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseBackpackItem;
 import org.evasive.me.minefinity.customItems.backpack.BackpackHandler;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
-import org.evasive.me.minefinity.utils.TextConversions;
+import org.evasive.me.minefinity.core.utils.TextConversions;
+import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.getItemId;
-import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.hasItemId;
-import static org.evasive.me.minefinity.utils.GenericGuiItems.fillerPane;
-import static org.evasive.me.minefinity.utils.TextConversions.formatItemName;
+import static org.evasive.me.minefinity.core.utils.guis.GenericGuiItems.fillerPane;
+import static org.evasive.me.minefinity.core.utils.TextConversions.formatItemName;
 
 public class GenericBackpackGui extends BaseGui {
 
@@ -29,9 +27,14 @@ public class GenericBackpackGui extends BaseGui {
     private final String backpackId;
     BackpackGuiHandler backpackGuiHandler;
 
-    public GenericBackpackGui(Player player, String backpackId) {
-        super(player, new BackpackGuiHandler().calculateBackpackSize(backpackId), TextConversions.parse(backpackId));
-        backpackGuiHandler = new BackpackGuiHandler();
+    private final CustomItemRegistryService customItemRegistryService;
+    private final BackpackService backpackService;
+
+    public GenericBackpackGui(Player player, String backpackId, CustomItemRegistryService customItemRegistryService, BackpackService backpackService) {
+        super(player, new BackpackGuiHandler(customItemRegistryService, backpackService).calculateBackpackSize(backpackId), TextConversions.parse(backpackId));
+        backpackGuiHandler = new BackpackGuiHandler(customItemRegistryService, backpackService);
+        this.customItemRegistryService = customItemRegistryService;
+        this.backpackService = backpackService;
         inventorySize = backpackGuiHandler.calculateBackpackSize(backpackId);
         insertButton = inventorySize - 5;
         this.backpackId = backpackId;
@@ -40,7 +43,7 @@ public class GenericBackpackGui extends BaseGui {
 
     @Override
     protected void build() {
-        List<String> storedItemIdList = ((BaseBackpackItem)CustomItemRegistry.getByID(backpackId)).getStoredItemIdList();
+        List<String> storedItemIdList = ((BaseBackpackItem)customItemRegistryService.getBaseItemById(backpackId)).getStoredItemIdList();
         List<String> sortedStoredItemIdList = storedItemIdList.stream().sorted().toList();
         for(int i = 0; i < sortedStoredItemIdList.size(); i++){
             inventory.setItem(i, createItemStorage(backpackId, player, sortedStoredItemIdList.get(i)));
@@ -57,9 +60,9 @@ public class GenericBackpackGui extends BaseGui {
     }
 
     private ItemStack createItemStorage(String backpackId, Player player, String itemId){
-        ItemStack customItem = CustomItemRegistry.getByID(itemId).getBaseItem().buildItem();
-        int amount = Minefinity.getCore().getBackpackService().getBackpackStoredItemAmount(player, itemId);
-        int totalStorage = new BackpackHandler().getTotalBackpackStorage(player, backpackId);
+        ItemStack customItem = customItemRegistryService.getRegisteredItemStack(itemId);
+        int amount = backpackService.getBackpackStoredItemAmount(player, itemId);
+        int totalStorage = new BackpackHandler(customItemRegistryService, backpackService).getTotalBackpackStorage(player, backpackId);
         ItemBuilder storageBlock = new ItemBuilder(customItem).setLore(
                 List.of(
                         "<gray>" + formatItemName(backpackId),
@@ -98,9 +101,10 @@ public class GenericBackpackGui extends BaseGui {
 
         ItemStack item = e.getCurrentItem();
 
-        if(!hasItemId(item)) return;
+        if(!customItemRegistryService.isRegistered(item)) return;
 
-        String itemId = getItemId(item);
+        assert item != null;
+        String itemId = customItemRegistryService.getItemId(item);
 
         if(e.getClick().isLeftClick()){
             backpackGuiHandler.handleTakeAll(player, itemId);

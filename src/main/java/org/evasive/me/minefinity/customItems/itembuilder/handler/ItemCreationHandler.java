@@ -6,25 +6,33 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.customItems.itembuilder.data.BaseCustomItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.BasePickaxeComponent;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemOptions;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.ItemCreationGui;
-import org.evasive.me.minefinity.utils.TextConversions;
+import org.evasive.me.minefinity.customItems.itembuilder.events.PlayerInputListener;
+import org.evasive.me.minefinity.core.utils.TextConversions;
+import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemKeys.ITEM_TYPE_KEY;
-import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.*;
 
 public class ItemCreationHandler {
 
+    private final PlayerInputListener playerInputListener;
+    private final CustomItemRegistryService customItemRegistryService;
+
+    public ItemCreationHandler(CustomItemRegistryService customItemRegistryService, PlayerInputListener playerInputListener) {
+        this.playerInputListener = playerInputListener;
+        this.customItemRegistryService = customItemRegistryService;
+    }
+
     public void handleFloatChanges(Player player, ItemOptions clickedOption, BaseCustomItem baseCustomItem, ItemCreationGui itemCreationGui) {
         player.closeInventory();
-        Minefinity.getCore().getPlayerInputListener().requestInput(player, input -> {
+        playerInputListener.requestInput(player, input -> {
 
             if(input.equalsIgnoreCase("cancel")){
                 player.sendMessage("<Canceled Selection>");
@@ -82,7 +90,7 @@ public class ItemCreationHandler {
 
         player.closeInventory();
 
-        Minefinity.getCore().getPlayerInputListener().requestInput(player, input -> {
+        playerInputListener.requestInput(player, input -> {
 
             if(input.equalsIgnoreCase("cancel")){
                 itemCreationGui.reopen();
@@ -112,13 +120,13 @@ public class ItemCreationHandler {
     }
 
     private void handleStorageChange(ItemOptions clickedOption, BaseCustomItem baseCustomItem, ItemStack cursorItem) {
-        if(!hasItemId(cursorItem))
+        if(!customItemRegistryService.isRegistered(cursorItem))
             return;
 
-        if(!List.of(CustomItemType.RESOURCE, CustomItemType.FUEL).contains(CustomItemType.valueOf(getItemType(cursorItem))))
+        if(!List.of(CustomItemType.RESOURCE, CustomItemType.FUEL).contains(CustomItemType.valueOf(customItemRegistryService.getItemType(cursorItem))))
             return;
 
-        clickedOption.apply(baseCustomItem, getItemId(cursorItem));
+        clickedOption.apply(baseCustomItem, customItemRegistryService.getItemId(cursorItem));
         cursorItem.setAmount(0);
     }
 
@@ -139,7 +147,7 @@ public class ItemCreationHandler {
 
     public void handleInteger(Player player, ItemOptions clickedOption, BaseCustomItem baseCustomItem, ItemCreationGui itemCreationGui) {
         player.closeInventory();
-        Minefinity.getCore().getPlayerInputListener().requestInput(player, input -> {
+        playerInputListener.requestInput(player, input -> {
 
             if(input.equalsIgnoreCase("cancel")){
                 itemCreationGui.reopen();

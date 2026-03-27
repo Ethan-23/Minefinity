@@ -8,51 +8,82 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.customItems.itembuilder.data.BasePickaxeItem;
-import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
-import org.evasive.me.minefinity.player.sevices.BlockTierService;
+
+import org.evasive.me.minefinity.customItems.framework.ItemPickupService;
+import org.evasive.me.minefinity.customItems.itembuilder.data.PickaxeData;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.itembuilder.resolvers.PickaxeResolver;
+import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
+import org.evasive.me.minefinity.mining.abilities.MiningAbilityRunner;
+import org.evasive.me.minefinity.mining.context.BreakContext;
+import org.evasive.me.minefinity.mining.context.HitContext;
+import org.evasive.me.minefinity.mining.context.StatsContext;
+import org.evasive.me.minefinity.mining.data.MiningDataMap;
+import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
+import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
+import org.evasive.me.minefinity.mining.milestones.MilestoneService;
 
 import java.util.Objects;
 import java.util.UUID;
 
-import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.getItemId;
-
 public class BlockProgressHandler {
 
-    BlockTierService blockTierService = Minefinity.core.getBlockTierService();
-    BlockBreakHandler blockBreak = new BlockBreakHandler();
+    private final CustomItemRegistryService customItemRegistryService;
+    private final MiningDataMap miningDataMap;
+    private final MiningAbilityRunner miningAbilityRunner;
+    private final PickaxeResolver pickaxeResolver;
+    BlockTierService blockTierService;
+    BlockBreakHandler blockBreak;
+
+    public BlockProgressHandler(PickaxeResolver pickaxeResolver, MiningAbilityRunner miningAbilityRunner, BlockTierService blockTierService, MilestoneService milestoneService, MiningDataMap miningDataMap, CustomItemRegistryService customItemRegistryService, ItemPickupService itemPickupService) {
+        this.blockTierService = blockTierService;
+        this.miningDataMap = miningDataMap;
+        this.pickaxeResolver = pickaxeResolver;
+        this.miningAbilityRunner = miningAbilityRunner;
+        this.customItemRegistryService = customItemRegistryService;
+        this.blockBreak = new BlockBreakHandler(customItemRegistryService, itemPickupService, milestoneService, blockTierService, miningDataMap);
+    }
 
     final public static int MAX_SPEED_DENOMINATION = 4;
     final int ANIMATION_STAGES = 10;
 
     public void addBlockProgress(Location location, Player player){
         UUID uuid = player.getUniqueId();
-        float progress = calculateMiningProgress(uuid);
 
-        int health = blockTierService.getBlockTier(player).getBlock().health();
+        ItemStack item = player.getInventory().getItemInMainHand();
+        if(item.isEmpty()) return;
+        BasePickaxeItem basePickaxeItem = (BasePickaxeItem) customItemRegistryService.getRegisteredBaseItem(item);
+
+        BaseBlock baseBlock = blockTierService.getSelectedBaseBlock(player);
+
+        //Mining stats being used
+        StatsContext statsContext = new StatsContext();
+
+        miningAbilityRunner.runOnHit(basePickaxeItem, new HitContext(player, baseBlock, statsContext));
+
+        statsContext.addSpeed(calculateMiningProgress(basePickaxeItem));
+
+        float progress = statsContext.getSpeed();
+        int health = baseBlock.health();
 
         if(progress > (float) health /MAX_SPEED_DENOMINATION)
             progress = (float) health /MAX_SPEED_DENOMINATION;
 
         createNewAnimation(player, progress, health, location.getBlock());
 
-        Minefinity.miningMap.increaseBlockProgress(location, uuid, progress);
+        miningDataMap.increaseBlockProgress(location, uuid, progress);
 
-
-
-        if(Minefinity.miningMap.getBlockProgress(location, uuid) >= health){
+        if(miningDataMap.getBlockProgress(location, uuid) >= health){
             sendCleanPacket(player, location.getBlock());
+            miningAbilityRunner.runOnBreak(basePickaxeItem, new BreakContext(player, baseBlock));
             blockBreak.handleBlockBreak(location, player);
         }
 
     }
 
-    public float calculateMiningProgress(UUID uuid){
-        //Update with parts eventually
-        ItemStack item = Objects.requireNonNull(Bukkit.getPlayer(uuid)).getInventory().getItemInMainHand();
-        BasePickaxeItem basePickaxeItem = (BasePickaxeItem) CustomItemRegistry.getByID(getItemId(item));
-        return basePickaxeItem.getBaseMiningSpeed();
+    public float calculateMiningProgress(BasePickaxeItem basePickaxeItem){
+        PickaxeData pickaxeData = pickaxeResolver.resolve(basePickaxeItem);
+        return basePickaxeItem.calculateMiningSpeed(pickaxeData.getPickaxeParts());
     }
 
     private void createNewAnimation(Player player, float progress, int health, Block block) {
@@ -60,7 +91,7 @@ public class BlockProgressHandler {
         if(!isBlockStillValid(block.getLocation()))
             return;
 
-        float currentProgress = Minefinity.miningMap.getBlockProgress(block.getLocation(), player.getUniqueId());
+        float currentProgress = miningDataMap.getBlockProgress(block.getLocation(), player.getUniqueId());
         int animUpdate = health / ANIMATION_STAGES;
 
         if((int)(currentProgress + progress) / animUpdate > (int)currentProgress / animUpdate || currentProgress == 0)
@@ -72,7 +103,7 @@ public class BlockProgressHandler {
         if(blockProgress > ANIMATION_STAGES - 1) blockProgress = ANIMATION_STAGES - 1;
 
         WrapperPlayServerBlockBreakAnimation progressAnimation = new WrapperPlayServerBlockBreakAnimation(
-                Minefinity.miningMap.getBlockAnimationID(block.getLocation(), player.getUniqueId()),
+                miningDataMap.getBlockAnimationID(block.getLocation(), player.getUniqueId()),
                 new Vector3i(block.getX(), block.getY(), block.getZ()),
                 blockProgress
         );
@@ -84,7 +115,7 @@ public class BlockProgressHandler {
         //if(!MinevolutionCore.miningMap.containsBlockLocation(block.getLocation()) || !MinevolutionCore.miningMap.containsPlayerAtLocation(block.getLocation(), player.getUniqueId()))return;
 
         WrapperPlayServerBlockBreakAnimation progressAnimation = new WrapperPlayServerBlockBreakAnimation(
-                Minefinity.miningMap.getBlockAnimationID(block.getLocation(), player.getUniqueId()),
+                miningDataMap.getBlockAnimationID(block.getLocation(), player.getUniqueId()),
                 new Vector3i(block.getX(), block.getY(), block.getZ()),
                 (byte) -1
         );
@@ -92,6 +123,6 @@ public class BlockProgressHandler {
     }
 
     public boolean isBlockStillValid(Location location){
-        return Minefinity.miningMap.containsBlockLocation(location);
+        return miningDataMap.containsBlockLocation(location);
     }
 }

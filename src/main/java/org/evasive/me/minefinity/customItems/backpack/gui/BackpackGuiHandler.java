@@ -4,25 +4,33 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.customItems.itembuilder.data.BaseBackpackItem;
-import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
+import org.evasive.me.minefinity.customItems.backpack.BackpackService;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseBackpackItem;
 import org.evasive.me.minefinity.customItems.backpack.BackpackHandler;
+import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 
 public class BackpackGuiHandler {
+
+    private final CustomItemRegistryService customItemRegistryService;
+    private final BackpackService backpackService;
+
+    public BackpackGuiHandler(CustomItemRegistryService customItemRegistryService, BackpackService backpackService) {
+        this.customItemRegistryService = customItemRegistryService;
+        this.backpackService = backpackService;
+    }
 
     public void handleTakeAll(Player player, String itemId) {
         int openSlots = getOpenSlots(player);
         if(openSlots == 0) return;
 
-        while (openSlots > 0 && Minefinity.getCore().getBackpackService().getBackpackStoredItemAmount(player, itemId) > 0) {
+        while (openSlots > 0 && backpackService.getBackpackStoredItemAmount(player, itemId) > 0) {
             takeBlocks(player, itemId);
             openSlots = getOpenSlots(player);
         }
     }
 
     public void handleInsertAll(Player player, String backpackId){
-        new BackpackHandler().insertInventoryToBackpack(player, backpackId);
+        new BackpackHandler(customItemRegistryService, backpackService).insertInventoryToBackpack(player, backpackId);
     }
 
     public void handleTakeStack(Player player, String itemId) {
@@ -32,16 +40,16 @@ public class BackpackGuiHandler {
     }
 
     private void takeBlocks(Player player, String itemId) {
-        ItemStack item = CustomItemRegistry.getByID(itemId).getBaseItem().buildItem();
-        int withdrawAmount = Math.min(item.getMaxStackSize(), Minefinity.getCore().getBackpackService().getBackpackStoredItemAmount(player, itemId));
+        ItemStack item = customItemRegistryService.getRegisteredItemStack(itemId);
+        int withdrawAmount = Math.min(item.getMaxStackSize(), backpackService.getBackpackStoredItemAmount(player, itemId));
         item.setAmount(withdrawAmount);
-        Minefinity.getCore().getBackpackService().removeBackpackItem(player, itemId, withdrawAmount);
+        backpackService.removeBackpackItem(player, itemId, withdrawAmount);
         player.getInventory().addItem(item);
 
     }
 
     public int calculateBackpackSize(String backpackId){
-        int inventorySize = ((BaseBackpackItem) CustomItemRegistry.getByID(backpackId).getBaseItem()).getStoredItemIdList().size();
+        int inventorySize = ((BaseBackpackItem) customItemRegistryService.getBaseItemById(backpackId)).getStoredItemIdList().size();
         int INVENTORY_ROW_SIZE = 9;
         if(inventorySize % 9 == 0){
             inventorySize = inventorySize / INVENTORY_ROW_SIZE * INVENTORY_ROW_SIZE + INVENTORY_ROW_SIZE;

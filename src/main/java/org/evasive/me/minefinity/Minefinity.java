@@ -2,413 +2,104 @@ package org.evasive.me.minefinity;
 
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.evasive.me.minefinity.admin.commands.*;
-import org.evasive.me.minefinity.admin.commands.gamemode.Gamemode;
-import org.evasive.me.minefinity.admin.commands.gamemode.GamemodeCreative;
-import org.evasive.me.minefinity.admin.commands.gamemode.GamemodeSpectator;
-import org.evasive.me.minefinity.admin.commands.gamemode.GamemodeSurvival;
-import org.evasive.me.minefinity.admin.commands.rank.MineRank;
-import org.evasive.me.minefinity.admin.commands.warp.DeleteWarp;
-import org.evasive.me.minefinity.admin.commands.warp.SetWarp;
-import org.evasive.me.minefinity.admin.events.VanishListener;
-import org.evasive.me.minefinity.admin.commands.economy.Economy;
-import org.evasive.me.minefinity.admin.service.VanishService;
-import org.evasive.me.minefinity.anvil.commands.PickaxeAnvilCommand;
-import org.evasive.me.minefinity.commands.Spawn;
-import org.evasive.me.minefinity.commands.Warp;
-import org.evasive.me.minefinity.core.events.ServerSpawnEvents;
-import org.evasive.me.minefinity.core.gui.GuiListener;
-import org.evasive.me.minefinity.core.service.SpawnService;
-import org.evasive.me.minefinity.core.service.WarpService;
+import org.evasive.me.minefinity.core.CoreModule;
+import org.evasive.me.minefinity.customItems.CustomItemModule;
+import org.evasive.me.minefinity.mining.MiningModule;
+import org.evasive.me.minefinity.playerdata.PlayerDataModule;
+import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
+import org.evasive.me.minefinity.towns.TownModule;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
-import org.evasive.me.minefinity.customItems.itembuilder.command.DeleteCustomItem;
-import org.evasive.me.minefinity.customItems.itembuilder.registry.config.ItemRegistryConfigManager;
-import org.evasive.me.minefinity.customItems.itembuilder.listener.PlayerInputListener;
-import org.evasive.me.minefinity.customItems.itembuilder.command.CreateCustomItem;
-import org.evasive.me.minefinity.customItems.framework.ItemGiver;
-import org.evasive.me.minefinity.customItems.backpack.events.ItemPickupListener;
-import org.evasive.me.minefinity.customItems.backpack.events.OpenBackpackListener;
-import org.evasive.me.minefinity.core.RepeatingTick;
-import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
-import org.evasive.me.minefinity.customItems.itembuilder.registry.config.RegistryConfigHandler;
-import org.evasive.me.minefinity.database.GameDatabaseManager;
-import org.evasive.me.minefinity.database.RankDataHandler;
-import org.evasive.me.minefinity.database.RankDatabaseManager;
-import org.evasive.me.minefinity.database.ServerDataHandler;
-import org.evasive.me.minefinity.database.repository.PlayerRepository;
-import org.evasive.me.minefinity.database.service.AutosaveService;
-import org.evasive.me.minefinity.database.service.DirtyPlayerService;
-import org.evasive.me.minefinity.economy.EconomyService;
-import org.evasive.me.minefinity.commands.balance.Balance;
-import org.evasive.me.minefinity.commands.Pay;
-import org.evasive.me.minefinity.core.events.ServerJoinEvent;
-import org.evasive.me.minefinity.forge.recipes.ForgeRecipeManager;
-import org.evasive.me.minefinity.forge.recipes.config.ForgeRecipeConfig;
-import org.evasive.me.minefinity.forge.service.ForgeService;
-import org.evasive.me.minefinity.miner.events.AutoMinerEvents;
-import org.evasive.me.minefinity.miner.service.AutoMinerService;
-import org.evasive.me.minefinity.mining.utils.AnimationIDs;
-import org.evasive.me.minefinity.mining.data.MiningDataMap;
-import org.evasive.me.minefinity.mining.data.SelectedBlockMap;
-import org.evasive.me.minefinity.mining.listeners.SwingPacketEvents;
-import org.evasive.me.minefinity.npcs.NpcInstanceMap;
-import org.evasive.me.minefinity.player.sevices.*;
-import org.evasive.me.minefinity.ranks.PermissionService;
-import org.evasive.me.minefinity.ranks.RankManager;
-import org.evasive.me.minefinity.ranks.RankRegistry;
-import org.evasive.me.minefinity.ranks.config.PermissionConfigManager;
-import org.evasive.me.minefinity.ranks.config.PermissionLoader;
-import org.evasive.me.minefinity.ranks.events.ChatEvent;
-import org.evasive.me.minefinity.ranks.events.PlayerRankJoinEvent;
-import org.evasive.me.minefinity.resourceblock.commands.BlockCommands;
-import org.evasive.me.minefinity.npcs.events.NpcLoadEvents;
-import org.evasive.me.minefinity.scoreboard.ScoreboardService;
-import org.evasive.me.minefinity.smelter.events.SmelterEvents;
-import org.evasive.me.minefinity.smelter.recipes.SmelterRecipeRegistry;
-import org.evasive.me.minefinity.smelter.service.SmelterService;
-import org.evasive.me.minefinity.town.service.TownService;
-import org.evasive.me.minefinity.workshop.recipes.WorkshopRecipeManager;
-import org.evasive.me.minefinity.workshop.recipes.config.WorkshopRecipeConfig;
-import org.evasive.me.minefinity.workshop.service.EngineerService;
-import org.evasive.me.minefinity.worldPackets.events.BlockPacketEvents;
-import org.evasive.me.minefinity.worldPackets.events.ChunkLoadingEvents;
-import org.evasive.me.minefinity.worldPackets.events.PlayerMovePacketEvents;
-import org.evasive.me.minefinity.npcs.events.InteractEvent;
-import org.evasive.me.minefinity.player.PlayerManager;
-
-import java.sql.SQLException;
 
 public final class Minefinity extends JavaPlugin {
 
     public static Minefinity core;
-    //Player Data
-    private PlayerManager playerManager;
-    private BlockTierService blockTierService;
-    private TownService townService;
+
+    private PlayerDataModule playerModule;
+    private PlayerDataService playerDataService;
+
+    private CustomItemModule customItemModule;
     private BackpackService backpackService;
-    private EconomyService economyService;
-    private MilestoneService milestoneService;
-    private AutoMinerService autoMinerService;
-    private ForgeService forgeService;
-    private EngineerService engineerService;
-    private SmelterService smelterService;
-    private DirtyPlayerService dirtyPlayerService;
-    private AutosaveService autosaveService;
-    private SpawnService spawnService;
-    private WarpService warpService;
-    private RankManager rankManager;
-    private RankRegistry rankRegistry;
-    private PermissionConfigManager permissionConfigManager;
-    private RegistryConfigHandler registryConfigHandler;
 
-    private ScoreboardService scoreboardService;
+    private CoreModule coreModule;
 
-    private VanishService vanishService;
-    private PermissionService permissionService;
+    private MiningModule miningModule;
 
-    private PlayerInputListener playerInputListener;
-
-    //Npc load data
-    public static NpcInstanceMap npcInstanceMap;
-    //Mining System
-    public static AnimationIDs animationIDs;
-    public static MiningDataMap miningMap;
-    public static SelectedBlockMap selectedBlockMap;
-    //Item Collection System
-    public static ItemGiver itemGiver;
-
-    private static final GameDatabaseManager databaseManager = new GameDatabaseManager();
-    private static final RankDatabaseManager rankDatabaseManager = new RankDatabaseManager();
-    ServerDataHandler serverDataHandler;
-    RankDataHandler rankDataHandler;
-    PlayerRepository playerRepository;
-    private ForgeRecipeManager forgeRecipeManager;
-    private WorkshopRecipeManager workshopRecipeManager;
+    private TownModule townModule;
 
     @Override
     public void onLoad(){
         core = this;
-
-        playerManager = new PlayerManager();
-
-        dirtyPlayerService = new DirtyPlayerService();
-        permissionService = new PermissionService(this);
-
-        registerDataMaps();
-        loadRecipesMaps();
-
-        playerRepository = new PlayerRepository(playerManager, rankRegistry, rankManager);
-        rankDataHandler = new RankDataHandler(rankManager, playerRepository);
-        serverDataHandler = new ServerDataHandler(playerManager, playerRepository, dirtyPlayerService);
-        autosaveService = new AutosaveService(serverDataHandler);
-
-
-
-        townService = new TownService(playerManager);
-        blockTierService = new BlockTierService(playerManager);
-        backpackService = new BackpackService(playerManager);
-        economyService = new EconomyService(playerManager);
-        milestoneService = new MilestoneService(playerManager);
-        autoMinerService = new AutoMinerService(playerManager);
-        forgeService = new ForgeService(playerManager);
-        engineerService = new EngineerService(playerManager);
-        smelterService = new SmelterService(playerManager);
-
+        //Needs to be called before any other packet events
         com.github.retrooper.packetevents.PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
         //On Bukkit, calling this here is essential, hence the name "load"
         com.github.retrooper.packetevents.PacketEvents.getAPI().load();
-
-        com.github.retrooper.packetevents.PacketEvents.getAPI().getEventManager().registerListener(new SwingPacketEvents());
-        com.github.retrooper.packetevents.PacketEvents.getAPI().getEventManager().registerListener(new BlockPacketEvents());
-        com.github.retrooper.packetevents.PacketEvents.getAPI().getEventManager().registerListener(new InteractEvent());
-        com.github.retrooper.packetevents.PacketEvents.getAPI().getEventManager().registerListener(new PlayerMovePacketEvents());
     }
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
-        saveDefaultConfig();
-
         worldGuardCheck();
         com.github.retrooper.packetevents.PacketEvents.getAPI().init();
+        saveDefaultConfig();
+        playerModule = new PlayerDataModule();
+        playerModule.enable(this);
+        playerDataService = playerModule.getPlayerService();
 
-        spawnService = new SpawnService();
-        warpService = new WarpService();
-        vanishService = new VanishService(getServer().getScoreboardManager(), scoreboardService);
-        scoreboardService = new ScoreboardService();
+        coreModule = new CoreModule(playerDataService);
+        coreModule.enable(this);
 
-        //Has to run before configs
+        customItemModule = new CustomItemModule(
+                playerDataService,
+                coreModule.getCustomItemRegistry(),
+                coreModule.getPlayerInputListener()
+        );
 
+        customItemModule.enable(this);
 
-        loadConfigs();
-        CustomItemRegistry.init();
+        backpackService = customItemModule.getBackpackService();
 
-        registerSmelterRecipes();
-        registerEvents();
-        registerCommands();
+        miningModule = new MiningModule(
+                playerDataService,
+                customItemModule.getCustomItemRegistryService(),
+                coreModule.getBlockTypeRegistry(),
+                customItemModule.getItemPickupService(),
+                customItemModule.getPickaxeResolver()
+        );
 
-        //Loading Ranks
-        try {
-            rankDatabaseConnect();
-            rankDataHandler.loadRanks();
-        } catch (SQLException e) {
-            Bukkit.getConsoleSender().sendMessage("FAILED LOAD RANKS");
-        }
-        rankDatabaseManager.closePool();
+        miningModule.enable();
 
-        //Loading Data
-        try {
-            databaseConnect();
-            serverDataHandler.loadAll();
-        } catch (SQLException e) {
-            Bukkit.getConsoleSender().sendMessage("FAILED LOAD ALL");
-        }
-        databaseManager.closePool();
+        townModule = new TownModule(
+                playerDataService,
+                coreModule.getEconomyService(),
+                customItemModule.getCustomItemRegistryService(),
+                backpackService,
+                miningModule.getBlockTierService(),
+                miningModule.getMilestoneService(),
+                customItemModule.getItemPickupService(),
+                coreModule.getNpcBehaviorRegistry(),
+                coreModule.getBlockTypeRegistry(),
+                miningModule.getBlockTypeRegistryService()
+        );
 
-        //Automated Functions
-        new RepeatingTick().startAutomation();
-
-        //Scoreboard
-        scoreboardService.repeatingScoreboardUpdate();
-
+        townModule.enable(this);
     }
-
-    //Move to respective database files
-    public void databaseConnect() throws SQLException {
-        databaseManager.setup("127.0.0.1", 3306, "minefinity", "admin", "jdf7tA@tf");
-    }
-
-    public void rankDatabaseConnect() throws SQLException {
-        rankDatabaseManager.setup("127.0.0.1", 3306, "minefinity_ranks", "admin", "jdf7tA@tf");
-    }
-
-    private void registerDataMaps(){
-        miningMap = new MiningDataMap();
-        animationIDs = new AnimationIDs();
-        npcInstanceMap = new NpcInstanceMap();
-        selectedBlockMap = new SelectedBlockMap();
-        itemGiver = new ItemGiver();
-        rankManager = new RankManager(permissionService);
-        rankRegistry = new RankRegistry();
-    }
-
-    private void loadConfigs(){
-
-        PermissionConfigManager permissionConfigManager = new PermissionConfigManager();
-        permissionConfigManager.createPermissionConfig();
-        new PermissionLoader(permissionConfigManager, rankRegistry).loadRanks();
-
-        ItemRegistryConfigManager itemRegistryConfigManager = new ItemRegistryConfigManager();
-        registryConfigHandler = new RegistryConfigHandler(itemRegistryConfigManager);
-        itemRegistryConfigManager.createItemRegistryConfig();
-        CustomItemRegistry.registerConfigItems(itemRegistryConfigManager);
-
-        new ForgeRecipeConfig(this, forgeRecipeManager).loadForgeRecipes();
-        new WorkshopRecipeConfig(this, workshopRecipeManager).loadWorkshopRecipes();
-    }
-
-    private void loadRecipesMaps(){
-        this.forgeRecipeManager = new ForgeRecipeManager();
-        this.workshopRecipeManager = new WorkshopRecipeManager();
-    }
-
 
     private void worldGuardCheck(){
         if(Bukkit.getPluginManager().getPlugin("WorldGuard") != null) return;
         getServer().getPluginManager().disablePlugin(this);
     }
 
-    private void registerEvents() {
-        PluginManager pluginManager = getServer().getPluginManager();
-        pluginManager.registerEvents(new NpcLoadEvents(), this);
-        pluginManager.registerEvents(new ChunkLoadingEvents(), this);
-        pluginManager.registerEvents(new GuiListener(), this);
-        pluginManager.registerEvents(new OpenBackpackListener(), this);
-        pluginManager.registerEvents(new ItemPickupListener(), this);
-        pluginManager.registerEvents(new ServerJoinEvent(playerManager, vanishService, scoreboardService), this);
-        pluginManager.registerEvents(new AutoMinerEvents(), this);
-        pluginManager.registerEvents(new SmelterEvents(), this);
-        pluginManager.registerEvents(new VanishListener(), this);
-        pluginManager.registerEvents(new ServerSpawnEvents(spawnService), this);
-        pluginManager.registerEvents(new PlayerRankJoinEvent(rankManager, permissionService), this);
-        pluginManager.registerEvents(new ChatEvent(rankManager), this);
-        playerInputListener =  new PlayerInputListener();
-        pluginManager.registerEvents(playerInputListener, this);
-    }
-
-    private void registerCommands(){
-        new MineGive();
-        new MineData(this, townService, blockTierService);
-        new Gamemode();
-        new PickaxeAnvilCommand();
-        new BlockCommands();
-        new MineSpawn();
-        new Balance();
-        new Pay();
-        new Economy();
-        new StaffMode();
-        new Rename();
-        new Vanish();
-        new PacketRefresh(townService, blockTierService);
-        new SetSpawn(spawnService);
-        new Spawn(spawnService);
-        new Speed();
-        new Invsee();
-        new GamemodeSpectator();
-        new GamemodeCreative();
-        new GamemodeSurvival();
-        new SetWarp(warpService);
-        new Warp(warpService);
-        new DeleteWarp(warpService);
-        new MineRank(rankManager, rankRegistry);
-        new CreateCustomItem(this, registryConfigHandler);
-        new DeleteCustomItem(this, registryConfigHandler);
-    }
-
-
-    private void registerSmelterRecipes(){
-        SmelterRecipeRegistry.loadRecipes();
-    }
-
     public static Minefinity getCore() {
         return core;
     }
 
-    public BlockTierService getBlockTierService() {
-        return blockTierService;
-    }
-
-    public TownService getTownService() {
-        return townService;
-    }
-
-    public BackpackService getBackpackService() {
-        return backpackService;
-    }
-
-    public EconomyService getEconomyService() {
-        return economyService;
-    }
-
-    public MilestoneService getMilestoneService() {
-        return milestoneService;
-    }
-
-    public AutoMinerService getAutoMinerService() {
-        return autoMinerService;
-    }
-
-    public ForgeService getForgeService() {
-        return forgeService;
-    }
-
-    public SmelterService getSmelterService() {
-        return smelterService;
-    }
-
-    public EngineerService getEngineerService() {
-        return engineerService;
-    }
-
-    public static GameDatabaseManager getDatabaseManager(){
-        return databaseManager;
-    }
-
-    public static RankDatabaseManager getRankDatabaseManager(){
-        return rankDatabaseManager;
-    }
-
-    public VanishService getVanishService(){
-        return vanishService;
-    }
-
-    public DirtyPlayerService getDirtyPlayerService(){
-        return dirtyPlayerService;
-    }
-
-    public AutosaveService getAutosaveService(){
-        return autosaveService;
-    }
-
-    public RankDataHandler getRankDataHandler(){
-        return rankDataHandler;
-    }
-
-    public PlayerInputListener getPlayerInputListener(){
-        return playerInputListener;
-    }
-
-    public ForgeRecipeManager getForgeRecipeManager() {
-        return forgeRecipeManager;
-    }
-
-    public WorkshopRecipeManager getWorkshopRecipeManager() {
-        return workshopRecipeManager;
-    }
-
-
     @Override
     public void onDisable() {
-
-        warpService.saveWarpLocations();
-        registryConfigHandler.saveEntireRegistry();
-
-        try {
-            databaseConnect();
-            serverDataHandler.saveDirty();
-        } catch (Exception e) {
-            Bukkit.getConsoleSender().sendMessage("FAILED TO SAVE");
-            e.printStackTrace();
-        }
-
-        databaseManager.closePool();
-
-
+        townModule.disable();
+        miningModule.disable();
+        customItemModule.disable();
+        coreModule.disable();
+        playerModule.disable();
         com.github.retrooper.packetevents.PacketEvents.getAPI().terminate();
     }
-
-
-
 }

@@ -5,3 +5,34 @@ recipes:
     required-fuel-tier: 1
     recipe:
       OAK_PLANK: 5
+  BRICK:
+    unlock-level: 1
+    fuel-usage: 1
+    required-fuel-tier: 1
+    recipe:
+      CLAY_BALL: 4
+  STONE:
+    unlock-level: 1
+    fuel-usage: 2
+    required-fuel-tier: 1
+    recipe:
+      COBBLESTONE: 4
+  COPPER_INGOT:
+    unlock-level: 1
+    fuel-usage: 3
+    required-fuel-tier: 1
+    recipe:
+      RAW_COPPER: 3
+  TIN_INGOT:
+    unlock-level: 1
+    fuel-usage: 2
+    required-fuel-tier: 1
+    recipe:
+      RAW_TIN: 3
+  IRON_INGOT:
+    unlock-level: 1
+    fuel-usage: 6
+    required-fuel-tier: 1
+    recipe:
+      RAW_IRON: 3
+

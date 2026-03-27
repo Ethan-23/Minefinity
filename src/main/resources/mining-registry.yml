@@ -1,0 +1,37 @@
+worlds:
+  OVERWORLD:
+    GRAVEL:
+      material: Gravel
+      health: 40
+      drop: GRAVEL
+      special-drop: FLINT
+      unlock-cost: 0
+      milestones:
+        - 50
+        - 100
+        - 250
+        - 750
+        - 1500
+        - 2500
+        - 5000
+        - 15000
+    CLAY:
+      material: Clay
+      health: 60
+      drop: CLAY
+      unlock-cost: 50
+      milestones:
+        - 50
+        - 100
+        - 2500
+        - 5000
+        - 15000
+    COBBLESTONE:
+      material: Cobblestone
+      health: 80
+      drop: COBBLESTONE
+      unlock-cost: 100
+      milestones:
+        - 50
+        - 100
+        - 250

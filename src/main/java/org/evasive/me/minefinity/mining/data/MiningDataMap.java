@@ -1,16 +1,20 @@
 package org.evasive.me.minefinity.mining.data;
 
 import org.bukkit.Location;
+import org.evasive.me.minefinity.mining.utils.AnimationIDs;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.evasive.me.minefinity.Minefinity.animationIDs;
-
 public class MiningDataMap {
 
     private final Map<Location, Map<UUID, MiningBlockData>> miningMap = new HashMap<>();
+    private final AnimationIDs animationIDs;
+
+    public MiningDataMap(AnimationIDs animationIDs){
+        this.animationIDs = animationIDs;
+    }
 
     public void addMiningData(Location location, UUID uuid, MiningBlockData miningBlockData){
         Map<UUID, MiningBlockData> blockDataMap = containsBlockLocation(location) ? miningMap.get(location) : new HashMap<>();

@@ -10,15 +10,19 @@ import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.ConfirmationGui;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.*;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseBackpackItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.handler.ItemCreationHandler;
-import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
-import org.evasive.me.minefinity.customItems.itembuilder.registry.config.RegistryConfigHandler;
-import org.evasive.me.minefinity.utils.TextConversions;
+import org.evasive.me.minefinity.customItems.itembuilder.events.PlayerInputListener;
+import org.evasive.me.minefinity.customItems.registry.config.RegistryConfigHandler;
+import org.evasive.me.minefinity.core.utils.TextConversions;
+import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 
 import java.util.List;
 import java.util.Optional;
 
-import static org.evasive.me.minefinity.utils.GenericGuiItems.fillerPane;
+import static org.evasive.me.minefinity.core.utils.guis.GenericGuiItems.fillerPane;
 
 public class ItemCreationGui extends BaseGui {
 
@@ -30,13 +34,17 @@ public class ItemCreationGui extends BaseGui {
     CustomItemType customItemType;
     ItemCreationHandler itemCreationHandler;
     RegistryConfigHandler registryConfigHandler;
+    PlayerInputListener playerInputListener;
+    private final CustomItemRegistryService customItemRegistryService;
 
-    public ItemCreationGui(Player player, BaseCustomItem baseCustomItem, RegistryConfigHandler registryConfigHandler) {
+    public ItemCreationGui(Player player, BaseCustomItem baseCustomItem, RegistryConfigHandler registryConfigHandler, PlayerInputListener playerInputListener, CustomItemRegistryService customItemRegistryService) {
         super(player, INVENTORY_SIZE, TextConversions.parse("ItemBuilder"));
         this.customItemType = baseCustomItem.getCustomItemType();
         this.baseCustomItem = baseCustomItem;
         this.registryConfigHandler = registryConfigHandler;
-        itemCreationHandler = new ItemCreationHandler();
+        this.playerInputListener = playerInputListener;
+        this.customItemRegistryService = customItemRegistryService;
+        itemCreationHandler = new ItemCreationHandler(customItemRegistryService, playerInputListener);
         build();
         updateItem();
     }
@@ -56,11 +64,11 @@ public class ItemCreationGui extends BaseGui {
     }
 
     private void addDisplayItem(){
-        inventory.setItem(BUILT_ITEM_SLOT, baseCustomItem.buildItem());
+        inventory.setItem(BUILT_ITEM_SLOT, customItemRegistryService.buildItem(baseCustomItem));
     }
 
     public void addRegistryButton(){
-        boolean registered = CustomItemRegistry.isRegistered(baseCustomItem.getID());
+        boolean registered = customItemRegistryService.isRegistered(baseCustomItem.getID());
         Material pane = registered ? Material.YELLOW_STAINED_GLASS_PANE : Material.LIME_STAINED_GLASS_PANE;
         String save = registered ? "<bold><yellow>Override" : "<bold><green>Save";
         String text = registered ? "<yellow>Left Click <gray>to <bold><yellow>OVERRIDE <reset><gray>in the item registry. This will update all items with this id globally." : "<green>Left Click <gray>to <bold><green>save <reset><gray>to the item registry.";
@@ -72,7 +80,7 @@ public class ItemCreationGui extends BaseGui {
     public void updateItem(){
         PlayerInventory playerInventory = player.getInventory();
         ItemStack playerItem = playerInventory.getItemInMainHand();
-        ItemStack itemStack = baseCustomItem.buildItem();
+        ItemStack itemStack = customItemRegistryService.buildItem(baseCustomItem);
         if(playerItem.isEmpty()){
             playerInventory.setItemInMainHand(itemStack);
             return;
@@ -111,8 +119,7 @@ public class ItemCreationGui extends BaseGui {
         if(e.getClick().isLeftClick() && slot == REGISTRY_SAVE_SLOT){
             new ConfirmationGui(player, this, p -> {
                 player.sendMessage(TextConversions.parse("<green>Item has been saved to the registry!"));
-                registryConfigHandler.addSingleEntry(baseCustomItem);
-                CustomItemRegistry.overrideCustomItem(baseCustomItem);
+                customItemRegistryService.saveCustomItem(baseCustomItem);
                 //reopen();
             }).open();
             return;

@@ -6,11 +6,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.ConfirmationGui;
-import org.evasive.me.minefinity.customItems.itembuilder.data.BaseCustomItem;
-import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
-import org.evasive.me.minefinity.customItems.itembuilder.registry.config.RegistryConfigHandler;
-import org.evasive.me.minefinity.utils.TextConversions;
-import org.evasive.me.minefinity.utils.command.CommandFeedback;
+import org.evasive.me.minefinity.customItems.registry.config.RegistryConfigHandler;
+import org.evasive.me.minefinity.core.utils.command.CommandFeedback;
+import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -18,9 +16,11 @@ import java.util.Objects;
 public class DeleteCustomItem implements CommandExecutor {
 
     RegistryConfigHandler registryConfigHandler;
+    private final CustomItemRegistryService customItemRegistryService;
 
-    public DeleteCustomItem(Minefinity core, RegistryConfigHandler registryConfigHandler) {
-        Objects.requireNonNull(core.getCommand("deletecustomitem")).setExecutor(this);
+    public DeleteCustomItem(CustomItemRegistryService customItemRegistryService, RegistryConfigHandler registryConfigHandler) {
+        Objects.requireNonNull(Minefinity.getCore().getCommand("deletecustomitem")).setExecutor(this);
+        this.customItemRegistryService = customItemRegistryService;
         this.registryConfigHandler = registryConfigHandler;
     }
 
@@ -36,15 +36,15 @@ public class DeleteCustomItem implements CommandExecutor {
 
         String itemId = args[0].toUpperCase();
 
-        if(!CustomItemRegistry.isRegistered(itemId)){
+        if(!customItemRegistryService.isRegistered(itemId)){
             player.sendMessage(CommandFeedback.INVALID_ITEM_ID);
             return true;
         }
 
         new ConfirmationGui(player, null, p -> {
             player.sendMessage(CommandFeedback.CUSTOMITEM_DELETE_SUCCESS(itemId));
-            registryConfigHandler.removeSingleEntry((BaseCustomItem) CustomItemRegistry.getByID(itemId));
-            CustomItemRegistry.removeCustomItem(itemId);
+            registryConfigHandler.removeSingleEntry(customItemRegistryService.getRegisteredBaseItem(itemId));
+            customItemRegistryService.removeRegisteredItem(itemId);
             player.closeInventory();
         }).open();
 

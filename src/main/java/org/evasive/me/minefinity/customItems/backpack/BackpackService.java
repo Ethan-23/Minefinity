@@ -1,45 +1,46 @@
 package org.evasive.me.minefinity.customItems.backpack;
 
 import org.bukkit.entity.Player;
-import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.database.service.DirtyPlayerService;
-import org.evasive.me.minefinity.player.PlayerManager;
+import org.evasive.me.minefinity.playerdata.model.PlayerData;
+import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 
 import java.util.Map;
 
 public class BackpackService {
 
-    PlayerManager playerManager;
-    DirtyPlayerService dirtyPlayerService = Minefinity.getCore().getDirtyPlayerService();
+    private final PlayerDataService playerDataService;
 
-    public BackpackService(PlayerManager playerManager) {
-        this.playerManager = playerManager;
+    public BackpackService(PlayerDataService playerDataService) {
+        this.playerDataService = playerDataService;
     }
 
-    private BackpackStorage getBackpackStorage(Player player){
-        return playerManager.get(player).getBackpackStorage();
+    private PlayerData getPlayerData(Player player) {
+        return playerDataService.getPlayerData(player.getUniqueId());
+    }
+
+    public Map<String, Integer> getBackpackStorage(Player player){
+        return getPlayerData(player).getBackpackStorage();
     }
 
     public int getBackpackStoredItemAmount(Player player, String itemId) {
-        return getBackpackStorage(player).getResourceCount(itemId);
+        if(!getPlayerData(player).getBackpackStorage().containsKey(itemId))
+            setBackpackItem(player, itemId, 0);
+        return getBackpackStorage(player).get(itemId);
     }
 
-    public void addBackpackItem(Player player, String itemId, int amount) {
-        dirtyPlayerService.addDirtyPlayer(player);
-        getBackpackStorage(player).setResourceCount(itemId, getBackpackStoredItemAmount(player, itemId) + amount);
+    private void setBackpackItem(Player player, String itemId, int amount) {
+        getPlayerData(player).changeBackpackStorage(itemId, amount);
     }
 
     public void removeBackpackItem(Player player, String itemId, int amount) {
-        getBackpackStorage(player).setResourceCount(itemId, getBackpackStoredItemAmount(player, itemId) - amount);
+        setBackpackItem(player, itemId, -amount);
     }
 
-    public Map<String, Integer> getBackpackItems(Player player) {
-        dirtyPlayerService.addDirtyPlayer(player);
-        return getBackpackStorage(player).getBackpackMap();
+    public void addBackpackItem(Player player, String itemId, int amount) {
+        setBackpackItem(player, itemId, amount);
     }
 
     public void clearBackpackStorage(Player player) {
-        dirtyPlayerService.addDirtyPlayer(player);
-        getBackpackStorage(player).clearBackpack();
+        getPlayerData(player).clearBackpackStorage();
     }
 }

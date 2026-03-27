@@ -6,14 +6,20 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.evasive.me.minefinity.customItems.backpack.BackpackService;
 import org.evasive.me.minefinity.customItems.backpack.gui.GenericBackpackGui;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
-import org.evasive.me.minefinity.customItems.itembuilder.registry.CustomItemRegistry;
-
-import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.getItemId;
-import static org.evasive.me.minefinity.customItems.framework.ItemFunctions.hasItemId;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseBackpackItem;
+import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 
 public class OpenBackpackListener implements Listener {
+
+    private final CustomItemRegistryService customItemRegistryService;
+    private final BackpackService backpackService;
+
+    public OpenBackpackListener(CustomItemRegistryService customItemRegistryService, BackpackService backpackService) {
+        this.customItemRegistryService = customItemRegistryService;
+        this.backpackService = backpackService;
+    }
 
     @EventHandler
     public void onRightClick(PlayerInteractEvent event) {
@@ -23,19 +29,18 @@ public class OpenBackpackListener implements Listener {
         if(action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK) return;
 
         ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
+        if(item.isEmpty()) return;
 
-        if(!hasItemId(item)) return;
+        if(!customItemRegistryService.isRegistered(item)) return;
 
-        String itemId = getItemId(item);
+        String itemId = customItemRegistryService.getItemId(item);
 
-        if(!CustomItemRegistry.isRegistered(itemId))return;
-
-       if(CustomItemRegistry.getByID(itemId).getBaseItem().getCustomItemType() != CustomItemType.STORAGE)
+       if(!(customItemRegistryService.getBaseItemById(itemId).getBaseItem() instanceof BaseBackpackItem))
            return;
 
         Player player = event.getPlayer();
 
-        new GenericBackpackGui(player, itemId).open();
+        new GenericBackpackGui(player, itemId, customItemRegistryService, backpackService).open();
     }
 
 }

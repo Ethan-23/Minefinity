@@ -1,0 +1,41 @@
+package org.evasive.me.minefinity.towns.structures.resourceblock.service;
+
+import org.bukkit.entity.Player;
+import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
+import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
+
+import java.util.List;
+
+public class BlockTypeRegistryService {
+
+    private final BlockTypeRegistry blockTypeRegistry;
+
+    public BlockTypeRegistryService(BlockTypeRegistry blockTypeRegistry) {
+        this.blockTypeRegistry = blockTypeRegistry;
+    }
+
+    public BaseBlock getBaseBlock(String blockId){
+        return blockTypeRegistry.getBlock(blockId);
+    }
+
+    public String getBlockIdByTier(String worldName, int tier){
+        return blockTypeRegistry.getBlockList(worldName).get(tier);
+    }
+
+    public List<String> getBlockList(String worldName){
+        return blockTypeRegistry.getBlockList(worldName);
+    }
+
+    public int getBlockTier(String worldName, String blockId){
+        return blockTypeRegistry.getBlockList(worldName).indexOf(blockId);
+    }
+
+    public float getNextUnlockCost(int currentTier, String worldName){
+        List<String> blockList = blockTypeRegistry.getBlockList(worldName);
+        if(blockList.size() < currentTier + 2) // current tier starts at 0
+            return 0f;
+        return blockTypeRegistry.getBlockTypes().get(blockList.get(currentTier + 1)).unlockCost();
+    }
+
+
+}

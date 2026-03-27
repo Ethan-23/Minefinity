@@ -1,8 +1,9 @@
 package org.evasive.me.minefinity.customItems.itembuilder.data;
 
 import org.bukkit.Material;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.*;
 import org.evasive.me.minefinity.mining.abilities.PickaxeAbilities;
-import org.evasive.me.minefinity.rarity.Rarity;
+import org.evasive.me.minefinity.core.rarity.Rarity;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -42,8 +43,44 @@ public enum ItemOptions {
     MINING_SPEED(
             Material.GOLDEN_PICKAXE,
             Float.class,
-            builder -> ((BasePickaxeItem) builder).getBaseMiningSpeed(),
-            (builder, value) -> ((BasePickaxeItem) builder).setBaseMiningSpeed((Float) value)
+            builder -> {
+                if (builder instanceof BasePickaxeItem item) {
+                    return item.getBaseMiningSpeed();
+                }
+                if (builder instanceof BasePickaxeComponent component) {
+                    return component.getMiningSpeed();
+                }
+                return 0f;
+            },
+            (builder, value) -> {
+                if (builder instanceof BasePickaxeItem item) {
+                    item.setBaseMiningSpeed((Float) value);
+                }
+                if (builder instanceof BasePickaxeComponent component) {
+                    component.setMiningSpeed((Float) value);
+                }
+            }
+    ),
+    MINING_FORTUNE(
+            Material.DIAMOND,
+            Float.class,
+            builder -> {
+                if (builder instanceof BasePickaxeItem item) {
+                    return item.getBaseMiningFortune();
+                }
+                if (builder instanceof BasePickaxeComponent component) {
+                    return component.getMiningFortune();
+                }
+                return 0f;
+            },
+            (builder, value) -> {
+                if (builder instanceof BasePickaxeItem item) {
+                    item.setBaseMiningFortune((Float) value);
+                }
+                if (builder instanceof BasePickaxeComponent component) {
+                    component.setMiningFortune((Float) value);
+                }
+            }
     ),
     PICKAXE_TIER(
             Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE,
@@ -79,7 +116,7 @@ public enum ItemOptions {
             Material.WIND_CHARGE,
             PickaxeAbilities.class,
             builder -> ((BasePickaxeComponent) builder).getPickaxeAbilityList(),
-            (builder, value) -> ((BasePickaxeComponent) builder).changePickaxeAbilityList((PickaxeAbilities) value)
+            (builder, value) -> ((BasePickaxeComponent) builder).changePickaxeAbilityList(((PickaxeAbilities) value).name())
     ),
     FUEL_AMOUNT(
             Material.CHARCOAL,

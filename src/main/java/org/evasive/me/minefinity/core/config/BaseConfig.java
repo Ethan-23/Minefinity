@@ -20,7 +20,6 @@ public class BaseConfig {
         this.fileName = fileName;
 
         createFile();
-        load();
     }
 
     private void createFile() {

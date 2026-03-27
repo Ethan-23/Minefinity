@@ -1,13 +1,11 @@
 package org.evasive.me.minefinity.customItems.framework;
 
-import org.evasive.me.minefinity.customItems.itembuilder.data.BaseCustomItem;
-
 public class CustomItemStack {
-    private final BaseCustomItem customItem;
+    private final String customItemId;
     int amount;
 
-    public CustomItemStack(BaseCustomItem customItem, int amount) {
-        this.customItem = customItem;
+    public CustomItemStack(String customItemId, int amount) {
+        this.customItemId = customItemId;
         this.amount = amount;
     }
 
@@ -19,7 +17,7 @@ public class CustomItemStack {
         this.amount = amount;
     }
 
-    public BaseCustomItem getCustomItem() {
-        return customItem;
+    public String getCustomItem() {
+        return customItemId;
     }
 }

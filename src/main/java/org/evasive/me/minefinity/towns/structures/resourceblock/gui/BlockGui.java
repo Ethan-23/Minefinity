@@ -1,0 +1,160 @@
+package org.evasive.me.minefinity.towns.structures.resourceblock.gui;
+
+import net.kyori.adventure.text.Component;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
+import org.evasive.me.minefinity.core.gui.BaseGui;
+import org.evasive.me.minefinity.core.economy.EconomyService;
+import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
+import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
+import org.evasive.me.minefinity.mining.milestones.MilestoneService;
+import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.core.utils.TextConversions;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+
+import static org.evasive.me.minefinity.core.utils.guis.GenericGuiItems.backPage;
+import static org.evasive.me.minefinity.core.utils.guis.GenericGuiItems.fillerPane;
+import static org.evasive.me.minefinity.core.utils.TextConversions.intToRoman;
+
+public class BlockGui extends BaseGui {
+
+    private static final int INVENTORY_SIZE = 54;
+    static final List<Integer> TRACK = List.of(10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34, 38, 39, 40, 41, 42);
+    private final BlockGuiHandler blockGuiHandler;
+    private final BlockTierService blockTierService;
+    private final MilestoneService milestoneService;
+
+    public BlockGui(Player player, BlockTierService blockTierService, CustomItemRegistryService customItemRegistryService, MilestoneService milestoneService, EconomyService economyService) {
+        super(player, INVENTORY_SIZE, TextConversions.parse("Blocks"));
+        this.blockTierService = blockTierService;
+        this.milestoneService = milestoneService;
+        this.blockGuiHandler = new BlockGuiHandler(milestoneService, customItemRegistryService, blockTierService, economyService);
+        build();
+    }
+
+    /**
+     * Creates the inventory
+     */
+    @Override
+    protected void build() {
+        buildFrame();
+        buildBlocks(player);
+    }
+
+    /**
+     * Builds the frame of the gui
+     */
+    private void buildFrame(){
+        for (int i = 0; i < INVENTORY_SIZE; i++) {
+            if (!TRACK.contains(i)) this.inventory.setItem(i, fillerPane);
+        }
+    }
+
+    /**
+     * Builds the block path in the gui.
+     * @param player player whose data being used to build.
+     */
+    private void buildBlocks(Player player){
+        List<String> blockList = blockTierService.getBlockTypeRegistryService().getBlockList(player.getWorld().getName());
+        for(int blockTier = 0; blockTier < TRACK.size(); blockTier++){
+
+            if(blockTier >= blockList.size()) break;
+
+            String blockId = blockList.get(blockTier);
+            BaseBlock block = blockTierService.getBlockTypeRegistryService().getBaseBlock(blockId);
+
+            boolean unlocked = blockTierService.getUnlockedMiningBlock(player) >= blockTier;
+
+            Component name = TextConversions.parse("<gray>(<" + (unlocked ? "white" : "red") + ">" + intToRoman(blockTier+1) +"<gray>) <white>" + TextConversions.formatItemName(block.name()));
+            ItemBuilder blockBuilder = new ItemBuilder(block.material(), name);
+            blockBuilder.addLore(unlocked ? getBlockLore(blockId, block, player) : getLockedBlockLore(block));
+            if(blockTier == blockList.indexOf(blockTierService.getSelectedMiningBlock(player)))
+                setSelected(blockBuilder);
+            this.inventory.setItem(TRACK.get(blockTier), blockBuilder.build());
+        }
+    }
+
+    /**
+     * Adds a glow and lore to show the selected block.
+     * @param blockBuilder ItemBuilder being added to.
+     */
+    private void setSelected(ItemBuilder blockBuilder){
+        blockBuilder.addLore("<bold><green>Selected").addGlow();
+    }
+
+
+    /**
+     * @param baseBlock BlockType of lore being created
+     * @param player Player being sent the inventory
+     * @return Unlocked block lore
+     */
+    private List<String> getBlockLore(String blockId, BaseBlock baseBlock, Player player){
+        String blockHealth = String.valueOf(baseBlock.health());
+        int mTier = milestoneService.getTier(player, blockId);
+        String milestoneTier = mTier == 0 ? "0" : intToRoman(mTier);
+
+        return List.of(
+                "<gray>Block Health: <white>" + blockHealth,
+                "<gray>Milestone Tier: <aqua>" + milestoneTier,
+                "",
+                "<#a1a1a1>Left-Click <gray>to Select",
+                "<#a1a1a1>Right-Click <gray>to view Milestones"
+        );
+    }
+
+    /**
+     * @param block BaseBlock data
+     * @return Locked block lore
+     */
+    private List<String> getLockedBlockLore(BaseBlock block){
+        String unlockCost = String.valueOf(block.unlockCost());
+
+        return List.of(
+                "<gray>Cost: $" + unlockCost,
+                "",
+                "<gray>Left-Click to purchase",
+                "<bold><red>Locked"
+        );
+    }
+
+    @Override
+    public @NotNull Inventory getInventory() {
+        return inventory;
+    }
+
+    @Override
+    public void onClick(InventoryClickEvent e) {
+        super.onClick(e);
+
+        e.setCancelled(true);
+
+        int slot = e.getSlot();
+
+        int blockTier = TRACK.indexOf(slot);
+
+        if(blockTier == -1 || blockTier >= blockTierService.getBlockTypeRegistryService().getBlockList(player.getWorld().getName()).size()) return;
+
+        Player player = (Player) e.getWhoClicked();
+
+        if(blockTier > blockTierService.getUnlockedMiningBlock(player)){
+            if(blockGuiHandler.lockedBlockClicked(player, blockTier))
+                rebuildInventory();
+            return;
+        }
+
+        if(e.getClick().isLeftClick()){
+            blockGuiHandler.handleSelect(player, blockTier);
+            rebuildInventory();
+        }
+
+        if(e.getClick().isRightClick()){
+            blockGuiHandler.handleMilestone(player, blockTier);
+        }
+    }
+}

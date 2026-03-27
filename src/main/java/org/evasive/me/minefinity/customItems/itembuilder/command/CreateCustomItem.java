@@ -8,12 +8,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.customItems.itembuilder.data.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.ItemCreationGui;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
-import org.evasive.me.minefinity.customItems.itembuilder.registry.config.RegistryConfigHandler;
-import org.evasive.me.minefinity.rarity.Rarity;
-import org.evasive.me.minefinity.utils.TextConversions;
+import org.evasive.me.minefinity.customItems.itembuilder.events.PlayerInputListener;
+import org.evasive.me.minefinity.customItems.registry.config.RegistryConfigHandler;
+import org.evasive.me.minefinity.core.rarity.Rarity;
+import org.evasive.me.minefinity.core.utils.TextConversions;
+import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -23,10 +25,14 @@ import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemK
 public class CreateCustomItem implements CommandExecutor {
 
     RegistryConfigHandler registryConfigHandler;
+    PlayerInputListener playerInputListener;
+    private final CustomItemRegistryService customItemRegistryService;
 
-    public CreateCustomItem(Minefinity core, RegistryConfigHandler registryConfigHandler) {
-        Objects.requireNonNull(core.getCommand("createcustomitem")).setExecutor(this);
+    public CreateCustomItem(CustomItemRegistryService customItemRegistryService, RegistryConfigHandler registryConfigHandler, PlayerInputListener playerInputListener) {
+        Objects.requireNonNull(Minefinity.getCore().getCommand("createcustomitem")).setExecutor(this);
         this.registryConfigHandler = registryConfigHandler;
+        this.customItemRegistryService = customItemRegistryService;
+        this.playerInputListener = playerInputListener;
     }
 
 
@@ -53,7 +59,7 @@ public class CreateCustomItem implements CommandExecutor {
         }
 
 
-        new ItemCreationGui(player, item, registryConfigHandler).open();
+        new ItemCreationGui(player, item, registryConfigHandler, playerInputListener, customItemRegistryService).open();
 
         return true;
     }

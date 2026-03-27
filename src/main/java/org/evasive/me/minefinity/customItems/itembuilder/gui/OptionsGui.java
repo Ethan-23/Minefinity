@@ -5,17 +5,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
-import org.evasive.me.minefinity.customItems.itembuilder.data.BaseCustomItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.BasePickaxeComponent;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.mining.abilities.PickaxeAbilities;
-import org.evasive.me.minefinity.rarity.Rarity;
-import org.evasive.me.minefinity.utils.TextConversions;
+import org.evasive.me.minefinity.core.rarity.Rarity;
+import org.evasive.me.minefinity.core.utils.TextConversions;
 
 import java.util.List;
 import java.util.function.Consumer;
 
-import static org.evasive.me.minefinity.utils.GenericGuiItems.fillerPane;
+import static org.evasive.me.minefinity.core.utils.guis.GenericGuiItems.fillerPane;
 
 public class OptionsGui<T extends Enum<T>> extends BaseGui {
 
@@ -57,11 +57,11 @@ public class OptionsGui<T extends Enum<T>> extends BaseGui {
             if(enumValue instanceof Rarity){
                 name = TextConversions.buildRarityColor(name, (Rarity) enumValue);
                 itemBuilder.setDisplayName(name);
-                itemBuilder.setMaterial(((Rarity) enumValue).getRarityBuilder().getMaterial());
+                itemBuilder.setMaterial(((Rarity) enumValue).getRarityBuilder().material());
                 itemBuilder.setGlow((baseCustomItem).getRarity() == enumValue);
             } else if(enumValue instanceof PickaxeAbilities){
                 itemBuilder.addLore(((PickaxeAbilities) enumValue).getDescription());
-                itemBuilder.setGlow(((BasePickaxeComponent)baseCustomItem).getPickaxeAbilityList().contains(enumValue));
+                itemBuilder.setGlow(((BasePickaxeComponent)baseCustomItem).getPickaxeAbilityList().contains(enumValue.name()));
             } else if(enumValue instanceof CustomItemType) {
                 itemBuilder.setMaterial(((CustomItemType) enumValue).getDisplayMaterial());
                 itemBuilder.setGlow((baseCustomItem).getCustomItemType() == enumValue);
