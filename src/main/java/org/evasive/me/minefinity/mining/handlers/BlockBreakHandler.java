@@ -1,6 +1,5 @@
 package org.evasive.me.minefinity.mining.handlers;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -8,10 +7,13 @@ import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.framework.ItemPickupService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
+import org.evasive.me.minefinity.mining.context.StatsContext;
 import org.evasive.me.minefinity.mining.data.MiningDataMap;
 import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 import org.evasive.me.minefinity.mining.milestones.MilestoneService;
+
+import java.util.Random;
 
 import static org.evasive.me.minefinity.core.utils.TextConversions.buildRarityColor;
 
@@ -32,11 +34,19 @@ public class BlockBreakHandler {
         this.miningDataMap = miningDataMap;
     }
 
-    public void handleBlockBreak(Location location, Player player){
+    public void handleBlockBreak(Location location, Player player, StatsContext statsContext) {
 
-        int amount = 1; // Change later based on fortune ect
+        float fortune = statsContext.getFortune();
 
-        String blockId = blockTierService.getSelectedMiningBlock(player);
+        Random random = new Random();
+        random.setSeed(System.currentTimeMillis());
+        int randomNum = random.nextInt(1, 101);
+
+        int fortuneAmount = (int)(((int) fortune/100f) + (randomNum <= fortune % 100 ? 1 : 0));
+
+        int amount = 1 + fortuneAmount;
+
+        String blockId = blockTierService.getSelectedMiningBlock(player, player.getWorld().getName());
         BaseBlock baseBlock = blockTierService.getSelectedBaseBlock(player);
 
         milestoneService.increaseBlocksMined(player, blockId, 1);

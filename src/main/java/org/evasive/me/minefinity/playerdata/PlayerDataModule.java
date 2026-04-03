@@ -1,10 +1,12 @@
 package org.evasive.me.minefinity.playerdata;
 
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.playerdata.commands.rank.MineRank;
 import org.evasive.me.minefinity.playerdata.database.PlayersDatabaseManager;
 import org.evasive.me.minefinity.playerdata.database.RankDatabaseManager;
+import org.evasive.me.minefinity.playerdata.listener.PlayerChatListener;
 import org.evasive.me.minefinity.playerdata.listener.PlayerJoinListener;
 import org.evasive.me.minefinity.playerdata.listener.PlayerQuitListener;
 import org.evasive.me.minefinity.playerdata.ranks.RankRegistry;
@@ -42,8 +44,9 @@ public class PlayerDataModule {
         permissionLoader = new PermissionLoader(permissionConfigManager, RankRegistry.getInstance());
 
         playerService = new PlayerDataService(playerRepo);
-        rankService = new RankService(rankRepo);
         permissionService = new PermissionService(Minefinity.getCore());
+        rankService = new RankService(rankRepo, permissionService);
+
     }
 
     public void enable(JavaPlugin plugin) {
@@ -55,12 +58,11 @@ public class PlayerDataModule {
         rankDb.connect("127.0.0.1", 3306, "minefinity_ranks", "admin", "jdf7tA@tf");
 
         // Register listeners
-        plugin.getServer().getPluginManager()
-                .registerEvents(new PlayerJoinListener(playerService, rankService, permissionService), plugin);
+        PluginManager pm = plugin.getServer().getPluginManager();
 
-        plugin.getServer().getPluginManager()
-                .registerEvents(new PlayerQuitListener(playerService, rankService), plugin);
-
+        pm.registerEvents(new PlayerJoinListener(playerService, rankService, permissionService), plugin);
+        pm.registerEvents(new PlayerQuitListener(playerService, rankService, permissionService), plugin);
+        pm.registerEvents(new PlayerChatListener(rankService), plugin);
         // autosave task for player data
         plugin.getServer().getScheduler().runTaskTimerAsynchronously(
                 plugin,

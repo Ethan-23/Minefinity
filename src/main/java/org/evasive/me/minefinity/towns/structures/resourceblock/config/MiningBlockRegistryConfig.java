@@ -53,12 +53,13 @@ public class MiningBlockRegistryConfig extends BaseConfig {
                 String materialName = blockVariables.getString("material");
                 Material material = Material.getMaterial(materialName.toUpperCase());
                 int health = blockVariables.getInt("health");
+                int breakingPower = blockVariables.getInt("breaking-power");
                 String dropId = blockVariables.getString("drop");
                 String specialDropId = blockVariables.getString("special-drop");
                 int unlockCost = blockVariables.getInt("unlock-cost");
                 List<Integer> milestones = (List<Integer>) blockVariables.getList("milestones");
 
-                BaseBlock baseBlock = new BaseBlock(blockName, material, health, dropId, unlockCost, milestones);
+                BaseBlock baseBlock = new BaseBlock(blockName, material, breakingPower, health, dropId, unlockCost, milestones);
 
                 blockTypeRegistry.registerBlock(key, baseBlock);
 

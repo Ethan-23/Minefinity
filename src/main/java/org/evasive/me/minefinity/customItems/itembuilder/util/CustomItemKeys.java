@@ -10,6 +10,7 @@ public class CustomItemKeys {
     public static final NamespacedKey DISPLAY_NAME_KEY = new NamespacedKey(Minefinity.getCore(), "DISPLAY_NAME");
     public static final NamespacedKey ITEM_TYPE_KEY = new NamespacedKey(Minefinity.getCore(), "TYPE");
     public static final NamespacedKey ITEM_RARITY_KEY = new NamespacedKey(Minefinity.getCore(), "RARITY");
+    public static final NamespacedKey BREAKING_POWER_KEY = new NamespacedKey(Minefinity.getCore(), "BREAKING_POWER");
     public static final NamespacedKey MINING_SPEED_KEY = new NamespacedKey(Minefinity.getCore(), "MINING_SPEED");
     public static final NamespacedKey MINING_FORTUNE_KEY = new NamespacedKey(Minefinity.getCore(), "MINING_FORTUNE");
     public static final NamespacedKey PICKAXE_HEAD_KEY = new NamespacedKey(Minefinity.getCore(), "PICKAXE_HEAD");

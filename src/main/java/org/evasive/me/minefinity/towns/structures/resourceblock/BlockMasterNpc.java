@@ -1,7 +1,6 @@
 package org.evasive.me.minefinity.towns.structures.resourceblock;
 
 import org.bukkit.entity.Player;
-import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.economy.EconomyService;
 import org.evasive.me.minefinity.core.npcs.framework.NpcBehavior;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
@@ -25,7 +24,7 @@ public class BlockMasterNpc implements NpcBehavior {
 
     @Override
     public void onInteract(Player player) {
-        new BlockGui(player, blockTierService, customItemRegistryService, milestoneService, economyService).open();
+        new BlockGui(player, blockTierService, customItemRegistryService, milestoneService, economyService, player.getWorld().getName()).open();
     }
 
     @Override

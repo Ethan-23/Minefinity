@@ -5,7 +5,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.towns.structures.mines.miner.service.AutoMinerService;
 
 public class AutoMinerEvents implements Listener {
@@ -16,7 +15,8 @@ public class AutoMinerEvents implements Listener {
         this.autoMinerService = autoMinerService;
     }
 
-    @EventHandler (priority = EventPriority.HIGH)
+    //Need to figure out why this is running before player data is being set
+    @EventHandler (priority = EventPriority.HIGHEST)
     public void onPlayerJoin(PlayerJoinEvent event){
         Player player = event.getPlayer();
         autoMinerService.addOfflineProgress(player);

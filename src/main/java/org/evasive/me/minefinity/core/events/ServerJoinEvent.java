@@ -7,12 +7,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.evasive.me.minefinity.core.admin.service.VanishService;
-import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
 import org.evasive.me.minefinity.core.scoreboard.ScoreboardService;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
-import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
-import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTypeRegistryService;
 
 public class ServerJoinEvent implements Listener {
 

@@ -32,14 +32,14 @@ public class BlockGuiHandler {
      * @param player
      * @param blockTier blockTier tier index of the clicked block in the progression track
      */
-    public boolean lockedBlockClicked(Player player, int blockTier){
+    public boolean lockedBlockClicked(Player player, int blockTier, String worldId) {
 
-        if(blockTier != blockTierService.getUnlockedMiningBlock(player) + 1){
+        if(blockTier != blockTierService.getUnlockedMiningBlock(player, worldId) + 1){
             player.sendMessage(INVALID_PURCHASE_ORDER);
             return false;
         }
 
-        return attemptBlockPurchase(player, blockTier);
+        return attemptBlockPurchase(player, blockTier, worldId);
     }
 
     /**
@@ -47,9 +47,9 @@ public class BlockGuiHandler {
      * @param player
      * @param blockTier blockTier tier index of the clicked block in the progression track
      */
-    public boolean attemptBlockPurchase(Player player, int blockTier){
+    public boolean attemptBlockPurchase(Player player, int blockTier, String worldId){
 
-        double cost = blockTierService.getBlockUnlockCost(player);
+        double cost = blockTierService.getBlockUnlockCost(player, worldId);
 
         if(economyService.getBalance(player) < cost){
             player.sendMessage(INVALID_PURCHASE_AMOUNT);
@@ -60,7 +60,7 @@ public class BlockGuiHandler {
 
         player.sendMessage(VALID_PURCHASE_MESSAGE);
 
-        blockTierService.setUnlockedMiningBlock(player, player.getWorld().getName(), blockTier);
+        blockTierService.setUnlockedMiningBlock(player, worldId, blockTier);
         return true;
     }
 
@@ -69,8 +69,8 @@ public class BlockGuiHandler {
      * @param player
      * @param blockTier tier to set block
      */
-    public void handleSelect(Player player, int blockTier){
-        blockTierService.setSelectedMiningBlock(player, player.getWorld().getName(), blockTier);
+    public void handleSelect(Player player, int blockTier, String worldId){
+        blockTierService.setSelectedMiningBlock(player, worldId, blockTier);
     }
 
     /**
@@ -78,14 +78,15 @@ public class BlockGuiHandler {
      * @param player
      * @param blockTier String Id of block
      */
-    public void handleMilestone(Player player, int blockTier){
+    public void handleMilestone(Player player, int blockTier, String worldId){
         new MilestoneGui(
                 player,
-                blockTierService.getBlockTypeRegistryService().getBlockIdByTier(player.getWorld().getName(), blockTier),
+                blockTierService.getBlockTypeRegistryService().getBlockIdByTier(worldId, blockTier),
                 customItemRegistryService,
                 blockTierService,
                 milestoneService,
-                economyService
+                economyService,
+                worldId
         ).open();
     }
 }

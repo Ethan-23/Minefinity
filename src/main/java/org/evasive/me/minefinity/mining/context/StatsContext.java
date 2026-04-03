@@ -2,8 +2,8 @@ package org.evasive.me.minefinity.mining.context;
 
 public class StatsContext {
 
-    private float speed = 1f;
-    private float fortune = 1f;
+    private float speed = 0f;
+    private float fortune = 0f;
 
     public void addSpeed(float amount) {
         this.speed += amount;

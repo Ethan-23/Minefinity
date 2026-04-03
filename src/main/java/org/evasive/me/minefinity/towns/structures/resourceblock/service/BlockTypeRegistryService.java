@@ -1,6 +1,5 @@
 package org.evasive.me.minefinity.towns.structures.resourceblock.service;
 
-import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
 import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
 
@@ -38,4 +37,7 @@ public class BlockTypeRegistryService {
     }
 
 
+    public List<String> getWorldList() {
+        return blockTypeRegistry.getWorldList();
+    }
 }

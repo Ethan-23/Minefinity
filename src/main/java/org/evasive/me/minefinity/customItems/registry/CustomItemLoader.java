@@ -52,12 +52,14 @@ public class CustomItemLoader {
 
 
             if(baseCustomItem instanceof BasePickaxeItem){
+                ((BasePickaxeItem) baseCustomItem).setBreakingPower(customItemSection.getInt("breaking-power"));
                 ((BasePickaxeItem) baseCustomItem).setBaseMiningSpeed((float) customItemSection.getDouble("mining-speed"));
                 ((BasePickaxeItem) baseCustomItem).setBaseMiningFortune((float) customItemSection.getDouble("mining-fortune"));
                 ((BasePickaxeItem) baseCustomItem).setPickaxeHeadId(customItemSection.getString("pickaxe-head"));
                 ((BasePickaxeItem) baseCustomItem).setPickaxeCoreId(customItemSection.getString("pickaxe-core"));
                 ((BasePickaxeItem) baseCustomItem).setPickaxeHandleId(customItemSection.getString("pickaxe-handle"));
             }else if(baseCustomItem instanceof BasePickaxeComponent){
+                ((BasePickaxeComponent) baseCustomItem).setBreakingPower(customItemSection.getInt("breaking-power"));
                 ((BasePickaxeComponent) baseCustomItem).setMiningSpeed((float) customItemSection.getDouble("mining-speed"));
                 ((BasePickaxeComponent) baseCustomItem).setMiningFortune((float) customItemSection.getDouble("mining-fortune"));
                 for (String string : customItemSection.getStringList("pickaxe-abilities")) {

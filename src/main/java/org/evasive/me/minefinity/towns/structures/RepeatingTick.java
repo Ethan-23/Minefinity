@@ -6,7 +6,6 @@ import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.towns.structures.mines.miner.service.AutoMinerService;
 import org.evasive.me.minefinity.towns.structures.forge.smelter.service.SmelterService;
 
-import java.sql.SQLException;
 import java.util.*;
 
 public class RepeatingTick {

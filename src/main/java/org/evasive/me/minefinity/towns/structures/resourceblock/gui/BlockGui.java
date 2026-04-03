@@ -3,6 +3,7 @@ package org.evasive.me.minefinity.towns.structures.resourceblock.gui;
 import net.kyori.adventure.text.Component;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -18,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static org.evasive.me.minefinity.core.utils.guis.GenericGuiItems.backPage;
 import static org.evasive.me.minefinity.core.utils.guis.GenericGuiItems.fillerPane;
 import static org.evasive.me.minefinity.core.utils.TextConversions.intToRoman;
 
@@ -26,14 +26,17 @@ public class BlockGui extends BaseGui {
 
     private static final int INVENTORY_SIZE = 54;
     static final List<Integer> TRACK = List.of(10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34, 38, 39, 40, 41, 42);
+    static final List<Integer> WORLD_TRACK = List.of(38, 39, 40, 41, 42);
     private final BlockGuiHandler blockGuiHandler;
     private final BlockTierService blockTierService;
     private final MilestoneService milestoneService;
+    private String SELECTED_WORLD;
 
-    public BlockGui(Player player, BlockTierService blockTierService, CustomItemRegistryService customItemRegistryService, MilestoneService milestoneService, EconomyService economyService) {
+    public BlockGui(Player player, BlockTierService blockTierService, CustomItemRegistryService customItemRegistryService, MilestoneService milestoneService, EconomyService economyService, String worldId) {
         super(player, INVENTORY_SIZE, TextConversions.parse("Blocks"));
         this.blockTierService = blockTierService;
         this.milestoneService = milestoneService;
+        SELECTED_WORLD = worldId;
         this.blockGuiHandler = new BlockGuiHandler(milestoneService, customItemRegistryService, blockTierService, economyService);
         build();
     }
@@ -45,6 +48,7 @@ public class BlockGui extends BaseGui {
     protected void build() {
         buildFrame();
         buildBlocks(player);
+        buildWorlds();
     }
 
     /**
@@ -56,25 +60,42 @@ public class BlockGui extends BaseGui {
         }
     }
 
+    private void buildWorlds(){
+        List<String> worldList = blockTierService.getBlockTrackWorlds();
+        for (int i = 0; i < WORLD_TRACK.size(); i++) {
+            if(worldList.size() <= i) return;
+            String worldId = worldList.get(i);
+            String blockId = blockTierService.getBlockTypeRegistryService().getBlockList(worldId).get(0);
+            BaseBlock baseBlock = blockTierService.getBlockTypeRegistryService().getBaseBlock(blockId);
+            ItemBuilder itemBuilder = new ItemBuilder(baseBlock.material(), TextConversions.formatItemName(worldId));
+            if(SELECTED_WORLD.equals(worldId))
+                itemBuilder.addLore("<bold><green>Selected").addGlow();
+            this.inventory.setItem(WORLD_TRACK.get(i), itemBuilder.build());
+        }
+    }
+
     /**
      * Builds the block path in the gui.
      * @param player player whose data being used to build.
      */
     private void buildBlocks(Player player){
-        List<String> blockList = blockTierService.getBlockTypeRegistryService().getBlockList(player.getWorld().getName());
+        List<String> blockList = blockTierService.getBlockTypeRegistryService().getBlockList(SELECTED_WORLD);
         for(int blockTier = 0; blockTier < TRACK.size(); blockTier++){
 
-            if(blockTier >= blockList.size()) break;
+            if(blockTier >= blockList.size()){
+                this.inventory.setItem(TRACK.get(blockTier), null);
+                continue;
+            };
 
             String blockId = blockList.get(blockTier);
             BaseBlock block = blockTierService.getBlockTypeRegistryService().getBaseBlock(blockId);
 
-            boolean unlocked = blockTierService.getUnlockedMiningBlock(player) >= blockTier;
+            boolean unlocked = blockTierService.getUnlockedMiningBlock(player, SELECTED_WORLD) >= blockTier;
 
             Component name = TextConversions.parse("<gray>(<" + (unlocked ? "white" : "red") + ">" + intToRoman(blockTier+1) +"<gray>) <white>" + TextConversions.formatItemName(block.name()));
             ItemBuilder blockBuilder = new ItemBuilder(block.material(), name);
             blockBuilder.addLore(unlocked ? getBlockLore(blockId, block, player) : getLockedBlockLore(block));
-            if(blockTier == blockList.indexOf(blockTierService.getSelectedMiningBlock(player)))
+            if(blockTier == blockList.indexOf(blockTierService.getSelectedMiningBlock(player, SELECTED_WORLD)))
                 setSelected(blockBuilder);
             this.inventory.setItem(TRACK.get(blockTier), blockBuilder.build());
         }
@@ -96,10 +117,12 @@ public class BlockGui extends BaseGui {
      */
     private List<String> getBlockLore(String blockId, BaseBlock baseBlock, Player player){
         String blockHealth = String.valueOf(baseBlock.health());
+        String breakingPower = String.valueOf(baseBlock.breakingPower());
         int mTier = milestoneService.getTier(player, blockId);
         String milestoneTier = mTier == 0 ? "0" : intToRoman(mTier);
 
         return List.of(
+                "<gray>Breaking Power: <white>" + breakingPower,
                 "<gray>Block Health: <white>" + blockHealth,
                 "<gray>Milestone Tier: <aqua>" + milestoneTier,
                 "",
@@ -136,25 +159,36 @@ public class BlockGui extends BaseGui {
 
         int slot = e.getSlot();
 
+        if(WORLD_TRACK.contains(slot)){
+
+            List<String> worldList = blockTierService.getBlockTrackWorlds();
+
+            if(WORLD_TRACK.indexOf(slot) > worldList.size()-1)
+                return;
+
+            SELECTED_WORLD = blockTierService.getBlockTrackWorlds().get(WORLD_TRACK.indexOf(slot));
+            rebuildInventory();
+        }
+
         int blockTier = TRACK.indexOf(slot);
 
-        if(blockTier == -1 || blockTier >= blockTierService.getBlockTypeRegistryService().getBlockList(player.getWorld().getName()).size()) return;
+        if(blockTier == -1 || blockTier >= blockTierService.getBlockTypeRegistryService().getBlockList(SELECTED_WORLD).size()) return;
 
         Player player = (Player) e.getWhoClicked();
 
-        if(blockTier > blockTierService.getUnlockedMiningBlock(player)){
-            if(blockGuiHandler.lockedBlockClicked(player, blockTier))
+        if(blockTier > blockTierService.getUnlockedMiningBlock(player, SELECTED_WORLD)){
+            if(blockGuiHandler.lockedBlockClicked(player, blockTier, SELECTED_WORLD))
                 rebuildInventory();
             return;
         }
 
         if(e.getClick().isLeftClick()){
-            blockGuiHandler.handleSelect(player, blockTier);
+            blockGuiHandler.handleSelect(player, blockTier, SELECTED_WORLD);
             rebuildInventory();
         }
 
         if(e.getClick().isRightClick()){
-            blockGuiHandler.handleMilestone(player, blockTier);
+            blockGuiHandler.handleMilestone(player, blockTier, SELECTED_WORLD);
         }
     }
 }

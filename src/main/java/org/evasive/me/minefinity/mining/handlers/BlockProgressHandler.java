@@ -23,7 +23,6 @@ import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBl
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 import org.evasive.me.minefinity.mining.milestones.MilestoneService;
 
-import java.util.Objects;
 import java.util.UUID;
 
 public class BlockProgressHandler {
@@ -59,11 +58,16 @@ public class BlockProgressHandler {
         //Mining stats being used
         StatsContext statsContext = new StatsContext();
 
+        statsContext.addSpeed(calculateMiningProgress(basePickaxeItem));
+        statsContext.addFortune(calculateMiningFortune(basePickaxeItem));
+
         miningAbilityRunner.runOnHit(basePickaxeItem, new HitContext(player, baseBlock, statsContext));
 
-        statsContext.addSpeed(calculateMiningProgress(basePickaxeItem));
-
         float progress = statsContext.getSpeed();
+        float fortune = statsContext.getFortune();
+
+        //Bukkit.getConsoleSender().sendMessage("Mining Progress: " + progress);
+
         int health = baseBlock.health();
 
         if(progress > (float) health /MAX_SPEED_DENOMINATION)
@@ -75,10 +79,16 @@ public class BlockProgressHandler {
 
         if(miningDataMap.getBlockProgress(location, uuid) >= health){
             sendCleanPacket(player, location.getBlock());
-            miningAbilityRunner.runOnBreak(basePickaxeItem, new BreakContext(player, baseBlock));
-            blockBreak.handleBlockBreak(location, player);
+            miningAbilityRunner.runOnBreak(basePickaxeItem, new BreakContext(player, baseBlock, statsContext));
+            blockBreak.handleBlockBreak(location, player, statsContext);
+            Bukkit.getConsoleSender().sendMessage("Mining Fortune: " + fortune);
         }
 
+    }
+
+    private float calculateMiningFortune(BasePickaxeItem basePickaxeItem) {
+        PickaxeData pickaxeData = pickaxeResolver.resolve(basePickaxeItem);
+        return basePickaxeItem.calculateMiningFortune(pickaxeData.getPickaxeParts());
     }
 
     public float calculateMiningProgress(BasePickaxeItem basePickaxeItem){
@@ -111,8 +121,6 @@ public class BlockProgressHandler {
     }
 
     public void sendCleanPacket(Player player, Block block){
-
-        //if(!MinevolutionCore.miningMap.containsBlockLocation(block.getLocation()) || !MinevolutionCore.miningMap.containsPlayerAtLocation(block.getLocation(), player.getUniqueId()))return;
 
         WrapperPlayServerBlockBreakAnimation progressAnimation = new WrapperPlayServerBlockBreakAnimation(
                 miningDataMap.getBlockAnimationID(block.getLocation(), player.getUniqueId()),

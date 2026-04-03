@@ -51,7 +51,7 @@ public class PickaxeAnvilHandler {
     public boolean isCorrectTemplateTier(ItemStack pickaxe, ItemStack pickaxePart) {
         BasePickaxeComponent basePickaxeComponent = (BasePickaxeComponent) customItemRegistryService.getRegisteredBaseItem(pickaxePart);
         BasePickaxeItem basePickaxe = (BasePickaxeItem) customItemRegistryService.getRegisteredBaseItem(pickaxe);
-        int pickaxeComponentTier = basePickaxeComponent.getRequiredPickaxeTier();
+        int pickaxeComponentTier = basePickaxeComponent.getBreakingPower();
         int pickaxeTier = basePickaxe.getPickaxeTier();
         return pickaxeTier >= pickaxeComponentTier;
     }

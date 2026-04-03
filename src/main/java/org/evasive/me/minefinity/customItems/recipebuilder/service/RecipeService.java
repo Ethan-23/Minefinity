@@ -3,7 +3,6 @@ package org.evasive.me.minefinity.customItems.recipebuilder.service;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.core.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
 import org.evasive.me.minefinity.customItems.recipebuilder.data.BaseItemRecipe;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;

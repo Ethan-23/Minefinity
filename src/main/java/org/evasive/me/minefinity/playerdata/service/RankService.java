@@ -1,6 +1,9 @@
 package org.evasive.me.minefinity.playerdata.service;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.playerdata.model.PlayerRanks;
+import org.evasive.me.minefinity.playerdata.ranks.service.PermissionService;
 import org.evasive.me.minefinity.playerdata.repository.PlayerRankRepository;
 
 import java.util.Map;
@@ -10,12 +13,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RankService {
 
     private final PlayerRankRepository rankRepository;
-
+    private final PermissionService permissionService;
     // Cache for online players
     private final Map<UUID, PlayerRanks> rankCache = new ConcurrentHashMap<>();
 
-    public RankService(PlayerRankRepository rankRepository) {
+    public RankService(PlayerRankRepository rankRepository, PermissionService permissionService) {
         this.rankRepository = rankRepository;
+        this.permissionService = permissionService;
     }
 
     /**
@@ -59,6 +63,10 @@ public class RankService {
 
         ranks.setDonorRankId(donorRankId);
         rankRepository.saveRanks(uuid, ranks);
+
+        Player player = Bukkit.getOfflinePlayer(uuid).getPlayer();
+        if(player == null) return;
+        permissionService.applyPermissions(player, loadRanks(uuid));
     }
 
     /**
@@ -71,6 +79,11 @@ public class RankService {
 
         ranks.setStaffRankId(staffRankId);
         rankRepository.saveRanks(uuid, ranks);
+
+        Player player = Bukkit.getOfflinePlayer(uuid).getPlayer();
+        if(player == null) return;
+        permissionService.applyPermissions(player, loadRanks(uuid));
+
     }
 
     /**

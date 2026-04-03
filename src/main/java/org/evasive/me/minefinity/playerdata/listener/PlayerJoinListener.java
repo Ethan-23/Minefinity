@@ -1,5 +1,6 @@
 package org.evasive.me.minefinity.playerdata.listener;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,7 +16,7 @@ public class PlayerJoinListener implements Listener {
 
     private final PlayerDataService playerDataService;
     private final RankService playerRankService;
-    PermissionService permissionService;
+    private final PermissionService permissionService;
 
     public PlayerJoinListener(PlayerDataService playerDataService, RankService playerRankService, PermissionService permissionService) {
         this.playerDataService = playerDataService;
@@ -27,6 +28,7 @@ public class PlayerJoinListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
+        Bukkit.getConsoleSender().sendMessage("LOADING PLAYERS");
         playerDataService.loadPlayerAsync(player.getUniqueId(), firstJoin -> {
 
             if (firstJoin) {
@@ -34,7 +36,7 @@ public class PlayerJoinListener implements Listener {
             }
 
         });
-        playerRankService.loadRanks(uuid);
+        permissionService.applyPermissions(player, playerRankService.loadRanks(uuid));
     }
 
 }

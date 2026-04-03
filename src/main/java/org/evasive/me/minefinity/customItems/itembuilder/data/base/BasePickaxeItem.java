@@ -28,16 +28,17 @@ public class BasePickaxeItem extends BaseCustomItem {
             ItemOptions.CUSTOM_ITEM_TYPE,
             ItemOptions.MINEFINITY_ID,
             ItemOptions.RARITY,
+            ItemOptions.BREAKING_POWER,
             ItemOptions.MINING_SPEED,
             ItemOptions.MINING_FORTUNE,
             ItemOptions.PICKAXE_HEAD,
             ItemOptions.PICKAXE_CORE,
-            ItemOptions.PICKAXE_HANDLE,
-            ItemOptions.PICKAXE_TIER
+            ItemOptions.PICKAXE_HANDLE
     );
 
     private float baseMiningSpeed;
     private float baseMiningFortune;
+    private int breakingPower;
     //Eventually Update to objects when created
     private String pickaxeHeadId;
     private String pickaxeCoreId;
@@ -56,6 +57,7 @@ public class BasePickaxeItem extends BaseCustomItem {
         this.pickaxeCoreId = getOrDefault(pdc, PICKAXE_CORE_KEY, PersistentDataType.STRING, null);
         this.pickaxeHandleId = getOrDefault(pdc, PICKAXE_HANDLE_KEY, PersistentDataType.STRING, null);
         this.pickaxeTier = getOrDefault(pdc, REQUIRED_PICKAXE_TIER_KEY, PersistentDataType.INTEGER, 1);
+        this.breakingPower = getOrDefault(pdc, BREAKING_POWER_KEY, PersistentDataType.INTEGER, 1);
     }
 
     public BasePickaxeItem(String id, Material material, String displayName, Rarity rarity){
@@ -82,6 +84,10 @@ public class BasePickaxeItem extends BaseCustomItem {
 
     public String getPickaxeHandleId() {
         return pickaxeHandleId;
+    }
+
+    public int getBreakingPower() {
+        return breakingPower;
     }
 
     @Override
@@ -125,6 +131,7 @@ public class BasePickaxeItem extends BaseCustomItem {
 
         if(getFlavorText().isPresent()) lore.add(getFlavorText().get());
 
+        lore.add("<gray>Breaking Power <gold>☒ " + calculateBreakingPower(components));
         lore.add("<gray>Mining Speed <gold>⛏ " + String.format("%.2f", calculateMiningSpeed(components)));
         lore.add("<gray>Mining Fortune <gold>☘ " + String.format("%.2f", calculateMiningFortune(components)));
         lore.add("");
@@ -141,10 +148,13 @@ public class BasePickaxeItem extends BaseCustomItem {
 
                 StringBuilder componentHeader = new StringBuilder("<white>[<reset>" + setRarityColor(component.getDisplayName(), component.getRarity()) + "<reset><white>]");
 
-                if(component.getMiningSpeed() > 0)
-                    componentHeader.append(" <gold>(⛏ ").append(component.getMiningSpeed()).append(")");
-                if(component.getMiningFortune() > 0)
-                    componentHeader.append(" <gold>(☘ ").append(component.getMiningFortune()).append(")");
+                float totalMiningSpeed = component.getMiningSpeed();
+                float totalMiningFortune = component.getMiningFortune();
+
+                if(totalMiningSpeed != 0)
+                    componentHeader.append(" <gold>(⛏ ").append(totalMiningSpeed < 0 ? "<red>" : "").append(totalMiningSpeed).append("<gold>)");
+                if(totalMiningFortune != 0)
+                    componentHeader.append(" <gold>(☘ ").append(totalMiningSpeed < 0 ? "<red>" : "").append(totalMiningFortune).append("<gold>)");
 
                 lore.add(componentHeader.toString());
 
@@ -168,6 +178,16 @@ public class BasePickaxeItem extends BaseCustomItem {
         return lore;
     }
 
+    public float calculateBreakingPower(BasePickaxeComponent[] components) {
+        int breakingPower = this.breakingPower;
+        for(BasePickaxeComponent component : components) {
+            if(component == null)
+                continue;
+            breakingPower += component.getBreakingPower();
+        }
+        return Math.max(breakingPower, 1);
+    }
+
     public float calculateMiningSpeed(BasePickaxeComponent[] components) {
         float miningSpeed = this.baseMiningSpeed;
         for(BasePickaxeComponent component : components) {
@@ -175,7 +195,7 @@ public class BasePickaxeItem extends BaseCustomItem {
                 continue;
             miningSpeed += component.getMiningSpeed();
         }
-        return miningSpeed;
+        return Math.max(miningSpeed, 1f);
     }
 
     public float calculateMiningFortune(BasePickaxeComponent[] components) {
@@ -206,6 +226,10 @@ public class BasePickaxeItem extends BaseCustomItem {
 
     public void setBaseMiningFortune(float baseMiningFortune) {
         this.baseMiningFortune = baseMiningFortune;
+    }
+
+    public void setBreakingPower(int breakingPower) {
+        this.breakingPower = breakingPower;
     }
 
     public float getBaseMiningFortune() {

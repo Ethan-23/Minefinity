@@ -10,6 +10,7 @@ import org.evasive.me.minefinity.core.utils.command.CommandFeedback;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Warp implements CommandExecutor {
 
@@ -27,7 +28,7 @@ public class Warp implements CommandExecutor {
             return true;
 
         if(args.length != 1){
-            player.sendMessage(CommandFeedback.INVALID_USAGE);
+            player.sendMessage(warpService.getWarpNames().stream().toList().stream().sorted().collect(Collectors.joining(", ")));
             return true;
         }
 

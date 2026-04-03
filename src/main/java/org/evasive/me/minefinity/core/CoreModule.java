@@ -27,6 +27,7 @@ import org.evasive.me.minefinity.core.spawn.command.Spawn;
 import org.evasive.me.minefinity.core.spawn.service.SpawnService;
 import org.evasive.me.minefinity.core.warp.command.Warp;
 import org.evasive.me.minefinity.core.warp.service.WarpService;
+import org.evasive.me.minefinity.core.worlds.GenerateCustomWorlds;
 import org.evasive.me.minefinity.customItems.itembuilder.events.PlayerInputListener;
 import org.evasive.me.minefinity.core.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
@@ -47,6 +48,7 @@ public class CoreModule {
     private final BlockTypeRegistry blockTypeRegistry;
 
     public CoreModule(PlayerDataService playerDataService) {
+        new GenerateCustomWorlds().init();
         EconomyService economyService = new EconomyService(playerDataService);
         this.vanishService = new VanishService();
         this.blockTypeRegistry = new BlockTypeRegistry();

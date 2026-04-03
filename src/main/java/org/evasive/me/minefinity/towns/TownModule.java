@@ -43,6 +43,9 @@ import org.evasive.me.minefinity.towns.structures.workshop.engineer.recipes.Work
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.recipes.config.WorkshopRecipeConfig;
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.service.EngineerService;
 import org.evasive.me.minefinity.towns.worldPackets.events.ChunkLoadingEvents;
+import org.evasive.me.minefinity.core.worlds.GenerateCustomWorlds;
+import org.evasive.me.minefinity.towns.worldPackets.events.PlayerMoveListener;
+import org.evasive.me.minefinity.towns.worldPackets.events.PlayerMovePacketEvents;
 
 public class TownModule {
 
@@ -66,6 +69,7 @@ public class TownModule {
     private final NpcBehaviorRegistry npcBehaviorRegistry;
 
     public TownModule(PlayerDataService playerDataService, EconomyService economyService, CustomItemRegistryService customItemRegistryService, BackpackService backpackService, BlockTierService blockTierService, MilestoneService milestoneService, ItemPickupService itemPickupService, NpcBehaviorRegistry npcBehaviorRegistry, BlockTypeRegistry blockTypeRegistry, BlockTypeRegistryService blockTypeRegistryService) {
+
         this.customItemRegistryService = customItemRegistryService;
 
         this.recipeService = new RecipeService(backpackService, customItemRegistryService);
@@ -108,10 +112,14 @@ public class TownModule {
 
     public void enable(JavaPlugin plugin) {
         //Events
+
+        com.github.retrooper.packetevents.PacketEvents.getAPI().getEventManager().registerListener(new PlayerMovePacketEvents());
+
         PluginManager pm = plugin.getServer().getPluginManager();
         pm.registerEvents(new ChunkLoadingEvents(structureService, blockTierService), plugin);
         pm.registerEvents(new AutoMinerEvents(autoMinerService), plugin);
         pm.registerEvents(new SmelterEvents(smelterService), plugin);
+        pm.registerEvents(new PlayerMoveListener(structureService), plugin);
 
         //Starts machine automation
         new RepeatingTick(autoMinerService, smelterService).startAutomation();

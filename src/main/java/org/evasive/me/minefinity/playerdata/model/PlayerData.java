@@ -40,8 +40,11 @@ public class PlayerData {
     public PlayerData(UUID uuid) {
         this.uuid = uuid;
         this.username = Bukkit.getOfflinePlayer(uuid).getName();
-        this.unlockedBlockTiers = new HashMap<>(Map.of("world_overworld",0));
-        this.selectedBlockTiers = new HashMap<>(Map.of("world_overworld", "GRAVEL")); //Update eventually to add all worlds from game
+
+        //Access world registry and set all worlds to tier 1 block
+
+        this.unlockedBlockTiers = new HashMap<>(Map.of("world",0, "world_mines", 0, "world_nether", 0, "world_the_end", 0));
+        this.selectedBlockTiers = new HashMap<>(Map.of("world", "DIRT", "world_mines", "DEEPSLATE", "world_nether", "NETHERRACK", "world_the_end", "END_STONE")); //Update eventually to add all worlds from game
         this.blockMilestones = new BlockMilestone();
         this.balance = 0;
         this.townData = new TownData();
@@ -79,7 +82,7 @@ public class PlayerData {
         this.username = username;
     }
 
-    public void setUnlockedBlockTiers(Map<String, Integer> unlockedBlockTiers) {
+    public void setUnlockedBlockTiers(HashMap<String, Integer> unlockedBlockTiers) {
         this.unlockedBlockTiers = unlockedBlockTiers;
     }
 
@@ -99,9 +102,10 @@ public class PlayerData {
         this.unlockedBlockTiers.put(worldName, tier);
     }
 
+
     public int getUnlockedBlockTier(String worldName){
         if(!this.unlockedBlockTiers.containsKey(worldName)){
-            throw new IllegalArgumentException("Invalid world name: " + worldName);
+            return unlockedBlockTiers.get("world");
         }
         return this.unlockedBlockTiers.get(worldName);
     }
@@ -214,4 +218,5 @@ public class PlayerData {
     public void setBackpackStorage(Map<String, Integer> backpackStorage) {
         this.backpackStorage = backpackStorage;
     }
+
 }

@@ -3,11 +3,13 @@ package org.evasive.me.minefinity.playerdata.commands.rank.sub;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.core.utils.command.SubCommand;
 import org.evasive.me.minefinity.playerdata.model.Rank;
 import org.evasive.me.minefinity.playerdata.ranks.RankRegistry;
 import org.evasive.me.minefinity.core.utils.command.CommandFeedback;
 import org.evasive.me.minefinity.playerdata.ranks.data.RankCategory;
+import org.evasive.me.minefinity.playerdata.ranks.service.PermissionService;
 import org.evasive.me.minefinity.playerdata.service.RankService;
 
 import java.util.Optional;
@@ -15,8 +17,8 @@ import java.util.UUID;
 
 public class MineRankAddSub implements SubCommand {
 
-    RankRegistry rankRegistry;
-    RankService playerRankService;
+    private final RankRegistry rankRegistry;
+    private final RankService playerRankService;
 
     public MineRankAddSub(RankService playerRankService) {
         this.rankRegistry = RankRegistry.getInstance();
@@ -55,5 +57,7 @@ public class MineRankAddSub implements SubCommand {
         }else if(rankCategory == RankCategory.STAFF){
             playerRankService.setStaffRank(targetUUID, rankId);
         }
+
+        sender.sendMessage(TextConversions.parse("<yellow>Player had been set to " + rankId + " rank"));
     }
 }

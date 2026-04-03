@@ -49,7 +49,6 @@ public class MiningModule {
     public void enable(){
         com.github.retrooper.packetevents.PacketEvents.getAPI().getEventManager().registerListener(new SwingPacketEvents(customItemRegistryService, selectedBlockMap, miningDataMap, animationIDs, blockProgressHandler));
         com.github.retrooper.packetevents.PacketEvents.getAPI().getEventManager().registerListener(new BlockPacketEvents());
-        com.github.retrooper.packetevents.PacketEvents.getAPI().getEventManager().registerListener(new PlayerMovePacketEvents());
     }
 
     public void disable(){

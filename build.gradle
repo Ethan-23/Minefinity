@@ -21,6 +21,10 @@ repositories {
     }
     maven { url = uri("https://repo.codemc.io/repository/maven-releases/") }
     //maven { url = "https://maven.evokegames.gg/snapshots"}
+    maven {
+        name = 'lunarclient'
+        url = 'https://repo.lunarclient.dev'
+    }
 }
 
 dependencies {
@@ -30,6 +34,8 @@ dependencies {
     implementation("com.github.retrooper:packetevents-spigot:2.11.1")
     compileOnly 'com.mojang:authlib:1.5.25' // or latest version
     implementation 'com.mysql:mysql-connector-j:8.3.0'
+    compileOnly 'com.lunarclient:apollo-api:1.2.4'
+    compileOnly 'com.lunarclient:apollo-extra-adventure4:1.2.4'
 }
 
 tasks {

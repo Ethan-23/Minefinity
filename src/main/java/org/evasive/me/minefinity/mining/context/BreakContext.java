@@ -9,10 +9,12 @@ public class BreakContext {
 
     private final Player player;
     private final BaseBlock baseBlock;
+    private final StatsContext statsContext;
 
-    public BreakContext(Player player, BaseBlock baseBlock) {
+    public BreakContext(Player player, BaseBlock baseBlock, StatsContext statsContext) {
         this.player = player;
         this.baseBlock = baseBlock;
+        this.statsContext = statsContext;
     }
 
     public Player getPlayer() {
@@ -25,5 +27,9 @@ public class BreakContext {
 
     public BaseBlock getBaseBlock() {
         return baseBlock;
+    }
+
+    public StatsContext getStatsContext() {
+        return statsContext;
     }
 }

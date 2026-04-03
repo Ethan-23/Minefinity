@@ -82,17 +82,32 @@ public enum ItemOptions {
                 }
             }
     ),
-    PICKAXE_TIER(
+    BREAKING_POWER(
             Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE,
             Integer.class,
-            builder -> ((BasePickaxeItem) builder).getPickaxeTier(),
-            (builder, value) -> ((BasePickaxeItem) builder).setPickaxeTier((Integer) value)
+            builder -> {
+                if (builder instanceof BasePickaxeItem item) {
+                    return item.getBreakingPower();
+                }
+                if (builder instanceof BasePickaxeComponent component) {
+                    return component.getBreakingPower();
+                }
+                return 0f;
+            },
+            (builder, value) -> {
+                if (builder instanceof BasePickaxeItem item) {
+                    item.setBreakingPower((int)value);
+                }
+                if (builder instanceof BasePickaxeComponent component) {
+                    component.setBreakingPower((int)value);
+                }
+            }
     ),
-    COMPONENT_TIER(
-            Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE,
+    REQUIRED_BREAKING_POWER(
+            Material.ANVIL,
             Integer.class,
-            builder -> ((BasePickaxeComponent) builder).getRequiredPickaxeTier(),
-            (builder, value) -> ((BasePickaxeComponent) builder).setRequiredPickaxeTier((Integer) value)
+            builder -> ((BasePickaxeComponent) builder).getRequiredBreakingPower(),
+            (builder, value) -> ((BasePickaxeComponent) builder).setRequiredBreakingPower((int) value)
     ),
     PICKAXE_HEAD(
             Material.IRON_INGOT,
@@ -171,7 +186,7 @@ public enum ItemOptions {
             Boolean.class,
             BaseCustomItem::isSoulbound,
             (builder, value) -> builder.setSoulbound((Boolean)value)
-    ),
+    )
 
     ;
 

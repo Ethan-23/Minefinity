@@ -24,21 +24,23 @@ public class BasePickaxeComponent extends BaseCustomItem {
             ItemOptions.MINEFINITY_ID,
             ItemOptions.RARITY,
             ItemOptions.COMPONENT_ABILITY,
-            ItemOptions.COMPONENT_TIER,
+            ItemOptions.BREAKING_POWER,
+            ItemOptions.REQUIRED_BREAKING_POWER,
             ItemOptions.MINING_SPEED,
             ItemOptions.MINING_FORTUNE
     );
 
+    private int requiredBreakingPower;
     private float miningSpeed;
     private float miningFortune;
-    private int requiredPickaxeTier;
+    private int breakingPower;
     private final List<String> pickaxeAbilityList;
 
     public BasePickaxeComponent (String id, Material material, String name, Rarity rarity) {
         super(id, material, name, rarity);
         this.miningSpeed = 0;
         this.miningFortune = 0;
-        this.requiredPickaxeTier = 1;
+        this.breakingPower = 1;
         this.pickaxeAbilityList =  new ArrayList<>(List.of());
     }
 
@@ -48,9 +50,10 @@ public class BasePickaxeComponent extends BaseCustomItem {
         ItemMeta meta = itemStack.getItemMeta();
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
 
-        this.requiredPickaxeTier = getOrDefault(pdc, REQUIRED_PICKAXE_TIER_KEY, PersistentDataType.INTEGER, 1);
+        this.breakingPower = getOrDefault(pdc, REQUIRED_PICKAXE_TIER_KEY, PersistentDataType.INTEGER, 1);
         this.miningSpeed = getOrDefault(pdc, MINING_SPEED_KEY, PersistentDataType.FLOAT, 0f);
         this.miningFortune = getOrDefault(pdc, MINING_FORTUNE_KEY, PersistentDataType.FLOAT, 0f);
+        this.breakingPower = getOrDefault(pdc, BREAKING_POWER_KEY, PersistentDataType.INTEGER, 1);
 
         if(pdc.has(PICKAXE_ABILITY_KEY)){
 
@@ -66,12 +69,20 @@ public class BasePickaxeComponent extends BaseCustomItem {
         }
     }
 
-    public int getRequiredPickaxeTier() {
-        return requiredPickaxeTier;
+    public int getBreakingPower() {
+        return breakingPower;
     }
 
-    public void setRequiredPickaxeTier(int requiredPickaxeTier) {
-        this.requiredPickaxeTier = requiredPickaxeTier;
+    public int getRequiredBreakingPower() {
+        return requiredBreakingPower;
+    }
+
+    public void setBreakingPower(int breakingPower) {
+        this.breakingPower = breakingPower;
+    }
+
+    public void setRequiredBreakingPower(int requiredBreakingPower) {
+        this.requiredBreakingPower = requiredBreakingPower;
     }
 
     public List<String> getPickaxeAbilityList() {
@@ -107,10 +118,12 @@ public class BasePickaxeComponent extends BaseCustomItem {
         if(getFlavorText().isPresent())
             lore.add(getFlavorText().get());
 
-        if(miningSpeed > 0)
-            lore.add("<gray>Mining Speed: <gold>⛏ " + miningSpeed);
-        if(miningFortune > 0)
-            lore.add("<gray>Mining Fortune: <gold>☘ " + miningFortune);
+        if(breakingPower != 0)
+            lore.add("<gray>Breaking Power: <gold>☒ " + (breakingPower < 0 ? "<red>" : "") + breakingPower);
+        if(miningSpeed != 0)
+            lore.add("<gray>Mining Speed: <gold>⛏ " + (miningSpeed < 0 ? "<red>" : "") + miningSpeed);
+        if(miningFortune != 0)
+            lore.add("<gray>Mining Fortune: <gold>☘ " + (miningFortune < 0 ? "<red>" : "")  + miningFortune);
         lore.add("");
         for(String pickaxeAbilityId : pickaxeAbilityList){
             lore.add(PickaxeAbilities.valueOf(pickaxeAbilityId).getAbilityDisplay());
@@ -124,7 +137,7 @@ public class BasePickaxeComponent extends BaseCustomItem {
     public ItemStack buildItem() {
         return new ItemBuilder(super.buildItem())
                 .addPersistentDataContainer(PICKAXE_ABILITY_KEY, PersistentDataType.STRING, String.join(";;", pickaxeAbilityList))
-                .addPersistentDataContainer(REQUIRED_PICKAXE_TIER_KEY, PersistentDataType.INTEGER, requiredPickaxeTier)
+                .addPersistentDataContainer(REQUIRED_PICKAXE_TIER_KEY, PersistentDataType.INTEGER, breakingPower)
                 .addPersistentDataContainer(MINING_SPEED_KEY, PersistentDataType.FLOAT, miningSpeed)
                 .addPersistentDataContainer(MINING_FORTUNE_KEY, PersistentDataType.FLOAT, miningFortune)
                 .build();

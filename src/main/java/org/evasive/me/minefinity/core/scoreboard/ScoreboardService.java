@@ -1,6 +1,7 @@
 package org.evasive.me.minefinity.core.scoreboard;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -13,7 +14,6 @@ import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 
 import java.time.LocalDateTime;
 
@@ -53,10 +53,13 @@ public class ScoreboardService {
             board.resetScores(entry);
         }
 
-        int playerBlockTier = playerDataService.getPlayerData(player.getUniqueId()).getUnlockedBlockTier(player.getWorld().getName());
+        String worldName = player.getWorld().getName();
+
+        int playerBlockTier = playerDataService.getPlayerData(player.getUniqueId()).getUnlockedBlockTier(worldName);
+
         String blockTierRoman = intToRoman(playerBlockTier + 1);
         //Bukkit.getConsoleSender().sendMessage();
-        BaseBlock baseBlock = blockTypeRegistry.getBlock(blockTypeRegistry.getBlockList(player.getWorld().getName()).get(playerBlockTier));
+        BaseBlock baseBlock = blockTypeRegistry.getBlock(blockTypeRegistry.getBlockList(worldName).get(playerBlockTier));
 
         // Here you can add other main stats (e.g., player currency, login time, etc.)
         addScore(board, objective, "§r", 9);

@@ -120,7 +120,7 @@ public class ItemCreationGui extends BaseGui {
             new ConfirmationGui(player, this, p -> {
                 player.sendMessage(TextConversions.parse("<green>Item has been saved to the registry!"));
                 customItemRegistryService.saveCustomItem(baseCustomItem);
-                //reopen();
+                reopen();
             }).open();
             return;
         }

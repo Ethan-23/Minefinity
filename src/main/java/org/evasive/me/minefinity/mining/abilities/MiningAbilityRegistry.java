@@ -2,6 +2,7 @@ package org.evasive.me.minefinity.mining.abilities;
 
 import org.evasive.me.minefinity.mining.abilities.criticalfracture.CriticalFracture;
 import org.evasive.me.minefinity.mining.abilities.criticalfracture.data.CriticalMap;
+import org.evasive.me.minefinity.mining.abilities.earlybird.EarlyBird;
 import org.evasive.me.minefinity.mining.abilities.structuredforce.StructuredForce;
 import org.evasive.me.minefinity.mining.abilities.structuredforce.data.StreakMap;
 import org.evasive.me.minefinity.mining.utils.AnimationIDs;
@@ -24,6 +25,7 @@ public class MiningAbilityRegistry {
     private void initializeAbilities(){
         abilities.put(PickaxeAbilities.CRITICAL_FRACTURE.name(), new CriticalFracture(new CriticalMap()));
         abilities.put(PickaxeAbilities.STRUCTURED_FORCE.name(), new StructuredForce(new StreakMap()));
+        abilities.put(PickaxeAbilities.EARLY_BIRD.name(), new EarlyBird());
     }
 
     public MiningAbility getAbility(String abilityId){

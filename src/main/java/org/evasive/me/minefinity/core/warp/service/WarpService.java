@@ -6,6 +6,7 @@ import org.evasive.me.minefinity.Minefinity;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class WarpService {
 
@@ -51,6 +52,10 @@ public class WarpService {
             warpConfiguration.set(entry.getKey(), entry.getValue());
         }
         Minefinity.getCore().saveConfig();
+    }
+
+    public Set<String> getWarpNames(){
+        return warps.keySet();
     }
 
 }

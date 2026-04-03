@@ -44,7 +44,7 @@ public class ItemCreationHandler {
             try {
                 number = Float.parseFloat(input);
                 //Change to int or round to 2nd number
-                if(number < 0){
+                if(number < 0 && clickedOption != ItemOptions.MINING_FORTUNE && clickedOption != ItemOptions.MINING_SPEED){
                     player.sendMessage(TextConversions.parse("<red>Number Must be positive"));
                     itemCreationGui.reopen();
                     return;
@@ -95,6 +95,15 @@ public class ItemCreationHandler {
             if(input.equalsIgnoreCase("cancel")){
                 itemCreationGui.reopen();
                 return;
+            }
+
+            if(clickedOption == ItemOptions.MINEFINITY_ID){
+                if(input.contains(" ")){
+                    player.sendMessage(TextConversions.parse("<red>Minefinity ID cannot contain spaces"));
+                    itemCreationGui.reopen();
+                    return;
+                }
+
             }
 
             if(clickedOption == ItemOptions.MATERIAL || clickedOption == ItemOptions.VISUAL_MATERIAL){

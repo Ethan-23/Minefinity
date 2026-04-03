@@ -50,6 +50,7 @@ public class RegistryConfigHandler {
 
         switch (item) {
             case BasePickaxeItem basePickaxeItem -> {
+                individualItemSection.set("breaking-power", basePickaxeItem.getBreakingPower());
                 individualItemSection.set("mining-speed", basePickaxeItem.getBaseMiningSpeed());
                 individualItemSection.set("mining-fortune", basePickaxeItem.getBaseMiningFortune());
                 individualItemSection.set("pickaxe-head", basePickaxeItem.getPickaxeHeadId());
@@ -57,12 +58,14 @@ public class RegistryConfigHandler {
                 individualItemSection.set("pickaxe-handle", basePickaxeItem.getPickaxeHandleId());
             }
             case BasePickaxeComponent basePickaxeComponent -> {
-                    individualItemSection.set("pickaxe-abilities", basePickaxeComponent.getPickaxeAbilityList());
-                    individualItemSection.set("mining-speed", basePickaxeComponent.getMiningSpeed());
-                    individualItemSection.set("mining-fortune", basePickaxeComponent.getMiningFortune());
+                individualItemSection.set("breaking-power", basePickaxeComponent.getBreakingPower());
+                individualItemSection.set("pickaxe-abilities", basePickaxeComponent.getPickaxeAbilityList());
+                individualItemSection.set("mining-speed", basePickaxeComponent.getMiningSpeed());
+                individualItemSection.set("mining-fortune", basePickaxeComponent.getMiningFortune());
             }
-            case BaseFuelItem baseFuelItem ->
-                    individualItemSection.set("fuel-amount", baseFuelItem.getFuelAmount());
+            case BaseFuelItem baseFuelItem -> {
+                individualItemSection.set("fuel-amount", baseFuelItem.getFuelAmount());
+            }
             case BaseBackpackItem baseBackpackItem -> {
                 individualItemSection.set("storage-amount", baseBackpackItem.getStoredItemAmount());
                 individualItemSection.set("storage-list", baseBackpackItem.getStoredItemIdList());

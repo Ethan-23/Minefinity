@@ -11,31 +11,47 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
+import org.evasive.me.minefinity.core.utils.TextConversions;
+import org.evasive.me.minefinity.towns.structures.data.Structure;
+import org.evasive.me.minefinity.towns.structures.service.StructureService;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class PlayerMovePacketEvents extends PacketListenerAbstract {
+
+    private final static String MINING_CENTER_TAG = "minefinity_town_center";
 
     @Override
     public void onPacketReceive(PacketReceiveEvent event) {
         if(event.getPacketType() == PacketType.Play.Client.PLAYER_POSITION_AND_ROTATION || event.getPacketType() == PacketType.Play.Client.PLAYER_POSITION || event.getPacketType() == PacketType.Play.Client.PLAYER_ROTATION){
 
             Player player = event.getPlayer();
+
+            if(getRegionAtLocation(player.getLocation()) == null)
+                return;
+
             checkForMiningRegion(player);
         }
     }
 
     public void checkForMiningRegion(Player player){
-        if(player.getAttribute(Attribute.BLOCK_BREAK_SPEED) == null) {
+        if(player.getAttribute(Attribute.BLOCK_BREAK_SPEED) == null)
             player.registerAttribute(Attribute.BLOCK_BREAK_SPEED);
+
+        if(getRegionAtLocation(player.getLocation()).getId().equals(MINING_CENTER_TAG)){
+            player.getAttribute(Attribute.BLOCK_BREAK_SPEED).setBaseValue(0);
+        }else{
+            player.getAttribute(Attribute.BLOCK_BREAK_SPEED).setBaseValue(1);
         }
         //Makes it so if you enter the area of the main block break speed attr set to 0
-        if(getRegionAtLocation(player.getLocation()) == null){
-            player.getAttribute(Attribute.BLOCK_BREAK_SPEED).setBaseValue(1);
-        } else if(getRegionAtLocation(player.getLocation()).getId().equals("minefinity_town_center")){
-            player.getAttribute(Attribute.BLOCK_BREAK_SPEED).setBaseValue(0);
-        }
     }
 
     public ProtectedRegion getRegionAtLocation(org.bukkit.Location location) {

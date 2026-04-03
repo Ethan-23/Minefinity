@@ -1,7 +1,5 @@
 package org.evasive.me.minefinity.mining.context;
 
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
 

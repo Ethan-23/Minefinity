@@ -38,10 +38,13 @@ public class PlayerRanks {
         this.donorRankId = donorRankId;
     }
 
-    public String getCombinedPrefix() {
-        String staffPrefix = getStaffRank() != null ? getStaffRank().getPrefix() : "";
-        String donorPrefix = getDonorRank() != null ? getDonorRank().getPrefix() : "";
-        return (staffPrefix + " " + donorPrefix).trim();
+    public String getWeightedPrefix() {
+
+        if(getStaffRank() != null)
+            return getStaffRank().getPrefix();
+        else if(getDonorRank() != null)
+            return getDonorRank().getPrefix();
+        return "";
     }
 
     public Set<String> getAllPermissions() {

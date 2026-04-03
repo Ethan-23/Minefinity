@@ -7,12 +7,12 @@ import java.util.*;
 public class BlockTypeRegistry {
 
     //TrackId, List<BlockIds>
-    private final Map<String, List<String>> blockTracks;
+    private final LinkedHashMap<String, List<String>> blockTracks;
     //BlockId, BaseBlock
     private final Map<String, BaseBlock> blockTypes;
 
     public BlockTypeRegistry() {
-        this.blockTracks = new HashMap<>();
+        this.blockTracks = new LinkedHashMap<>();
         this.blockTypes = new HashMap<>();
     }
 
@@ -39,5 +39,9 @@ public class BlockTypeRegistry {
 
     public Map<String, BaseBlock> getBlockTypes(){
         return Collections.unmodifiableMap(this.blockTypes);
+    }
+
+    public List<String> getWorldList() {
+        return this.blockTracks.keySet().stream().toList();
     }
 }

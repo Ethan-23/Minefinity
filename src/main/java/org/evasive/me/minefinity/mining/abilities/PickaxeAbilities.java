@@ -21,7 +21,7 @@ public enum PickaxeAbilities {
             Rarity.RADIANT
     ),
     EARLY_BIRD(
-            "Increased mining speed on tier 1 resources.",
+            "Increased mining speed on Breaking Power 1 resources.",
             Rarity.MINOR
     ),
     FRACTURED_VEIN(

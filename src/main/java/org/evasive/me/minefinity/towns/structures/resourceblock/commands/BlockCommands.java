@@ -33,7 +33,7 @@ public class BlockCommands implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if (!(commandSender instanceof Player player))
             return true;
-        new BlockGui(player, blockTierService, customItemRegistryService, milestoneService, economyService).open();
+        new BlockGui(player, blockTierService, customItemRegistryService, milestoneService, economyService, player.getWorld().getName()).open();
         return true;
     }
 }

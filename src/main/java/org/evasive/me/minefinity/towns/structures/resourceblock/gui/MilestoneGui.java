@@ -31,6 +31,7 @@ public class MilestoneGui extends BaseGui {
     public final static int BACK_BUTTON = 45;
     public final static List<Integer> TRACK = List.of(28,29,30,31,32,33,34);
     public final String blockId;
+    private final String SELECTED_WORLD;
 
     String COMPLETED = "<bold><green>COMPLETED";
     String IN_PROGRESS = "<bold><yellow>IN PROGRESS";
@@ -40,13 +41,14 @@ public class MilestoneGui extends BaseGui {
     private final EconomyService economyService;
     private final CustomItemRegistryService customItemRegistryService;
 
-    public MilestoneGui(Player player, String blockId, CustomItemRegistryService customItemRegistryService, BlockTierService blockTierService, MilestoneService milestoneService, EconomyService economyService) {
+    public MilestoneGui(Player player, String blockId, CustomItemRegistryService customItemRegistryService, BlockTierService blockTierService, MilestoneService milestoneService, EconomyService economyService, String worldId) {
         super(player, INVENTORY_SIZE, TextConversions.parse("Milestones"));
         this.blockId = blockId;
         this.blockTierService = blockTierService;
         this.milestoneService = milestoneService;
         this.economyService = economyService;
         this.customItemRegistryService = customItemRegistryService;
+        SELECTED_WORLD = worldId;
         build();
     }
 
@@ -106,7 +108,7 @@ public class MilestoneGui extends BaseGui {
         int slot = e.getSlot();
 
         if(slot == BACK_BUTTON){
-            new BlockGui(player, blockTierService, customItemRegistryService, milestoneService, economyService).open();
+            new BlockGui(player, blockTierService, customItemRegistryService, milestoneService, economyService, SELECTED_WORLD).open();
         }
 
     }

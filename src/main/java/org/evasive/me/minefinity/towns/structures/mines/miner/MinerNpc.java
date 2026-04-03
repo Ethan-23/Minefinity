@@ -1,7 +1,6 @@
 package org.evasive.me.minefinity.towns.structures.mines.miner;
 
 import org.bukkit.entity.Player;
-import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.customItems.framework.ItemPickupService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.mines.miner.gui.main.MinerMainGui;

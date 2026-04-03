@@ -1,7 +1,6 @@
 package org.evasive.me.minefinity.mining.milestones;
 
 import org.bukkit.entity.Player;
-import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTypeRegistryService;
