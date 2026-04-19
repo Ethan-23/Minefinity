@@ -2,6 +2,7 @@ package org.evasive.me.minefinity.towns.structures.mines.miner.service;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.evasive.me.minefinity.playerdata.stats.data.Stats;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.playerdata.model.PlayerData;
@@ -111,7 +112,7 @@ public class AutoMinerService {
         if(autoMiner.getPickaxeId() == null) return;
         BasePickaxeItem basePickaxeItem =(BasePickaxeItem) customItemRegistryService.getBaseItemById(autoMiner.getPickaxeId());
         if(basePickaxeItem == null) return;
-        float progressPerTick = basePickaxeItem.getBaseMiningSpeed();
+        float progressPerTick = basePickaxeItem.getStatsMap().get(Stats.MINING_SPEED.name());
 
         if(progressPerTick > blockHardness / BlockProgressHandler.MAX_SPEED_DENOMINATION)
             progressPerTick = blockHardness / BlockProgressHandler.MAX_SPEED_DENOMINATION;

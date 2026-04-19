@@ -1,7 +1,9 @@
 package org.evasive.me.minefinity.towns.structures.forge.smelter.service;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.customItems.framework.ItemPickupService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 
@@ -25,13 +27,23 @@ public class SmelterHandler {
         Map<String, Integer> itemMap = smelterService.getOutput(player);
 
         for (Map.Entry<String, Integer> entry : itemMap.entrySet()) {
+
             int remaining = entry.getValue();
 
-            int overflow = itemPickupService.attemptBackpackStorage(player, customItemRegistryService.getRegisteredItemStack(entry.getKey()), remaining);
+            ItemStack drop = customItemRegistryService.getRegisteredItemStack(entry.getKey());
+
+            int overflow = itemPickupService.attemptBackpackStorage(player, drop, remaining);
+
+            if(overflow > 0)
+                overflow = itemPickupService.attemptInventoryStorage(player, drop, overflow);
 
             smelterService.removeSmelterStorage(player, entry.getKey(), remaining - overflow);
 
+            if(overflow > 0){
+                itemPickupService.fullInventoryNotification(player);
+            }
         }
     }
+
 
 }

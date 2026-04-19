@@ -26,7 +26,8 @@ public class EngineerCraftingService {
     public void craftTool(){
         WorkshopToolsTiers resourceType = engineerService.getWorkshopCurrentResource(player, workshopMode);
         engineerService.setWorkshopToolType(player, workshopMode, resourceType);
-        engineerService.setWorkshopToolDurability(player, workshopMode, resourceType.getDurability());
+        //added durability instead of setting to handle negatives easier for crafting through a tool
+        engineerService.setWorkshopToolDurability(player, workshopMode, engineerService.getWorkshopToolDurability(player, workshopMode) + resourceType.getDurability());
         int total = engineerService.getWorkshopCurrentResourceCount(player, workshopMode);
         engineerService.setWorkshopCurrentResourceCount(player, workshopMode, total-4);
 

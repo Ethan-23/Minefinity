@@ -13,6 +13,7 @@ import org.evasive.me.minefinity.mining.handlers.BlockProgressHandler;
 import org.evasive.me.minefinity.mining.milestones.MilestoneService;
 import org.evasive.me.minefinity.mining.utils.AnimationIDs;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
+import org.evasive.me.minefinity.playerdata.stats.service.StatsService;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTypeRegistryService;
 import org.evasive.me.minefinity.towns.worldPackets.events.BlockPacketEvents;
@@ -31,7 +32,7 @@ public class MiningModule {
     private final MiningAbilityRegistry miningAbilityRegistry;
     private final MiningAbilityRunner miningAbilityRunner;
 
-    public MiningModule(PlayerDataService playerDataService, CustomItemRegistryService customItemRegistryService, BlockTypeRegistry blockTypeRegistry, ItemPickupService itemPickupService, PickaxeResolver pickaxeResolver) {
+    public MiningModule(PlayerDataService playerDataService, CustomItemRegistryService customItemRegistryService, BlockTypeRegistry blockTypeRegistry, ItemPickupService itemPickupService, PickaxeResolver pickaxeResolver, StatsService statsService) {
         this.animationIDs = new AnimationIDs();
         this.miningAbilityRegistry = new MiningAbilityRegistry(animationIDs);
         this.miningAbilityRunner = new MiningAbilityRunner(miningAbilityRegistry, pickaxeResolver);
@@ -41,7 +42,7 @@ public class MiningModule {
         this.milestoneService = new MilestoneService(playerDataService, blockTypeRegistryService);
         this.blockTierService = new BlockTierService(playerDataService, customItemRegistryService, blockTypeRegistryService, miningDataMap, selectedBlockMap);
         //Should be changed to a service that calls a handler for everything other than progress calcs
-        this.blockProgressHandler = new BlockProgressHandler(pickaxeResolver, miningAbilityRunner, blockTierService, milestoneService, miningDataMap, customItemRegistryService, itemPickupService);
+        this.blockProgressHandler = new BlockProgressHandler(pickaxeResolver, miningAbilityRunner, blockTierService, milestoneService, miningDataMap, customItemRegistryService, itemPickupService, statsService);
 
         this.customItemRegistryService = customItemRegistryService;
     }

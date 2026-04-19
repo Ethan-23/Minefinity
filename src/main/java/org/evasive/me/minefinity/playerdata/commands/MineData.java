@@ -6,6 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
+import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 import org.evasive.me.minefinity.towns.structures.service.StructureService;
 import org.evasive.me.minefinity.towns.structures.data.Structure;
@@ -27,6 +28,7 @@ public class MineData implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+
         if(strings.length == 3){
 
             if(strings[0].equals("tier")){
@@ -46,6 +48,12 @@ public class MineData implements CommandExecutor {
             }
 
             Player player = Bukkit.getPlayer(strings[1]);
+
+            if(player == null){
+                commandSender.sendMessage(CommandFeedback.INVALID_PLAYER);
+                return true;
+            }
+
             townService.setStructureLevel(player, Structure.valueOf(structureName), Integer.parseInt(strings[2]));
             return true;
         }

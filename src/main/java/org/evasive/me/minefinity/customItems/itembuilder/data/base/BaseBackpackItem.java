@@ -72,8 +72,8 @@ public class BaseBackpackItem extends BaseCustomItem {
     //Update lore to take multiple lines if too long
     @Override
     protected List<String> getLore() {
-        List<String> lore = new ArrayList<>();
-        if(getFlavorText().isPresent()) lore.add(getFlavorText().get());
+        List<String> lore = super.getLore();
+
         lore.addAll(List.of(
                 "<gray>Item pickups go directly into your backpack",
                 "",
@@ -83,9 +83,7 @@ public class BaseBackpackItem extends BaseCustomItem {
                 "",
                 "<gray>Capacity <yellow>" + getStoredItemAmount() + " of each held item",
                 "",
-                "<yellow>Right Click to open backpack!",
-                "",
-                buildItemRarity(getRarity(), getCustomItemType())
+                "<yellow>Right Click to open backpack!"
         ));
         return lore;
     }

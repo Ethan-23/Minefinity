@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.playerdata.model.PlayerData;
 import org.evasive.me.minefinity.playerdata.repository.PlayerDataRepository;
+import org.evasive.me.minefinity.playerdata.stats.service.StatsService;
 
 import java.util.Map;
 import java.util.Optional;

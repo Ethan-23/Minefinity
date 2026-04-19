@@ -2,6 +2,7 @@ package org.evasive.me.minefinity.towns.structures.forge.pickaxeanvil;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.evasive.me.minefinity.playerdata.stats.data.Stats;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.forge.pickaxeanvil.gui.PickaxeAnvilGui;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
@@ -51,7 +52,7 @@ public class PickaxeAnvilHandler {
     public boolean isCorrectTemplateTier(ItemStack pickaxe, ItemStack pickaxePart) {
         BasePickaxeComponent basePickaxeComponent = (BasePickaxeComponent) customItemRegistryService.getRegisteredBaseItem(pickaxePart);
         BasePickaxeItem basePickaxe = (BasePickaxeItem) customItemRegistryService.getRegisteredBaseItem(pickaxe);
-        int pickaxeComponentTier = basePickaxeComponent.getBreakingPower();
+        int pickaxeComponentTier = basePickaxeComponent.getStatAmount(Stats.BREAKING_POWER);
         int pickaxeTier = basePickaxe.getPickaxeTier();
         return pickaxeTier >= pickaxeComponentTier;
     }

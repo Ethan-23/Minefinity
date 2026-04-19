@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
+import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseFuelItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
@@ -52,7 +53,7 @@ public class SmelterGui extends BaseGui {
 
     @Override
     protected void build() {
-        buildBorder();
+        GuiUtils.fillGui(inventory);
         buildFuel();
         buildOutput();
         buildStatus();
@@ -89,8 +90,9 @@ public class SmelterGui extends BaseGui {
         CustomItem currentSmelt = customItemRegistryService.getBaseItemById(smelterService.getCurrentlySmelting(player));
 
         if(currentSmelt != null) {
+            String outputId = smelterRecipeManager.getRecipe(currentSmelt.getID()).getResult();
             itemBuilder.setDisplayName("<yellow>Smelting").setItemModel(Material.CAMPFIRE.getKey());
-            itemBuilder.addLore("<gray>Item: <green>" + currentSmelt.getID());
+            itemBuilder.addLore("<gray>Item: <green>" + TextConversions.formatItemName(outputId));
             itemBuilder.addLore("<gray>Time Left: <gold>" + (smelterRecipeManager.getRecipe(currentSmelt.getID()).getFuelCost() - smelterService.getCurrentSmeltProgress(player)) + "s");
         }
 
@@ -128,7 +130,7 @@ public class SmelterGui extends BaseGui {
 
             CustomItem customItem = customItemRegistryService.getRegisteredBaseItem(entry.getKey());
 
-            itemBuilder.addLore(customItemRegistryService.isRegistered(entry.getKey()) ? customItem.getID() + " x" + entry.getValue() : "<bold><red>Null (" + entry.getKey()+")" + " x" + entry.getValue());
+            itemBuilder.addLore(customItemRegistryService.isRegistered(entry.getKey()) ? TextConversions.buildRarityColor(customItem.getID(), customItem.getBaseItem().getRarity()) + " <gray>x" + entry.getValue() : "<bold><red>Null (" + entry.getKey()+")" + " x" + entry.getValue());
         }
         inventory.setItem(OUTPUT_SLOT, itemBuilder.build());
     }
@@ -137,13 +139,6 @@ public class SmelterGui extends BaseGui {
         ItemBuilder itemBuilder = new ItemBuilder(Material.KNOWLEDGE_BOOK, TextConversions.parse("<bold><yellow>Smelter"));
         itemBuilder.addLore("<gray>Input items you want to smelt on the left side. The smelter will automatically smelt items after their smelt time if there is enough fuel.");
         inventory.setItem(INFORMATION_SLOT, itemBuilder.build());
-    }
-
-    private void buildBorder(){
-        for(int i = 0; i < INVENTORY_SIZE; i++){
-            if(INPUT_SLOTS.contains(i) || List.of(STATUS_SLOT, OUTPUT_SLOT, INFORMATION_SLOT, FUEL_SLOT, RECIPE_SLOT).contains(i)) continue;
-            inventory.setItem(i, fillerPane);
-        }
     }
 
     @Override

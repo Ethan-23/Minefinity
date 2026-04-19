@@ -76,6 +76,12 @@ public class BlockTierService {
         return customItemRegistryService.getRegisteredItemStack(baseBlock.blockDropId());
     }
 
+    public ItemStack getSelectedSpecialDrop(Player player){
+        String specialBlockId = getPlayerData(player).getSelectedBlockTier(player.getWorld().getName());
+        BaseBlock baseBlock = blockTypeRegistryService.getBaseBlock(specialBlockId);
+        return customItemRegistryService.getRegisteredItemStack(baseBlock.specialBlockDropId());
+    }
+
     public double getBlockUnlockCost(Player player, String worldId){
         return blockTypeRegistryService.getNextUnlockCost(getPlayerData(player).getUnlockedBlockTier(worldId), worldId);
     }
@@ -109,5 +115,9 @@ public class BlockTierService {
 
     public BlockTypeRegistryService getBlockTypeRegistryService() {
         return blockTypeRegistryService;
+    }
+
+    public boolean hasWorldUnlocked(Player player, String worldId){
+        return getPlayerData(player).hasWorldUnlocked(worldId);
     }
 }

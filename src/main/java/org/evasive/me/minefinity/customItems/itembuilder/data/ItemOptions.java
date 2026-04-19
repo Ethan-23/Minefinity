@@ -1,11 +1,17 @@
 package org.evasive.me.minefinity.customItems.itembuilder.data;
 
+import com.google.common.reflect.TypeToken;
 import org.bukkit.Material;
+import org.bukkit.inventory.EquipmentSlot;
+import org.evasive.me.minefinity.playerdata.stats.data.Stats;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.*;
 import org.evasive.me.minefinity.mining.abilities.PickaxeAbilities;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -40,74 +46,20 @@ public enum ItemOptions {
             BaseCustomItem::getRarity,
             (builder, value) -> builder.setRarity((Rarity) value)
     ),
-    MINING_SPEED(
-            Material.GOLDEN_PICKAXE,
-            Float.class,
-            builder -> {
-                if (builder instanceof BasePickaxeItem item) {
-                    return item.getBaseMiningSpeed();
-                }
-                if (builder instanceof BasePickaxeComponent component) {
-                    return component.getMiningSpeed();
-                }
-                return 0f;
-            },
+    STATS(
+            Material.GRINDSTONE,
+            new TypeToken<Map<Stats, Integer>>() {}.getType(),
+            BaseCustomItem::getStatsMap,
             (builder, value) -> {
-                if (builder instanceof BasePickaxeItem item) {
-                    item.setBaseMiningSpeed((Float) value);
-                }
-                if (builder instanceof BasePickaxeComponent component) {
-                    component.setMiningSpeed((Float) value);
-                }
+                Map.Entry<?, ?> entry = (Map.Entry<?, ?>) value;
+                builder.addStatsMap((Stats) entry.getKey(), (Integer) entry.getValue());
             }
     ),
-    MINING_FORTUNE(
-            Material.DIAMOND,
-            Float.class,
-            builder -> {
-                if (builder instanceof BasePickaxeItem item) {
-                    return item.getBaseMiningFortune();
-                }
-                if (builder instanceof BasePickaxeComponent component) {
-                    return component.getMiningFortune();
-                }
-                return 0f;
-            },
-            (builder, value) -> {
-                if (builder instanceof BasePickaxeItem item) {
-                    item.setBaseMiningFortune((Float) value);
-                }
-                if (builder instanceof BasePickaxeComponent component) {
-                    component.setMiningFortune((Float) value);
-                }
-            }
-    ),
-    BREAKING_POWER(
-            Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE,
-            Integer.class,
-            builder -> {
-                if (builder instanceof BasePickaxeItem item) {
-                    return item.getBreakingPower();
-                }
-                if (builder instanceof BasePickaxeComponent component) {
-                    return component.getBreakingPower();
-                }
-                return 0f;
-            },
-            (builder, value) -> {
-                if (builder instanceof BasePickaxeItem item) {
-                    item.setBreakingPower((int)value);
-                }
-                if (builder instanceof BasePickaxeComponent component) {
-                    component.setBreakingPower((int)value);
-                }
-            }
-    ),
-    REQUIRED_BREAKING_POWER(
-            Material.ANVIL,
-            Integer.class,
-            builder -> ((BasePickaxeComponent) builder).getRequiredBreakingPower(),
-            (builder, value) -> ((BasePickaxeComponent) builder).setRequiredBreakingPower((int) value)
+    EQUIPMENT_SLOT(
+            Material.NETHERITE_HELMET,
+            EquipmentSlot.class,
+            BaseCustomItem::getEquipmentSlots,
+            (builder, value) -> (builder).changeEquipmentList((EquipmentSlot) value)
     ),
     PICKAXE_HEAD(
             Material.IRON_INGOT,
@@ -191,18 +143,18 @@ public enum ItemOptions {
     ;
 
     private final Material material;
-    private final Class<?> type;
+    private final Type type;
     private final BiConsumer<BaseCustomItem, Object> setter;
     private final Function<BaseCustomItem, Object> getter;
 
-    ItemOptions(Material material, Class<?> type, Function<BaseCustomItem, Object> getter, BiConsumer<BaseCustomItem, Object> setter) {
+    ItemOptions(Material material, Type type, Function<BaseCustomItem, Object> getter, BiConsumer<BaseCustomItem, Object> setter) {
         this.type = type;
         this.getter = getter;
         this.setter = setter;
         this.material = material;
     }
 
-    public Class<?> getClassType() {
+    public Type getClassType() {
         return type;
     }
 
@@ -215,7 +167,7 @@ public enum ItemOptions {
     }
 
     public boolean isEnum() {
-        return type.isEnum();
+        return type instanceof Class<?> clazz && clazz.isEnum();
     }
 
     public boolean isString() {
@@ -236,6 +188,12 @@ public enum ItemOptions {
 
     public boolean isBoolean() {
         return type == Boolean.class;
+    }
+
+    public boolean isMap() {
+        return type instanceof ParameterizedType paramType
+                && paramType.getRawType() instanceof Class<?> clazz
+                && Map.class.isAssignableFrom(clazz);
     }
 
     public Material getMaterial() {

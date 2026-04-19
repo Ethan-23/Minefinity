@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.evasive.me.minefinity.core.economy.EconomyService;
 import org.evasive.me.minefinity.core.gui.BaseGui;
+import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.shops.merchant.service.MerchantHandler;
@@ -30,15 +31,8 @@ public class MerchantGui extends BaseGui {
 
     @Override
     protected void build() {
-        buildOutline();
+        GuiUtils.fillGui(inventory);
         addButtons();
-    }
-
-    private void buildOutline(){
-        for(int i = 0; i < INVENTORY_SIZE; i++){
-            if(List.of(SELL_INVENTORY_SLOT, SELL_BACKPACK_SLOT).contains(i)) continue;
-            inventory.setItem(i, fillerPane);
-        }
     }
 
     private void addButtons(){

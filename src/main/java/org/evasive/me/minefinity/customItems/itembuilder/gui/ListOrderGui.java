@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.evasive.me.minefinity.core.gui.BaseGui;
+import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 
@@ -32,15 +33,9 @@ public class ListOrderGui extends BaseGui {
 
     @Override
     protected void build() {
-        fillGui();
+        GuiUtils.fillGui(inventory);
         buildBackSlot();
         loadOptions();
-    }
-
-    private void fillGui(){
-        for(int i = 0; i < INVENTORY_SIZE; i++){
-            inventory.setItem(i, fillerPane);
-        }
     }
 
     private void buildBackSlot(){
@@ -80,6 +75,7 @@ public class ListOrderGui extends BaseGui {
         }else if(e.getClick().isRightClick() && index < editableList.size() - 1){
             Collections.swap(editableList, index, index+1);
         }
+
         itemCreationGui.updateItem();
         rebuildInventory();
     }

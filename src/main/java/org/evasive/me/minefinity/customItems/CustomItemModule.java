@@ -33,7 +33,8 @@ public class CustomItemModule {
         ItemRegistryConfigManager itemRegistryConfigManager = new ItemRegistryConfigManager();
 
         registryConfigHandler = new RegistryConfigHandler(itemRegistryConfigManager);
-        this.customItemRegistryService = new CustomItemRegistryService(customItemRegistry, registryConfigHandler);
+        CustomItemRegistryService.init(customItemRegistry, registryConfigHandler);
+        customItemRegistryService = CustomItemRegistryService.get();
 
         itemRegistryConfigManager.createItemRegistryConfig();
         new CustomItemLoader(customItemRegistry).registerConfigItems(itemRegistryConfigManager);

@@ -7,6 +7,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.evasive.me.minefinity.Minefinity;
+import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.forge.pickaxeanvil.PickaxeAnvilHandler;
 import org.evasive.me.minefinity.core.gui.BaseGui;
@@ -33,7 +34,6 @@ public class PickaxeAnvilGui extends BaseGui {
     private final ItemStack EMPTY_CORE_SLOT;
     private final ItemStack EMPTY_HANDLE_SLOT;
     private final ItemStack EMPTY_SLOT;
-    private final ItemStack FILLER_PANE = GenericGuiItems.fillerPane;
     private final CustomItemRegistryService customItemRegistryService;
     PickaxeAnvilHandler pickaxeAnvilHandler;
 
@@ -50,19 +50,12 @@ public class PickaxeAnvilGui extends BaseGui {
 
     @Override
     protected void build() {
-        fillInventory();
+        GuiUtils.fillGui(inventory, List.of(PICKAXE_SLOT));
         ItemStack pickaxe = inventory.getItem(PICKAXE_SLOT);
         if(pickaxe == null || pickaxe.getType() == Material.AIR) {
             resetSlots();
         }else {
             addPickaxeParts(pickaxe);
-        }
-    }
-
-    private void fillInventory() {
-        for (int i = 0; i < INVENTORY_SIZE; i++) {
-            if(List.of(PICKAXE_SLOT, HEAD_SLOT, CORE_SLOT, HANDLE_SLOT).contains(i)) continue;
-            inventory.setItem(i, FILLER_PANE.clone());
         }
     }
 

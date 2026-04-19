@@ -18,7 +18,9 @@ public class ItemRegistryConfigManager {
         this.itemRegistryConfigFile = new File(Minefinity.getCore().getDataFolder(), "custom-item-registry.yml");
         this.itemRegistryConfig = new YamlConfiguration();
 
-        createItemRegistryConfig(); // load first
+        if(!createItemRegistryConfig()){
+            return;
+        }
 
         ConfigurationSection itemSection = itemRegistryConfig.getConfigurationSection("items");
         if(itemSection == null)
@@ -27,15 +29,17 @@ public class ItemRegistryConfigManager {
         saveItemRegistryConfig();
     }
 
-    public void createItemRegistryConfig() {
-        if(!itemRegistryConfigFile.exists()){
-            Minefinity.getCore().saveResource("custom-item-registry.yml",false);
+    public boolean createItemRegistryConfig() {
+        if (!itemRegistryConfigFile.exists()) {
+            Minefinity.getCore().saveResource("custom-item-registry.yml", false);
         }
 
         try {
             itemRegistryConfig.load(itemRegistryConfigFile);
-        }catch (IOException | InvalidConfigurationException e){
+            return true;
+        } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
+            return false;
         }
     }
 

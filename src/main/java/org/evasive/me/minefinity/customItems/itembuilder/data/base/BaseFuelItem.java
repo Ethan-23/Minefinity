@@ -63,14 +63,8 @@ public class BaseFuelItem extends BaseCustomItem {
 
     @Override
     protected List<String> getLore() {
-        List<String> lore = new ArrayList<>();
-        if(getFlavorText().isPresent()) lore.add(getFlavorText().get());
-        lore.addAll(List.of(
-                buildItemType(getCustomItemType().name()),
-                "<gray> Efficiency: " + this.fuelAmount,
-                "",
-                buildItemRarity(getRarity(), getCustomItemType())
-        ));
+        List<String> lore = super.getLore();
+        lore.add("<gray> Efficiency: " + this.fuelAmount);
         return lore;
     }
 

@@ -15,6 +15,8 @@ import org.evasive.me.minefinity.customItems.itembuilder.events.PlayerInputListe
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +46,7 @@ public class ItemCreationHandler {
             try {
                 number = Float.parseFloat(input);
                 //Change to int or round to 2nd number
-                if(number < 0 && clickedOption != ItemOptions.MINING_FORTUNE && clickedOption != ItemOptions.MINING_SPEED){
+                if(number < 0){
                     player.sendMessage(TextConversions.parse("<red>Number Must be positive"));
                     itemCreationGui.reopen();
                     return;
@@ -179,5 +181,15 @@ public class ItemCreationHandler {
             clickedOption.apply(baseCustomItem, number);
             itemCreationGui.reopen();
         });
+    }
+
+    public void handleMap(Player player, Type type, ItemOptions clickedOption, BaseCustomItem baseCustomItem, ItemCreationGui itemCreationGui) {
+        if(!(type instanceof ParameterizedType paramType))
+            return;
+
+        Type[] typeArgs = paramType.getActualTypeArguments();
+
+        Type keyType = typeArgs[0];
+        Type valueType = typeArgs[1];
     }
 }

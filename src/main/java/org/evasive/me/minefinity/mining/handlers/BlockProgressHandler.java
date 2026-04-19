@@ -19,23 +19,29 @@ import org.evasive.me.minefinity.mining.context.BreakContext;
 import org.evasive.me.minefinity.mining.context.HitContext;
 import org.evasive.me.minefinity.mining.context.StatsContext;
 import org.evasive.me.minefinity.mining.data.MiningDataMap;
+import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
+import org.evasive.me.minefinity.playerdata.stats.data.Stats;
+import org.evasive.me.minefinity.playerdata.stats.service.StatsService;
 import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 import org.evasive.me.minefinity.mining.milestones.MilestoneService;
 
+import java.util.Map;
 import java.util.UUID;
 
 public class BlockProgressHandler {
 
     private final CustomItemRegistryService customItemRegistryService;
+    private final StatsService statsService;
     private final MiningDataMap miningDataMap;
     private final MiningAbilityRunner miningAbilityRunner;
     private final PickaxeResolver pickaxeResolver;
     BlockTierService blockTierService;
     BlockBreakHandler blockBreak;
 
-    public BlockProgressHandler(PickaxeResolver pickaxeResolver, MiningAbilityRunner miningAbilityRunner, BlockTierService blockTierService, MilestoneService milestoneService, MiningDataMap miningDataMap, CustomItemRegistryService customItemRegistryService, ItemPickupService itemPickupService) {
+    public BlockProgressHandler(PickaxeResolver pickaxeResolver, MiningAbilityRunner miningAbilityRunner, BlockTierService blockTierService, MilestoneService milestoneService, MiningDataMap miningDataMap, CustomItemRegistryService customItemRegistryService, ItemPickupService itemPickupService, StatsService statsService) {
         this.blockTierService = blockTierService;
+        this.statsService = statsService;
         this.miningDataMap = miningDataMap;
         this.pickaxeResolver = pickaxeResolver;
         this.miningAbilityRunner = miningAbilityRunner;
@@ -49,24 +55,33 @@ public class BlockProgressHandler {
     public void addBlockProgress(Location location, Player player){
         UUID uuid = player.getUniqueId();
 
+        Map<Stats, Integer> playerStats = statsService.getStats(uuid);
+
+        int breakingPower = playerStats.get(Stats.BREAKING_POWER);
+
         ItemStack item = player.getInventory().getItemInMainHand();
-        if(item.isEmpty()) return;
-        BasePickaxeItem basePickaxeItem = (BasePickaxeItem) customItemRegistryService.getRegisteredBaseItem(item);
+
+        BasePickaxeItem basePickaxeItem = null;
+
+        if(!item.isEmpty())
+            basePickaxeItem = (BasePickaxeItem) customItemRegistryService.getRegisteredBaseItem(item);
 
         BaseBlock baseBlock = blockTierService.getSelectedBaseBlock(player);
+
+        if(baseBlock.breakingPower() > breakingPower)
+            return;
 
         //Mining stats being used
         StatsContext statsContext = new StatsContext();
 
-        statsContext.addSpeed(calculateMiningProgress(basePickaxeItem));
-        statsContext.addFortune(calculateMiningFortune(basePickaxeItem));
+        if (basePickaxeItem != null){
+            statsContext.addStats(calculateTotalStats(basePickaxeItem));
+            miningAbilityRunner.runOnHit(basePickaxeItem, new HitContext(player, baseBlock, statsContext));
+        }else {
+            statsContext.addStats(statsService.getStringIdStats(player.getUniqueId()));
+        }
 
-        miningAbilityRunner.runOnHit(basePickaxeItem, new HitContext(player, baseBlock, statsContext));
-
-        float progress = statsContext.getSpeed();
-        float fortune = statsContext.getFortune();
-
-        //Bukkit.getConsoleSender().sendMessage("Mining Progress: " + progress);
+        float progress = statsContext.getSpeed() / 10f; // divide by 10 to allow for bigger numbers for better display
 
         int health = baseBlock.health();
 
@@ -79,22 +94,16 @@ public class BlockProgressHandler {
 
         if(miningDataMap.getBlockProgress(location, uuid) >= health){
             sendCleanPacket(player, location.getBlock());
-            miningAbilityRunner.runOnBreak(basePickaxeItem, new BreakContext(player, baseBlock, statsContext));
-            blockBreak.handleBlockBreak(location, player, statsContext);
-            Bukkit.getConsoleSender().sendMessage("Mining Fortune: " + fortune);
+            blockBreak.handleBlockBreak(location, player, baseBlock, basePickaxeItem, statsContext, miningAbilityRunner);
         }
 
     }
 
-    private float calculateMiningFortune(BasePickaxeItem basePickaxeItem) {
+    public Map<String, Integer> calculateTotalStats(BasePickaxeItem basePickaxeItem){
         PickaxeData pickaxeData = pickaxeResolver.resolve(basePickaxeItem);
-        return basePickaxeItem.calculateMiningFortune(pickaxeData.getPickaxeParts());
+        return basePickaxeItem.getTotalStats(pickaxeData.getPickaxeParts());
     }
 
-    public float calculateMiningProgress(BasePickaxeItem basePickaxeItem){
-        PickaxeData pickaxeData = pickaxeResolver.resolve(basePickaxeItem);
-        return basePickaxeItem.calculateMiningSpeed(pickaxeData.getPickaxeParts());
-    }
 
     private void createNewAnimation(Player player, float progress, int health, Block block) {
 

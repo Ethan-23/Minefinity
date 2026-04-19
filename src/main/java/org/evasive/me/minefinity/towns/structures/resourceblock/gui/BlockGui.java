@@ -9,6 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.economy.EconomyService;
+import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 import org.evasive.me.minefinity.mining.milestones.MilestoneService;
@@ -25,7 +26,7 @@ import static org.evasive.me.minefinity.core.utils.TextConversions.intToRoman;
 public class BlockGui extends BaseGui {
 
     private static final int INVENTORY_SIZE = 54;
-    static final List<Integer> TRACK = List.of(10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34, 38, 39, 40, 41, 42);
+    static final List<Integer> TRACK = List.of(10,11,12,13,14,15,16,19,20,21,22,23,24,25);
     static final List<Integer> WORLD_TRACK = List.of(38, 39, 40, 41, 42);
     private final BlockGuiHandler blockGuiHandler;
     private final BlockTierService blockTierService;
@@ -46,18 +47,9 @@ public class BlockGui extends BaseGui {
      */
     @Override
     protected void build() {
-        buildFrame();
+        GuiUtils.fillGui(inventory);
         buildBlocks(player);
         buildWorlds();
-    }
-
-    /**
-     * Builds the frame of the gui
-     */
-    private void buildFrame(){
-        for (int i = 0; i < INVENTORY_SIZE; i++) {
-            if (!TRACK.contains(i)) this.inventory.setItem(i, fillerPane);
-        }
     }
 
     private void buildWorlds(){
@@ -65,10 +57,13 @@ public class BlockGui extends BaseGui {
         for (int i = 0; i < WORLD_TRACK.size(); i++) {
             if(worldList.size() <= i) return;
             String worldId = worldList.get(i);
-            String blockId = blockTierService.getBlockTypeRegistryService().getBlockList(worldId).get(0);
+            String blockId = blockTierService.getBlockTypeRegistryService().getBlockList(worldId).getFirst();
             BaseBlock baseBlock = blockTierService.getBlockTypeRegistryService().getBaseBlock(blockId);
             ItemBuilder itemBuilder = new ItemBuilder(baseBlock.material(), TextConversions.formatItemName(worldId));
-            if(SELECTED_WORLD.equals(worldId))
+
+            if(!blockTierService.hasWorldUnlocked(player, worldId))
+                itemBuilder.addLore("<red>Locked");
+            else if(SELECTED_WORLD.equals(worldId))
                 itemBuilder.addLore("<bold><green>Selected").addGlow();
             this.inventory.setItem(WORLD_TRACK.get(i), itemBuilder.build());
         }
@@ -166,7 +161,14 @@ public class BlockGui extends BaseGui {
             if(WORLD_TRACK.indexOf(slot) > worldList.size()-1)
                 return;
 
-            SELECTED_WORLD = blockTierService.getBlockTrackWorlds().get(WORLD_TRACK.indexOf(slot));
+            String clickedWorldId = blockTierService.getBlockTrackWorlds().get(WORLD_TRACK.indexOf(slot));
+
+            if(!blockTierService.hasWorldUnlocked(player, clickedWorldId)){
+                player.sendMessage(TextConversions.parse("<red>You have not unlocked this world yet!"));
+                return;
+            }
+
+            SELECTED_WORLD = clickedWorldId;
             rebuildInventory();
         }
 

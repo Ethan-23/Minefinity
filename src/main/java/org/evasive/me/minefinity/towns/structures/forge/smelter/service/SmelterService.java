@@ -1,5 +1,6 @@
 package org.evasive.me.minefinity.towns.structures.forge.smelter.service;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseFuelItem;
 import org.evasive.me.minefinity.customItems.framework.CustomItemStack;
@@ -148,18 +149,13 @@ public class SmelterService {
 
         int currentProgress = getCurrentSmeltProgress(player);
 
-        //Bukkit.getConsoleSender().sendMessage(currentId);
-
-        //Need to correct entire system this check for output while the recipe map is backwards and looks for input. Think about this
-
-        //This is why im not subtrating fuel atm
-        if(smelterRecipeManager.getRecipe(currentId) == null)
+        if(smelterRecipeManager.getRecipe(currentId) == null){
             return false;
-
-        //Bukkit.getConsoleSender().sendMessage("BEANS");
+        }
 
         int totalFuelCost = smelterRecipeManager.getRecipe(currentId).getFuelCost();
         int remainingCost = totalFuelCost - currentProgress;
+
         int fuelToBurn = Math.min(progressTime, remainingFuel);
         fuelToBurn = Math.min(fuelToBurn, remainingCost);
         int progress = currentProgress + fuelToBurn;
@@ -173,10 +169,11 @@ public class SmelterService {
 
         setLastUpdated(player);
 
-        //if(progress < SmelterRecipes.valueOf(currentId).getSmelterRecipe().getFuelCost()) return true;
+        if(progress < smelterRecipeManager.getRecipes().get(currentId).getFuelCost()) return true;
 
         setCurrentSmeltProgress(player, 0);
-        getOutput(player).put(currentId, getOutput(player).getOrDefault(currentId, 0) + 1);
+        String outputId = smelterRecipeManager.getRecipes().getOrDefault(currentId, null).getResult();
+        getOutput(player).put(outputId, getOutput(player).getOrDefault(outputId, 0) + 1);
         setCurrentlySmelting(player, null);
 
         findNewRecipe(player);
@@ -217,7 +214,7 @@ public class SmelterService {
             if(amount < neededAmount) continue;
 
             customItemStack.setAmount(customItemStack.getAmount() - neededAmount);
-            setCurrentlySmelting(player, recipe.getResult());
+            setCurrentlySmelting(player, customItemId);
             return;
         }
 

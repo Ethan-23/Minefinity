@@ -1,12 +1,18 @@
 package org.evasive.me.minefinity.customItems.registry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.EquipmentSlot;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.core.registry.CustomItemRegistry;
+import org.evasive.me.minefinity.playerdata.stats.data.Stats;
 import org.evasive.me.minefinity.customItems.itembuilder.data.*;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.*;
 import org.evasive.me.minefinity.customItems.registry.config.ItemRegistryConfigManager;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class CustomItemLoader {
 
@@ -33,8 +39,36 @@ public class CustomItemLoader {
             String displayName = customItemSection.getString("display-name");
             Rarity rarity = Rarity.valueOf(customItemSection.getString("rarity"));
 
+            Set<EquipmentSlot> equipmentSlotSet =
+                    customItemSection.getStringList("equipment-slot").stream()
+                            .map(EquipmentSlot::valueOf)
+                            .collect(Collectors.toSet());
+
+            Map<String, Integer> statsMap = new HashMap<>();
+
+            ConfigurationSection statsSection = customItemSection.getConfigurationSection("stats");
+
+            if (statsSection != null) {
+                for (String key : statsSection.getKeys(false)) {
+                    try {
+                        Stats stat = Stats.valueOf(key); // convert String → Enum
+                        int value = statsSection.getInt(key);
+
+                        statsMap.put(stat.name(), value);
+                    } catch (IllegalArgumentException e) {
+                        // Optional: handle invalid stat names in config
+                        Bukkit.getLogger().warning("Invalid stat found: " + key);
+                    }
+                }
+            }
+
+
+
             CustomItemType customItemType = CustomItemType.valueOf(customItemSection.getString("custom-item-type"));
             BaseCustomItem baseCustomItem = customItemType.create(itemID, material, displayName, rarity);
+
+            baseCustomItem.setStatsMap(statsMap);
+            baseCustomItem.setEquipmentSlots(equipmentSlotSet);
             baseCustomItem.setItemType(customItemType);
 
             if(customItemSection.get("sell-value") != null)
@@ -52,16 +86,10 @@ public class CustomItemLoader {
 
 
             if(baseCustomItem instanceof BasePickaxeItem){
-                ((BasePickaxeItem) baseCustomItem).setBreakingPower(customItemSection.getInt("breaking-power"));
-                ((BasePickaxeItem) baseCustomItem).setBaseMiningSpeed((float) customItemSection.getDouble("mining-speed"));
-                ((BasePickaxeItem) baseCustomItem).setBaseMiningFortune((float) customItemSection.getDouble("mining-fortune"));
                 ((BasePickaxeItem) baseCustomItem).setPickaxeHeadId(customItemSection.getString("pickaxe-head"));
                 ((BasePickaxeItem) baseCustomItem).setPickaxeCoreId(customItemSection.getString("pickaxe-core"));
                 ((BasePickaxeItem) baseCustomItem).setPickaxeHandleId(customItemSection.getString("pickaxe-handle"));
             }else if(baseCustomItem instanceof BasePickaxeComponent){
-                ((BasePickaxeComponent) baseCustomItem).setBreakingPower(customItemSection.getInt("breaking-power"));
-                ((BasePickaxeComponent) baseCustomItem).setMiningSpeed((float) customItemSection.getDouble("mining-speed"));
-                ((BasePickaxeComponent) baseCustomItem).setMiningFortune((float) customItemSection.getDouble("mining-fortune"));
                 for (String string : customItemSection.getStringList("pickaxe-abilities")) {
                     ((BasePickaxeComponent) baseCustomItem).changePickaxeAbilityList(string);
                 }

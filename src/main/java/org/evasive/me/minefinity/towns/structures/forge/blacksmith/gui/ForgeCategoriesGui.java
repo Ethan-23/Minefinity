@@ -5,6 +5,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.gui.BaseGui;
+import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
 import org.evasive.me.minefinity.customItems.recipebuilder.service.RecipeService;
@@ -53,25 +54,22 @@ public class ForgeCategoriesGui extends BaseGui {
 
     @Override
     protected void build() {
-        buildFrame();
+        GuiUtils.fillGui(inventory);
+        buildOptions();
         buildRecipes();
     }
 
     /**
      * Builds the frame of the gui
      */
-    private void buildFrame(){
-        for (int i = 0; i < INVENTORY_SIZE; i++) {
-            switch (i){
-                case MATERIAL_CATEGORY_SLOT -> inventory.setItem(i, buildCategory(ForgeCategories.PICKAXE_TEMPLATES, this.forgeCategory));
-                case COMPONENT_CATEGORY_SLOT -> inventory.setItem(i, buildCategory(ForgeCategories.PICKAXE_HEADS, this.forgeCategory));
-                case PICKAXE_CATEGORY_SLOT -> inventory.setItem(i, buildCategory(ForgeCategories.PICKAXE_CORES, this.forgeCategory));
-                case STORAGE_CATEGORY_SLOT -> inventory.setItem(i, buildCategory(ForgeCategories.PICKAXE_HANDLES, this.forgeCategory));
-                case BACK_SLOT -> inventory.setItem(i, backPage);
-                case EXIT_SLOT -> inventory.setItem(i, exit);
-                default -> inventory.setItem(i, fillerPane);
-            }
-        }
+    private void buildOptions(){
+        inventory.setItem(MATERIAL_CATEGORY_SLOT, buildCategory(ForgeCategories.PICKAXE_TEMPLATES, this.forgeCategory));
+        inventory.setItem(COMPONENT_CATEGORY_SLOT, buildCategory(ForgeCategories.PICKAXE_HEADS, this.forgeCategory));
+        inventory.setItem(PICKAXE_CATEGORY_SLOT, buildCategory(ForgeCategories.PICKAXE_CORES, this.forgeCategory));
+        inventory.setItem(STORAGE_CATEGORY_SLOT, buildCategory(ForgeCategories.PICKAXE_HANDLES, this.forgeCategory));
+        inventory.setItem(BACK_SLOT, backPage);
+        inventory.setItem(EXIT_SLOT, exit);
+
         for(int recipeSlot : RECIPE_SLOTS){
             inventory.setItem(recipeSlot, mysteryPane);
         }
@@ -119,7 +117,7 @@ public class ForgeCategoriesGui extends BaseGui {
 
                     int amount = entry.getValue();
                     String name = baseCustomItem.getDisplayName();
-                    forgeItem.addLore(name + "<white> x" + amount).build();
+                    forgeItem.addLore(TextConversions.buildRarityColor(name, baseCustomItem.getRarity()) + "<white> x" + amount).build();
                 }else {
                     forgeItem.addLore("<red>Unknown Item <bold>" +  entry.getKey());
                 }

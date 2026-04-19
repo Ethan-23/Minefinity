@@ -44,4 +44,8 @@ public class BlockTypeRegistry {
     public List<String> getWorldList() {
         return this.blockTracks.keySet().stream().toList();
     }
+
+    public boolean hasWorld(String worldName) {
+        return this.blockTypes.containsKey(worldName);
+    }
 }

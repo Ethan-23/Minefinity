@@ -105,17 +105,20 @@ public class EngineerClickHandler {
             return;
         }
 
-        if(engineerService.getWorkshopToolDurability(player, workshopMode) < toolDurability) return;
+        int recipeDurability = workshopRecipe.getDurabilityUsage();
+
+        if(toolDurability < recipeDurability && !engineerCraftingService.canCraftNextTool())
+            return;
 
         boolean purchased = handlePurchase(player, workshopRecipe);
 
         if(!purchased) return;
 
-        engineerService.setWorkshopToolDurability(player, workshopMode, toolDurability - workshopRecipe.getDurabilityUsage());
+        engineerService.setWorkshopToolDurability(player, workshopMode, toolDurability - recipeDurability);
 
-        if(toolDurability - workshopRecipe.getDurabilityUsage() == 0 && engineerCraftingService.canCraftNextTool()){
+        if(toolDurability - recipeDurability <= 0 && engineerCraftingService.canCraftNextTool()){
             engineerCraftingService.craftTool();
-        }else if (toolDurability - workshopRecipe.getDurabilityUsage() <= 0){
+        }else if (toolDurability - recipeDurability <= 0){
             engineerService.setWorkshopToolType(player, workshopMode, null);
         }
     }

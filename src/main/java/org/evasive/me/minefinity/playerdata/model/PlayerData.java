@@ -1,11 +1,14 @@
 package org.evasive.me.minefinity.playerdata.model;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.mining.milestones.BlockMilestone;
+import org.evasive.me.minefinity.playerdata.stats.data.Stats;
 import org.evasive.me.minefinity.towns.data.TownData;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.data.BaseForgeItem;
 import org.evasive.me.minefinity.towns.structures.forge.smelter.Smelter;
 import org.evasive.me.minefinity.towns.structures.mines.miner.AutoMinerData;
+import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTypeRegistryService;
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.data.Engineer;
 
 import java.util.*;
@@ -18,6 +21,7 @@ public class PlayerData {
     //Mining Block Data
     private Map<String, Integer> unlockedBlockTiers;
     private Map<String, String> selectedBlockTiers;
+    private EnumMap<Stats, Integer> playerStats;
 
     private BlockMilestone blockMilestones;
 
@@ -41,10 +45,17 @@ public class PlayerData {
         this.uuid = uuid;
         this.username = Bukkit.getOfflinePlayer(uuid).getName();
 
+        BlockTypeRegistryService blockTypeRegistryService = BlockTypeRegistryService.getInstance();
+        String worldId = blockTypeRegistryService.getWorldList().getFirst();
         //Access world registry and set all worlds to tier 1 block
+        playerStats = new EnumMap<>(Stats.class);
 
-        this.unlockedBlockTiers = new HashMap<>(Map.of("world",0, "world_mines", 0, "world_nether", 0, "world_the_end", 0));
-        this.selectedBlockTiers = new HashMap<>(Map.of("world", "DIRT", "world_mines", "DEEPSLATE", "world_nether", "NETHERRACK", "world_the_end", "END_STONE")); //Update eventually to add all worlds from game
+        //Block setup
+        this.unlockedBlockTiers = new HashMap<>();
+        this.unlockedBlockTiers.put(worldId, 0);
+        this.selectedBlockTiers = new HashMap<>();
+        this.selectedBlockTiers.put(worldId, blockTypeRegistryService.getBlockIdByTier(worldId, 0));
+
         this.blockMilestones = new BlockMilestone();
         this.balance = 0;
         this.townData = new TownData();
@@ -57,6 +68,7 @@ public class PlayerData {
 
     public PlayerData(UUID uuid, String username, Map<String, Integer> unlockedBlockTier, Map<String, String> selectedBlockTier, BlockMilestone blockMilestones, double balance, TownData townData, AutoMinerData autoMinerData, Engineer engineer, Smelter smelter, Map<Integer, BaseForgeItem> forgeItems, Map<String, Integer> backpackStorage) {
         this.uuid = uuid;
+        playerStats = new EnumMap<>(Stats.class);
         this.username = username;
         this.unlockedBlockTiers = unlockedBlockTier;
         this.selectedBlockTiers = selectedBlockTier;
@@ -119,6 +131,10 @@ public class PlayerData {
             throw new IllegalArgumentException("Invalid world name: " + worldName);
         }
         return this.selectedBlockTiers.get(worldName);
+    }
+
+    public boolean hasWorldUnlocked(String worldName){
+        return selectedBlockTiers.containsKey(worldName);
     }
 
     public BlockMilestone getBlockMilestones() {
@@ -219,4 +235,19 @@ public class PlayerData {
         this.backpackStorage = backpackStorage;
     }
 
+    public EnumMap<Stats, Integer> getPlayerStats() {
+        return playerStats;
+    }
+
+    public void addPlayerStats(Stats stats, int amount) {
+        playerStats.put(stats, playerStats.get(stats) + amount);
+    }
+
+    public void removePlayerStats(Stats stats, int amount) {
+        playerStats.put(stats, playerStats.get(stats) + amount);
+    }
+
+    public void setPlayerStats(EnumMap<Stats, Integer> playerStats) {
+        this.playerStats = playerStats;
+    }
 }

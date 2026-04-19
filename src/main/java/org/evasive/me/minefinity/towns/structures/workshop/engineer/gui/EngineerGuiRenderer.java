@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
@@ -69,7 +70,7 @@ public class EngineerGuiRenderer {
     }
 
     public void render(Inventory inventory, int inventorySize) {
-        renderBorder(inventory, inventorySize);
+        GuiUtils.fillGui(inventory);
         renderHeader(inventory);
         renderSwapButton(inventory);
         renderShopOptions(inventory);

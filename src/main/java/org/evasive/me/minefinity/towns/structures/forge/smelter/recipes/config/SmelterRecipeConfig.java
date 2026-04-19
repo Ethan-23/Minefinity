@@ -41,7 +41,7 @@ public class SmelterRecipeConfig extends BaseConfig {
             ConfigurationSection ingredients = recipeSection.getConfigurationSection("recipe");
 
             int fuelTier = recipeSection.getInt("fuel-tier");
-            int fuelAmount = recipeSection.getInt("fuel-amount");
+            int fuelAmount = recipeSection.getInt("fuel-usage");
             int unlockLevel = recipeSection.getInt("unlock-level");
 
             String firstKey = null;

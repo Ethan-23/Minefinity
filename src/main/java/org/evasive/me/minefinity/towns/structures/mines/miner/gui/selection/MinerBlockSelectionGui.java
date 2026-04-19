@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.evasive.me.minefinity.core.gui.BaseGui;
+import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.customItems.framework.ItemPickupService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.mines.miner.service.AutoMinerService;
@@ -41,7 +42,7 @@ public class MinerBlockSelectionGui extends BaseGui {
 
     @Override
     protected void build() {
-        buildFrame();
+        GuiUtils.fillGui(inventory);
         setupButtons();
         buildBlocks(player);
     }
@@ -79,12 +80,6 @@ public class MinerBlockSelectionGui extends BaseGui {
 
     private void setupButtons() {
         inventory.setItem(BACK_SLOT, backPage);
-    }
-
-    private void buildFrame(){
-        for (int i = 0; i < INVENTORY_SIZE; i++) {
-            if (!TRACK.contains(i)) this.inventory.setItem(i, fillerPane);
-        }
     }
 
     private List<String> getBlockLore(BaseBlock baseBlock){

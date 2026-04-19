@@ -1,11 +1,16 @@
 package org.evasive.me.minefinity.customItems.itembuilder.data.base;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.evasive.me.minefinity.playerdata.stats.data.Stats;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.core.utils.TextConversions;
@@ -13,9 +18,9 @@ import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemOptions;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.lang.reflect.Type;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemKeys.*;
 import static org.evasive.me.minefinity.core.utils.TextConversions.*;
@@ -27,7 +32,9 @@ public class BaseCustomItem implements CustomItem {
             ItemOptions.DISPLAY_NAME,
             ItemOptions.CUSTOM_ITEM_TYPE,
             ItemOptions.MINEFINITY_ID,
-            ItemOptions.RARITY
+            ItemOptions.RARITY,
+            ItemOptions.STATS,
+            ItemOptions.EQUIPMENT_SLOT
     );
 
     private static final List<ItemOptions> optionalOptions = List.of(
@@ -44,6 +51,8 @@ public class BaseCustomItem implements CustomItem {
     private String displayName;
     private Rarity rarity;
     private CustomItemType itemType;
+    private Map<String, Integer> statsMap;
+    private Set<EquipmentSlot> equipmentSlots;
 
     // Optionals
     private Float value;
@@ -55,6 +64,7 @@ public class BaseCustomItem implements CustomItem {
 
 
     public BaseCustomItem(ItemStack itemStack) {
+
         this.material = itemStack.getType();
 
         ItemMeta meta = itemStack.getItemMeta();
@@ -69,6 +79,45 @@ public class BaseCustomItem implements CustomItem {
         this.soulbound = hasOrDefault(pdc, SOULBOUND_KEY) ? true : null;
         this.flavorText = getOrDefault(pdc, FLAVOR_TEXT_KEY, PersistentDataType.STRING, null);
         this.value = getOrDefault(pdc, VALUE_KEY, PersistentDataType.FLOAT, null);
+
+        if (pdc.has(EQUIPMENT_SLOT_KEY)) {
+
+            String joined = pdc.get(EQUIPMENT_SLOT_KEY, PersistentDataType.STRING);
+
+            this.equipmentSlots = new HashSet<>();
+
+            if (joined != null && !joined.isEmpty()) {
+                for (String slot : joined.split(";;")) {
+                    try {
+                        equipmentSlots.add(EquipmentSlot.valueOf(slot));
+                    } catch (IllegalArgumentException e) {
+                        Bukkit.getConsoleSender().sendMessage("Invalid equipment slot: " + slot);
+                    }
+                }
+            }
+
+        } else {
+            this.equipmentSlots = new HashSet<>();
+        }
+
+        this.statsMap = new HashMap<>();
+
+        if (pdc.has(STATS_KEY)) {
+
+            String mapJson = pdc.get(STATS_KEY, PersistentDataType.STRING);
+
+            if (mapJson != null && !mapJson.isEmpty()) {
+                Gson gson = new Gson();
+                Type type = new TypeToken<Map<String, Integer>>() {}.getType();
+
+                Map<String, Integer> parsed = gson.fromJson(mapJson, type);
+                if (parsed != null) {
+                    this.statsMap.putAll(parsed);
+                }
+            }
+        }
+
+
         //
         String materialName = getOrDefault(pdc, VISUAL_ID_KEY, PersistentDataType.STRING, null);
         this.visualMaterial = materialName == null ? null : Material.getMaterial(materialName);
@@ -90,6 +139,8 @@ public class BaseCustomItem implements CustomItem {
         this.displayName = displayName;
         this.rarity = rarity;
         this.itemType = CustomItemType.CUSTOM_ITEM;
+        this.equipmentSlots = new HashSet<>();
+        this.statsMap = new HashMap<>();
     }
 
     public BaseCustomItem(String id, Material material, String displayName, Rarity rarity, CustomItemType itemType) {
@@ -98,6 +149,8 @@ public class BaseCustomItem implements CustomItem {
         this.displayName = displayName;
         this.rarity = rarity;
         this.itemType = itemType;
+        this.equipmentSlots = new HashSet<>();
+        this.statsMap = new HashMap<>();
     }
 
     public Material getMaterial() {
@@ -136,14 +189,39 @@ public class BaseCustomItem implements CustomItem {
         return buildRarityColor(this.id, this.rarity);
     }
 
+    public Set<EquipmentSlot> getEquipmentSlots() {
+        return equipmentSlots;
+    }
+
+    public void changeEquipmentList(EquipmentSlot slot) {
+        if(equipmentSlots.contains(slot)){
+            equipmentSlots.remove(slot);
+        } else {
+            equipmentSlots.add(slot);
+        }
+    }
+
+    public void addEquipmentSlot(EquipmentSlot equipmentSlot) {
+        this.equipmentSlots.add(equipmentSlot);
+    }
+
     public ItemStack buildItem() {
 
+        Gson gson = new Gson();
+        String json = gson.toJson(statsMap);
+
+        List<String> lore = getLore();
+        lore.add("");
+        lore.add(buildItemRarity(this.rarity, this.itemType));
+
         return new ItemBuilder(this.id, this.material, this.getDisplayName())
-                .addLore(getLore())
+                .addLore(lore)
                 .setItemId(this.id)
                 .setItemRarity(this.rarity)
                 .setDisplayName(this.displayName)
                 .setItemType(this.itemType)
+                .addPersistentDataContainer(STATS_KEY, PersistentDataType.STRING, json)
+                .addPersistentDataContainer(EQUIPMENT_SLOT_KEY, PersistentDataType.STRING, equipmentSlots.stream().map(Enum::name).collect(Collectors.joining(";;")))
                 .setGlow(this.glowing)
                 .setStackSize(this.stackSize)
                 .setFlavorText(this.flavorText)
@@ -157,19 +235,35 @@ public class BaseCustomItem implements CustomItem {
         return this.displayName;
     }
 
+    protected void getStatsLore(List<String> lore) {
+        if(statsMap == null || statsMap.isEmpty())
+            return;
+
+        for(Stats stats : Stats.values()){
+            if(!statsMap.containsKey(stats.name()))
+                continue;
+            int value = statsMap.get(stats.name());
+            lore.add(stats.getDisplay() + ": " + (value < 0 ? "<red>" : "") + value);
+        }
+    }
+
     protected List<String> getLore() {
         List<String> lore = new ArrayList<>();
 
-        if(this.flavorText != null) lore.add(this.flavorText);
-        lore.add("");
+        if(this.flavorText != null) {
+            lore.add(this.flavorText);
+            lore.add("");
+        }
+
+        getStatsLore(lore);
+        if(!lore.isEmpty())
+            lore.add("");
 
         if(this.getCustomItemType() == CustomItemType.CUSTOM_ITEM){
             lore.add("<red>This is an unregistered CustomItem");
             lore.add("<red>Please report where you got this item");
             lore.add("");
         }
-
-        lore.add(buildItemRarity(this.rarity, this.itemType));
 
         return lore;
     }
@@ -241,6 +335,34 @@ public class BaseCustomItem implements CustomItem {
 
     public void setSoulbound(Boolean soulbound) {
         this.soulbound = soulbound;
+    }
+
+    public int getStatAmount(Stats stats){
+        if(!statsMap.containsKey(stats.name()))
+            return 0;
+        return this.statsMap.get(stats.name());
+    }
+
+    public Map<String, Integer> getStatsMap() {
+        return statsMap;
+    }
+
+    public void setStatsMap(Map<String, Integer> statsMap) {
+        this.statsMap = statsMap;
+    }
+
+    public void addStatsMap(Stats stats, Integer value) {
+        String statId = stats.name();
+        if(!statsMap.containsKey(statId) || value != 0){
+            statsMap.put(statId, value);
+        }else {
+            statsMap.remove(statId);
+        }
+
+    }
+
+    public void setEquipmentSlots(Set<EquipmentSlot> equipmentSlots) {
+        this.equipmentSlots = equipmentSlots;
     }
 
     public BaseCustomItem copy() {

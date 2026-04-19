@@ -8,6 +8,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
+import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.customItems.recipebuilder.service.RecipeService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.recipes.ForgeRecipeManager;
@@ -44,17 +45,11 @@ public class ForgeGui extends BaseGui {
 
     @Override
     protected void build() {
-        buildFrame();
+        GuiUtils.fillGui(inventory);
         buildProgressPanes(player);
         buildForgeSlots(player);
         buildInformationSlot();
         createRefresh(player);
-    }
-
-    private void buildFrame(){
-        for (int i = 0; i < INVENTORY_SIZE; i++) {
-            inventory.setItem(i, fillerPane);
-        }
     }
 
     private void buildInformationSlot(){

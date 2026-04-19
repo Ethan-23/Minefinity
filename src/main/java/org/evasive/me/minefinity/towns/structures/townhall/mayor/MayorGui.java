@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.gui.BaseGui;
+import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.customItems.recipebuilder.service.RecipeService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.service.StructureService;
@@ -36,16 +37,9 @@ public class MayorGui extends BaseGui {
 
     @Override
     protected void build() {
-        buildBackground();
+        GuiUtils.fillGui(inventory);
         buildButtons();
         buildStats();
-    }
-
-    private void buildBackground(){
-        for(int i = 0; i < INVENTORY_SIZE; i++){
-            if(townListing.contains(i) || List.of(PLAYER_STATS).contains(i)) continue;
-            inventory.setItem(i, fillerPane);
-        }
     }
 
     private void buildButtons(){

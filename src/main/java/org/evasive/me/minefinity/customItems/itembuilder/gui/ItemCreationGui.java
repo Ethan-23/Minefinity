@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.ConfirmationGui;
+import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.*;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseBackpackItem;
@@ -19,6 +20,7 @@ import org.evasive.me.minefinity.customItems.registry.config.RegistryConfigHandl
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,16 +53,10 @@ public class ItemCreationGui extends BaseGui {
 
     @Override
     protected void build() {
-        fillInventory();
+        GuiUtils.fillGui(inventory);
         loadCustomItemOptions();
         addDisplayItem();
         addRegistryButton();
-    }
-
-    private void fillInventory(){
-        for(int i = 0; i < INVENTORY_SIZE; i++){
-            inventory.setItem(i, fillerPane);
-        }
     }
 
     private void addDisplayItem(){
@@ -96,9 +92,8 @@ public class ItemCreationGui extends BaseGui {
             if(customItemOptions.size() > i){
                 ItemOptions itemOption = customItemOptions.get(i);
                 ItemBuilder optionItemStack = new ItemBuilder(itemOption.getMaterial(), "<bold><gold>" + TextConversions.formatItemName(itemOption.name()));
-                String[] itemTypeString = itemOption.getClassType().getName().split("\\.");
                 optionItemStack.addLore("<yellow>Current Value: <gray>" + itemOption.get(baseCustomItem));
-                optionItemStack.addLore("<yellow>Data Type: <gray>" + itemTypeString[itemTypeString.length - 1]);
+                optionItemStack.addLore("<yellow>Data Type: <gray>" + itemOption.getClassType().getTypeName().replace("java.lang.", "").replace("java.util.", "").replace("org.evasive.me.minefinity.core.", "")/*itemTypeString[itemTypeString.length - 1]*/);
                 if(List.of(ItemOptions.MATERIAL, ItemOptions.VISUAL_MATERIAL, ItemOptions.PICKAXE_HEAD, ItemOptions.PICKAXE_HANDLE, ItemOptions.PICKAXE_CORE, ItemOptions.STORAGE_LIST).contains(itemOption))
                     optionItemStack.addLore("<gray>You can drop items into this!");
                 if(List.of(ItemOptions.COMPONENT_ABILITY, ItemOptions.STORAGE_LIST).contains(itemOption))
@@ -152,11 +147,13 @@ public class ItemCreationGui extends BaseGui {
 
         ItemStack cursorItem = e.getCursor();
 
-        if (clickedOption.isEnum()) {
+        if (clickedOption.isMap()) {
+            openEnumOptionGui(clickedOption.getClassType(), clickedOption);
+        } else if (clickedOption.isEnum()) {
 
             @SuppressWarnings("unchecked")
             Class<? extends Enum<?>> rawClass = (Class<? extends Enum<?>>) clickedOption.getClassType();
-            openEnumOptionGui((Class) rawClass, clickedOption);
+            openEnumOptionGui(rawClass, clickedOption);
 
         } else if (clickedOption.isString()) {
             itemCreationHandler.handleStringChanges(player, clickedOption, baseCustomItem, cursorItem, this);
@@ -167,18 +164,17 @@ public class ItemCreationGui extends BaseGui {
         } else if (clickedOption.isInteger()) {
             itemCreationHandler.handleInteger(player, clickedOption, baseCustomItem, this);
         }
-
     }
 
-    private <E extends Enum<E>> void openEnumOptionGui(Class<E> enumClass, ItemOptions option) {
-        new OptionsGui<>(player, enumClass, selected -> {
+    private void openEnumOptionGui(Type type, ItemOptions option) {
+        new OptionsGui(player, type, selected -> {
             option.apply(baseCustomItem, selected);
-            if(enumClass == CustomItemType.class){
+            if(type == CustomItemType.class){
                 this.customItemType = (CustomItemType) selected;
                 buildNewItemType();
             }
-            reopen();
-        }, baseCustomItem).open();
+            updateItem();
+        }, baseCustomItem, playerInputListener, this).open();
     }
 
     private void buildNewItemType(){

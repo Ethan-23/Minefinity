@@ -33,7 +33,6 @@ public class MiningBlockRegistryConfig extends BaseConfig {
 
         configurationSection.getKeys(false).forEach(key -> {
 
-            Bukkit.getConsoleSender().sendMessage(key);
             ConfigurationSection worldSection = configurationSection.getConfigurationSection(key);
 
             if (worldSection == null) {
@@ -43,8 +42,6 @@ public class MiningBlockRegistryConfig extends BaseConfig {
             blockTypeRegistry.registerBlockTrack(key);
 
             worldSection.getKeys(false).forEach(blockName -> {
-
-                Bukkit.getConsoleSender().sendMessage(blockName);
 
                 ConfigurationSection blockVariables = worldSection.getConfigurationSection(blockName);
                 if(blockVariables == null)
@@ -59,7 +56,7 @@ public class MiningBlockRegistryConfig extends BaseConfig {
                 int unlockCost = blockVariables.getInt("unlock-cost");
                 List<Integer> milestones = (List<Integer>) blockVariables.getList("milestones");
 
-                BaseBlock baseBlock = new BaseBlock(blockName, material, breakingPower, health, dropId, unlockCost, milestones);
+                BaseBlock baseBlock = new BaseBlock(blockName, material, breakingPower, health, dropId, specialDropId, unlockCost, milestones);
 
                 blockTypeRegistry.registerBlock(key, baseBlock);
 

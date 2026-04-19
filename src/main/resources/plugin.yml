@@ -24,7 +24,7 @@ commands:
     permission: minefinity.pickaxeanvil
     description: opens the pickaxe anvil gui
   blocks:
-    aliases: [blockmaster, bm]
+    aliases: [blockmaster, bm, worlds]
     description: opens the blocks gui
     permission: minefinity.blocks
   milestone:
@@ -105,8 +105,14 @@ commands:
     alias: [deleteitem, dci]
     permission: minefinity.createcustomitem
     description: Creates a custom item from nothing
+  stats:
+    aliases: [playerstats]
+    permission: minefinity.stats
+    description: Shows your player stats
 
 permissions:
+  minefinity.stats:
+    description: Allows use of /stats
   minefinity.gamemode:
     description: Allows the use of /gamemode
   minefinity.staffmode:

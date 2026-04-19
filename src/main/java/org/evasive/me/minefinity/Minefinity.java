@@ -67,7 +67,8 @@ public final class Minefinity extends JavaPlugin {
                 customItemModule.getCustomItemRegistryService(),
                 coreModule.getBlockTypeRegistry(),
                 customItemModule.getItemPickupService(),
-                customItemModule.getPickaxeResolver()
+                customItemModule.getPickaxeResolver(),
+                playerModule.getStatsService()
         );
 
         miningModule.enable();

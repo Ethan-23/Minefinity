@@ -3,6 +3,7 @@ package org.evasive.me.minefinity.playerdata;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.evasive.me.minefinity.Minefinity;
+import org.evasive.me.minefinity.playerdata.commands.StatCommand;
 import org.evasive.me.minefinity.playerdata.commands.rank.MineRank;
 import org.evasive.me.minefinity.playerdata.database.PlayersDatabaseManager;
 import org.evasive.me.minefinity.playerdata.database.RankDatabaseManager;
@@ -17,6 +18,8 @@ import org.evasive.me.minefinity.playerdata.repository.PlayerDataRepository;
 import org.evasive.me.minefinity.playerdata.repository.PlayerRankRepository;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.playerdata.service.RankService;
+import org.evasive.me.minefinity.playerdata.stats.events.StatsListeners;
+import org.evasive.me.minefinity.playerdata.stats.service.StatsService;
 
 public class PlayerDataModule {
 
@@ -25,6 +28,7 @@ public class PlayerDataModule {
 
     private final PlayerDataService playerService;
     private final RankService rankService;
+    private final StatsService statsService;
 
     private final PermissionConfigManager permissionConfigManager;
     private final PermissionService permissionService;
@@ -46,6 +50,7 @@ public class PlayerDataModule {
         playerService = new PlayerDataService(playerRepo);
         permissionService = new PermissionService(Minefinity.getCore());
         rankService = new RankService(rankRepo, permissionService);
+        statsService = new StatsService(playerService);
 
     }
 
@@ -63,6 +68,7 @@ public class PlayerDataModule {
         pm.registerEvents(new PlayerJoinListener(playerService, rankService, permissionService), plugin);
         pm.registerEvents(new PlayerQuitListener(playerService, rankService, permissionService), plugin);
         pm.registerEvents(new PlayerChatListener(rankService), plugin);
+        pm.registerEvents(new StatsListeners(statsService), plugin);
         // autosave task for player data
         plugin.getServer().getScheduler().runTaskTimerAsynchronously(
                 plugin,
@@ -73,6 +79,7 @@ public class PlayerDataModule {
 
         //Commands
         new MineRank(rankService);
+        new StatCommand(statsService);
     }
 
     public void disable() {
@@ -92,5 +99,9 @@ public class PlayerDataModule {
 
     public RankService getRankService() {
         return rankService;
+    }
+
+    public StatsService getStatsService() {
+        return statsService;
     }
 }

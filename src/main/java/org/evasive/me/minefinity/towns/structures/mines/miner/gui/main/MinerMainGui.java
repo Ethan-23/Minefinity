@@ -8,6 +8,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
+import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.customItems.framework.ItemPickupService;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
@@ -52,7 +53,7 @@ public class MinerMainGui extends BaseGui {
 
     @Override
     protected void build() {
-        setupBackground();
+        GuiUtils.fillGui(inventory);
         addButtons(player);
         createRefresh(player);
         buildInformation();
@@ -113,13 +114,6 @@ public class MinerMainGui extends BaseGui {
         ItemBuilder itemBuilder = new ItemBuilder(Material.KNOWLEDGE_BOOK, TextConversions.parse("<bold><gold>Miner"));
         itemBuilder.addLore("<gray>This is the miner. He be mining the blocks and stuff. He be mining all night and day. Might be a 'worker' if you catch my drift. 3 Netherite Ingots!");
         inventory.setItem(INFORMATION_SLOT, itemBuilder.build());
-    }
-
-    private void setupBackground(){
-        for (int slot = 0; slot < INVENTORY_SIZE; slot++) {
-            if(List.of(PICKAXE_SLOT, BLOCK_SLOT, UPGRADE_SLOT).contains(slot)) continue;
-            inventory.setItem(slot, fillerPane);
-        }
     }
 
     private void createRefresh(Player player){

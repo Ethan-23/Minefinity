@@ -8,9 +8,15 @@ import java.util.List;
 public class BlockTypeRegistryService {
 
     private final BlockTypeRegistry blockTypeRegistry;
+    private static BlockTypeRegistryService blockTypeRegistryService;
+
+    public static BlockTypeRegistryService getInstance() {
+        return blockTypeRegistryService;
+    }
 
     public BlockTypeRegistryService(BlockTypeRegistry blockTypeRegistry) {
         this.blockTypeRegistry = blockTypeRegistry;
+        blockTypeRegistryService = this;
     }
 
     public BaseBlock getBaseBlock(String blockId){
@@ -19,6 +25,10 @@ public class BlockTypeRegistryService {
 
     public String getBlockIdByTier(String worldName, int tier){
         return blockTypeRegistry.getBlockList(worldName).get(tier);
+    }
+
+    public boolean hasWorldUnlocked(String worldName){
+        return blockTypeRegistry.hasWorld(worldName);
     }
 
     public List<String> getBlockList(String worldName){

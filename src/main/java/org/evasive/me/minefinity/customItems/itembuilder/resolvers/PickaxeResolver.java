@@ -15,12 +15,7 @@ public class PickaxeResolver {
     }
 
     public PickaxeData resolve(BasePickaxeItem item) {
-
-        BasePickaxeComponent head = getComponent(item.getPickaxeHeadId());
-        BasePickaxeComponent core = getComponent(item.getPickaxeCoreId());
-        BasePickaxeComponent handle = getComponent(item.getPickaxeHandleId());
-
-        return new PickaxeData(head, core, handle);
+        return new PickaxeData(item);
     }
 
     private BasePickaxeComponent getComponent(String id) {

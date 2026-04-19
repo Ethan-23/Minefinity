@@ -6,6 +6,7 @@ import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.protocol.player.DiggingAction;
 import com.github.retrooper.packetevents.util.Vector3i;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerDigging;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -94,7 +95,7 @@ public class SwingPacketEvents extends PacketListenerAbstract {
     }
 
     public boolean validateItemInHand(ItemStack itemStack){
-        return customItemRegistryService.getRegisteredBaseItem(itemStack) instanceof BasePickaxeItem;
+        return customItemRegistryService.getRegisteredBaseItem(itemStack) instanceof BasePickaxeItem || itemStack.isEmpty();
     }
 
     public boolean checkForCorrectGameMode(Player player){

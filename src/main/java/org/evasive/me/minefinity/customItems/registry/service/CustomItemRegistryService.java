@@ -6,7 +6,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.core.rarity.Rarity;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
@@ -26,12 +25,26 @@ public class CustomItemRegistryService {
     private final PickaxeResolver pickaxeResolver;
     private final PickaxeService pickaxeService;
 
+    private static CustomItemRegistryService instance;
+
     public CustomItemRegistryService(CustomItemRegistry customItemRegistry, RegistryConfigHandler registryConfigHandler) {
         this.customItemRegistry = customItemRegistry;
         this.registryConfigHandler = registryConfigHandler;
 
         this.pickaxeResolver = new PickaxeResolver(this);
         this.pickaxeService = new PickaxeService(pickaxeResolver);
+    }
+
+    public static void init(CustomItemRegistry customItemRegistry,
+                            RegistryConfigHandler registryConfigHandler) {
+        instance = new CustomItemRegistryService(customItemRegistry, registryConfigHandler);
+    }
+
+    public static CustomItemRegistryService get() {
+        if (instance == null) {
+            throw new IllegalStateException("CustomItemRegistryService not initialized!");
+        }
+        return instance;
     }
 
     public boolean isRegistered(String itemId) {

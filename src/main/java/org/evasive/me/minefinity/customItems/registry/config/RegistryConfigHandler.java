@@ -7,6 +7,7 @@ import org.evasive.me.minefinity.customItems.itembuilder.data.base.*;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class RegistryConfigHandler {
 
@@ -32,6 +33,14 @@ public class RegistryConfigHandler {
         individualItemSection.set("display-name", item.getDisplayName());
         individualItemSection.set("custom-item-type", customItemType.name());
         individualItemSection.set("rarity", item.getRarity().name());
+        individualItemSection.set(
+                "equipment-slot",
+                item.getEquipmentSlots().stream()
+                        .map(Enum::name)
+                        .toList()
+        );
+
+        individualItemSection.set("stats", item.getStatsMap());
 
         Optional<Float> value = item.getValue();
         value.ifPresent(aFloat -> individualItemSection.set("sell-value", aFloat));
@@ -50,18 +59,12 @@ public class RegistryConfigHandler {
 
         switch (item) {
             case BasePickaxeItem basePickaxeItem -> {
-                individualItemSection.set("breaking-power", basePickaxeItem.getBreakingPower());
-                individualItemSection.set("mining-speed", basePickaxeItem.getBaseMiningSpeed());
-                individualItemSection.set("mining-fortune", basePickaxeItem.getBaseMiningFortune());
                 individualItemSection.set("pickaxe-head", basePickaxeItem.getPickaxeHeadId());
                 individualItemSection.set("pickaxe-core", basePickaxeItem.getPickaxeCoreId());
                 individualItemSection.set("pickaxe-handle", basePickaxeItem.getPickaxeHandleId());
             }
             case BasePickaxeComponent basePickaxeComponent -> {
-                individualItemSection.set("breaking-power", basePickaxeComponent.getBreakingPower());
                 individualItemSection.set("pickaxe-abilities", basePickaxeComponent.getPickaxeAbilityList());
-                individualItemSection.set("mining-speed", basePickaxeComponent.getMiningSpeed());
-                individualItemSection.set("mining-fortune", basePickaxeComponent.getMiningFortune());
             }
             case BaseFuelItem baseFuelItem -> {
                 individualItemSection.set("fuel-amount", baseFuelItem.getFuelAmount());

@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.evasive.me.minefinity.core.gui.BaseGui;
+import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.core.economy.EconomyService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
@@ -54,29 +55,27 @@ public class MilestoneGui extends BaseGui {
 
     @Override
     protected void build() {
+        GuiUtils.fillGui(inventory);
+        buildMilestoneTiers();
+        inventory.setItem(BACK_BUTTON, backPage);
+    }
+
+    public void buildMilestoneTiers(){
         BaseBlock baseBlock = blockTierService.getBlockTypeRegistryService().getBaseBlock(blockId);
-
-        int milestoneAmount = milestoneService.getTierProgress(player, blockId);
-
-
-        for (int i = 0; i < INVENTORY_SIZE; i++) {
-            if (!TRACK.contains(i)) this.inventory.setItem(i, fillerPane);
-        }
-
         BaseCustomItem baseCustomItem = customItemRegistryService.getBaseItemById(baseBlock.blockDropId());
 
         inventory.setItem(BLOCK_DISPLAY, new ItemBuilder(baseBlock.material(), TextConversions.parse(buildRarityColor(baseBlock.name(), baseCustomItem.getRarity()))).build());
-
-        inventory.setItem(BACK_BUTTON, backPage);
-
+        int milestoneAmount = milestoneService.getTierProgress(player, blockId);
         List<Integer> milestoneUnlocks = baseBlock.milestoneUnlocks();
+
+        int milestoneSize = TRACK.size() - milestoneUnlocks.size();
 
         for(int milestoneTier = 0; milestoneTier < milestoneUnlocks.size(); milestoneTier++){
 
             if(milestoneTier >= TRACK.size())
                 continue;
 
-            int slot = TRACK.get(milestoneTier);
+            int slot = TRACK.get(milestoneTier + milestoneSize/2);
 
             boolean completed = milestoneAmount >= milestoneUnlocks.get(milestoneTier);
             boolean started = (milestoneTier == 0 && milestoneUnlocks.getFirst() > milestoneTier || (milestoneUnlocks.getFirst() <= milestoneAmount && milestoneAmount >= milestoneUnlocks.get(milestoneTier-1)));
@@ -92,7 +91,6 @@ public class MilestoneGui extends BaseGui {
 
             inventory.setItem(slot, milestoneItem.build());
         }
-
     }
 
     @Override
