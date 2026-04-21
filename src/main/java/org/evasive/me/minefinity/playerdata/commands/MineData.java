@@ -6,10 +6,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 import org.evasive.me.minefinity.towns.structures.service.StructureService;
-import org.evasive.me.minefinity.towns.structures.data.Structure;
 import org.evasive.me.minefinity.core.utils.command.CommandFeedback;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,10 +16,10 @@ import java.util.Objects;
 public class MineData implements CommandExecutor {
 
     private final BlockTierService blockTierService;
-    private final StructureService townService;
+    private final StructureService structureService;
 
     public MineData(Minefinity minefinity, StructureService townService, BlockTierService blockTierService) {
-        this.townService = townService;
+        this.structureService = townService;
         this.blockTierService = blockTierService;
         Objects.requireNonNull(minefinity.getCommand("minedata")).setExecutor(this);
     }
@@ -42,7 +40,7 @@ public class MineData implements CommandExecutor {
             }
 
             String structureName = strings[0].toUpperCase();
-            if(!Structure.contains(structureName)) {
+            if(!structureService.isStructure(structureName)) {
                 commandSender.sendMessage(CommandFeedback.INVALID_STRUCTURE);
                 return true;
             }
@@ -54,7 +52,7 @@ public class MineData implements CommandExecutor {
                 return true;
             }
 
-            townService.setStructureLevel(player, Structure.valueOf(structureName), Integer.parseInt(strings[2]));
+            structureService.setStructureLevel(player, structureService.getStructure(structureName), Integer.parseInt(strings[2]));
             return true;
         }
 

@@ -30,9 +30,9 @@ public class StructuredForce implements MiningAbility {
 
     @Override
     public void onBreak(BreakContext context) {
-        Player player = context.getPlayer();
+        Player player = context.player();
         UUID uuid = context.getUUID();
-        BaseBlock baseBlock = context.getBaseBlock();
+        BaseBlock baseBlock = context.baseBlock();
 
         streakMap.addStreak(uuid, baseBlock);
         player.sendActionBar(TextConversions.parse("<gold>" + TextConversions.formatItemName(baseBlock.name()) + " Streak: <gray>" + streakMap.getStreak(uuid)));

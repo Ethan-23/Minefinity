@@ -74,11 +74,10 @@ public class BlockProgressHandler {
         //Mining stats being used
         StatsContext statsContext = new StatsContext();
 
+        statsContext.addStats(statsService.getStringIdStats(player.getUniqueId()));
+
         if (basePickaxeItem != null){
-            statsContext.addStats(calculateTotalStats(basePickaxeItem));
             miningAbilityRunner.runOnHit(basePickaxeItem, new HitContext(player, baseBlock, statsContext));
-        }else {
-            statsContext.addStats(statsService.getStringIdStats(player.getUniqueId()));
         }
 
         float progress = statsContext.getSpeed() / 10f; // divide by 10 to allow for bigger numbers for better display

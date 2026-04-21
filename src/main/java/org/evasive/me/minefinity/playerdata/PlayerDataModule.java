@@ -51,7 +51,6 @@ public class PlayerDataModule {
         permissionService = new PermissionService(Minefinity.getCore());
         rankService = new RankService(rankRepo, permissionService);
         statsService = new StatsService(playerService);
-
     }
 
     public void enable(JavaPlugin plugin) {
@@ -104,4 +103,5 @@ public class PlayerDataModule {
     public StatsService getStatsService() {
         return statsService;
     }
+
 }

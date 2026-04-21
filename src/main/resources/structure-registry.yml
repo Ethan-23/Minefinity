@@ -1,0 +1,48 @@
+worlds:
+  world:
+    structure:
+      townhall:
+        display: LECTERN
+        levels:
+          1:
+            recipe:
+              COBBLESTONE: 20
+              TUFF: 15
+            milestones:
+              COBBLESTONE: 2
+              TUFF: 1
+          2:
+            recipe:
+              COBBLESTONE: 100
+              TUFF: 50
+            milestones:
+              COBBLESTONE: 3
+              TUFF: 2
+          3:
+            recipe:
+              CALCITE: 20
+              COBBLESTONE: 250
+              TUFF: 100
+            milestones:
+              COBBLESTONE: 4
+              TUFF: 3
+              CALCITE: 1
+          4:
+            recipe:
+              CALCITE: 100
+              COBBLESTONE: 1000
+              TUFF: 500
+            milestones:
+              COBBLESTONE: 5
+              TUFF: 5
+              CALCITE: 3
+          5:
+            recipe:
+              CALCITE: 100
+              COBBLESTONE: 1000
+              TUFF: 500
+            milestones:
+              COBBLESTONE: 5
+              TUFF: 5
+              CALCITE: 5
+

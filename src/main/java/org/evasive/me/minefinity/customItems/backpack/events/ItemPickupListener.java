@@ -105,6 +105,6 @@ public class ItemPickupListener implements Listener {
 
         PacketEvents.getAPI().getPlayerManager().sendPacket(player, packet);
 
-        player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1f, 1f);
+        player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1f, 2f);
     }
 }

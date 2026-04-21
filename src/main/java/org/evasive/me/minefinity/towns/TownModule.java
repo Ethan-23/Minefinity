@@ -6,6 +6,7 @@ import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.admin.commands.PacketRefresh;
 import org.evasive.me.minefinity.core.economy.EconomyService;
 import org.evasive.me.minefinity.core.npcs.NpcBehaviorRegistry;
+import org.evasive.me.minefinity.core.registry.StructureRegistry;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
 import org.evasive.me.minefinity.customItems.framework.ItemPickupService;
 import org.evasive.me.minefinity.customItems.recipebuilder.service.RecipeService;
@@ -28,6 +29,7 @@ import org.evasive.me.minefinity.towns.structures.forge.smelter.service.SmelterS
 import org.evasive.me.minefinity.towns.structures.mines.miner.MinerNpc;
 import org.evasive.me.minefinity.towns.structures.mines.miner.events.AutoMinerEvents;
 import org.evasive.me.minefinity.towns.structures.mines.miner.service.AutoMinerService;
+import org.evasive.me.minefinity.towns.structures.registry.config.StructureRegistryConfigManager;
 import org.evasive.me.minefinity.towns.structures.resourceblock.BlockMasterNpc;
 import org.evasive.me.minefinity.towns.structures.resourceblock.commands.BlockCommands;
 import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
@@ -67,12 +69,15 @@ public class TownModule {
     private final RecipeService recipeService;
     private final SmelterHandler smelterHandler;
     private final NpcBehaviorRegistry npcBehaviorRegistry;
+    private final StructureRegistryConfigManager structureRegistryConfigManager;
 
-    public TownModule(PlayerDataService playerDataService, EconomyService economyService, CustomItemRegistryService customItemRegistryService, BackpackService backpackService, BlockTierService blockTierService, MilestoneService milestoneService, ItemPickupService itemPickupService, NpcBehaviorRegistry npcBehaviorRegistry, BlockTypeRegistry blockTypeRegistry, BlockTypeRegistryService blockTypeRegistryService) {
+    public TownModule(PlayerDataService playerDataService, EconomyService economyService, CustomItemRegistryService customItemRegistryService, BackpackService backpackService, BlockTierService blockTierService, MilestoneService milestoneService, ItemPickupService itemPickupService, NpcBehaviorRegistry npcBehaviorRegistry, BlockTypeRegistry blockTypeRegistry, BlockTypeRegistryService blockTypeRegistryService, StructureRegistry structureRegistry) {
 
         this.customItemRegistryService = customItemRegistryService;
 
-        this.recipeService = new RecipeService(backpackService, customItemRegistryService);
+        this.recipeService = new RecipeService(backpackService, customItemRegistryService, economyService);
+
+        this.structureRegistryConfigManager = new StructureRegistryConfigManager(structureRegistry);
 
         //Smelter
         this.smelterRecipeManager = new SmelterRecipeManager();
@@ -102,7 +107,7 @@ public class TownModule {
         this.merchantHandler = new MerchantHandler(this.economyService, customItemRegistryService, backpackService);
 
         //Misc
-        this.structureService = new StructureService(playerDataService);
+        this.structureService = new StructureService(playerDataService, structureRegistry);
 
         this.backpackService = backpackService;
         this.itemPickupService = itemPickupService;
@@ -140,7 +145,7 @@ public class TownModule {
         npcBehaviorRegistry.addBehavior("blockmaster", () -> new BlockMasterNpc(blockTierService, milestoneService, economyService, customItemRegistryService));
         npcBehaviorRegistry.addBehavior("engineer", () -> new EngineerNpc(engineerService, workshopRecipeManager, backpackService, customItemRegistryService, recipeService));
         npcBehaviorRegistry.addBehavior("goblintinkerer", GoblinTinkererNpc::new);
-        npcBehaviorRegistry.addBehavior("mayor", () -> new MayorNpc(customItemRegistryService, structureService, recipeService));
+        npcBehaviorRegistry.addBehavior("mayor", () -> new MayorNpc(customItemRegistryService, structureService, recipeService, milestoneService));
         npcBehaviorRegistry.addBehavior("merchant", () -> new MerchantNpc(customItemRegistryService, economyService, backpackService));
         npcBehaviorRegistry.addBehavior("miner", () -> new MinerNpc(customItemRegistryService, autoMinerService, blockTierService, itemPickupService));
         npcBehaviorRegistry.addBehavior("smelter", () -> new SmelterNpc(customItemRegistryService, smelterService, smelterHandler, smelterRecipeManager));

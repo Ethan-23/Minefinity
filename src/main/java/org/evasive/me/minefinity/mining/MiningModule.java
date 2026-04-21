@@ -39,7 +39,7 @@ public class MiningModule {
         this.miningDataMap = new MiningDataMap(animationIDs);
         this.selectedBlockMap = new SelectedBlockMap();
         this.blockTypeRegistryService = new BlockTypeRegistryService(blockTypeRegistry);
-        this.milestoneService = new MilestoneService(playerDataService, blockTypeRegistryService);
+        this.milestoneService = new MilestoneService(playerDataService, blockTypeRegistryService, statsService);
         this.blockTierService = new BlockTierService(playerDataService, customItemRegistryService, blockTypeRegistryService, miningDataMap, selectedBlockMap);
         //Should be changed to a service that calls a handler for everything other than progress calcs
         this.blockProgressHandler = new BlockProgressHandler(pickaxeResolver, miningAbilityRunner, blockTierService, milestoneService, miningDataMap, customItemRegistryService, itemPickupService, statsService);

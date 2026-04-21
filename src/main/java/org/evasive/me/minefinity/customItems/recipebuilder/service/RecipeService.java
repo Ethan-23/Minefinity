@@ -3,6 +3,7 @@ package org.evasive.me.minefinity.customItems.recipebuilder.service;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.evasive.me.minefinity.core.economy.EconomyService;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
 import org.evasive.me.minefinity.customItems.recipebuilder.data.BaseItemRecipe;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
@@ -15,13 +16,24 @@ public class RecipeService {
 
     private final BackpackService backpackService;
     private final CustomItemRegistryService customItemRegistryService;
+    private final EconomyService economyService;
 
-    public RecipeService(BackpackService backpackService, CustomItemRegistryService customItemRegistryService) {
+    public RecipeService(BackpackService backpackService, CustomItemRegistryService customItemRegistryService, EconomyService economyService) {
         this.backpackService = backpackService;
         this.customItemRegistryService = customItemRegistryService;
+        this.economyService = economyService;
     }
 
     public boolean tryPurchaseItem(Player player, BaseItemRecipe recipe){
+
+        if(recipe == null)
+            return false;
+
+        float cost = recipe.getCost();
+
+        if(cost > 0 && economyService.getBalance(player) < cost){
+            return false;
+        }
 
         Map<String, Integer> remaining = new HashMap<>(recipe.getRecipe());
         Map<Integer, Integer> slotUsage = new HashMap<>();
@@ -51,6 +63,7 @@ public class RecipeService {
                 removeRequiredItems(player, slotUsage, backpackUsage);
                 if(recipe.getResult() != null && !(recipe instanceof BaseForgeRecipe))
                     player.getInventory().addItem(customItemRegistryService.getRegisteredItemStack(recipe.getResult()));
+                economyService.subBalance(player, cost);
                 return true;
             }
         }
@@ -71,10 +84,10 @@ public class RecipeService {
                 removeRequiredItems(player, slotUsage, backpackUsage);
                 if(recipe.getResult() != null)
                     player.getInventory().addItem(customItemRegistryService.getRegisteredItemStack(recipe.getResult()));
+                economyService.subBalance(player, cost);
                 return true;
             }
         }
-
         return false;
     }
 

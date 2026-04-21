@@ -1,14 +1,17 @@
 package org.evasive.me.minefinity.towns.structures.resourceblock.config;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.config.BaseConfig;
 import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
+import org.evasive.me.minefinity.mining.milestones.MilestoneTier;
 import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MiningBlockRegistryConfig extends BaseConfig {
 
@@ -54,8 +57,33 @@ public class MiningBlockRegistryConfig extends BaseConfig {
                 String dropId = blockVariables.getString("drop");
                 String specialDropId = blockVariables.getString("special-drop");
                 int unlockCost = blockVariables.getInt("unlock-cost");
-                List<Integer> milestones = (List<Integer>) blockVariables.getList("milestones");
 
+                ConfigurationSection milestoneSection = blockVariables.getConfigurationSection("milestones");
+
+                List<MilestoneTier> milestones = new ArrayList<>();
+
+                if (milestoneSection != null) {
+                    for (String tier : milestoneSection.getKeys(false)) {
+
+                        ConfigurationSection tierSection = milestoneSection.getConfigurationSection(tier);
+                        if (tierSection == null) continue;
+
+                        int amount = tierSection.getInt("amount");
+
+                        ConfigurationSection statsSection = tierSection.getConfigurationSection("stats");
+
+                        Map<String, Integer> stats = new HashMap<>();
+
+                        if (statsSection != null) {
+                            for (Map.Entry<String, Object> entry : statsSection.getValues(false).entrySet()) {
+                                stats.put(entry.getKey(), ((Number) entry.getValue()).intValue());
+                            }
+                        }
+
+
+                        milestones.add(new MilestoneTier(amount, stats));
+                    }
+                }
                 BaseBlock baseBlock = new BaseBlock(blockName, material, breakingPower, health, dropId, specialDropId, unlockCost, milestones);
 
                 blockTypeRegistry.registerBlock(key, baseBlock);

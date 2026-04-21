@@ -32,16 +32,9 @@ public class SmelterHandler {
 
             ItemStack drop = customItemRegistryService.getRegisteredItemStack(entry.getKey());
 
-            int overflow = itemPickupService.attemptBackpackStorage(player, drop, remaining);
-
-            if(overflow > 0)
-                overflow = itemPickupService.attemptInventoryStorage(player, drop, overflow);
+            int overflow = itemPickupService.givePlayerDrops(player, drop, remaining);
 
             smelterService.removeSmelterStorage(player, entry.getKey(), remaining - overflow);
-
-            if(overflow > 0){
-                itemPickupService.fullInventoryNotification(player);
-            }
         }
     }
 

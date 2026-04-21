@@ -1,21 +1,30 @@
 package org.evasive.me.minefinity.mining.milestones;
 
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
+import org.evasive.me.minefinity.playerdata.stats.data.Stats;
+import org.evasive.me.minefinity.playerdata.stats.service.StatsService;
 import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTypeRegistryService;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.ResourceData;
 
 import java.util.List;
+import java.util.Map;
+
+import static org.evasive.me.minefinity.playerdata.stats.data.Stats.MINING_FORTUNE;
 
 public class MilestoneService {
 
     private final PlayerDataService playerDataService;
     private final BlockTypeRegistryService blockTypeRegistryService;
+    private final StatsService statsService;
 
-    public MilestoneService(PlayerDataService playerDataService, BlockTypeRegistryService blockTypeRegistryService) {
+    public MilestoneService(PlayerDataService playerDataService, BlockTypeRegistryService blockTypeRegistryService, StatsService statsService) {
         this.playerDataService = playerDataService;
         this.blockTypeRegistryService = blockTypeRegistryService;
+        this.statsService = statsService;
     }
 
     public ResourceData getResourceData(Player player, String blockId) {
@@ -28,15 +37,17 @@ public class MilestoneService {
 
     public void increaseTierProgress(Player player, String blockId, int amount) {
         getResourceData(player, blockId).setProgress(getTierProgress(player, blockId) + amount);
-        if(checkTierUp(player, blockId))
-            increaseTier(player, blockId, 1);
+        if(!checkTierUp(player, blockId))
+            return;
+        increaseTier(player, blockId, 1);
     }
 
     private boolean checkTierUp(Player player, String blockId) {
         BaseBlock baseBlock = blockTypeRegistryService.getBaseBlock(blockId);
-        List<Integer> milestones = baseBlock.milestoneUnlocks();
-        if(getTier(player, blockId) >= milestones.size()) return false;
-        return getResourceData(player, blockId).getProgress() >= baseBlock.milestoneUnlocks().get(getTier(player, blockId));
+        List<MilestoneTier> milestones = baseBlock.milestoneUnlocks();
+        int currentTier = getTier(player, blockId);
+        if(currentTier >= milestones.size()) return false;
+        return getResourceData(player, blockId).getProgress() >= milestones.get(currentTier).amount();
     }
 
     public void setTierProgress(Player player, String blockId, int amount) {
@@ -60,11 +71,26 @@ public class MilestoneService {
     }
 
     public void increaseTier(Player player, String blockId, int amount) {
-        getResourceData(player, blockId).setTier(getTier(player, blockId) + amount);
+        int currentTier = getTier(player, blockId);
+        getResourceData(player, blockId).setTier(currentTier + amount);
+        statsService.recalculateStats(player);
+        announceTierUp(player, blockId);
     }
 
     public void setTier(Player player, String blockId, int amount) {
         getResourceData(player, blockId).setTier(amount);
     }
 
+    private void announceTierUp(Player player, String blockId) {
+        int tier = getTier(player, blockId);
+        MilestoneTier milestoneTier = blockTypeRegistryService.getBaseBlock(blockId).milestoneUnlocks().get(tier - 1);
+        player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
+        player.sendMessage(TextConversions.parse("<yellow>"  + TextConversions.formatItemName(blockId) +"<gold> Milestone Increased <yellow>" + TextConversions.intToRoman(Math.max(0, tier - 1)) + " <gold>-> <yellow>" + TextConversions.intToRoman(tier)));
+        Map<String, Integer> rewardStatsMap = milestoneTier.stats();
+
+        for(Map.Entry<String, Integer> entry : rewardStatsMap.entrySet()) {
+            player.sendMessage(TextConversions.parse("  <gray>+" + entry.getValue() + " " + Stats.valueOf(entry.getKey()).getDisplay()));
+        }
+
+    }
 }

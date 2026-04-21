@@ -104,11 +104,14 @@ public class PlayerMoveListener implements Listener {
         String structureId;
         Structure structure;
         try{
-            structureId = regionId.split("_")[1].toUpperCase();
-            structure = Structure.valueOf(structureId);
+            //Have to correct this later
+            structureId = regionId.toUpperCase();
+            structure = structureService.getStructure(structureId);
         }catch(Exception exception){
             return;
         }
+
+        if(structure == null) return;
 
         int level = structureService.getStructureLevel(player, structure);
 

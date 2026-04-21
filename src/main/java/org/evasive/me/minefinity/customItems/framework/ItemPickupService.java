@@ -91,4 +91,17 @@ public class ItemPickupService {
         return leftover.values().stream().mapToInt(ItemStack::getAmount).sum();
     }
 
+    public int givePlayerDrops(Player player, ItemStack drop, int amount){
+        int overflow = attemptBackpackStorage(player, drop, amount);
+
+        if(overflow > 0)
+            overflow = attemptInventoryStorage(player, drop, amount);
+
+        if(overflow > 0){
+            fullInventoryNotification(player);
+            return overflow;
+        }
+        return 0;
+    }
+
 }

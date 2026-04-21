@@ -3,7 +3,9 @@ package org.evasive.me.minefinity.towns.structures.resourceblock.service;
 import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
 import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public class BlockTypeRegistryService {
 
@@ -46,6 +48,9 @@ public class BlockTypeRegistryService {
         return blockTypeRegistry.getBlockTypes().get(blockList.get(currentTier + 1)).unlockCost();
     }
 
+    public List<BaseBlock> getAllBlocks(){
+        return blockTypeRegistry.getBlockTypes().values().stream().toList();
+    }
 
     public List<String> getWorldList() {
         return blockTypeRegistry.getWorldList();

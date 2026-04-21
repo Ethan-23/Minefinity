@@ -11,6 +11,8 @@ import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.core.economy.EconomyService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
+import org.evasive.me.minefinity.mining.milestones.MilestoneTier;
+import org.evasive.me.minefinity.playerdata.stats.data.Stats;
 import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 import org.evasive.me.minefinity.mining.milestones.MilestoneService;
@@ -19,11 +21,13 @@ import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.evasive.me.minefinity.core.utils.guis.GenericGuiItems.backPage;
 import static org.evasive.me.minefinity.core.utils.guis.GenericGuiItems.fillerPane;
 import static org.evasive.me.minefinity.core.utils.TextConversions.buildRarityColor;
 import static org.evasive.me.minefinity.core.utils.TextConversions.intToRoman;
+import static org.evasive.me.minefinity.playerdata.stats.data.Stats.MINING_FORTUNE;
 
 public class MilestoneGui extends BaseGui {
 
@@ -65,28 +69,37 @@ public class MilestoneGui extends BaseGui {
         BaseCustomItem baseCustomItem = customItemRegistryService.getBaseItemById(baseBlock.blockDropId());
 
         inventory.setItem(BLOCK_DISPLAY, new ItemBuilder(baseBlock.material(), TextConversions.parse(buildRarityColor(baseBlock.name(), baseCustomItem.getRarity()))).build());
-        int milestoneAmount = milestoneService.getTierProgress(player, blockId);
-        List<Integer> milestoneUnlocks = baseBlock.milestoneUnlocks();
+        int playerMilestoneCount = milestoneService.getTierProgress(player, blockId);
+        List<MilestoneTier> milestoneUnlocks = baseBlock.milestoneUnlocks();
 
         int milestoneSize = TRACK.size() - milestoneUnlocks.size();
 
-        for(int milestoneTier = 0; milestoneTier < milestoneUnlocks.size(); milestoneTier++){
+        for(int tierCount = 0; tierCount < milestoneUnlocks.size(); tierCount++){
 
-            if(milestoneTier >= TRACK.size())
+            if(tierCount >= TRACK.size())
                 continue;
 
-            int slot = TRACK.get(milestoneTier + milestoneSize/2);
+            int slot = TRACK.get(tierCount + milestoneSize/2);
 
-            boolean completed = milestoneAmount >= milestoneUnlocks.get(milestoneTier);
-            boolean started = (milestoneTier == 0 && milestoneUnlocks.getFirst() > milestoneTier || (milestoneUnlocks.getFirst() <= milestoneAmount && milestoneAmount >= milestoneUnlocks.get(milestoneTier-1)));
+            MilestoneTier milestoneTier = milestoneUnlocks.get(tierCount);
+            int milestoneAmount = milestoneTier.amount();
+
+            boolean completed = playerMilestoneCount >= milestoneAmount;
+            boolean started = (tierCount == 0 && milestoneUnlocks.getFirst().amount() > tierCount || (milestoneUnlocks.getFirst().amount() <= playerMilestoneCount && playerMilestoneCount >= milestoneUnlocks.get(tierCount-1).amount()));
 
             Material milestoneMaterial = completed ? Material.GREEN_STAINED_GLASS_PANE : started ? Material.YELLOW_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE;
             String color = completed ? "green" : started ? "yellow" : "red";
-            Component milestoneName = TextConversions.parse("<"+color+">Milestone <tier></"+color+">", Placeholder.parsed("tier", intToRoman(milestoneTier + 1)));
-            int cap = milestoneUnlocks.get(milestoneTier);
+            Component milestoneName = TextConversions.parse("<"+color+">Milestone <tier></"+color+">", Placeholder.parsed("tier", intToRoman(tierCount + 1)));
 
             ItemBuilder milestoneItem = new ItemBuilder(milestoneMaterial, milestoneName);
-            milestoneItem.addLore("<white>"+Math.min(milestoneAmount, cap)+"/"+cap+"</white>");
+            milestoneItem.addLore("<white>"+Math.min(playerMilestoneCount, milestoneAmount)+"/"+milestoneAmount+"</white>");
+            milestoneItem.addLore("<yellow>Rewards:");
+            Map<String, Integer> rewardStatsMap = milestoneTier.stats();
+
+            for(Map.Entry<String, Integer> entry : rewardStatsMap.entrySet()) {
+                Stats stat = Stats.valueOf(entry.getKey());
+                milestoneItem.addLore("<" + stat.getColor() + ">" + stat.getName() + ": +" + entry.getValue() + stat.getShortDisplay());            }
+
             milestoneItem.addLore(completed ? COMPLETED : (started ? IN_PROGRESS : null));
 
             inventory.setItem(slot, milestoneItem.build());

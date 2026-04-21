@@ -1,5 +1,6 @@
 package org.evasive.me.minefinity.mining.handlers;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -17,6 +18,7 @@ import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTie
 import org.evasive.me.minefinity.mining.milestones.MilestoneService;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static org.evasive.me.minefinity.core.utils.TextConversions.buildRarityColor;
 
@@ -39,22 +41,21 @@ public class BlockBreakHandler {
 
     public void handleBlockBreak(Location location, Player player, BaseBlock baseBlock, BasePickaxeItem basePickaxeItem, StatsContext statsContext, MiningAbilityRunner miningAbilityRunner) {
 
+        BreakContext breakContext = new BreakContext(player, baseBlock, statsContext);
+
         int amount = 1 + calculateFortuneDrops(statsContext.getFortune());
 
-        handlePlayerData(player, amount, location);
+        handlePlayerData(player, location);
 
-        BreakContext breakContext = new BreakContext(player, baseBlock, statsContext);
         statsContext.setSpecialDrop(baseBlock.specialBlockDropId() != null && new Random().nextInt(1, 101) <= statsContext.getSpecialChance());
-
 
         if(basePickaxeItem != null)
             miningAbilityRunner.runOnBreak(basePickaxeItem, breakContext);
 
-
         playBreakSound(player, statsContext.isSpecialDrop());
 
         ItemStack drop = statsContext.isSpecialDrop() ? blockTierService.getSelectedSpecialDrop(player) : blockTierService.getSelectedBlockDrop(player);
-        if(givePlayerDrops(player, drop, amount))
+        if(itemPickupService.givePlayerDrops(player, drop, amount) == 0)
             sendActionBar(player, statsContext.isSpecialDrop() ? baseBlock.specialBlockDropId() : baseBlock.blockDropId(), amount);
 
     }
@@ -64,39 +65,30 @@ public class BlockBreakHandler {
     }
 
     private void playBreakSound(Player player, boolean specialDrop){
-        Sound sound = specialDrop ? Sound.ENTITY_SHEEP_SHEAR : Sound.ENTITY_EXPERIENCE_ORB_PICKUP;
+        Sound sound = specialDrop ? Sound.BLOCK_SPAWNER_BREAK : Sound.BLOCK_GILDED_BLACKSTONE_BREAK;
         player.playSound(player.getLocation(), sound, 0.3f, 0.3f);
     }
 
-    private void handleMilestone(Player player, String blockId, int amount){
-        milestoneService.increaseTierProgress(player, blockId, amount);
-    }
+    private void handleMilestone(Player player, String blockId){
 
-    private boolean givePlayerDrops(Player player, ItemStack drop, int amount){
-        int overflow = itemPickupService.attemptBackpackStorage(player, drop, amount);
-
-        if(overflow > 0)
-            overflow = itemPickupService.attemptInventoryStorage(player, drop, amount);
-
-        if(overflow > 0){
-            itemPickupService.fullInventoryNotification(player);
-            return false;
-        }
-        return true;
+        milestoneService.increaseTierProgress(player, blockId, 1);
     }
 
     private int calculateFortuneDrops(float fortuneStat){
-        Random random = new Random();
-        random.setSeed(System.currentTimeMillis());
+        Random random = ThreadLocalRandom.current();
+
+        int guaranteed = (int) fortuneStat / 100;
+        int remainder = (int) (fortuneStat % 100);
+
         int randomNum = random.nextInt(1, 101);
 
-        return (int)(((int) fortuneStat/100f) + (randomNum <= fortuneStat % 100 ? 1 : 0));
+        return guaranteed + (randomNum <= remainder ? 1 : 0);
     }
 
-    private void handlePlayerData(Player player, int amount, Location location){
+    private void handlePlayerData(Player player, Location location){
         String blockId = blockTierService.getSelectedMiningBlock(player, player.getWorld().getName());
         milestoneService.increaseBlocksMined(player, blockId, 1);
-        handleMilestone(player, blockId, amount);
+        handleMilestone(player, blockId);
         miningDataMap.removeBlockPos(location, player.getUniqueId());
     }
 

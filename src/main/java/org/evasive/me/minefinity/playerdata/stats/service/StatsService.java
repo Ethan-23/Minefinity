@@ -11,10 +11,13 @@ import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomIte
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.itembuilder.resolvers.PickaxeResolver;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
+import org.evasive.me.minefinity.mining.milestones.MilestoneTier;
 import org.evasive.me.minefinity.playerdata.model.PlayerData;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.playerdata.stats.PlayerDefaults;
 import org.evasive.me.minefinity.playerdata.stats.data.Stats;
+import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
+import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTypeRegistryService;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -73,7 +76,36 @@ public class StatsService {
             result.merge(entry.getKey(), entry.getValue(), Integer::sum);
         }
 
+        for (var entry : calculateMilestoneStats(player).entrySet()) {
+            result.merge(entry.getKey(), entry.getValue(), Integer::sum);
+        }
+
         cachedStats.put(uuid, result);
+    }
+
+    private Map<Stats, Integer> calculateMilestoneStats(Player player) {
+        Map<Stats, Integer> statsMap = new HashMap<>();
+
+        List<BaseBlock> blockList = BlockTypeRegistryService.getInstance().getAllBlocks();
+
+        for (BaseBlock baseBlock : blockList) {
+            List<MilestoneTier> milestoneTiers = baseBlock.milestoneUnlocks();
+            String blockId = baseBlock.name();
+            int tier = playerDataService.getPlayerData(player.getUniqueId()).getBlockMilestones().getTier(blockId);
+            for(int i = 0; i <= tier; i++){
+                if(i == 0)
+                    continue;
+
+                Map<String, Integer> statsStringMap = milestoneTiers.get(i-1).stats();
+
+                for(String stat : statsStringMap.keySet()){
+                    Stats currentStat = Stats.valueOf(stat);
+                    statsMap.put(currentStat, statsMap.getOrDefault(currentStat, 0) + statsStringMap.get(stat));
+                }
+
+            }
+        }
+        return statsMap;
     }
 
     private Map<Stats, Integer> calculateEquipmentStats(Player player) {
