@@ -37,7 +37,7 @@ public class PickaxeAnvilGui extends BaseGui {
     private final CustomItemRegistryService customItemRegistryService;
     PickaxeAnvilHandler pickaxeAnvilHandler;
 
-    public PickaxeAnvilGui(Player player, CustomItemRegistryService customItemRegistryService) {
+    public PickaxeAnvilGui(Player player, CustomItemRegistryService customItemRegistryService, ItemStack pickaxe) {
         super(player, INVENTORY_SIZE, TextConversions.parse("Pickaxe Anvil"));
         this.customItemRegistryService = customItemRegistryService;
         EMPTY_HEAD_SLOT = new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, "<yellow>Head Slot").build();
@@ -45,6 +45,10 @@ public class PickaxeAnvilGui extends BaseGui {
         EMPTY_HANDLE_SLOT = new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, "<yellow>Handle Slot").build();
         EMPTY_SLOT = new ItemBuilder(Material.RED_STAINED_GLASS_PANE, "<red>Please insert an item").build();
         this.pickaxeAnvilHandler = new PickaxeAnvilHandler(customItemRegistryService);
+        if(pickaxe != null){
+            inventory.setItem(PICKAXE_SLOT, pickaxe);
+        }
+
         build();
     }
 
@@ -102,6 +106,7 @@ public class PickaxeAnvilGui extends BaseGui {
         }
 
         if(itemType == null) return;
+
 
         if(!pickaxeAnvilHandler.verifyPartChange(inventory.getItem(PICKAXE_SLOT), e.getCursor(), e.getCurrentItem(), itemType)){
             e.setCancelled(true);

@@ -1,5 +1,6 @@
 package org.evasive.me.minefinity.core;
 
+import com.github.retrooper.packetevents.PacketEvents;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.evasive.me.minefinity.core.admin.commands.*;

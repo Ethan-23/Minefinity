@@ -4,7 +4,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.forge.pickaxeanvil.gui.PickaxeAnvilGui;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +26,14 @@ public class PickaxeAnvilCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] strings) {
         if(!(commandSender instanceof Player player))
             return true;
-        new PickaxeAnvilGui(player, customItemRegistryService).open();
+        ItemStack heldPickaxeItem = player.getInventory().getItemInMainHand();
+        if(customItemRegistryService.isRegistered(heldPickaxeItem) && customItemRegistryService.getRegisteredBaseItem(heldPickaxeItem).getCustomItemType() == CustomItemType.PICKAXE){
+            new PickaxeAnvilGui(player, customItemRegistryService, heldPickaxeItem).open();
+            player.getInventory().setItemInMainHand(null);
+        }else {
+            new PickaxeAnvilGui(player, customItemRegistryService, null).open();
+        }
+
         return true;
     }
 }

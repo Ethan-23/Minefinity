@@ -1,5 +1,6 @@
 package org.evasive.me.minefinity.towns.structures.forge.pickaxeanvil;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.playerdata.stats.data.Stats;
@@ -68,6 +69,12 @@ public class PickaxeAnvilHandler {
 
         boolean cursorPickaxe = (customItemRegistryService.getRegisteredBaseItem(cursorItem) instanceof BasePickaxeItem);
         boolean currentPickaxe = (customItemRegistryService.getRegisteredBaseItem(currentItem) instanceof BasePickaxeItem);
+
+
+        if(currentItem != null && !cursorItem.isEmpty() && !cursorPickaxe && currentPickaxe){
+            e.setCancelled(true);
+            return;
+        }
 
         if (!cursorPickaxe && !currentPickaxe) {
             e.setCancelled(true);

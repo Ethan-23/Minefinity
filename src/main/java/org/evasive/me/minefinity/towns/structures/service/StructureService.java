@@ -1,6 +1,7 @@
 package org.evasive.me.minefinity.towns.structures.service;
 
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.core.registry.StructureRegistry;
@@ -10,6 +11,7 @@ import org.evasive.me.minefinity.towns.structures.data.Structure;
 import org.evasive.me.minefinity.towns.worldPackets.service.MassBlockPacketSender;
 import org.evasive.me.minefinity.towns.worldPackets.StructurePallets;
 
+import java.nio.Buffer;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -83,6 +85,7 @@ public class StructureService {
 
     public void handleWorkshopArea(Player player) {
         updateWorldPackets(player, WORKSHOP_REGION, structureRegistry.getStructure("WORLD_WORKSHOP"));
+
     }
 
     private void updateWorldPackets(Player player, String regionString, Structure structure){
@@ -90,7 +93,9 @@ public class StructureService {
         ProtectedRegion region = massBlockPacketSender.getRegion(world, regionString);
         if(region == null)
             return;
-        massBlockPacketSender.createBlockReplacementMap(player, world, region, StructurePallets.values()[getStructureLevel(player, structure)].replacementMap);
+
+        massBlockPacketSender.showSchematic(player, structure.id(), region.getMinimumPoint());
+        //massBlockPacketSender.createBlockReplacementMap(player, world, region, StructurePallets.values()[getStructureLevel(player, structure)].replacementMap);
     }
 
     public Collection<Structure> getStructures() {

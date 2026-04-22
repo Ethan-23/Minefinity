@@ -29,6 +29,7 @@ public class PlayerMoveListener implements Listener {
 
     private final StructureService structureService;
     private final Map<UUID, Long> cooldownMap = new HashMap<>();
+    private final Map<UUID, Long> illegalRegionTime = new HashMap<>();
 
     public PlayerMoveListener(StructureService structureService) {
         this.structureService = structureService;
@@ -40,8 +41,11 @@ public class PlayerMoveListener implements Listener {
 
         Location location = e.getFrom();
 
-        if(getRegionAtLocation(location) == null)
+        if(getRegionAtLocation(location) == null){
+            illegalRegionTime.remove(player.getUniqueId());
             return;
+        }
+
 
         checkUnlockedRegion(player, e);
 
@@ -104,7 +108,6 @@ public class PlayerMoveListener implements Listener {
         String structureId;
         Structure structure;
         try{
-            //Have to correct this later
             structureId = regionId.toUpperCase();
             structure = structureService.getStructure(structureId);
         }catch(Exception exception){
@@ -125,11 +128,12 @@ public class PlayerMoveListener implements Listener {
             player.sendMessage(TextConversions.parse("<red>You cannot enter this building yet!"));
         }
 
-        if(isInsideRegion(to, regionId))
-            e.setTo(from);
-
-        if(!isInsideRegion(from, regionId))
-            e.setTo(from);
+        if(!trackInsideRegionTime(player, regionId, level, to)){
+            if(isInsideRegion(to, regionId))
+                e.setTo(from);
+            else if(!isInsideRegion(from, regionId))
+                e.setTo(from);
+        }
 
         Vector movement = to.toVector().subtract(from.toVector());
 
@@ -144,10 +148,75 @@ public class PlayerMoveListener implements Listener {
             });
         }
 
+
     }
 
-    /*
+    public boolean trackInsideRegionTime(Player player, String regionId, int level, Location to) {
+        long now = System.currentTimeMillis();
 
-     */
+        boolean insideIllegal = isInsideRegion(to, regionId) && level <= 0;
+
+        UUID uuid = player.getUniqueId();
+
+        ProtectedRegion region = getRegionAtLocation(to);
+
+        if (insideIllegal) {
+            illegalRegionTime.putIfAbsent(uuid, now);
+
+            long enteredAt = illegalRegionTime.get(uuid);
+
+            player.sendMessage("IN");
+
+            if (now - enteredAt >= 3000) { // 3 seconds
+                forceTeleportOut(player, region);
+                illegalRegionTime.remove(uuid);
+                return true;
+            }
+        } else {
+            illegalRegionTime.remove(uuid);
+            player.sendMessage("REMOVED");
+            return false;
+        }
+        return false;
+    }
+
+    private void forceTeleportOut(Player player, ProtectedRegion region) {
+
+        Location loc = player.getLocation();
+
+        Location safe = getClosestOutsideLocation(player, region);
+
+        safe.setY(loc.getWorld().getHighestBlockYAt(safe) + 1);
+
+        player.teleport(safe.setRotation(player.getLocation().getRotation()));
+        player.sendMessage(TextConversions.parse("<red>You were removed from a locked area!"));
+    }
+
+    private Location getClosestOutsideLocation(Player player, ProtectedRegion region) {
+
+        Location loc = player.getLocation();
+
+        int minX = region.getMinimumPoint().x();
+        int maxX = region.getMaximumPoint().x();
+        int minZ = region.getMinimumPoint().z();
+        int maxZ = region.getMaximumPoint().z();
+
+        double x = loc.getX();
+        double z = loc.getZ();
+
+        double dx = Math.min(Math.abs(x - minX), Math.abs(x - maxX));
+        double dz = Math.min(Math.abs(z - minZ), Math.abs(z - maxZ));
+
+        if (dx < dz) {
+            x = (Math.abs(x - minX) < Math.abs(x - maxX)) ? minX - 1 : maxX + 1;
+        } else {
+            z = (Math.abs(z - minZ) < Math.abs(z - maxZ)) ? minZ - 1 : maxZ + 1;
+        }
+
+        Location safe = new Location(loc.getWorld(), x, loc.getY(), z);
+        safe.setY(loc.getWorld().getHighestBlockYAt(safe) + 1);
+
+        return safe;
+    }
 
 }

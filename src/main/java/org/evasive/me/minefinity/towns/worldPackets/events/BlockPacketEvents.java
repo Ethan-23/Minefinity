@@ -12,6 +12,7 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -49,7 +50,10 @@ public class BlockPacketEvents extends PacketListenerAbstract {
             if (isBlockInAnyRegion(block)) {
                 event.setCancelled(true);
 
-                Bukkit.getScheduler().runTask(Minefinity.getCore(), ()-> new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, player.getEquipment().getItemInMainHand(), block, player.getTargetBlockFace(5)).callEvent());
+                BlockFace blockFace = player.getTargetBlockFace(5);
+                if(blockFace == null)
+                    return;
+                Bukkit.getScheduler().runTask(Minefinity.getCore(), ()-> new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, player.getEquipment().getItemInMainHand(), block, blockFace).callEvent());
             }
             copy.cleanUp();
 
