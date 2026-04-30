@@ -9,9 +9,9 @@ import java.util.Map;
 
 public class BaseForgeRecipe extends BaseItemRecipe {
 
-    private int amount;
-    private int craftTime;
-    private ForgeCategories forgeCategories;
+    private final int amount;
+    private final int craftTime;
+    private final ForgeCategories forgeCategories;
 
     public BaseForgeRecipe(Map<String, Integer> recipe, String resultId, int amount, int craftTime, float cost, ForgeCategories forgeCategories, List<RecipeRequirement> requirements) {
         super(recipe, resultId, cost, requirements);

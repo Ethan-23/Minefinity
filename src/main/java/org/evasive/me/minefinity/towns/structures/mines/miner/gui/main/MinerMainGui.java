@@ -150,7 +150,6 @@ public class MinerMainGui extends BaseGui {
         if(clickedSlot == MinerMainGui.COLLECT_SLOT){
             minerMainEvents.handleCollectSlot(e, player);
             build();
-            return;
         }
     }
 

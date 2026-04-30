@@ -11,6 +11,7 @@ import org.evasive.me.minefinity.mining.milestones.MilestoneService;
 import org.evasive.me.minefinity.towns.structures.resourceblock.gui.BlockGui;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Objects;
 
@@ -30,7 +31,7 @@ public class BlockCommands implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NonNull [] strings) {
         if (!(commandSender instanceof Player player))
             return true;
         new BlockGui(player, blockTierService, customItemRegistryService, milestoneService, economyService, player.getWorld().getName()).open();

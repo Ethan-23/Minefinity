@@ -18,9 +18,7 @@ public class RegistryConfigHandler {
     }
 
     public void saveEntireRegistry(Collection<CustomItem> customItems) {
-        customItems.forEach(item -> {
-            addSingleEntry((BaseCustomItem) item);
-        });
+        customItems.forEach(item -> addSingleEntry((BaseCustomItem) item));
         itemRegistryConfigManager.saveItemRegistryConfig();
     }
 

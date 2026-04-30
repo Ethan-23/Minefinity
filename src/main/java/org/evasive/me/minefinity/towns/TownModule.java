@@ -52,11 +52,11 @@ import org.evasive.me.minefinity.towns.worldPackets.events.PlayerMovePacketEvent
 
 public class TownModule {
 
-    private PlayerDataService playerDataService;
+    private final PlayerDataService playerDataService;
     private final SmelterService smelterService;
-    private SmelterRecipeManager smelterRecipeManager;
+    private final SmelterRecipeManager smelterRecipeManager;
     private final ForgeService forgeService;
-    private ForgeRecipeManager forgeRecipeManager;
+    private final ForgeRecipeManager forgeRecipeManager;
     private final AutoMinerService autoMinerService;
     private final MerchantHandler merchantHandler;
     private final EngineerService engineerService;

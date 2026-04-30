@@ -94,12 +94,6 @@ public class BlockProgressHandler {
 
     }
 
-    public Map<String, Integer> calculateTotalStats(BasePickaxeItem basePickaxeItem){
-        PickaxeData pickaxeData = pickaxeResolver.resolve(basePickaxeItem);
-        return basePickaxeItem.getTotalStats(pickaxeData.getPickaxeParts());
-    }
-
-
     private void createNewAnimation(Player player, float progress, int health, Block block) {
 
         if(!isBlockStillValid(block.getLocation()))

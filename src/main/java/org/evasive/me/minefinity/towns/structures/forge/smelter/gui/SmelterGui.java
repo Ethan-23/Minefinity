@@ -42,7 +42,7 @@ public class SmelterGui extends BaseGui {
     private BukkitTask refreshTask;
 
     public SmelterGui(Player player, CustomItemRegistryService customItemRegistryService, SmelterService smelterService, SmelterHandler smelterHandler, SmelterRecipeManager smelterRecipeManager) {
-        super(player, 54, TextConversions.parse("Smeltery"));
+        super(player, INVENTORY_SIZE, TextConversions.parse("Smeltery"));
         this.smelterService = smelterService;
         this.smelterHandler = smelterHandler;
         this.customItemRegistryService = customItemRegistryService;

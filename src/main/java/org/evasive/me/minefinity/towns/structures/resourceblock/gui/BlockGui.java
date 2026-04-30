@@ -77,7 +77,7 @@ public class BlockGui extends BaseGui {
             if(blockTier >= blockList.size()){
                 this.inventory.setItem(TRACK.get(blockTier), null);
                 continue;
-            };
+            }
 
             String blockId = blockList.get(blockTier);
             BaseBlock block = blockTierService.getBlockTypeRegistryService().getBaseBlock(blockId);

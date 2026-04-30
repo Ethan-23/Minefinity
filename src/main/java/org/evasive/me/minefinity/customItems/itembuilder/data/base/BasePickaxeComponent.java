@@ -45,7 +45,7 @@ public class BasePickaxeComponent extends BaseCustomItem {
 
             String joined = pdc.get(PICKAXE_ABILITY_KEY, PersistentDataType.STRING);
             if (joined == null || joined.isEmpty()) {
-                this.pickaxeAbilityList =  new ArrayList<>(List.of());;
+                this.pickaxeAbilityList =  new ArrayList<>(List.of());
                 return;
             }
             this.pickaxeAbilityList = new ArrayList<>(Arrays.asList(joined.split(";;")));

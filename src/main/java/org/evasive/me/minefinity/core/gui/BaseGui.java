@@ -37,7 +37,7 @@ public abstract class BaseGui implements InventoryHolder {
 
     @Override
     public @NotNull Inventory getInventory() {
-        return null;
+        return inventory;
     }
 
     public void rebuildInventory(){

@@ -182,14 +182,4 @@ public class ItemCreationHandler {
             itemCreationGui.reopen();
         });
     }
-
-    public void handleMap(Player player, Type type, ItemOptions clickedOption, BaseCustomItem baseCustomItem, ItemCreationGui itemCreationGui) {
-        if(!(type instanceof ParameterizedType paramType))
-            return;
-
-        Type[] typeArgs = paramType.getActualTypeArguments();
-
-        Type keyType = typeArgs[0];
-        Type valueType = typeArgs[1];
-    }
 }

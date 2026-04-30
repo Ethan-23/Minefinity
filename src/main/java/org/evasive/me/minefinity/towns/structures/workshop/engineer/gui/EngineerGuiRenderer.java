@@ -147,15 +147,6 @@ public class EngineerGuiRenderer {
         inventory.setItem(TOOL_SLOT, tool.build());
     }
 
-    private void renderBorder(Inventory inventory, int size){
-        for(int i = 0; i < size; i++){
-            if(SHOP_SLOTS.contains(i) || List.of(SWAP_SLOT, HEADER_SLOT, TOOL_SLOT, RESOURCE_SLOT, INFORMATION_SLOT).contains(i))
-                continue;
-
-            inventory.setItem(i, fillerPane);
-        }
-    }
-
     private void renderSwapButton(Inventory inventory){
         boolean isCarpentry = mode == WorkshopMode.CARPENTRY;
         ItemBuilder itemBuilder = new ItemBuilder(isCarpentry ? Material.GRINDSTONE : Material.STONECUTTER, "<yellow>Swap to <bold><gold>"+formatItemName(isCarpentry ? WorkshopMode.STONEWORKING.name() : WorkshopMode.CARPENTRY.name()));
