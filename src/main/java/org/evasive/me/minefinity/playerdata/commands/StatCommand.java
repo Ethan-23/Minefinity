@@ -10,7 +10,6 @@ import org.evasive.me.minefinity.playerdata.stats.service.StatsService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public class StatCommand implements CommandExecutor {
 

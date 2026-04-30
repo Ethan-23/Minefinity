@@ -9,22 +9,21 @@ import org.bukkit.scheduler.BukkitTask;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
+import org.evasive.me.minefinity.core.utils.TextConversions;
+import org.evasive.me.minefinity.customItems.framework.CustomItemStack;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseFuelItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
-import org.evasive.me.minefinity.customItems.framework.CustomItemStack;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.forge.smelter.recipes.SmelterRecipeManager;
 import org.evasive.me.minefinity.towns.structures.forge.smelter.service.SmelterHandler;
 import org.evasive.me.minefinity.towns.structures.forge.smelter.service.SmelterService;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
-import org.evasive.me.minefinity.core.utils.TextConversions;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static org.evasive.me.minefinity.core.utils.guis.GenericGuiItems.fillerPane;
 import static org.evasive.me.minefinity.core.utils.guis.SwapItems.swapCursor;
 
 public class SmelterGui extends BaseGui {

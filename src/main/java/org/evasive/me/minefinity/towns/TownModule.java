@@ -6,20 +6,23 @@ import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.admin.commands.PacketRefresh;
 import org.evasive.me.minefinity.core.economy.EconomyService;
 import org.evasive.me.minefinity.core.npcs.NpcBehaviorRegistry;
+import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
 import org.evasive.me.minefinity.core.registry.StructureRegistry;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
 import org.evasive.me.minefinity.customItems.framework.ItemPickupService;
-import org.evasive.me.minefinity.customItems.recipebuilder.service.RecipeService;
+import org.evasive.me.minefinity.customItems.recipes.RecipeUnlockManager;
+import org.evasive.me.minefinity.customItems.recipes.recipebuilder.service.RecipeService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.mining.milestones.MilestoneService;
 import org.evasive.me.minefinity.playerdata.commands.MineData;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
+import org.evasive.me.minefinity.towns.events.JoinListener;
 import org.evasive.me.minefinity.towns.structures.RepeatingTick;
-import org.evasive.me.minefinity.towns.structures.forge.pickaxeanvil.commands.PickaxeAnvilCommand;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.BlacksmithNpc;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.recipes.ForgeRecipeManager;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.recipes.config.ForgeRecipeConfig;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.service.ForgeService;
+import org.evasive.me.minefinity.towns.structures.forge.pickaxeanvil.commands.PickaxeAnvilCommand;
 import org.evasive.me.minefinity.towns.structures.forge.smelter.SmelterNpc;
 import org.evasive.me.minefinity.towns.structures.forge.smelter.events.SmelterEvents;
 import org.evasive.me.minefinity.towns.structures.forge.smelter.recipes.SmelterRecipeManager;
@@ -32,7 +35,6 @@ import org.evasive.me.minefinity.towns.structures.mines.miner.service.AutoMinerS
 import org.evasive.me.minefinity.towns.structures.registry.config.StructureRegistryConfigManager;
 import org.evasive.me.minefinity.towns.structures.resourceblock.BlockMasterNpc;
 import org.evasive.me.minefinity.towns.structures.resourceblock.commands.BlockCommands;
-import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTypeRegistryService;
 import org.evasive.me.minefinity.towns.structures.service.StructureService;
@@ -45,12 +47,12 @@ import org.evasive.me.minefinity.towns.structures.workshop.engineer.recipes.Work
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.recipes.config.WorkshopRecipeConfig;
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.service.EngineerService;
 import org.evasive.me.minefinity.towns.worldPackets.events.ChunkLoadingEvents;
-import org.evasive.me.minefinity.core.worlds.GenerateCustomWorlds;
 import org.evasive.me.minefinity.towns.worldPackets.events.PlayerMoveListener;
 import org.evasive.me.minefinity.towns.worldPackets.events.PlayerMovePacketEvents;
 
 public class TownModule {
 
+    private PlayerDataService playerDataService;
     private final SmelterService smelterService;
     private SmelterRecipeManager smelterRecipeManager;
     private final ForgeService forgeService;
@@ -70,21 +72,21 @@ public class TownModule {
     private final SmelterHandler smelterHandler;
     private final NpcBehaviorRegistry npcBehaviorRegistry;
     private final StructureRegistryConfigManager structureRegistryConfigManager;
+    private final RecipeUnlockManager recipeUnlockManager;
 
     public TownModule(PlayerDataService playerDataService, EconomyService economyService, CustomItemRegistryService customItemRegistryService, BackpackService backpackService, BlockTierService blockTierService, MilestoneService milestoneService, ItemPickupService itemPickupService, NpcBehaviorRegistry npcBehaviorRegistry, BlockTypeRegistry blockTypeRegistry, BlockTypeRegistryService blockTypeRegistryService, StructureRegistry structureRegistry) {
 
+        this.playerDataService = playerDataService;
         this.customItemRegistryService = customItemRegistryService;
-
-        this.recipeService = new RecipeService(backpackService, customItemRegistryService, economyService);
 
         this.structureRegistryConfigManager = new StructureRegistryConfigManager(structureRegistry);
 
         //Smelter
         this.smelterRecipeManager = new SmelterRecipeManager();
-
         new SmelterRecipeConfig(Minefinity.getCore(), smelterRecipeManager);
         this.smelterService = new SmelterService(playerDataService, customItemRegistryService, smelterRecipeManager);
         this.smelterHandler = new SmelterHandler(smelterService, customItemRegistryService, itemPickupService);
+
         //Forge
         this.forgeRecipeManager = new ForgeRecipeManager();
         new ForgeRecipeConfig(Minefinity.getCore(), forgeRecipeManager);
@@ -109,6 +111,9 @@ public class TownModule {
         //Misc
         this.structureService = new StructureService(playerDataService, structureRegistry);
 
+        this.recipeUnlockManager = new RecipeUnlockManager(smelterRecipeManager, forgeRecipeManager);
+        this.recipeService = new RecipeService(backpackService, customItemRegistryService, economyService, recipeUnlockManager);
+
         this.backpackService = backpackService;
         this.itemPickupService = itemPickupService;
 
@@ -125,6 +130,7 @@ public class TownModule {
         pm.registerEvents(new AutoMinerEvents(autoMinerService), plugin);
         pm.registerEvents(new SmelterEvents(smelterService), plugin);
         pm.registerEvents(new PlayerMoveListener(structureService), plugin);
+        pm.registerEvents(new JoinListener(playerDataService, recipeUnlockManager), plugin);
 
         //Starts machine automation
         new RepeatingTick(autoMinerService, smelterService).startAutomation();

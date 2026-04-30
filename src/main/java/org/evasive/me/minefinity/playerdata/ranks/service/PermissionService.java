@@ -1,12 +1,5 @@
 package org.evasive.me.minefinity.playerdata.ranks.service;
 
-import com.google.common.collect.Lists;
-import com.lunarclient.apollo.Apollo;
-import com.lunarclient.apollo.client.mod.LunarClientMod;
-import com.lunarclient.apollo.module.nametag.Nametag;
-import com.lunarclient.apollo.module.nametag.NametagModule;
-import com.lunarclient.apollo.player.ApolloPlayer;
-import com.lunarclient.apollo.recipients.Recipients;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -21,7 +14,6 @@ import org.evasive.me.minefinity.playerdata.model.Rank;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 public class PermissionService {

@@ -11,8 +11,8 @@ import org.evasive.me.minefinity.core.admin.commands.economy.sub.EconomyAddSub;
 import org.evasive.me.minefinity.core.admin.commands.economy.sub.EconomySetSub;
 import org.evasive.me.minefinity.core.admin.commands.economy.sub.EconomySubSub;
 import org.evasive.me.minefinity.core.economy.EconomyService;
-import org.evasive.me.minefinity.core.utils.command.SubCommand;
 import org.evasive.me.minefinity.core.utils.command.CommandFeedback;
+import org.evasive.me.minefinity.core.utils.command.SubCommand;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

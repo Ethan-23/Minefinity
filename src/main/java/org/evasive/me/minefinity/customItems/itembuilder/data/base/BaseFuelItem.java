@@ -5,17 +5,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.core.rarity.Rarity;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemOptions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemKeys.FUEL_AMOUNT_KEY;
-import static org.evasive.me.minefinity.core.utils.TextConversions.buildItemRarity;
-import static org.evasive.me.minefinity.core.utils.TextConversions.buildItemType;
 
 public class BaseFuelItem extends BaseCustomItem {
 

@@ -6,7 +6,6 @@ import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 
 import java.util.List;
-import java.util.Optional;
 
 public class GuiUtils {
 

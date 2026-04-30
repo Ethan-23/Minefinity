@@ -2,8 +2,8 @@ package org.evasive.me.minefinity.playerdata.ranks.config;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.evasive.me.minefinity.playerdata.model.Rank;
-import org.evasive.me.minefinity.playerdata.ranks.data.RankCategory;
 import org.evasive.me.minefinity.playerdata.ranks.RankRegistry;
+import org.evasive.me.minefinity.playerdata.ranks.data.RankCategory;
 
 import java.util.HashSet;
 import java.util.Set;

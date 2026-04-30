@@ -2,10 +2,9 @@ package org.evasive.me.minefinity.core.economy.commands.balance.sub;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.core.utils.command.SubCommand;
 import org.evasive.me.minefinity.core.economy.EconomyService;
 import org.evasive.me.minefinity.core.utils.command.CommandFeedback;
+import org.evasive.me.minefinity.core.utils.command.SubCommand;
 
 public class BalanceSelfSub implements SubCommand {
 

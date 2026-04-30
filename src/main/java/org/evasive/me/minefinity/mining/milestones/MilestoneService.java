@@ -13,8 +13,6 @@ import org.evasive.me.minefinity.towns.structures.resourceblock.service.Resource
 import java.util.List;
 import java.util.Map;
 
-import static org.evasive.me.minefinity.playerdata.stats.data.Stats.MINING_FORTUNE;
-
 public class MilestoneService {
 
     private final PlayerDataService playerDataService;

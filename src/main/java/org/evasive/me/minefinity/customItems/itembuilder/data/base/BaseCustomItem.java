@@ -10,20 +10,21 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.evasive.me.minefinity.playerdata.stats.data.Stats;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.core.utils.TextConversions;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemOptions;
+import org.evasive.me.minefinity.playerdata.stats.data.Stats;
 
 import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.evasive.me.minefinity.core.utils.TextConversions.buildItemRarity;
+import static org.evasive.me.minefinity.core.utils.TextConversions.buildRarityColor;
 import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemKeys.*;
-import static org.evasive.me.minefinity.core.utils.TextConversions.*;
 
 public class BaseCustomItem implements CustomItem {
 

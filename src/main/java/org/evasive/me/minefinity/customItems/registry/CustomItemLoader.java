@@ -6,12 +6,14 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.EquipmentSlot;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.core.registry.CustomItemRegistry;
-import org.evasive.me.minefinity.playerdata.stats.data.Stats;
-import org.evasive.me.minefinity.customItems.itembuilder.data.*;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.*;
 import org.evasive.me.minefinity.customItems.registry.config.ItemRegistryConfigManager;
+import org.evasive.me.minefinity.playerdata.stats.data.Stats;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CustomItemLoader {

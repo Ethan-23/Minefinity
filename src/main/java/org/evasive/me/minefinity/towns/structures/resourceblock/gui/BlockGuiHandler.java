@@ -2,11 +2,11 @@ package org.evasive.me.minefinity.towns.structures.resourceblock.gui;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
-import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
-import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 import org.evasive.me.minefinity.core.economy.EconomyService;
-import org.evasive.me.minefinity.mining.milestones.MilestoneService;
 import org.evasive.me.minefinity.core.utils.TextConversions;
+import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
+import org.evasive.me.minefinity.mining.milestones.MilestoneService;
+import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 
 
 public class BlockGuiHandler {

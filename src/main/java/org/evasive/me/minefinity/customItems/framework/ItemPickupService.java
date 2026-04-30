@@ -1,16 +1,12 @@
 package org.evasive.me.minefinity.customItems.framework;
 
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerCollectItem;
 import net.kyori.adventure.title.Title;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.backpack.BackpackHandler;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
-import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 
 import java.util.HashMap;

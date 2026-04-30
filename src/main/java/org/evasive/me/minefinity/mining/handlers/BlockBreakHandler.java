@@ -1,6 +1,5 @@
 package org.evasive.me.minefinity.mining.handlers;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -13,9 +12,9 @@ import org.evasive.me.minefinity.mining.abilities.MiningAbilityRunner;
 import org.evasive.me.minefinity.mining.context.BreakContext;
 import org.evasive.me.minefinity.mining.context.StatsContext;
 import org.evasive.me.minefinity.mining.data.MiningDataMap;
+import org.evasive.me.minefinity.mining.milestones.MilestoneService;
 import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
-import org.evasive.me.minefinity.mining.milestones.MilestoneService;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;

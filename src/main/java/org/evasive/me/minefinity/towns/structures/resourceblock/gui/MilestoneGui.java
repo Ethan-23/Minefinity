@@ -6,28 +6,26 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.evasive.me.minefinity.core.economy.EconomyService;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
+import org.evasive.me.minefinity.core.utils.TextConversions;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
-import org.evasive.me.minefinity.core.economy.EconomyService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
+import org.evasive.me.minefinity.mining.milestones.MilestoneService;
 import org.evasive.me.minefinity.mining.milestones.MilestoneTier;
 import org.evasive.me.minefinity.playerdata.stats.data.Stats;
 import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
-import org.evasive.me.minefinity.mining.milestones.MilestoneService;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
-import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
 
-import static org.evasive.me.minefinity.core.utils.guis.GenericGuiItems.backPage;
-import static org.evasive.me.minefinity.core.utils.guis.GenericGuiItems.fillerPane;
 import static org.evasive.me.minefinity.core.utils.TextConversions.buildRarityColor;
 import static org.evasive.me.minefinity.core.utils.TextConversions.intToRoman;
-import static org.evasive.me.minefinity.playerdata.stats.data.Stats.MINING_FORTUNE;
+import static org.evasive.me.minefinity.core.utils.guis.GenericGuiItems.backPage;
 
 public class MilestoneGui extends BaseGui {
 

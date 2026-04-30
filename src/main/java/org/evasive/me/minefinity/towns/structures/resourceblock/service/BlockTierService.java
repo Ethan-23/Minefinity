@@ -47,6 +47,11 @@ public class BlockTierService {
         return getPlayerData(player).getSelectedBlockTier(worldId);
     }
 
+    public int getSelectedMiningTier(Player player, String worldId) {
+        List<String> blockList = getBlockTypeRegistryService().getBlockList(worldId);
+        return blockList.indexOf(getSelectedMiningBlock(player, worldId));
+    }
+
     public BaseBlock getSelectedBaseBlock(Player player){
         String worldName = player.getWorld().getName();
         return blockTypeRegistryService.getBaseBlock(getPlayerData(player).getSelectedBlockTier(worldName));

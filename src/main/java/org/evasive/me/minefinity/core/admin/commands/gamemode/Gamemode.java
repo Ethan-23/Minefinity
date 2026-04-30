@@ -9,7 +9,9 @@ import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.utils.command.CommandFeedback;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 
 import static org.evasive.me.minefinity.core.utils.command.CommandFeedback.SET_PLAYERS_GAMEMODE;
 

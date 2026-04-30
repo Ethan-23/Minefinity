@@ -1,7 +1,6 @@
 package org.evasive.me.minefinity.core.scoreboard;
 
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -11,9 +10,9 @@ import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.admin.service.VanishService;
 import org.evasive.me.minefinity.core.economy.EconomyService;
 import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
+import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
-import org.evasive.me.minefinity.core.utils.TextConversions;
 
 import java.time.LocalDateTime;
 

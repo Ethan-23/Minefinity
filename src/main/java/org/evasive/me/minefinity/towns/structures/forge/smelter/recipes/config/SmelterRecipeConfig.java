@@ -2,6 +2,7 @@ package org.evasive.me.minefinity.towns.structures.forge.smelter.recipes.config;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.evasive.me.minefinity.core.config.BaseConfig;
+import org.evasive.me.minefinity.customItems.recipes.recipebuilder.util.RequirementParser;
 import org.evasive.me.minefinity.towns.structures.forge.smelter.recipes.BaseSmelterRecipe;
 import org.evasive.me.minefinity.towns.structures.forge.smelter.recipes.SmelterRecipeManager;
 
@@ -42,7 +43,7 @@ public class SmelterRecipeConfig extends BaseConfig {
 
             int fuelTier = recipeSection.getInt("fuel-tier");
             int fuelAmount = recipeSection.getInt("fuel-usage");
-            int unlockLevel = recipeSection.getInt("unlock-level");
+            float cost = (float) recipeSection.getDouble("cost");
 
             String firstKey = null;
 
@@ -57,7 +58,7 @@ public class SmelterRecipeConfig extends BaseConfig {
 
 
             //Smelter map puts input as key instead of output to search inventory since its 1:1
-            smelterRecipeManager.addRecipe(firstKey, new BaseSmelterRecipe(recipeMap, key, fuelTier, fuelAmount, unlockLevel));
+            smelterRecipeManager.addRecipe(firstKey, new BaseSmelterRecipe(recipeMap, key, fuelTier, fuelAmount, cost, RequirementParser.parse(recipeSection)));
 
         });
     }

@@ -1,13 +1,10 @@
 package org.evasive.me.minefinity.playerdata.service;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.playerdata.model.PlayerData;
 import org.evasive.me.minefinity.playerdata.repository.PlayerDataRepository;
-import org.evasive.me.minefinity.playerdata.stats.service.StatsService;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.*;
 import java.util.function.Consumer;

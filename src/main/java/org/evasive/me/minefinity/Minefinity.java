@@ -2,16 +2,14 @@ package org.evasive.me.minefinity;
 
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import org.bukkit.Bukkit;
-import org.bukkit.WorldCreator;
-import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.evasive.me.minefinity.core.CoreModule;
 import org.evasive.me.minefinity.customItems.CustomItemModule;
+import org.evasive.me.minefinity.customItems.backpack.BackpackService;
 import org.evasive.me.minefinity.mining.MiningModule;
 import org.evasive.me.minefinity.playerdata.PlayerDataModule;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.towns.TownModule;
-import org.evasive.me.minefinity.customItems.backpack.BackpackService;
 
 
 public final class Minefinity extends JavaPlugin {

@@ -1,15 +1,12 @@
 package org.evasive.me.minefinity.playerdata.stats.service;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.evasive.me.minefinity.customItems.itembuilder.data.PickaxeData;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeItem;
-import org.evasive.me.minefinity.customItems.itembuilder.resolvers.PickaxeResolver;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.mining.milestones.MilestoneTier;
 import org.evasive.me.minefinity.playerdata.model.PlayerData;

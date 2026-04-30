@@ -1,29 +1,25 @@
 package org.evasive.me.minefinity.towns.structures.townhall.mayor;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.core.admin.commands.economy.Economy;
-import org.evasive.me.minefinity.core.economy.EconomyService;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
-import org.evasive.me.minefinity.customItems.recipebuilder.data.BaseItemRecipe;
-import org.evasive.me.minefinity.customItems.recipebuilder.service.RecipeService;
+import org.evasive.me.minefinity.core.utils.TextConversions;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.BaseItemRecipe;
+import org.evasive.me.minefinity.customItems.recipes.recipebuilder.service.RecipeService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.mining.milestones.MilestoneService;
 import org.evasive.me.minefinity.towns.structures.data.Structure;
 import org.evasive.me.minefinity.towns.structures.service.StructureService;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
-import org.evasive.me.minefinity.core.utils.TextConversions;
 
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
 import static org.evasive.me.minefinity.core.utils.TextConversions.buildRarityColor;
-import static org.evasive.me.minefinity.core.utils.economy.EconNumberUtils.balanceSuffix;
 
 public class MayorGui extends BaseGui {
 

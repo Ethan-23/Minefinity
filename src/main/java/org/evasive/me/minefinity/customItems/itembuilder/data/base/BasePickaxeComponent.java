@@ -5,14 +5,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.evasive.me.minefinity.customItems.itembuilder.data.ItemOptions;
-import org.evasive.me.minefinity.mining.abilities.PickaxeAbilities;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.data.ItemOptions;
+import org.evasive.me.minefinity.mining.abilities.PickaxeAbilities;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemKeys.*;
+import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemKeys.PICKAXE_ABILITY_KEY;
 
 public class BasePickaxeComponent extends BaseCustomItem {
 

@@ -1,27 +1,31 @@
-package org.evasive.me.minefinity.customItems.recipebuilder.service;
+package org.evasive.me.minefinity.customItems.recipes.recipebuilder.service;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.economy.EconomyService;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
-import org.evasive.me.minefinity.customItems.recipebuilder.data.BaseItemRecipe;
+import org.evasive.me.minefinity.customItems.recipes.RecipeUnlockManager;
+import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.BaseItemRecipe;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.recipes.BaseForgeRecipe;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class RecipeService {
 
     private final BackpackService backpackService;
     private final CustomItemRegistryService customItemRegistryService;
     private final EconomyService economyService;
+    private final RecipeUnlockManager recipeUnlockManager;
 
-    public RecipeService(BackpackService backpackService, CustomItemRegistryService customItemRegistryService, EconomyService economyService) {
+    public RecipeService(BackpackService backpackService, CustomItemRegistryService customItemRegistryService, EconomyService economyService, RecipeUnlockManager recipeUnlockManager) {
         this.backpackService = backpackService;
         this.customItemRegistryService = customItemRegistryService;
         this.economyService = economyService;
+        this.recipeUnlockManager = recipeUnlockManager;
     }
 
     public boolean tryPurchaseItem(Player player, BaseItemRecipe recipe){
@@ -113,6 +117,10 @@ public class RecipeService {
     private boolean isValidResource(ItemStack stack) {
         return stack != null
                 && customItemRegistryService.getItemId(stack) != null;
+    }
+
+    public boolean hasRecipeUnlocked(UUID uuid, String recipeId){
+        return recipeUnlockManager.hasRecipeUnlocked(uuid, recipeId);
     }
 
 }

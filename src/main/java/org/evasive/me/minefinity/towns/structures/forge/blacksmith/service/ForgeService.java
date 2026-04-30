@@ -2,10 +2,12 @@ package org.evasive.me.minefinity.towns.structures.forge.blacksmith.service;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.RecipeRequirement;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.playerdata.model.PlayerData;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.data.BaseForgeItem;
+import org.evasive.me.minefinity.towns.structures.forge.blacksmith.recipes.BaseForgeRecipe;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -70,6 +72,15 @@ public class ForgeService {
 
     public boolean isFinished(Player player, int slot){
         return getForgeFinishTime(player, slot) - Instant.now().toEpochMilli() <= 0;
+    }
+
+    public boolean hasRecipeUnlocked(Player player, BaseForgeRecipe baseForgeRecipe){
+
+        for(RecipeRequirement recipeRequirement : baseForgeRecipe.getRequirements()){
+            if(!recipeRequirement.isMet(getPlayerData(player)))
+                return false;
+        }
+        return true;
     }
 
 }

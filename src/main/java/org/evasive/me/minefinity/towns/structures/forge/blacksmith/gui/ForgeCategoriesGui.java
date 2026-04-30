@@ -1,24 +1,27 @@
 package org.evasive.me.minefinity.towns.structures.forge.blacksmith.gui;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
+import org.evasive.me.minefinity.core.utils.TextConversions;
+import org.evasive.me.minefinity.core.utils.TimeCalculator;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
-import org.evasive.me.minefinity.customItems.recipebuilder.service.RecipeService;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.RecipeRequirement;
+import org.evasive.me.minefinity.customItems.recipes.recipebuilder.service.RecipeService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.data.ForgeCategories;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.recipes.BaseForgeRecipe;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.recipes.ForgeRecipeManager;
-import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.core.utils.TimeCalculator;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.service.ForgeService;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -102,31 +105,43 @@ public class ForgeCategoriesGui extends BaseGui {
 
             if(slot >= categoryList.size()) break;
 
-            BaseForgeRecipe forgeCrafting = categoryList.get(slot);
+            BaseForgeRecipe currentRecipe = categoryList.get(slot);
+            String itemId = currentRecipe.getResult();
 
-            ItemBuilder forgeItem = new ItemBuilder(customItemRegistryService.getRegisteredItemStack(forgeCrafting.getResult()));
-            forgeItem.addBlank().addLore("<bold><gold>Recipe:");
+            ItemBuilder forgeItem = new ItemBuilder(customItemRegistryService.getRegisteredItemStack(itemId));
 
-            for (Map.Entry<String, Integer> entry : forgeCrafting.getRecipe().entrySet()) {
+            //Change to check if player just has recipe in set of recipes when I add that <<<<<<
+            if(!recipeService.hasRecipeUnlocked(player.getUniqueId(), currentRecipe.getResult())){
+                forgeItem.setMaterial(Material.BARRIER);
+                forgeItem.setDisplayName(TextConversions.formatItemName(itemId) + " <red>(Locked)");
+                forgeItem.setLore(new ArrayList<>());
+                forgeItem.addBlank();
+                forgeItem.addLore("<red>Requirements:");
+                for (RecipeRequirement recipeRequirement : currentRecipe.getRequirements()) {
+                    forgeItem.addLore(recipeRequirement.getDisplay());
+                }
+            } else {
+                forgeItem.addBlank().addLore("<bold><gold>Recipe:");
 
-                CustomItem customItem = customItemRegistryService.getRegisteredBaseItem(entry.getKey());
+                for (Map.Entry<String, Integer> entry : currentRecipe.getRecipe().entrySet()) {
 
-                if(customItem != null){
+                    CustomItem customItem = customItemRegistryService.getRegisteredBaseItem(entry.getKey());
 
-                    BaseCustomItem baseCustomItem = customItem.getBaseItem();
+                    if(customItem != null){
 
-                    int amount = entry.getValue();
-                    String name = baseCustomItem.getDisplayName();
-                    forgeItem.addLore(TextConversions.buildRarityColor(name, baseCustomItem.getRarity()) + "<white> x" + amount).build();
-                }else {
-                    forgeItem.addLore("<red>Unknown Item <bold>" +  entry.getKey());
+                        BaseCustomItem baseCustomItem = customItem.getBaseItem();
+
+                        int amount = entry.getValue();
+                        String name = baseCustomItem.getDisplayName();
+                        forgeItem.addLore(TextConversions.buildRarityColor(name, baseCustomItem.getRarity()) + "<white> x" + amount).build();
+                    }else {
+                        forgeItem.addLore("<red>Unknown Item <bold>" +  entry.getKey());
+                    }
                 }
 
-
+                forgeItem.addBlank().addLore("<bold><gold>Forge Time:" );
+                forgeItem.addLore("<yellow>" + (TimeCalculator.getString(currentRecipe.getCraftTime() * 1000L)));
             }
-
-            forgeItem.addBlank().addLore("<bold><gold>Forge Time:" );
-            forgeItem.addLore("<yellow>" + (TimeCalculator.getString(forgeCrafting.getCraftTime() * 1000L)));
 
             inventory.setItem(RECIPE_SLOTS.get(slot), forgeItem.build());
 
@@ -164,6 +179,11 @@ public class ForgeCategoriesGui extends BaseGui {
             String itemId = customItemRegistryService.getItemId(currentItem);
 
             if(itemId == null)
+                return;
+
+            BaseForgeRecipe itemRecipe = forgeRecipeManager.getRecipe(itemId);
+
+            if(!forgeService.hasRecipeUnlocked(player, itemRecipe))
                 return;
 
             new ForgeConfirmationGui(player, customItemRegistryService, forgeRecipeManager.getRecipe(itemId), forgeRecipeManager, recipeService, forgeService).openInventory(player);

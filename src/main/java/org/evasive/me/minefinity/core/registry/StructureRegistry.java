@@ -2,7 +2,10 @@ package org.evasive.me.minefinity.core.registry;
 
 import org.evasive.me.minefinity.towns.structures.data.Structure;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class StructureRegistry {
 

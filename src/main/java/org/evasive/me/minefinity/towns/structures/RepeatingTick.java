@@ -3,10 +3,10 @@ package org.evasive.me.minefinity.towns.structures;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.towns.structures.mines.miner.service.AutoMinerService;
 import org.evasive.me.minefinity.towns.structures.forge.smelter.service.SmelterService;
+import org.evasive.me.minefinity.towns.structures.mines.miner.service.AutoMinerService;
 
-import java.util.*;
+import java.util.Collection;
 
 public class RepeatingTick {
 

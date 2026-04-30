@@ -7,21 +7,20 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.evasive.me.minefinity.Minefinity;
+import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
+import org.evasive.me.minefinity.core.utils.TextConversions;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.forge.pickaxeanvil.PickaxeAnvilHandler;
-import org.evasive.me.minefinity.core.gui.BaseGui;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
-import org.evasive.me.minefinity.core.utils.guis.GenericGuiItems;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
-import org.evasive.me.minefinity.core.utils.TextConversions;
 
 import java.util.List;
 import java.util.Objects;
 
 import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemKeys.*;
-import static org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService.*;
+import static org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService.getStringPDC;
 
 public class PickaxeAnvilGui extends BaseGui {
 

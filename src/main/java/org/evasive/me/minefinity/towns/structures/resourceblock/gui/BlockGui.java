@@ -1,26 +1,23 @@
 package org.evasive.me.minefinity.towns.structures.resourceblock.gui;
 
 import net.kyori.adventure.text.Component;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.economy.EconomyService;
+import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
-import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
-import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
-import org.evasive.me.minefinity.mining.milestones.MilestoneService;
-import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.core.utils.TextConversions;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
+import org.evasive.me.minefinity.mining.milestones.MilestoneService;
+import org.evasive.me.minefinity.playerdata.stats.data.Stats;
+import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
+import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static org.evasive.me.minefinity.core.utils.guis.GenericGuiItems.fillerPane;
 import static org.evasive.me.minefinity.core.utils.TextConversions.intToRoman;
 
 public class BlockGui extends BaseGui {
@@ -86,24 +83,19 @@ public class BlockGui extends BaseGui {
             BaseBlock block = blockTierService.getBlockTypeRegistryService().getBaseBlock(blockId);
 
             boolean unlocked = blockTierService.getUnlockedMiningBlock(player, SELECTED_WORLD) >= blockTier;
+            boolean selected = blockTier == blockTierService.getSelectedMiningTier(player, SELECTED_WORLD);
 
-            Component name = TextConversions.parse("<gray>(<" + (unlocked ? "white" : "red") + ">" + intToRoman(blockTier+1) +"<gray>) <white>" + TextConversions.formatItemName(block.name()));
+            Component name = TextConversions.parse(
+                    "<gray>(<" + (unlocked ? "white" : "red") + ">" + intToRoman(blockTier+1) +"<gray>) <white>" +
+                            TextConversions.buildRarityColor(block.name(), CustomItemRegistryService.get().getRegisteredBaseItem(block.blockDropId()).getRarity()) +
+                            (selected ? "<gray> - <green><bold>Selected" : ""));
             ItemBuilder blockBuilder = new ItemBuilder(block.material(), name);
+            if(selected)
+                blockBuilder.setGlow(true);
             blockBuilder.addLore(unlocked ? getBlockLore(blockId, block, player) : getLockedBlockLore(block));
-            if(blockTier == blockList.indexOf(blockTierService.getSelectedMiningBlock(player, SELECTED_WORLD)))
-                setSelected(blockBuilder);
             this.inventory.setItem(TRACK.get(blockTier), blockBuilder.build());
         }
     }
-
-    /**
-     * Adds a glow and lore to show the selected block.
-     * @param blockBuilder ItemBuilder being added to.
-     */
-    private void setSelected(ItemBuilder blockBuilder){
-        blockBuilder.addLore("<bold><green>Selected").addGlow();
-    }
-
 
     /**
      * @param baseBlock BlockType of lore being created
@@ -111,18 +103,19 @@ public class BlockGui extends BaseGui {
      * @return Unlocked block lore
      */
     private List<String> getBlockLore(String blockId, BaseBlock baseBlock, Player player){
-        String blockHealth = String.valueOf(baseBlock.health());
-        String breakingPower = String.valueOf(baseBlock.breakingPower());
+        String blockHealth =  "" + baseBlock.health();
+        String breakingPower =  "" + baseBlock.breakingPower();
         int mTier = milestoneService.getTier(player, blockId);
         String milestoneTier = mTier == 0 ? "0" : intToRoman(mTier);
 
         return List.of(
-                "<gray>Breaking Power: <white>" + breakingPower,
-                "<gray>Block Health: <white>" + blockHealth,
-                "<gray>Milestone Tier: <aqua>" + milestoneTier,
+                Stats.BREAKING_POWER.getDisplay() + ": <white>" + breakingPower,
+                Stats.HEALTH.getDisplay() + ": <white>" + blockHealth,
                 "",
-                "<#a1a1a1>Left-Click <gray>to Select",
-                "<#a1a1a1>Right-Click <gray>to view Milestones"
+                "<green>Milestone Tier: <white>" + milestoneTier,
+                "",
+                "<#a1a1a1>Left-Click <gray>to <white>Select",
+                "<#a1a1a1>Right-Click <gray>to <white>Open Milestones"
         );
     }
 

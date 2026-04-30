@@ -6,14 +6,13 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.core.utils.TextConversions;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 
 import java.util.Collections;
 import java.util.List;
 
 import static org.evasive.me.minefinity.core.utils.guis.GenericGuiItems.backPage;
-import static org.evasive.me.minefinity.core.utils.guis.GenericGuiItems.fillerPane;
 
 public class ListOrderGui extends BaseGui {
 

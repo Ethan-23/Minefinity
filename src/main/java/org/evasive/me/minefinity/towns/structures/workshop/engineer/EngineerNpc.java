@@ -3,7 +3,7 @@ package org.evasive.me.minefinity.towns.structures.workshop.engineer;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.core.npcs.framework.NpcBehavior;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
-import org.evasive.me.minefinity.customItems.recipebuilder.service.RecipeService;
+import org.evasive.me.minefinity.customItems.recipes.recipebuilder.service.RecipeService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.data.WorkshopMode;
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.gui.EngineerGui;

@@ -1,6 +1,5 @@
 package org.evasive.me.minefinity.playerdata.stats.gui;
 
-import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -13,7 +12,6 @@ import org.evasive.me.minefinity.playerdata.stats.data.Stats;
 import org.evasive.me.minefinity.playerdata.stats.service.StatsService;
 
 import java.util.EnumMap;
-import java.util.Map;
 
 import static org.evasive.me.minefinity.playerdata.stats.data.Stats.MINING_FORTUNE;
 import static org.evasive.me.minefinity.playerdata.stats.data.Stats.MINING_SPEED;

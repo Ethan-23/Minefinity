@@ -1,6 +1,5 @@
 package org.evasive.me.minefinity.towns.structures.forge.smelter.service;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;

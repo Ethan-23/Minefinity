@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.evasive.me.minefinity.mining.milestones.BlockMilestone;
 import org.evasive.me.minefinity.playerdata.database.PlayersDatabaseManager;
-import org.evasive.me.minefinity.playerdata.model.*;
+import org.evasive.me.minefinity.playerdata.model.PlayerData;
 import org.evasive.me.minefinity.towns.data.TownData;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.data.BaseForgeItem;
 import org.evasive.me.minefinity.towns.structures.forge.smelter.Smelter;
@@ -12,8 +12,13 @@ import org.evasive.me.minefinity.towns.structures.mines.miner.AutoMinerData;
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.data.Engineer;
 
 import java.lang.reflect.Type;
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 public class PlayerDataRepository {
 

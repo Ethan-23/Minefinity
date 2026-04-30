@@ -4,8 +4,10 @@ import org.bukkit.Bukkit;
 import org.evasive.me.minefinity.playerdata.database.RankDatabaseManager;
 import org.evasive.me.minefinity.playerdata.model.PlayerRanks;
 
-import java.sql.*;
-import java.util.Iterator;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 

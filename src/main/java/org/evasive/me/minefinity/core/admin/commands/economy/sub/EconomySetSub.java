@@ -3,10 +3,9 @@ package org.evasive.me.minefinity.core.admin.commands.economy.sub;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.core.utils.command.SubCommand;
 import org.evasive.me.minefinity.core.economy.EconomyService;
 import org.evasive.me.minefinity.core.utils.command.CommandFeedback;
+import org.evasive.me.minefinity.core.utils.command.SubCommand;
 
 public class EconomySetSub implements SubCommand {
 

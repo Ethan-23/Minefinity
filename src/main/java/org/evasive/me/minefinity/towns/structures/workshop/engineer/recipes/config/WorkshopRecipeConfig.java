@@ -2,6 +2,7 @@ package org.evasive.me.minefinity.towns.structures.workshop.engineer.recipes.con
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.evasive.me.minefinity.core.config.BaseConfig;
+import org.evasive.me.minefinity.customItems.recipes.recipebuilder.util.RequirementParser;
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.data.WorkshopMode;
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.recipes.BaseWorkshopRecipe;
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.recipes.WorkshopRecipeManager;
@@ -40,7 +41,7 @@ public class WorkshopRecipeConfig extends BaseConfig {
             Map<String, Integer> recipeMap = new HashMap<>();
             WorkshopMode workshopMode = WorkshopMode.valueOf(recipeSection.getString("workshop-mode"));
             WorkshopToolsTiers workshopToolsTier = WorkshopToolsTiers.valueOf(recipeSection.getString("workshop-tool-tier"));
-            int unlockLevel = recipeSection.getInt("unlock-level");
+            float cost = (float) recipeSection.getDouble("cost");
             int durabilityUsage = recipeSection.getInt("durability-usage");
             ConfigurationSection ingredients = recipeSection.getConfigurationSection("recipe");
 
@@ -50,7 +51,7 @@ public class WorkshopRecipeConfig extends BaseConfig {
                 );
             }
 
-            workshopRecipeManager.addRecipe(key, new BaseWorkshopRecipe(recipeMap, key, workshopMode, workshopToolsTier, unlockLevel, durabilityUsage));
+            workshopRecipeManager.addRecipe(key, new BaseWorkshopRecipe(recipeMap, key, workshopMode, workshopToolsTier, cost, durabilityUsage, RequirementParser.parse(recipeSection)));
 
         });
     }

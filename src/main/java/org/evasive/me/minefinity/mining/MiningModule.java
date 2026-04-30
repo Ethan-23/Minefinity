@@ -17,7 +17,6 @@ import org.evasive.me.minefinity.playerdata.stats.service.StatsService;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTypeRegistryService;
 import org.evasive.me.minefinity.towns.worldPackets.events.BlockPacketEvents;
-import org.evasive.me.minefinity.towns.worldPackets.events.PlayerMovePacketEvents;
 
 public class MiningModule {
 

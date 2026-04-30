@@ -1,7 +1,6 @@
 package org.evasive.me.minefinity.playerdata.model;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.mining.milestones.BlockMilestone;
 import org.evasive.me.minefinity.playerdata.stats.data.Stats;
 import org.evasive.me.minefinity.towns.data.TownData;

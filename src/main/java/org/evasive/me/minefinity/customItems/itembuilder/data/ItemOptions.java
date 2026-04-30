@@ -3,10 +3,10 @@ package org.evasive.me.minefinity.customItems.itembuilder.data;
 import com.google.common.reflect.TypeToken;
 import org.bukkit.Material;
 import org.bukkit.inventory.EquipmentSlot;
-import org.evasive.me.minefinity.playerdata.stats.data.Stats;
+import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.*;
 import org.evasive.me.minefinity.mining.abilities.PickaxeAbilities;
-import org.evasive.me.minefinity.core.rarity.Rarity;
+import org.evasive.me.minefinity.playerdata.stats.data.Stats;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

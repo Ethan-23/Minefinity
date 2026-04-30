@@ -2,14 +2,14 @@ package org.evasive.me.minefinity.towns.structures.mines.miner.service;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.playerdata.stats.data.Stats;
+import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
+import org.evasive.me.minefinity.mining.handlers.BlockProgressHandler;
 import org.evasive.me.minefinity.playerdata.model.PlayerData;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
+import org.evasive.me.minefinity.playerdata.stats.data.Stats;
 import org.evasive.me.minefinity.towns.structures.mines.miner.AutoMinerData;
-import org.evasive.me.minefinity.mining.handlers.BlockProgressHandler;
-import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTypeRegistryService;
 

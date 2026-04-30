@@ -1,6 +1,5 @@
 package org.evasive.me.minefinity.core;
 
-import com.github.retrooper.packetevents.PacketEvents;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.evasive.me.minefinity.core.admin.commands.*;
@@ -24,16 +23,16 @@ import org.evasive.me.minefinity.core.npcs.NpcInstanceMap;
 import org.evasive.me.minefinity.core.npcs.events.InteractEvent;
 import org.evasive.me.minefinity.core.npcs.events.NpcLoadEvents;
 import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
+import org.evasive.me.minefinity.core.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.core.registry.StructureRegistry;
+import org.evasive.me.minefinity.core.scoreboard.ScoreboardService;
 import org.evasive.me.minefinity.core.spawn.command.Spawn;
 import org.evasive.me.minefinity.core.spawn.service.SpawnService;
 import org.evasive.me.minefinity.core.warp.command.Warp;
 import org.evasive.me.minefinity.core.warp.service.WarpService;
 import org.evasive.me.minefinity.core.worlds.GenerateCustomWorlds;
 import org.evasive.me.minefinity.customItems.itembuilder.events.PlayerInputListener;
-import org.evasive.me.minefinity.core.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
-import org.evasive.me.minefinity.core.scoreboard.ScoreboardService;
 import org.evasive.me.minefinity.towns.structures.resourceblock.config.MiningBlockRegistryConfig;
 
 public class CoreModule {

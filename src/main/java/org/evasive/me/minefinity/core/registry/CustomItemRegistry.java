@@ -1,6 +1,6 @@
 package org.evasive.me.minefinity.core.registry;
 
-import org.evasive.me.minefinity.customItems.itembuilder.data.*;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
 
 import java.util.Collection;
 import java.util.HashMap;

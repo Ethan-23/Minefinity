@@ -9,19 +9,19 @@ import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
-import org.evasive.me.minefinity.customItems.recipebuilder.service.RecipeService;
+import org.evasive.me.minefinity.core.utils.TextConversions;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.recipes.recipebuilder.service.RecipeService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.recipes.ForgeRecipeManager;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.service.ForgeHandler;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.service.ForgeService;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
-import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.List;
 
-import static org.evasive.me.minefinity.core.utils.guis.GenericGuiItems.*;
 import static org.evasive.me.minefinity.core.utils.TimeCalculator.getString;
+import static org.evasive.me.minefinity.core.utils.guis.GenericGuiItems.*;
 
 public class ForgeGui extends BaseGui {
 

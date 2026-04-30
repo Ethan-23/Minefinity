@@ -1,16 +1,15 @@
 package org.evasive.me.minefinity.towns.structures.forge.smelter.service;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseFuelItem;
+import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.framework.CustomItemStack;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseFuelItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.playerdata.model.PlayerData;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.towns.structures.forge.smelter.Smelter;
 import org.evasive.me.minefinity.towns.structures.forge.smelter.recipes.BaseSmelterRecipe;
 import org.evasive.me.minefinity.towns.structures.forge.smelter.recipes.SmelterRecipeManager;
-import org.evasive.me.minefinity.core.utils.TextConversions;
 
 import java.util.Map;
 

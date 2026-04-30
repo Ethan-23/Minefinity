@@ -1,11 +1,11 @@
 package org.evasive.me.minefinity.towns.structures.mines.miner;
 
 import org.bukkit.entity.Player;
+import org.evasive.me.minefinity.core.npcs.framework.NpcBehavior;
 import org.evasive.me.minefinity.customItems.framework.ItemPickupService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.mines.miner.gui.main.MinerMainGui;
 import org.evasive.me.minefinity.towns.structures.mines.miner.service.AutoMinerService;
-import org.evasive.me.minefinity.core.npcs.framework.NpcBehavior;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 
 public class MinerNpc implements NpcBehavior {

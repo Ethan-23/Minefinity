@@ -7,9 +7,9 @@ import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.economy.EconomyService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
-import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 import org.evasive.me.minefinity.mining.milestones.MilestoneService;
 import org.evasive.me.minefinity.towns.structures.resourceblock.gui.BlockGui;
+import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

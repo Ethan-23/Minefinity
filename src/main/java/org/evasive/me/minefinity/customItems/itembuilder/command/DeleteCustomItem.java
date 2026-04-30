@@ -6,8 +6,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.ConfirmationGui;
-import org.evasive.me.minefinity.customItems.registry.config.RegistryConfigHandler;
 import org.evasive.me.minefinity.core.utils.command.CommandFeedback;
+import org.evasive.me.minefinity.customItems.registry.config.RegistryConfigHandler;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.jetbrains.annotations.NotNull;
 

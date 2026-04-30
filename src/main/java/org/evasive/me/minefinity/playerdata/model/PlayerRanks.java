@@ -2,7 +2,9 @@ package org.evasive.me.minefinity.playerdata.model;
 
 import org.evasive.me.minefinity.playerdata.ranks.RankRegistry;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public class PlayerRanks {
 

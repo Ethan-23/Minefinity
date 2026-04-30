@@ -1,15 +1,14 @@
 package org.evasive.me.minefinity.towns.structures.forge.pickaxeanvil;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.playerdata.stats.data.Stats;
-import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
-import org.evasive.me.minefinity.towns.structures.forge.pickaxeanvil.gui.PickaxeAnvilGui;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeComponent;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
+import org.evasive.me.minefinity.playerdata.stats.data.Stats;
+import org.evasive.me.minefinity.towns.structures.forge.pickaxeanvil.gui.PickaxeAnvilGui;
 
 public class PickaxeAnvilHandler {
 

@@ -9,22 +9,21 @@ import org.bukkit.inventory.PlayerInventory;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.ConfirmationGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
+import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
-import org.evasive.me.minefinity.customItems.itembuilder.data.*;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
+import org.evasive.me.minefinity.customItems.itembuilder.data.ItemOptions;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseBackpackItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeComponent;
-import org.evasive.me.minefinity.customItems.itembuilder.handler.ItemCreationHandler;
 import org.evasive.me.minefinity.customItems.itembuilder.events.PlayerInputListener;
+import org.evasive.me.minefinity.customItems.itembuilder.handler.ItemCreationHandler;
 import org.evasive.me.minefinity.customItems.registry.config.RegistryConfigHandler;
-import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
-
-import static org.evasive.me.minefinity.core.utils.guis.GenericGuiItems.fillerPane;
 
 public class ItemCreationGui extends BaseGui {
 

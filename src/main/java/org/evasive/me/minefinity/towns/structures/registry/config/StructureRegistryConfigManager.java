@@ -5,10 +5,14 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.config.BaseConfig;
 import org.evasive.me.minefinity.core.registry.StructureRegistry;
-import org.evasive.me.minefinity.customItems.recipebuilder.data.BaseItemRecipe;
+import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.BaseItemRecipe;
+import org.evasive.me.minefinity.customItems.recipes.recipebuilder.util.RequirementParser;
 import org.evasive.me.minefinity.towns.structures.data.Structure;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class StructureRegistryConfigManager extends BaseConfig {
 
@@ -76,7 +80,8 @@ public class StructureRegistryConfigManager extends BaseConfig {
                             }
 
                             float cost = (float) levelSection.getDouble("cost");
-                            BaseItemRecipe baseItemRecipe = new BaseItemRecipe(recipeMap, cost);
+
+                            BaseItemRecipe baseItemRecipe = new BaseItemRecipe(recipeMap, cost, RequirementParser.parse(levelSection));
                             recipes.add(baseItemRecipe);
                         }
 

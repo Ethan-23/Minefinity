@@ -1,18 +1,20 @@
 package org.evasive.me.minefinity.towns.structures.forge.blacksmith.recipes;
 
-import org.evasive.me.minefinity.customItems.recipebuilder.data.BaseItemRecipe;
+import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.BaseItemRecipe;
+import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.RecipeRequirement;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.data.ForgeCategories;
 
+import java.util.List;
 import java.util.Map;
 
 public class BaseForgeRecipe extends BaseItemRecipe {
 
-    int amount;
-    int craftTime;
-    ForgeCategories forgeCategories;
+    private int amount;
+    private int craftTime;
+    private ForgeCategories forgeCategories;
 
-    public BaseForgeRecipe(Map<String, Integer> recipe, String resultId, int amount, int craftTime, ForgeCategories forgeCategories) {
-        super(recipe, resultId);
+    public BaseForgeRecipe(Map<String, Integer> recipe, String resultId, int amount, int craftTime, float cost, ForgeCategories forgeCategories, List<RecipeRequirement> requirements) {
+        super(recipe, resultId, cost, requirements);
         this.amount = amount;
         this.craftTime = craftTime;
         this.forgeCategories = forgeCategories;

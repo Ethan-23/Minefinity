@@ -5,8 +5,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.core.warp.service.WarpService;
 import org.evasive.me.minefinity.core.utils.command.CommandFeedback;
+import org.evasive.me.minefinity.core.warp.service.WarpService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

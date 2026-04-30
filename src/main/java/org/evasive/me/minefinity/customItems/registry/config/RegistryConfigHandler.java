@@ -2,12 +2,12 @@ package org.evasive.me.minefinity.customItems.registry.config;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.evasive.me.minefinity.customItems.itembuilder.data.*;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.*;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class RegistryConfigHandler {
 
