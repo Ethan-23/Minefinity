@@ -4,9 +4,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.evasive.me.minefinity.customItems.itembuilder.data.PickaxeData;
+import org.evasive.me.minefinity.customItems.itembuilder.data.ToolItemData;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.mining.milestones.MilestoneTier;
 import org.evasive.me.minefinity.playerdata.model.PlayerData;
@@ -133,7 +133,7 @@ public class StatsService {
             Map<String, Integer> equipmentStatMap = baseCustomItem.getStatsMap();
 
             if(baseCustomItem instanceof BasePickaxeItem basePickaxeItem){
-                PickaxeData pickaxeData = new PickaxeData(basePickaxeItem);
+                ToolItemData pickaxeData = new ToolItemData(basePickaxeItem);
                 equipmentStatMap = basePickaxeItem.getTotalStats(pickaxeData.getPickaxeParts());
             }
 

@@ -10,16 +10,15 @@ import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemOptions;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeComponent;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePartItem;
 import org.evasive.me.minefinity.customItems.itembuilder.events.PlayerInputListener;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.ItemCreationGui;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 
+import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemKeys.PART_SLOT_KEY;
 import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemKeys.ITEM_TYPE_KEY;
 
 public class ItemCreationHandler {
@@ -78,14 +77,11 @@ public class ItemCreationHandler {
         if(!cursorItem.isEmpty()){
             if(clickedOption == ItemOptions.MATERIAL || clickedOption == ItemOptions.VISUAL_MATERIAL)
                 handleMaterialChanges(clickedOption, baseCustomItem, cursorItem);
-            if(clickedOption == ItemOptions.PICKAXE_HEAD)
-                handlePickaxePartChanges(clickedOption, baseCustomItem, cursorItem, CustomItemType.PICKAXE_HEAD);
-            else if(clickedOption == ItemOptions.PICKAXE_CORE)
-                handlePickaxePartChanges(clickedOption, baseCustomItem, cursorItem, CustomItemType.PICKAXE_CORE);
-            else if(clickedOption == ItemOptions.PICKAXE_HANDLE)
-                handlePickaxePartChanges(clickedOption, baseCustomItem, cursorItem, CustomItemType.PICKAXE_HANDLE);
-            else if(clickedOption == ItemOptions.STORAGE_LIST)
+
+            if(clickedOption == ItemOptions.STORAGE_LIST)
                 handleStorageChange(clickedOption, baseCustomItem, cursorItem);
+            else
+                handlePickaxePartChanges(clickedOption, baseCustomItem, cursorItem, clickedOption.name());
             itemCreationGui.reopen();
             return;
         }
@@ -146,14 +142,19 @@ public class ItemCreationHandler {
         cursorItem.setAmount(0);
     }
 
-    public void handlePickaxePartChanges(ItemOptions clickedOption, BaseCustomItem baseCustomItem, ItemStack cursorItem, CustomItemType customItemType){
+    public void handlePickaxePartChanges(ItemOptions clickedOption, BaseCustomItem baseCustomItem, ItemStack cursorItem, String itemSlot){
         ItemMeta meta = cursorItem.getItemMeta();
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
-        if(!pdc.has(ITEM_TYPE_KEY) || !pdc.get(ITEM_TYPE_KEY, PersistentDataType.STRING).equals(customItemType.name()))
+        if(!isCorrectItemType(pdc, itemSlot))
             return;
-        BasePickaxeComponent pickaxeComponent = new BasePickaxeComponent(cursorItem);
+
+        BasePartItem pickaxeComponent = new BasePartItem(cursorItem);
         clickedOption.apply(baseCustomItem, pickaxeComponent.getBaseItem().getID());
         cursorItem.setAmount(0);
+    }
+
+    private boolean isCorrectItemType(PersistentDataContainer pdc, String itemSlot){
+        return pdc.has(ITEM_TYPE_KEY) && pdc.has(PART_SLOT_KEY) && itemSlot != null && pdc.get(PART_SLOT_KEY, PersistentDataType.STRING).equalsIgnoreCase(itemSlot);
     }
 
     public void handleInteger(Player player, ItemOptions clickedOption, BaseCustomItem baseCustomItem, ItemCreationGui itemCreationGui) {

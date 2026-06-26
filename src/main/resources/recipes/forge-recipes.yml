@@ -4,16 +4,27 @@ recipes:
     craft-time: 30
     recipe:
       OAK_PLANK: 5
+    requirements:
+      milestones:
+        COBBLESTONE: 3
   STONE_TEMPLATE:
     forge-category: PICKAXE_TEMPLATES
     craft-time: 30
     recipe:
       STONE: 5
+    requirements:
+      milestones:
+        COPPER_ORE: 3
+        IRON_ORE: 3
   COPPER_TEMPLATE:
     forge-category: PICKAXE_TEMPLATES
     craft-time: 30
     recipe:
       COPPER_INGOT: 5
+    requirements:
+      milestones:
+        COBBLESTONE: 5
+        CALCITE: 5
   FLINT_HEAD:
     forge-category: PICKAXE_HEADS
     craft-time: 30
@@ -28,7 +39,7 @@ recipes:
     forge-category: PICKAXE_HANDLES
     craft-time: 30
     recipe:
-      CLAY: 5
+      CLAY_BALL: 5
   ANDESITE_CORE:
     forge-category: PICKAXE_CORES
     craft-time: 30

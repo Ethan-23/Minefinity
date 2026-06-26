@@ -4,6 +4,7 @@ import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.evasive.me.minefinity.core.CoreModule;
+import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.CustomItemModule;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
 import org.evasive.me.minefinity.mining.MiningModule;
@@ -105,5 +106,9 @@ public final class Minefinity extends JavaPlugin {
         coreModule.disable();
         playerModule.disable();
         com.github.retrooper.packetevents.PacketEvents.getAPI().terminate();
+    }
+
+    public static void SendConsoleMessage(String message){
+        Bukkit.getConsoleSender().sendMessage(TextConversions.parse("[Minefinity] " + message));
     }
 }

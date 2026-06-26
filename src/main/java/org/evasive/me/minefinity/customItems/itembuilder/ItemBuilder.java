@@ -192,6 +192,7 @@ public class ItemBuilder {
     public ItemBuilder addUnbreakable() {
         ItemMeta meta = getMeta();
         meta.setUnbreakable(true);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         this.itemStack.setItemMeta(meta);
         return this;
     }
@@ -255,7 +256,7 @@ public class ItemBuilder {
         ItemMeta meta = getMeta();
         meta.setItemModel(material.getKey());
         itemStack.setItemMeta(meta);
-        return addPersistentDataContainer(VISUAL_ID_KEY, PersistentDataType.STRING, material.name());
+        return addPersistentDataContainer(VISUAL_MATERIAL_KEY, PersistentDataType.STRING, material.name());
     }
 
     public ItemBuilder setMaterial(Material material){

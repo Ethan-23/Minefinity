@@ -7,7 +7,10 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.core.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
+import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.*;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BaseToolItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePartItem;
 import org.evasive.me.minefinity.customItems.registry.config.ItemRegistryConfigManager;
 import org.evasive.me.minefinity.playerdata.stats.data.Stats;
 
@@ -69,6 +72,8 @@ public class CustomItemLoader {
             CustomItemType customItemType = CustomItemType.valueOf(customItemSection.getString("custom-item-type"));
             BaseCustomItem baseCustomItem = customItemType.create(itemID, material, displayName, rarity);
 
+            ConfigurationSection componentsSection = customItemSection.getConfigurationSection("components");
+
             baseCustomItem.setStatsMap(statsMap);
             baseCustomItem.setEquipmentSlots(equipmentSlotSet);
             baseCustomItem.setItemType(customItemType);
@@ -87,13 +92,27 @@ public class CustomItemLoader {
                 baseCustomItem.setStackSize(customItemSection.getInt("stack-size"));
 
 
-            if(baseCustomItem instanceof BasePickaxeItem){
-                ((BasePickaxeItem) baseCustomItem).setPickaxeHeadId(customItemSection.getString("pickaxe-head"));
-                ((BasePickaxeItem) baseCustomItem).setPickaxeCoreId(customItemSection.getString("pickaxe-core"));
-                ((BasePickaxeItem) baseCustomItem).setPickaxeHandleId(customItemSection.getString("pickaxe-handle"));
-            }else if(baseCustomItem instanceof BasePickaxeComponent){
+            if(baseCustomItem instanceof BaseToolItem){
+
+                //Need to update to a map under a different section so you can create any amount of parts instead of set names on set types
+                if(componentsSection != null){
+                    for(String key : componentsSection.getKeys(false)) {
+                        PartSlots component = PartSlots.fromString(key);
+                        ((BaseToolItem) baseCustomItem).setPart(component, componentsSection.getString(key));
+                    }
+                }
+
+            }else if(baseCustomItem instanceof BasePartItem){
+                //Change name to abilities to allow anything to have abilities instead of just pickaxe parts
                 for (String string : customItemSection.getStringList("pickaxe-abilities")) {
-                    ((BasePickaxeComponent) baseCustomItem).changePickaxeAbilityList(string);
+                    ((BasePartItem) baseCustomItem).changeAbilityList(string);
+                }
+
+                for (String string : customItemSection.getStringList("component-slot")) {
+                    PartSlots toolComponent = PartSlots.fromString(string);
+                    if(toolComponent == null)
+                        continue;
+                    ((BasePartItem) baseCustomItem).changeComponentSlots(toolComponent);
                 }
             }else if(baseCustomItem instanceof BaseFuelItem){
                 ((BaseFuelItem) baseCustomItem).setFuelAmount(customItemSection.getInt("fuel-amount"));

@@ -2,12 +2,15 @@ package org.evasive.me.minefinity.customItems.registry.config;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
+import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
+import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.*;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BaseToolItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePartItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.components.EditableComponent;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 public class RegistryConfigHandler {
 
@@ -17,7 +20,7 @@ public class RegistryConfigHandler {
         this.itemRegistryConfigManager = itemRegistryConfigManager;
     }
 
-    public void saveEntireRegistry(Collection<CustomItem> customItems) {
+    public void saveEntireRegistry(Collection<BaseCustomItem> customItems) {
         customItems.forEach(item -> addSingleEntry((BaseCustomItem) item));
         itemRegistryConfigManager.saveItemRegistryConfig();
     }
@@ -31,48 +34,12 @@ public class RegistryConfigHandler {
         individualItemSection.set("display-name", item.getDisplayName());
         individualItemSection.set("custom-item-type", customItemType.name());
         individualItemSection.set("rarity", item.getRarity().name());
-        individualItemSection.set(
-                "equipment-slot",
-                item.getEquipmentSlots().stream()
-                        .map(Enum::name)
-                        .toList()
-        );
 
-        individualItemSection.set("stats", item.getStatsMap());
+        List<ItemComponent> itemComponentList = item.getComponents();
 
-        Optional<Float> value = item.getValue();
-        value.ifPresent(aFloat -> individualItemSection.set("sell-value", aFloat));
-        Optional<Material> visualMaterial = item.getVisualMaterial();
-        visualMaterial.ifPresent(aMaterial -> individualItemSection.set("visual-material", aMaterial.name()));
-        Optional<String> flavorText = item.getFlavorText();
-        flavorText.ifPresent(aFlavor -> individualItemSection.set("flavor-text", aFlavor));
-        Optional<Boolean> glowing = item.isGlowing();
-        glowing.ifPresent(aGlowing -> individualItemSection.set("glowing", aGlowing));
-        Optional<Boolean> soulbound = item.isSoulbound();
-        soulbound.ifPresent(aSoulbound -> individualItemSection.set("soulbound", aSoulbound));
-        Optional<Integer> stackSize = item.getStackSize();
-        stackSize.ifPresent(aStackSize -> individualItemSection.set("stack-size", aStackSize));
-
-
-
-        switch (item) {
-            case BasePickaxeItem basePickaxeItem -> {
-                individualItemSection.set("pickaxe-head", basePickaxeItem.getPickaxeHeadId());
-                individualItemSection.set("pickaxe-core", basePickaxeItem.getPickaxeCoreId());
-                individualItemSection.set("pickaxe-handle", basePickaxeItem.getPickaxeHandleId());
-            }
-            case BasePickaxeComponent basePickaxeComponent -> {
-                individualItemSection.set("pickaxe-abilities", basePickaxeComponent.getPickaxeAbilityList());
-            }
-            case BaseFuelItem baseFuelItem -> {
-                individualItemSection.set("fuel-amount", baseFuelItem.getFuelAmount());
-            }
-            case BaseBackpackItem baseBackpackItem -> {
-                individualItemSection.set("storage-amount", baseBackpackItem.getStoredItemAmount());
-                individualItemSection.set("storage-list", baseBackpackItem.getStoredItemIdList());
-            }
-            default -> {
-            }
+        for(ItemComponent itemComponent : itemComponentList){
+            if(itemComponent instanceof EditableComponent<?> editableComponent)
+                individualItemSection.set(itemComponent.getClass().getName().toLowerCase(Locale.ROOT), editableComponent.getValue());
         }
 
         itemRegistryConfigManager.saveItemRegistryConfig();

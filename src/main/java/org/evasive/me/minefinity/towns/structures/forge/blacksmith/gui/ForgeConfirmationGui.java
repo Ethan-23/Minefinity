@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.evasive.me.minefinity.core.utils.guis.GenericGuiItems.*;
 
@@ -118,7 +119,7 @@ public class ForgeConfirmationGui extends BaseGui {
     public void onClick(InventoryClickEvent e) {
         super.onClick(e);
         e.setCancelled(true);
-        ItemStack result = e.getClickedInventory().getItem(ForgeConfirmationGui.RESULT_PREVIEW_SLOT);
+        ItemStack result = Objects.requireNonNull(e.getClickedInventory()).getItem(ForgeConfirmationGui.RESULT_PREVIEW_SLOT);
 
         int clickedSlot = e.getSlot();
 

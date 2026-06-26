@@ -1,8 +1,8 @@
 package org.evasive.me.minefinity.mining.abilities;
 
-import org.evasive.me.minefinity.customItems.itembuilder.data.PickaxeData;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeComponent;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.ToolItemData;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePartItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.itembuilder.resolvers.PickaxeResolver;
 import org.evasive.me.minefinity.mining.context.BreakContext;
 import org.evasive.me.minefinity.mining.context.HitContext;
@@ -22,10 +22,10 @@ public class MiningAbilityRunner {
 
     public void runOnHit(BasePickaxeItem basePickaxeItem, HitContext hitContext){
         List<PickaxeAbilities> pickaxeAbilitiesList = new ArrayList<>();
-        PickaxeData pickaxeData = pickaxeResolver.resolve(basePickaxeItem);
-        for (BasePickaxeComponent part : pickaxeData.getPickaxeParts()) {
+        ToolItemData pickaxeData = pickaxeResolver.resolve(basePickaxeItem);
+        for (BasePartItem part : pickaxeData.getPickaxeParts()) {
             if(part == null) continue;
-            for (String abilityId : part.getPickaxeAbilityList()) {
+            for (String abilityId : part.getAbilityList()) {
                 MiningAbility miningAbility = miningAbilityRegistry.getAbility(abilityId);
                 PickaxeAbilities pickaxeAbility = PickaxeAbilities.valueOf(abilityId);
                 if(miningAbility == null || pickaxeAbilitiesList.contains(pickaxeAbility)) continue;
@@ -39,10 +39,10 @@ public class MiningAbilityRunner {
 
         List<PickaxeAbilities> pickaxeAbilitiesList = new ArrayList<>();
 
-        PickaxeData pickaxeData = pickaxeResolver.resolve(basePickaxeItem);
-        for (BasePickaxeComponent part : pickaxeData.getPickaxeParts()) {
+        ToolItemData pickaxeData = pickaxeResolver.resolve(basePickaxeItem);
+        for (BasePartItem part : pickaxeData.getPickaxeParts()) {
             if(part == null) continue;
-            for (String abilityId : part.getPickaxeAbilityList()) {
+            for (String abilityId : part.getAbilityList()) {
                 MiningAbility miningAbility = miningAbilityRegistry.getAbility(abilityId);
                 PickaxeAbilities pickaxeAbility = PickaxeAbilities.valueOf(abilityId);
                 if(miningAbility == null || pickaxeAbilitiesList.contains(pickaxeAbility)) continue;

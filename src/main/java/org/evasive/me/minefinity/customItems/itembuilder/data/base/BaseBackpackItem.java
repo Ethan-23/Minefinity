@@ -20,23 +20,8 @@ import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemK
 
 public class BaseBackpackItem extends BaseCustomItem {
 
-    private static final List<ItemOptions> requiredOptions = List.of(
-            ItemOptions.MATERIAL,
-            ItemOptions.DISPLAY_NAME,
-            ItemOptions.CUSTOM_ITEM_TYPE,
-            ItemOptions.MINEFINITY_ID,
-            ItemOptions.RARITY,
-            ItemOptions.STORAGE_AMOUNT,
-            ItemOptions.STORAGE_LIST
-    );
-
-    private int storedItemAmount;
-    private final List<String> storedItemIdList;
-
     public BaseBackpackItem(String id, Material material, String displayName, Rarity rarity) {
         super(id, material, displayName, rarity);
-        this.storedItemAmount = 640;
-        this.storedItemIdList = new ArrayList<>();
     }
 
     public BaseBackpackItem(ItemStack itemStack) {
@@ -45,29 +30,10 @@ public class BaseBackpackItem extends BaseCustomItem {
         ItemMeta meta = itemStack.getItemMeta();
         PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
 
-        if(persistentDataContainer.has(STORAGE_AMOUNT_KEY)){
-            this.storedItemAmount = persistentDataContainer.get(STORAGE_AMOUNT_KEY, PersistentDataType.INTEGER);
-        } else {
-            this.storedItemAmount = 1;
-        }
 
-        if(persistentDataContainer.has(ITEMID_STORAGE_LIST_KEY)){
-            String joined = persistentDataContainer.get(ITEMID_STORAGE_LIST_KEY, PersistentDataType.STRING);
-            List<String> itemIds = new ArrayList<>();
-            if (joined != null && !joined.isEmpty()) {
-                itemIds = new ArrayList<>(List.of(joined.split(";;")));
-            }
-            this.storedItemIdList = itemIds;
-        } else {
-            this.storedItemIdList = new ArrayList<>();
-        }
 
-    }
 
-    public BaseBackpackItem(String id, Material material, Rarity rarity, CustomItemType itemType, int storedItemAmount, List<String> storedItemIdList) {
-        super(id, material, id, rarity, itemType);
-        this.storedItemAmount = storedItemAmount;
-        this.storedItemIdList = storedItemIdList;
+
     }
 
     //Update lore to take multiple lines if too long
@@ -75,50 +41,15 @@ public class BaseBackpackItem extends BaseCustomItem {
     protected List<String> getLore() {
         List<String> lore = super.getLore();
 
-        lore.addAll(List.of(
-                "<gray>Item pickups go directly into your backpack",
-                "",
-                "<gray>Items: "+ getStoredItemIdList().stream().map(string ->
-                        "<green>" + (TextConversions.formatItemName(string.replace("\\", "\\\\"))) // NEED TO GET ITEM DISPLAY NAME SOMEHOW INSTEAD OF ITEM ID
-                ).collect(Collectors.joining("<gray>, ")),
-                "",
-                "<gray>Capacity <yellow>" + getStoredItemAmount() + " of each held item",
-                "",
-                "<yellow>Right Click to open backpack!"
-        ));
         return lore;
     }
 
     @Override
     public ItemStack buildItem() {
         return new ItemBuilder(super.buildItem())
-                .addPersistentDataContainer(STORAGE_AMOUNT_KEY, PersistentDataType.INTEGER, storedItemAmount)
-                .addPersistentDataContainer(ITEMID_STORAGE_LIST_KEY, PersistentDataType.STRING, String.join(";;", getStoredItemIdList()))
                 .build();
     }
 
-    public void setStoredItemAmount(int storedItemAmount) {
-        this.storedItemAmount = storedItemAmount;
-    }
-
-    public void changeStoredItemIdList(String storedItemId) {
-        if(storedItemIdList.contains(storedItemId))
-            storedItemIdList.remove(storedItemId);
-        else
-            storedItemIdList.add(storedItemId);
-    }
-
-    public int getStoredItemAmount() {
-        return storedItemAmount;
-    }
-
-    public List<String> getStoredItemIdList() {
-        return storedItemIdList;
-    }
-
-    public static List<ItemOptions> getRequiredOptions() {
-        return requiredOptions;
-    }
 
     @Override
     public BaseCustomItem copy() {

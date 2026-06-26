@@ -11,7 +11,7 @@ import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeComponent;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePartItem;
 import org.evasive.me.minefinity.customItems.itembuilder.events.PlayerInputListener;
 import org.evasive.me.minefinity.mining.abilities.PickaxeAbilities;
 import org.evasive.me.minefinity.playerdata.stats.data.Stats;
@@ -92,7 +92,7 @@ public class OptionsGui<T extends Enum<T>> extends BaseGui {
                 itemBuilder.setGlow((baseCustomItem).getRarity() == enumValue);
             } else if(enumValue instanceof PickaxeAbilities){
                 itemBuilder.addLore(((PickaxeAbilities) enumValue).getDescription());
-                itemBuilder.setGlow(((BasePickaxeComponent)baseCustomItem).getPickaxeAbilityList().contains(enumValue.name()));
+                itemBuilder.setGlow(((BasePartItem)baseCustomItem).getAbilityList().contains(enumValue.name()));
             } else if(enumValue instanceof CustomItemType) {
                 itemBuilder.setMaterial(((CustomItemType) enumValue).getDisplayMaterial());
                 itemBuilder.setGlow((baseCustomItem).getCustomItemType() == enumValue);

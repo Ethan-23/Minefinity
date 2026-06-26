@@ -4,11 +4,11 @@ import org.bukkit.Material;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 
 public class SwapItems
 {
-    public static void swapCursor(InventoryClickEvent e, CustomItem customItem, int amount){
+    public static void swapCursor(InventoryClickEvent e, BaseCustomItem customItem, int amount){
 
         ItemStack returnItem = new ItemStack(Material.AIR);
 

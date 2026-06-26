@@ -29,8 +29,6 @@ public class ForgeRecipeConfig extends BaseConfig {
             return;
         }
 
-        Bukkit.getConsoleSender().sendMessage("LOADING FORGE RECIPES");
-
         configurationSection.getKeys(false).forEach(key -> {
 
             ConfigurationSection recipeSection = configurationSection.getConfigurationSection(key);

@@ -20,6 +20,6 @@ public class MilestoneRequirement implements RecipeRequirement{
 
     @Override
     public String getDisplay() {
-        return "<gold>" + TextConversions.formatItemName(blockId) + " Milestone: <green>" + TextConversions.intToRoman(tier);
+        return TextConversions.formatItemName(blockId) + " Milestone: <white>" + TextConversions.intToRoman(tier);
     }
 }

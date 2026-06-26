@@ -11,8 +11,8 @@ import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.forge.pickaxeanvil.PickaxeAnvilHandler;
 
@@ -63,9 +63,9 @@ public class PickaxeAnvilGui extends BaseGui {
     }
 
     public void addPickaxeParts(ItemStack itemStack){
-        String headId = getStringPDC(itemStack, PICKAXE_HEAD_KEY);
-        String coreId = getStringPDC(itemStack, PICKAXE_CORE_KEY);
-        String handleId = getStringPDC(itemStack, PICKAXE_HANDLE_KEY);
+        String headId = getStringPDC(itemStack, COMPONENT_HEAD_KEY);
+        String coreId = getStringPDC(itemStack, COMPONENT_CORE_KEY);
+        String handleId = getStringPDC(itemStack, COMPONENT_HANDLE_KEY);
 
         inventory.setItem(HEAD_SLOT, Objects.equals(headId, "NONE") || !customItemRegistryService.isRegistered(headId) ? EMPTY_HEAD_SLOT : customItemRegistryService.getRegisteredItemStack(headId).clone());
         inventory.setItem(CORE_SLOT, Objects.equals(coreId, "NONE") || !customItemRegistryService.isRegistered(coreId) ? EMPTY_CORE_SLOT : customItemRegistryService.getRegisteredItemStack(coreId).clone());
@@ -94,20 +94,21 @@ public class PickaxeAnvilGui extends BaseGui {
 
     private void handleClickEvent(InventoryClickEvent e){
         int slot = e.getSlot();
-        CustomItemType itemType = null;
+        PartSlots toolSlot = null;
 
+        //Make change in the future to allow HEAD CORE and HANDLE to accept any type of head core or handle while PICKAXE_HEAD or AXE_HANDLE are specific to the type not just any
         switch (slot) {
-            case PickaxeAnvilGui.HEAD_SLOT -> itemType = CustomItemType.PICKAXE_HEAD;
-            case PickaxeAnvilGui.CORE_SLOT -> itemType = CustomItemType.PICKAXE_CORE;
-            case PickaxeAnvilGui.HANDLE_SLOT -> itemType = CustomItemType.PICKAXE_HANDLE;
-            case PickaxeAnvilGui.PICKAXE_SLOT -> pickaxeAnvilHandler.handlePickaxeSlot(e);
+            case HEAD_SLOT -> toolSlot = PartSlots.HEAD;
+            case CORE_SLOT -> toolSlot = PartSlots.CORE;
+            case HANDLE_SLOT -> toolSlot = PartSlots.HANDLE;
+            case PICKAXE_SLOT -> pickaxeAnvilHandler.handlePickaxeSlot(e);
             default -> e.setCancelled(true);
         }
 
-        if(itemType == null) return;
+        if(toolSlot == null) return;
 
 
-        if(!pickaxeAnvilHandler.verifyPartChange(inventory.getItem(PICKAXE_SLOT), e.getCursor(), e.getCurrentItem(), itemType)){
+        if(!pickaxeAnvilHandler.verifyPartChange(inventory.getItem(PICKAXE_SLOT), e.getCursor(), e.getCurrentItem(), toolSlot)){
             e.setCancelled(true);
             return;
         }

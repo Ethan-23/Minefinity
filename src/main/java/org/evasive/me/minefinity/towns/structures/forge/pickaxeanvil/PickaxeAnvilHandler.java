@@ -2,10 +2,9 @@ package org.evasive.me.minefinity.towns.structures.forge.pickaxeanvil;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeComponent;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePartItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.playerdata.stats.data.Stats;
 import org.evasive.me.minefinity.towns.structures.forge.pickaxeanvil.gui.PickaxeAnvilGui;
@@ -18,7 +17,7 @@ public class PickaxeAnvilHandler {
         this.customItemRegistryService = customItemRegistryService;
     }
 
-    public boolean isCorrectComponentType(ItemStack itemStack, CustomItemType slotType) {
+    public boolean isCorrectComponentType(ItemStack itemStack, PartSlots toolSlot) {
 
         if(itemStack == null || itemStack.isEmpty())
             return false;
@@ -26,19 +25,19 @@ public class PickaxeAnvilHandler {
         if(!customItemRegistryService.isRegistered(itemStack))
             return false;
 
-        BaseCustomItem baseCustomItem = new BaseCustomItem(itemStack);
+        BasePartItem baseToolComponent = new BasePartItem(itemStack);
 
-        return baseCustomItem.getCustomItemType() == slotType;
+        return baseToolComponent.getComponentSlots().contains(toolSlot);
     }
 
 
-    public boolean verifyPartChange(ItemStack pickaxe, ItemStack cursorItem, ItemStack currentItem, CustomItemType itemType){
+    public boolean verifyPartChange(ItemStack pickaxe, ItemStack cursorItem, ItemStack currentItem, PartSlots toolSlot){
 
         if(!(customItemRegistryService.getRegisteredBaseItem(pickaxe) instanceof BasePickaxeItem))
             return false;
 
-        boolean correctItemTypeCursor = isCorrectComponentType(cursorItem, itemType);
-        boolean correctItemTypeCurrent = isCorrectComponentType(currentItem, itemType);
+        boolean correctItemTypeCursor = isCorrectComponentType(cursorItem, toolSlot);
+        boolean correctItemTypeCurrent = isCorrectComponentType(currentItem, toolSlot);
 
         if (!correctItemTypeCursor && !correctItemTypeCurrent) return false;
 
@@ -50,11 +49,10 @@ public class PickaxeAnvilHandler {
     }
 
     public boolean isCorrectTemplateTier(ItemStack pickaxe, ItemStack pickaxePart) {
-        BasePickaxeComponent basePickaxeComponent = (BasePickaxeComponent) customItemRegistryService.getRegisteredBaseItem(pickaxePart);
+        BasePartItem basePickaxeComponent = (BasePartItem) customItemRegistryService.getRegisteredBaseItem(pickaxePart);
         BasePickaxeItem basePickaxe = (BasePickaxeItem) customItemRegistryService.getRegisteredBaseItem(pickaxe);
         int pickaxeComponentTier = basePickaxeComponent.getStatAmount(Stats.BREAKING_POWER);
-        int pickaxeTier = basePickaxe.getPickaxeTier();
-        return pickaxeTier >= pickaxeComponentTier;
+        return basePickaxe.getStatAmount(Stats.BREAKING_POWER) >= pickaxeComponentTier;
     }
 
 

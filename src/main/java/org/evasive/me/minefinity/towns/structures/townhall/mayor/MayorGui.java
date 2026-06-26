@@ -9,9 +9,12 @@ import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.BaseItemRecipe;
+import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.RecipeRequirement;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.service.RecipeService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.mining.milestones.MilestoneService;
+import org.evasive.me.minefinity.playerdata.model.PlayerData;
+import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.towns.structures.data.Structure;
 import org.evasive.me.minefinity.towns.structures.service.StructureService;
 
@@ -56,13 +59,15 @@ public class MayorGui extends BaseGui {
                 structureItem.addLore("<bold><green>Max Level");
             } else {
                 structureItem.addLore("<yellow>Milestones Required:");
-                structure.getMilestoneRequirements(structureLevel).forEach((key, value) -> {
-                    int milestoneLevel = milestoneService.getTier(player, key);
-                    if(milestoneLevel < value)
-                        structureItem.addLore("<red>- " + TextConversions.formatItemName(key) + " " + TextConversions.intToRoman(value));
+                List<RecipeRequirement> recipeRequirementList = structure.getUpgradeMap(structureLevel).getRequirements();
+                for(RecipeRequirement recipeRequirement : recipeRequirementList){
+
+                    if(recipeService.checkRecipeRequirement(player, recipeRequirement))
+                        structureItem.addLore("<green>- <strikethrough>" + recipeRequirement.getDisplay());
                     else
-                        structureItem.addLore("<green>- <strikethrough>" + TextConversions.formatItemName(key) + " " + TextConversions.intToRoman(value));
-                });
+                        structureItem.addLore("<red>- " + recipeRequirement.getDisplay());
+                }
+
                 structureItem.addLore("<yellow>Upgrade Cost:");
                 BaseItemRecipe structureRecipe = structure.getUpgradeMap(structureLevel);
                 float cost = structureRecipe.getCost();
@@ -103,18 +108,19 @@ public class MayorGui extends BaseGui {
         Structure structure = structureService.getStructures().stream().toList().get(townListing.indexOf(slot));
         int currentLevel = structureService.getStructureLevel(player, structure);
 
-        for(Map.Entry<String, Integer> entry : structure.getMilestoneRequirements(currentLevel).entrySet()){
-            int milestoneLevel = milestoneService.getTier(player, entry.getKey());
-            if(milestoneLevel < entry.getValue()){
-                player.sendMessage(TextConversions.parse("<red>You have not reached the correct milestone levels."));
-                return;
-            }
-        }
-
         BaseItemRecipe baseItemRecipe = structure.getUpgradeMap(currentLevel);
 
         if(baseItemRecipe == null) {
             return;
+        }
+
+        List<RecipeRequirement> recipeRequirementList = baseItemRecipe.getRequirements();
+        for(RecipeRequirement recipeRequirement : recipeRequirementList){
+
+            if(!recipeService.checkRecipeRequirement(player, recipeRequirement)){
+                player.sendMessage(TextConversions.parse("<red>You do not meet the requirements to purchase this upgrade"));
+                return;
+            }
         }
 
         boolean completedPurchase = recipeService.tryPurchaseItem(player, baseItemRecipe);
@@ -123,6 +129,7 @@ public class MayorGui extends BaseGui {
             player.sendMessage(TextConversions.parse("<red>You do not have the correct materials!"));
             return;
         }
+
         structureService.setStructureLevel(player, structure, currentLevel + 1);
         player.sendMessage(TextConversions.parse("<yellow>You have upgraded the towns <green>" + TextConversions.formatItemName(structure.name()) + "<yellow> to level <blue>" + (currentLevel + 1)));
         rebuildInventory();
