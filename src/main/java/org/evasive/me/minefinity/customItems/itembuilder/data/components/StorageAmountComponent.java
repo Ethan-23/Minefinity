@@ -4,6 +4,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
+import org.evasive.me.minefinity.customItems.itembuilder.gui.EditContext;
 
 import java.util.List;
 import java.util.Objects;
@@ -16,11 +17,9 @@ public class StorageAmountComponent implements ItemComponent, EditableComponent<
 
     @Override
     public void load(PersistentDataContainer pdc) {
-
-        if(!pdc.has(STORAGE_AMOUNT_KEY))
-            return;
-
-        this.storageAmount = Objects.requireNonNullElse(pdc.get(STORAGE_AMOUNT_KEY, PersistentDataType.INTEGER), 0);
+        if (pdc.has(STORAGE_AMOUNT_KEY)) {
+            this.storageAmount = Objects.requireNonNullElse(pdc.get(STORAGE_AMOUNT_KEY, PersistentDataType.INTEGER), 0);
+        }
     }
 
     @Override
@@ -30,21 +29,21 @@ public class StorageAmountComponent implements ItemComponent, EditableComponent<
 
     @Override
     public void addLore(List<String> lore) {
-
-    }
-
-    @Override
-    public Class<?> type() {
-        return Integer.class;
+        // visual handled by the backpack GUI
     }
 
     @Override
     public void setValue(Integer value) {
-        this.storageAmount = value;
+        this.storageAmount = value == null ? 0 : value;
     }
 
     @Override
     public Integer getValue() {
         return this.storageAmount;
+    }
+
+    @Override
+    public void openEditor(EditContext ctx) {
+        ctx.promptInt(value -> storageAmount = Math.max(0, value));
     }
 }

@@ -125,7 +125,7 @@ public class ForgeCategoriesGui extends BaseGui {
 
                 for (Map.Entry<String, Integer> entry : currentRecipe.getRecipe().entrySet()) {
 
-                    CustomItem customItem = customItemRegistryService.getRegisteredBaseItem(entry.getKey());
+                    BaseCustomItem customItem = customItemRegistryService.getRegisteredBaseItem(entry.getKey());
 
                     if(customItem != null){
 

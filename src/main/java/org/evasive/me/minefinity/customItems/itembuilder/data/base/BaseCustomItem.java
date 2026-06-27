@@ -1,11 +1,7 @@
 package org.evasive.me.minefinity.customItems.itembuilder.data.base;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -15,13 +11,11 @@ import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
-import org.evasive.me.minefinity.customItems.itembuilder.data.ItemOptions;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.*;
-import org.evasive.me.minefinity.playerdata.stats.data.Stats;
 
-import java.lang.reflect.Type;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import static org.evasive.me.minefinity.core.utils.TextConversions.buildItemRarity;
 import static org.evasive.me.minefinity.core.utils.TextConversions.buildRarityColor;
@@ -38,16 +32,8 @@ public class BaseCustomItem {
 
     private final List<ItemComponent> components = new ArrayList<>();
 
-    public void addComponent(ItemComponent component) {
-        components.add(component);
-    }
-
     public BaseCustomItem(String id, Material material, String displayName, Rarity rarity) {
-        this.id = id;
-        this.material = material;
-        this.displayName = displayName;
-        this.rarity = rarity;
-        this.itemType = CustomItemType.CUSTOM_ITEM;
+        this(id, material, displayName, rarity, CustomItemType.CUSTOM_ITEM);
     }
 
     public BaseCustomItem(String id, Material material, String displayName, Rarity rarity, CustomItemType itemType) {
@@ -56,37 +42,56 @@ public class BaseCustomItem {
         this.displayName = displayName;
         this.rarity = rarity;
         this.itemType = itemType;
+        registerComponents();
     }
 
     public BaseCustomItem(ItemStack itemStack) {
-
         ItemMeta meta = itemStack.getItemMeta();
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
 
         this.material = itemStack.getType();
         this.id = getOrDefault(pdc, ITEM_ID_KEY, PersistentDataType.STRING, material.name());
         this.displayName = getOrDefault(pdc, DISPLAY_NAME_KEY, PersistentDataType.STRING, TextConversions.formatItemName(this.id));
-        this.rarity = Rarity.valueOf(getOrDefault(pdc, ITEM_RARITY_KEY, PersistentDataType.STRING, Rarity.MINOR.name()));
-        this.itemType = CustomItemType.valueOf(getOrDefault(pdc, ITEM_TYPE_KEY, PersistentDataType.STRING, CustomItemType.CUSTOM_ITEM.name()));
+        this.rarity = parseEnum(Rarity.class, pdc.get(ITEM_RARITY_KEY, PersistentDataType.STRING), Rarity.MINOR);
+        this.itemType = parseEnum(CustomItemType.class, pdc.get(ITEM_TYPE_KEY, PersistentDataType.STRING), CustomItemType.CUSTOM_ITEM);
 
-        registerDefaultComponents();
+        registerComponents();
 
-        for(ItemComponent component : components) {
+        for (ItemComponent component : components) {
             component.load(pdc);
         }
-
     }
 
-    private void registerDefaultComponents() {
-        components.add(new FlavorTextComponent());
-        components.add(new ValueComponent());
-        components.add(new GlowComponent());
-        components.add(new VisualMaterialComponent());
-        components.add(new StackSizeComponent());
-        components.add(new SoulboundComponent());
+    /**
+     * Registers the components every custom item carries. Subclasses override to add their own,
+     * calling {@code super.registerComponents()} first. Components are added with sane defaults so
+     * their values are never {@code null} before {@link ItemComponent#load} runs.
+     */
+    protected void registerComponents() {
+        addComponent(new FlavorTextComponent());
+        addComponent(new ValueComponent());
+        addComponent(new GlowComponent());
+        addComponent(new VisualMaterialComponent());
+        addComponent(new StackSizeComponent());
+        addComponent(new SoulboundComponent());
+        addComponent(new StatsComponent());
+        addComponent(new EquipmentSlotComponent());
     }
 
-    public <T> T getOrDefault(PersistentDataContainer pdc, NamespacedKey key, PersistentDataType<?,T> type, T def){
+    public void addComponent(ItemComponent component) {
+        components.add(component);
+    }
+
+    private static <E extends Enum<E>> E parseEnum(Class<E> type, String name, E fallback) {
+        if (name == null) return fallback;
+        try {
+            return Enum.valueOf(type, name);
+        } catch (IllegalArgumentException e) {
+            return fallback;
+        }
+    }
+
+    public <T> T getOrDefault(PersistentDataContainer pdc, NamespacedKey key, PersistentDataType<?, T> type, T def) {
         T value = pdc.get(key, type);
         return value == null ? def : value;
     }
@@ -136,49 +141,38 @@ public class BaseCustomItem {
     }
 
     public ItemStack buildItem() {
+        ItemBuilder builder = new ItemBuilder(this.id, this.material, this.displayName);
+        builder.setItemId(this.id);
+        builder.setItemRarity(this.rarity);
+        builder.setItemType(this.itemType);
+        builder.setDisplayName(this.displayName);
 
-        ItemBuilder itemBuilder = new ItemBuilder(this.id, this.material, this.displayName);
-
-        itemBuilder.setItemRarity(this.rarity);
-        itemBuilder.setItemType(this.itemType);
-
-        List<String> lore = getLore();
-
-        for(ItemComponent component : components) {
-            component.save(itemBuilder);
+        for (ItemComponent component : components) {
+            component.save(builder);
         }
 
+        List<String> lore = getLore();
         lore.add("");
         lore.add(buildItemRarity(this.rarity, this.itemType));
+        builder.setLore(lore);
 
-        return new ItemBuilder(this.id, this.material, this.displayName)
-                .addLore(lore)
-                .setItemId(this.id)
-                .setItemRarity(this.rarity)
-                .setDisplayName(this.displayName)
-                .setItemType(this.itemType)
-                .build();
+        return builder.build();
     }
-
-
 
     protected List<String> getLore() {
         List<String> lore = new ArrayList<>();
 
-        if(!lore.isEmpty())
-            lore.add("");
-
-        //Make set order since lore comes in this way aswell
-        for(ItemComponent component : components) {
+        for (ItemComponent component : components) {
             component.addLore(lore);
         }
 
-        if(this.getCustomItemType() == CustomItemType.CUSTOM_ITEM){
+        if (this.itemType == CustomItemType.CUSTOM_ITEM) {
             lore.add("<red>This is an unregistered CustomItem");
             lore.add("<red>Please report where you got this item");
             lore.add("");
         }
 
+        lore.removeIf(Objects::isNull);
         return lore;
     }
 
@@ -190,6 +184,22 @@ public class BaseCustomItem {
                 .orElse(null);
     }
 
+    /**
+     * Null-safe read of an editable component's value. Returns {@code fallback} when the component
+     * is absent or holds no value. Lets consumers read component data without repeating null checks.
+     */
+    @SuppressWarnings("unchecked")
+    public <T, C extends ItemComponent> T getComponentValue(Class<C> clazz, T fallback) {
+        C component = getComponent(clazz);
+        if (component instanceof EditableComponent<?> editable) {
+            Object value = editable.getValue();
+            if (value != null) {
+                return (T) value;
+            }
+        }
+        return fallback;
+    }
+
     public List<ItemComponent> getComponents() {
         return components;
     }
@@ -198,7 +208,7 @@ public class BaseCustomItem {
         return this;
     }
 
-    public BaseCustomItem copy(){
+    public BaseCustomItem copy() {
         return new BaseCustomItem(this.buildItem());
     }
 }

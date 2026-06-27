@@ -43,7 +43,7 @@ public class GenericBackpackGui extends BaseGui {
 
     @Override
     protected void build() {
-        List<String> storedItemIdList = ((BaseBackpackItem)customItemRegistryService.getBaseItemById(backpackId)).getStoredItemIdList();
+        List<String> storedItemIdList = ((BaseBackpackItem)customItemRegistryService.getBaseItemById(backpackId)).storageListComponent().getValue();
         List<String> sortedStoredItemIdList = storedItemIdList.stream().sorted().toList();
         for(int i = 0; i < sortedStoredItemIdList.size(); i++){
             inventory.setItem(i, createItemStorage(backpackId, player, sortedStoredItemIdList.get(i)));

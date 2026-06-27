@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePartItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.components.StatsComponent;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.playerdata.stats.data.Stats;
 import org.evasive.me.minefinity.towns.structures.forge.pickaxeanvil.gui.PickaxeAnvilGui;
@@ -27,7 +28,7 @@ public class PickaxeAnvilHandler {
 
         BasePartItem baseToolComponent = new BasePartItem(itemStack);
 
-        return baseToolComponent.getComponentSlots().contains(toolSlot);
+        return baseToolComponent.slotComponent().getValue().contains(toolSlot);
     }
 
 
@@ -51,8 +52,8 @@ public class PickaxeAnvilHandler {
     public boolean isCorrectTemplateTier(ItemStack pickaxe, ItemStack pickaxePart) {
         BasePartItem basePickaxeComponent = (BasePartItem) customItemRegistryService.getRegisteredBaseItem(pickaxePart);
         BasePickaxeItem basePickaxe = (BasePickaxeItem) customItemRegistryService.getRegisteredBaseItem(pickaxe);
-        int pickaxeComponentTier = basePickaxeComponent.getStatAmount(Stats.BREAKING_POWER);
-        return basePickaxe.getStatAmount(Stats.BREAKING_POWER) >= pickaxeComponentTier;
+        int pickaxeComponentTier = basePickaxeComponent.getComponent(StatsComponent.class).getStatAmount(Stats.BREAKING_POWER);
+        return basePickaxe.getComponent(StatsComponent.class).getStatAmount(Stats.BREAKING_POWER) >= pickaxeComponentTier;
     }
 
 
@@ -91,9 +92,9 @@ public class PickaxeAnvilHandler {
         String headId = customItemRegistryService.getItemId(head);
         String coreId = customItemRegistryService.getItemId(core);
         String handleId = customItemRegistryService.getItemId(handle);
-        basePickaxeItem.setPickaxeHeadId(customItemRegistryService.isRegistered(headId) ? headId : null);
-        basePickaxeItem.setPickaxeCoreId(customItemRegistryService.isRegistered(coreId) ? coreId : null);
-        basePickaxeItem.setPickaxeHandleId(customItemRegistryService.isRegistered(handleId) ? handleId : null);
+        basePickaxeItem.setPart(PartSlots.HEAD, customItemRegistryService.isRegistered(headId) ? headId : null);
+        basePickaxeItem.setPart(PartSlots.CORE, customItemRegistryService.isRegistered(coreId) ? coreId : null);
+        basePickaxeItem.setPart(PartSlots.HANDLE, customItemRegistryService.isRegistered(handleId) ? handleId : null);
         return customItemRegistryService.buildItem(basePickaxeItem);
     }
 

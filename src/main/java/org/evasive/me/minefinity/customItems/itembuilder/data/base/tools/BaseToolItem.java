@@ -6,14 +6,16 @@ import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.components.ToolPartComponent;
 
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Base for tools (pickaxe, axe, ...). A tool's installed parts are stored in a single
+ * {@link ToolPartComponent}; the helpers here delegate to it so there is one source of truth.
+ */
 public class BaseToolItem extends BaseCustomItem {
-
-    private final LinkedHashMap<PartSlots, String> partMap = new LinkedHashMap<>();
 
     public BaseToolItem(ItemStack itemStack) {
         super(itemStack);
@@ -23,16 +25,25 @@ public class BaseToolItem extends BaseCustomItem {
         super(id, material, displayName, rarity, customItemType);
     }
 
-    public void setPart(PartSlots partComponent, String partId) {
-        partMap.put(partComponent, partId);
+    @Override
+    protected void registerComponents() {
+        super.registerComponents();
+        addComponent(new ToolPartComponent());
     }
 
-    public String getPart(PartSlots partComponent) {
-        return partMap.get(partComponent);
+    public ToolPartComponent partComponent() {
+        return getComponent(ToolPartComponent.class);
+    }
+
+    public void setPart(PartSlots slot, String partId) {
+        partComponent().setPart(slot, partId);
+    }
+
+    public String getPart(PartSlots slot) {
+        return partComponent().getPart(slot);
     }
 
     public Map<PartSlots, String> getPartMap() {
-        return Collections.unmodifiableMap(partMap);
+        return Collections.unmodifiableMap(partComponent().getValue());
     }
-
 }

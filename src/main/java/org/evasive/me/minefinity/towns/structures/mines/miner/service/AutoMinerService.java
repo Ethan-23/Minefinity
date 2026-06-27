@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.components.StatsComponent;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.mining.handlers.BlockProgressHandler;
 import org.evasive.me.minefinity.playerdata.model.PlayerData;
@@ -112,7 +113,7 @@ public class AutoMinerService {
         if(autoMiner.getPickaxeId() == null) return;
         BasePickaxeItem basePickaxeItem =(BasePickaxeItem) customItemRegistryService.getBaseItemById(autoMiner.getPickaxeId());
         if(basePickaxeItem == null) return;
-        float progressPerTick = basePickaxeItem.getStatsMap().get(Stats.MINING_SPEED.name());
+        float progressPerTick = basePickaxeItem.getComponent(StatsComponent.class).getStatAmount(Stats.MINING_SPEED);
 
         if(progressPerTick > blockHardness / BlockProgressHandler.MAX_SPEED_DENOMINATION)
             progressPerTick = blockHardness / BlockProgressHandler.MAX_SPEED_DENOMINATION;

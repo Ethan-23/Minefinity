@@ -2,54 +2,39 @@ package org.evasive.me.minefinity.customItems.itembuilder.data.base.tools;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.core.rarity.Rarity;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
-import org.evasive.me.minefinity.customItems.itembuilder.data.ItemOptions;
-import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
-import org.evasive.me.minefinity.mining.abilities.PickaxeAbilities;
+import org.evasive.me.minefinity.customItems.itembuilder.data.components.PartAbilityComponent;
+import org.evasive.me.minefinity.customItems.itembuilder.data.components.PartSlotComponent;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemKeys.*;
-
+/**
+ * A tool part. Carries the slots it can fill ({@link PartSlotComponent}) and the abilities it
+ * grants ({@link PartAbilityComponent}).
+ */
 public class BasePartItem extends BaseCustomItem {
 
     public BasePartItem(String id, Material material, String name, Rarity rarity) {
-        super(id, material, name, rarity);
+        super(id, material, name, rarity, CustomItemType.TOOL_PART);
     }
 
-    public BasePartItem(ItemStack itemStack){
+    public BasePartItem(ItemStack itemStack) {
         super(itemStack);
-
-        ItemMeta meta = itemStack.getItemMeta();
-        PersistentDataContainer pdc = meta.getPersistentDataContainer();
-
-
     }
 
-
-
-
     @Override
-    protected List<String> getLore() {
-        List<String> lore = super.getLore();
-
-
-        return lore;
+    protected void registerComponents() {
+        super.registerComponents();
+        addComponent(new PartSlotComponent());
+        addComponent(new PartAbilityComponent());
     }
 
+    public PartAbilityComponent abilityComponent() {
+        return getComponent(PartAbilityComponent.class);
+    }
 
-    @Override
-    public ItemStack buildItem() {
-
-
-        return new ItemBuilder(super.buildItem())
-                .build();
+    public PartSlotComponent slotComponent() {
+        return getComponent(PartSlotComponent.class);
     }
 
     @Override
@@ -57,4 +42,3 @@ public class BasePartItem extends BaseCustomItem {
         return new BasePartItem(this.buildItem());
     }
 }
-

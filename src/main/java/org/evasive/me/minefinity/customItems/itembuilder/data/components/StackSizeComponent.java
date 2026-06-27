@@ -4,9 +4,9 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
+import org.evasive.me.minefinity.customItems.itembuilder.gui.EditContext;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemKeys.STACK_SIZE_KEY;
 
@@ -16,22 +16,17 @@ public class StackSizeComponent implements ItemComponent, EditableComponent<Inte
 
     @Override
     public void load(PersistentDataContainer pdc) {
-        stackSize = pdc.has(STACK_SIZE_KEY) ? pdc.get(STACK_SIZE_KEY, PersistentDataType.INTEGER) : null;
+        stackSize = pdc.get(STACK_SIZE_KEY, PersistentDataType.INTEGER);
     }
 
     @Override
     public void save(ItemBuilder builder) {
-        if(stackSize != null) builder.setStackSize(stackSize);
+        if (stackSize != null) builder.setStackSize(stackSize);
     }
 
     @Override
     public void addLore(List<String> lore) {
-
-    }
-
-    @Override
-    public Class<?> type() {
-        return Integer.class;
+        // visual only
     }
 
     @Override
@@ -42,5 +37,10 @@ public class StackSizeComponent implements ItemComponent, EditableComponent<Inte
     @Override
     public Integer getValue() {
         return stackSize;
+    }
+
+    @Override
+    public void openEditor(EditContext ctx) {
+        ctx.promptInt(value -> stackSize = Math.max(1, Math.min(99, value)));
     }
 }

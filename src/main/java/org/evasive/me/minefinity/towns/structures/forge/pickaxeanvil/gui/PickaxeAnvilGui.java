@@ -63,13 +63,14 @@ public class PickaxeAnvilGui extends BaseGui {
     }
 
     public void addPickaxeParts(ItemStack itemStack){
-        String headId = getStringPDC(itemStack, COMPONENT_HEAD_KEY);
-        String coreId = getStringPDC(itemStack, COMPONENT_CORE_KEY);
-        String handleId = getStringPDC(itemStack, COMPONENT_HANDLE_KEY);
+        BasePickaxeItem pickaxe = new BasePickaxeItem(itemStack);
+        String headId = pickaxe.getPart(PartSlots.HEAD);
+        String coreId = pickaxe.getPart(PartSlots.CORE);
+        String handleId = pickaxe.getPart(PartSlots.HANDLE);
 
-        inventory.setItem(HEAD_SLOT, Objects.equals(headId, "NONE") || !customItemRegistryService.isRegistered(headId) ? EMPTY_HEAD_SLOT : customItemRegistryService.getRegisteredItemStack(headId).clone());
-        inventory.setItem(CORE_SLOT, Objects.equals(coreId, "NONE") || !customItemRegistryService.isRegistered(coreId) ? EMPTY_CORE_SLOT : customItemRegistryService.getRegisteredItemStack(coreId).clone());
-        inventory.setItem(HANDLE_SLOT, Objects.equals(handleId, "NONE") || !customItemRegistryService.isRegistered(handleId)? EMPTY_HANDLE_SLOT : customItemRegistryService.getRegisteredItemStack(handleId).clone());
+        inventory.setItem(HEAD_SLOT, headId == null || !customItemRegistryService.isRegistered(headId) ? EMPTY_HEAD_SLOT : customItemRegistryService.getRegisteredItemStack(headId).clone());
+        inventory.setItem(CORE_SLOT, coreId == null || !customItemRegistryService.isRegistered(coreId) ? EMPTY_CORE_SLOT : customItemRegistryService.getRegisteredItemStack(coreId).clone());
+        inventory.setItem(HANDLE_SLOT, handleId == null || !customItemRegistryService.isRegistered(handleId) ? EMPTY_HANDLE_SLOT : customItemRegistryService.getRegisteredItemStack(handleId).clone());
     }
 
     public void resetSlots(){

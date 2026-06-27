@@ -49,7 +49,7 @@ public class BackpackGuiHandler {
     }
 
     public int calculateBackpackSize(String backpackId){
-        int inventorySize = ((BaseBackpackItem) customItemRegistryService.getBaseItemById(backpackId)).getStoredItemIdList().size();
+        int inventorySize = ((BaseBackpackItem) customItemRegistryService.getBaseItemById(backpackId)).storageListComponent().getValue().size();
         int INVENTORY_ROW_SIZE = 9;
         if(inventorySize % 9 == 0){
             inventorySize = inventorySize / INVENTORY_ROW_SIZE * INVENTORY_ROW_SIZE + INVENTORY_ROW_SIZE;

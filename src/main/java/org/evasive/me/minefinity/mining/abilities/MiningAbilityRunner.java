@@ -25,7 +25,7 @@ public class MiningAbilityRunner {
         ToolItemData pickaxeData = pickaxeResolver.resolve(basePickaxeItem);
         for (BasePartItem part : pickaxeData.getPickaxeParts()) {
             if(part == null) continue;
-            for (String abilityId : part.getAbilityList()) {
+            for (String abilityId : part.abilityComponent().getValue()) {
                 MiningAbility miningAbility = miningAbilityRegistry.getAbility(abilityId);
                 PickaxeAbilities pickaxeAbility = PickaxeAbilities.valueOf(abilityId);
                 if(miningAbility == null || pickaxeAbilitiesList.contains(pickaxeAbility)) continue;
@@ -42,7 +42,7 @@ public class MiningAbilityRunner {
         ToolItemData pickaxeData = pickaxeResolver.resolve(basePickaxeItem);
         for (BasePartItem part : pickaxeData.getPickaxeParts()) {
             if(part == null) continue;
-            for (String abilityId : part.getAbilityList()) {
+            for (String abilityId : part.abilityComponent().getValue()) {
                 MiningAbility miningAbility = miningAbilityRegistry.getAbility(abilityId);
                 PickaxeAbilities pickaxeAbility = PickaxeAbilities.valueOf(abilityId);
                 if(miningAbility == null || pickaxeAbilitiesList.contains(pickaxeAbility)) continue;

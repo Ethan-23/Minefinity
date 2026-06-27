@@ -2,6 +2,7 @@ package org.evasive.me.minefinity.customItems.itembuilder;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -199,8 +200,7 @@ public class ItemBuilder {
 
     public ItemBuilder addGlow() {
         ItemMeta meta = getMeta();
-        meta.addEnchant(Enchantment.UNBREAKING, 1, true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        meta.setEnchantmentGlintOverride(true);
         this.itemStack.setItemMeta(meta);
         return this;
     }
@@ -261,8 +261,13 @@ public class ItemBuilder {
 
     public ItemBuilder setMaterial(Material material){
         ItemMeta meta = getMeta();
-        this.itemStack = new ItemStack(material);
-        this.itemStack.setItemMeta(meta);
+        ItemStack replacement = new ItemStack(material, this.itemStack.getAmount());
+        // Only carry the old meta over if it is valid for the new material (e.g. don't force
+        // SkullMeta onto a stone); otherwise keep the new material's default meta.
+        if (Bukkit.getItemFactory().isApplicable(meta, material)) {
+            replacement.setItemMeta(meta);
+        }
+        this.itemStack = replacement;
         return this;
     }
 
@@ -288,8 +293,8 @@ public class ItemBuilder {
 
     public ItemStack build() {
         ItemMeta meta = getMeta();
-        if (!lore.isEmpty())
-            meta.lore(lore);
+        // Always apply lore (null clears it) so setLore([]) can actually remove lore.
+        meta.lore(lore.isEmpty() ? null : lore);
         itemStack.setItemMeta(meta);
         return itemStack.clone();
     }

@@ -2,7 +2,6 @@ package org.evasive.me.minefinity.customItems.itembuilder.gui;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -15,18 +14,13 @@ import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemOptions;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseBackpackItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePartItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.EditableComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.events.PlayerInputListener;
-import org.evasive.me.minefinity.customItems.itembuilder.handler.ItemCreationHandler;
 import org.evasive.me.minefinity.customItems.registry.config.RegistryConfigHandler;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 
-import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Optional;
 
 public class ItemCreationGui extends BaseGui {
 
@@ -55,7 +49,6 @@ public class ItemCreationGui extends BaseGui {
 
         this.baseCustomItem = item;
         this.customItemType = item.getCustomItemType();
-
         this.registry = registry;
         this.inputListener = inputListener;
 
@@ -66,79 +59,79 @@ public class ItemCreationGui extends BaseGui {
     @Override
     protected void build() {
         GuiUtils.fillGui(inventory);
-
         loadCustomItemOptions();
         addDisplayItem();
         addRegistryButton();
     }
 
     private void addDisplayItem() {
-        inventory.setItem(
-                BUILT_ITEM_SLOT,
-                registry.buildItem(baseCustomItem)
-        );
+        inventory.setItem(BUILT_ITEM_SLOT, registry.buildItem(baseCustomItem));
     }
 
-    public void addRegistryButton(){
+    public void addRegistryButton() {
         boolean registered = registry.isRegistered(baseCustomItem.getID());
         Material pane = registered ? Material.YELLOW_STAINED_GLASS_PANE : Material.LIME_STAINED_GLASS_PANE;
         String save = registered ? "<bold><yellow>Override" : "<bold><green>Save";
-        String text = registered ? "<yellow>Left Click <gray>to <bold><yellow>OVERRIDE <reset><gray>in the item registry. This will update all items with this id globally." : "<green>Left Click <gray>to <bold><green>save <reset><gray>to the item registry.";
+        String text = registered
+                ? "<yellow>Left Click <gray>to <bold><yellow>OVERRIDE <reset><gray>in the item registry. This will update all items with this id globally."
+                : "<green>Left Click <gray>to <bold><green>save <reset><gray>to the item registry.";
         ItemBuilder saveButton = new ItemBuilder(pane, TextConversions.parse(save));
         saveButton.addBlank().addLore(text);
         inventory.setItem(REGISTRY_SAVE_SLOT, saveButton.build());
     }
 
-    public void updateItem(){
+    public void updateItem() {
         PlayerInventory playerInventory = player.getInventory();
         ItemStack playerItem = playerInventory.getItemInMainHand();
         ItemStack itemStack = registry.buildItem(baseCustomItem);
-        if(playerItem.isEmpty()){
+        if (playerItem.isEmpty()) {
             playerInventory.setItemInMainHand(itemStack);
             return;
         }
-        int amount = player.getInventory().getItemInMainHand().getAmount();
-        itemStack.setAmount(amount);
-        player.getInventory().setItemInMainHand(itemStack);
+        itemStack.setAmount(playerItem.getAmount());
+        playerInventory.setItemInMainHand(itemStack);
     }
 
-    private void loadCustomItemOptions(){
+    private void loadCustomItemOptions() {
         List<ItemOptions> options = customItemType.getAllOptions();
 
-        for (int i = 0; i < OPTION_SLOTS.size(); i++) {
-
-            if (i >= options.size()) continue;
-
+        for (int i = 0; i < OPTION_SLOTS.size() && i < options.size(); i++) {
             ItemOptions option = options.get(i);
 
-            ItemComponent component =
-                    baseCustomItem.getComponent(option.asComponentClass());
-
-            Object value = (component instanceof EditableComponent<?> ec)
-                    ? ec.getValue()
-                    : "N/A";
-
-            ItemBuilder item = new ItemBuilder(
-                    option.getIcon(),
-                    "<gold>" + option.getDisplayName()
-            );
-
-            item.addLore("<yellow>Current Value: <gray>" + value);
+            ItemBuilder item = new ItemBuilder(option.getIcon(), "<gold>" + option.getDisplayName());
+            item.addLore("<yellow>Current: <gray>" + currentValue(option));
             item.addLore("<gray>Click to edit");
 
             inventory.setItem(OPTION_SLOTS.get(i), item.build());
         }
     }
 
+    private String currentValue(ItemOptions option) {
+        if (option.isComponent()) {
+            ItemComponent component = baseCustomItem.getComponent(option.asComponentClass());
+            if (component instanceof EditableComponent<?> editable) {
+                return String.valueOf(editable.getValue());
+            }
+            return "N/A";
+        }
+
+        return switch (option) {
+            case MINEFINITY_ID -> baseCustomItem.getID();
+            case MATERIAL -> baseCustomItem.getMaterial().name();
+            case DISPLAY_NAME -> baseCustomItem.getDisplayName();
+            case RARITY -> baseCustomItem.getRarity().name();
+            case CUSTOM_ITEM_TYPE -> baseCustomItem.getCustomItemType().name();
+            default -> "N/A";
+        };
+    }
+
     @Override
     public void onClick(InventoryClickEvent e) {
-
         super.onClick(e);
         e.setCancelled(true);
 
         int slot = e.getSlot();
 
-        // registry button
         if (slot == REGISTRY_SAVE_SLOT && e.isLeftClick()) {
             new ConfirmationGui(player, this, p -> {
                 registry.saveCustomItem(baseCustomItem);
@@ -155,78 +148,85 @@ public class ItemCreationGui extends BaseGui {
 
         ItemOptions option = options.get(index);
 
-        ItemComponent component =
-                baseCustomItem.getComponent(option.asComponentClass());
-
-        if (!(component instanceof EditableComponent<?> editable)) return;
-
-        // forward ALL logic to component
-        editable.openEditor(player, baseCustomItem, this::reopen);
-    }
-
-    private void openEnumOptionGui(Type type, ItemOptions option) {
-
-        new OptionsGui(player, type, selected -> {
-
-            if (option.isComponent()) {
-
-                ItemComponent component =
-                        baseCustomItem.getComponent(option.asComponentClass());
-
-                if (component instanceof EditableComponent<?> editable) {
-                    applyToComponent(editable, selected);
-                }
-
-            } else {
-                applyCoreValue(option, selected);
+        if (option.isComponent()) {
+            ItemComponent component = baseCustomItem.getComponent(option.asComponentClass());
+            if (component instanceof EditableComponent<?> editable) {
+                editable.openEditor(new EditContext(player, baseCustomItem, inputListener, this));
             }
+            return;
+        }
 
-            if (type == CustomItemType.class) {
-                this.customItemType = (CustomItemType) selected;
-                buildNewItemType();
-            }
-
-            updateItem();
-
-        }, baseCustomItem, inputListener, this).open();
+        handleCoreOption(option);
     }
 
-    @SuppressWarnings("unchecked")
-    private static <T> void applyToComponent(EditableComponent<T> component, Object value) {
-        if (component == null) return;
-
-        component.setValue((T) value);
-    }
-
-    private void applyCoreValue(ItemOptions option, Object value) {
+    /** Editing for the non-component "core" fields (id, material, name, rarity, type). */
+    private void handleCoreOption(ItemOptions option) {
+        EditContext ctx = new EditContext(player, baseCustomItem, inputListener, this);
 
         switch (option) {
+            case MINEFINITY_ID -> ctx.promptString(input -> {
+                if (input.contains(" ")) {
+                    player.sendMessage(TextConversions.parse("<red>Minefinity ID cannot contain spaces"));
+                    return;
+                }
+                baseCustomItem.setId(input);
+            });
 
-            case MATERIAL ->
-                    baseCustomItem.setMaterial((Material) value);
+            case DISPLAY_NAME -> ctx.promptString(baseCustomItem::setDisplayName);
 
-            case MINEFINITY_ID ->
-                    baseCustomItem.setId((String) value);
+            case MATERIAL -> ctx.promptString(input -> {
+                Material material = Material.matchMaterial(input.trim());
+                if (material == null || material == Material.AIR) {
+                    player.sendMessage(TextConversions.parse("<red>Invalid Material Type"));
+                    return;
+                }
+                baseCustomItem.setMaterial(material);
+            });
 
-            case DISPLAY_NAME ->
-                    baseCustomItem.setDisplayName((String) value);
+            case RARITY -> ctx.openSelector(Rarity.values(), new OptionsGui.OptionAdapter<>() {
+                @Override
+                public ItemStack render(Rarity rarity) {
+                    ItemBuilder icon = new ItemBuilder(rarity.getRarityBuilder().material(),
+                            TextConversions.buildRarityColor(rarity.name(), rarity));
+                    if (baseCustomItem.getRarity() == rarity) icon.addGlow();
+                    return icon.build();
+                }
 
-            case RARITY ->
-                    baseCustomItem.setRarity((Rarity) value);
+                @Override
+                public void onClick(Rarity rarity, org.bukkit.event.inventory.ClickType click, OptionsGui<Rarity> gui) {
+                    baseCustomItem.setRarity(rarity);
+                }
+            });
 
-            case CUSTOM_ITEM_TYPE -> {
-                baseCustomItem.setItemType((CustomItemType) value);
-                this.customItemType = (CustomItemType) value;
-                buildNewItemType();
-            }
+            case CUSTOM_ITEM_TYPE -> new OptionsGui<>(player, CustomItemType.values(),
+                    new OptionsGui.OptionAdapter<CustomItemType>() {
+                        @Override
+                        public ItemStack render(CustomItemType type) {
+                            ItemBuilder icon = new ItemBuilder(type.getDisplayMaterial(),
+                                    "<gold>" + TextConversions.formatItemName(type.name()));
+                            if (baseCustomItem.getCustomItemType() == type) icon.addGlow();
+                            return icon.build();
+                        }
+
+                        @Override
+                        public void onClick(CustomItemType type, org.bukkit.event.inventory.ClickType click, OptionsGui<CustomItemType> gui) {
+                            changeItemType(type);
+                            reopen();
+                        }
+                    }, this::reopen).open();
+
+            default -> { /* no-op */ }
         }
     }
 
-    private void buildNewItemType(){
-        baseCustomItem = customItemType.create(baseCustomItem.buildItem());
+    /** Rebuilds the working item as a new type, carrying over shared data via the built ItemStack. */
+    private void changeItemType(CustomItemType type) {
+        baseCustomItem.setItemType(type);
+        this.baseCustomItem = type.create(baseCustomItem.buildItem());
+        this.customItemType = type;
     }
 
-    public void reopen(){
+    public void reopen() {
         updateItem();
         build();
         open();

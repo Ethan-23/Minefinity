@@ -2,10 +2,14 @@ package org.evasive.me.minefinity.customItems.itembuilder.data.components;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
+import org.evasive.me.minefinity.customItems.itembuilder.gui.EditContext;
+import org.evasive.me.minefinity.customItems.itembuilder.gui.OptionsGui;
 import org.evasive.me.minefinity.playerdata.stats.data.Stats;
 
 import java.lang.reflect.Type;
@@ -17,57 +21,45 @@ import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemK
 
 public class StatsComponent implements ItemComponent, EditableComponent<Map<String, Integer>> {
 
-    private Map<String, Integer> statsMap;
+    private static final Gson GSON = new Gson();
+    private static final Type MAP_TYPE = new TypeToken<Map<String, Integer>>() {}.getType();
+
+    private Map<String, Integer> statsMap = new HashMap<>();
 
     @Override
     public void load(PersistentDataContainer pdc) {
         this.statsMap = new HashMap<>();
 
-        if (pdc.has(STATS_KEY)) {
+        if (!pdc.has(STATS_KEY)) return;
 
-            String mapJson = pdc.get(STATS_KEY, PersistentDataType.STRING);
+        String mapJson = pdc.get(STATS_KEY, PersistentDataType.STRING);
+        if (mapJson == null || mapJson.isEmpty()) return;
 
-            if (mapJson != null && !mapJson.isEmpty()) {
-                Gson gson = new Gson();
-                Type type = new TypeToken<Map<String, Integer>>() {}.getType();
-
-                Map<String, Integer> parsed = gson.fromJson(mapJson, type);
-                if (parsed != null) {
-                    this.statsMap.putAll(parsed);
-                }
-            }
+        Map<String, Integer> parsed = GSON.fromJson(mapJson, MAP_TYPE);
+        if (parsed != null) {
+            this.statsMap.putAll(parsed);
         }
     }
 
     @Override
     public void save(ItemBuilder builder) {
-        Gson gson = new Gson();
-        String json = gson.toJson(statsMap);
-        builder.addPersistentDataContainer(STATS_KEY, PersistentDataType.STRING, json);
-
+        builder.addPersistentDataContainer(STATS_KEY, PersistentDataType.STRING, GSON.toJson(statsMap));
     }
 
     @Override
     public void addLore(List<String> lore) {
-        if(statsMap == null || statsMap.isEmpty())
-            return;
+        if (statsMap.isEmpty()) return;
 
-        for(Stats stats : Stats.values()){
-            if(!statsMap.containsKey(stats.name()))
-                continue;
-            int value = statsMap.get(stats.name());
-            lore.add(stats.getDisplay() + ": " + (value < 0 ? "<red>" : "") + value);
+        for (Stats stat : Stats.values()) {
+            Integer value = statsMap.get(stat.name());
+            if (value == null) continue;
+            lore.add(stat.getDisplay() + ": " + (value < 0 ? "<red>" : "<white>") + value);
         }
     }
 
     @Override
-    public Class<?> type() {
-        return Map.class;
-    }
-
-    @Override
     public void setValue(Map<String, Integer> value) {
-        this.statsMap = value;
+        this.statsMap = value == null ? new HashMap<>() : value;
     }
 
     @Override
@@ -75,19 +67,36 @@ public class StatsComponent implements ItemComponent, EditableComponent<Map<Stri
         return statsMap;
     }
 
-    public int getStatAmount(Stats stats){
-        if(!statsMap.containsKey(stats.name()))
-            return 0;
-        return this.statsMap.get(stats.name());
+    public int getStatAmount(Stats stats) {
+        return statsMap.getOrDefault(stats.name(), 0);
     }
 
-    public void addStatsMap(Stats stats, Integer value) {
-        String statId = stats.name();
-        if(!statsMap.containsKey(statId) || value != 0){
-            statsMap.put(statId, value);
-        }else {
-            statsMap.remove(statId);
+    /** Sets a stat; a value of 0 removes it. */
+    public void setStat(Stats stats, int value) {
+        if (value == 0) {
+            statsMap.remove(stats.name());
+        } else {
+            statsMap.put(stats.name(), value);
         }
+    }
 
+    @Override
+    public void openEditor(EditContext ctx) {
+        ctx.openSelector(Stats.values(), new OptionsGui.OptionAdapter<>() {
+            @Override
+            public ItemStack render(Stats stat) {
+                Integer value = statsMap.get(stat.name());
+                ItemBuilder icon = new ItemBuilder(stat.getMaterial(), stat.getDisplay());
+                icon.addLore(value != null ? "<white>Value: <yellow>" + value : "<red>Not set");
+                icon.addLore("<gray>Click to set a value (0 removes)");
+                if (value != null) icon.addGlow();
+                return icon.build();
+            }
+
+            @Override
+            public void onClick(Stats stat, ClickType click, OptionsGui<Stats> gui) {
+                ctx.promptInt(value -> setStat(stat, value), gui::reopenSelf);
+            }
+        });
     }
 }

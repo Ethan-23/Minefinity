@@ -7,6 +7,7 @@ import org.evasive.me.minefinity.core.economy.EconomyService;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.components.ValueComponent;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 
 import java.util.HashMap;
@@ -39,7 +40,8 @@ public class MerchantHandler {
                 continue;
 
             int stackSize = item.getAmount();
-            float singleCost = baseCustomItem.getValue().isPresent() ? baseCustomItem.getValue().get() : 0;
+            Float value = baseCustomItem.getComponent(ValueComponent.class).getValue();
+            float singleCost = value != null ? value : 0;
 
             if(singleCost <= 0) continue;
 
@@ -66,7 +68,8 @@ public class MerchantHandler {
         for (Map.Entry<String, Integer> entry : playerSaleMap.entrySet()) {
             String itemId = entry.getKey();
             BaseCustomItem baseCustomItem = customItemRegistryService.getBaseItemById(itemId);
-            float singleCost = baseCustomItem.getValue().isPresent() ? baseCustomItem.getValue().get() : 0;
+            Float value = baseCustomItem.getComponent(ValueComponent.class).getValue();
+            float singleCost = value != null ? value : 0;
             int stackSize = entry.getValue();
             if(stackSize <= 0 || singleCost <= 0) continue;
             totalCost += stackSize * singleCost;

@@ -39,9 +39,9 @@ public class BackpackHandler {
             if(!(baseCustomItem instanceof BaseBackpackItem baseBackpackItem))
                 continue;
 
-            if(!baseBackpackItem.getStoredItemIdList().contains(itemId)) continue;
+            if(!baseBackpackItem.storageListComponent().getValue().contains(itemId)) continue;
 
-            storageAmount += baseBackpackItem.getStoredItemAmount();
+            storageAmount += baseBackpackItem.storageAmountComponent().getValue();
 
             if(storageAmount <= backpackService.getBackpackStoredItemAmount(player, itemId)) continue;
 
@@ -73,7 +73,7 @@ public class BackpackHandler {
             if(!baseCustomItem.getID().equals(backPackId))
                 continue;
 
-            storageAmount += baseBackpackItem.getStoredItemAmount();
+            storageAmount += baseBackpackItem.storageAmountComponent().getValue();
         }
 
         return storageAmount;
@@ -86,7 +86,7 @@ public class BackpackHandler {
         Inventory inventory = player.getInventory();
 
         BaseBackpackItem baseBackpackItem = (BaseBackpackItem) customItemRegistryService.getBaseItemById(backPackId).getBaseItem();
-        List<String> storedItemIds = baseBackpackItem.getStoredItemIdList();
+        List<String> storedItemIds = baseBackpackItem.storageListComponent().getValue();
 
         for(ItemStack item : inventory.getContents()){
             if(!customItemRegistryService.isRegistered(item))continue;
@@ -114,7 +114,7 @@ public class BackpackHandler {
     public boolean canHoldItem(Player player, String backpackId, String itemId){
         BaseBackpackItem baseBackpackItem = (BaseBackpackItem) customItemRegistryService.getBaseItemById(backpackId);
 
-        int max = baseBackpackItem.getStoredItemAmount();
+        int max = baseBackpackItem.storageAmountComponent().getValue();
         int total = backpackService.getBackpackStoredItemAmount(player, itemId);
         return total <= max;
     }

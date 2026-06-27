@@ -3,6 +3,7 @@ package org.evasive.me.minefinity.customItems.itembuilder.data.components;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
+import org.evasive.me.minefinity.customItems.itembuilder.gui.EditContext;
 
 import java.util.List;
 
@@ -24,21 +25,24 @@ public class SoulboundComponent implements ItemComponent, EditableComponent<Bool
 
     @Override
     public void addLore(List<String> lore) {
-        lore.add("<gray>Soulbound");
-    }
-
-    @Override
-    public Class<?> type() {
-        return Boolean.class;
+        if (soulbound) {
+            lore.add("<gray>Soulbound");
+        }
     }
 
     @Override
     public void setValue(Boolean value) {
-        soulbound = value;
+        soulbound = Boolean.TRUE.equals(value);
     }
 
     @Override
     public Boolean getValue() {
         return soulbound;
+    }
+
+    @Override
+    public void openEditor(EditContext ctx) {
+        soulbound = !soulbound;
+        ctx.reopen();
     }
 }

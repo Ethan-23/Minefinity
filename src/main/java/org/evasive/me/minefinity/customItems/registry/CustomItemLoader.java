@@ -11,6 +11,7 @@ import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.*;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BaseToolItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePartItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.components.*;
 import org.evasive.me.minefinity.customItems.registry.config.ItemRegistryConfigManager;
 import org.evasive.me.minefinity.playerdata.stats.data.Stats;
 
@@ -74,52 +75,52 @@ public class CustomItemLoader {
 
             ConfigurationSection componentsSection = customItemSection.getConfigurationSection("components");
 
-            baseCustomItem.setStatsMap(statsMap);
-            baseCustomItem.setEquipmentSlots(equipmentSlotSet);
             baseCustomItem.setItemType(customItemType);
+            baseCustomItem.getComponent(StatsComponent.class).setValue(statsMap);
+            baseCustomItem.getComponent(EquipmentSlotComponent.class).setValue(equipmentSlotSet);
 
             if(customItemSection.get("sell-value") != null)
-                baseCustomItem.setValue((float) customItemSection.getDouble("sell-value"));
+                baseCustomItem.getComponent(ValueComponent.class).setValue((float) customItemSection.getDouble("sell-value"));
             if(customItemSection.get("visual-material") != null)
-                baseCustomItem.setVisualMaterial(Material.valueOf(customItemSection.getString("visual-material")));
+                baseCustomItem.getComponent(VisualMaterialComponent.class).setValue(Material.valueOf(customItemSection.getString("visual-material")));
             if(customItemSection.get("flavor-text") != null)
-                baseCustomItem.setFlavorText(customItemSection.getString("flavor-text"));
+                baseCustomItem.getComponent(FlavorTextComponent.class).setValue(customItemSection.getString("flavor-text"));
             if(customItemSection.get("glowing") != null)
-                baseCustomItem.setGlowing(customItemSection.getBoolean("glowing"));
+                baseCustomItem.getComponent(GlowComponent.class).setValue(customItemSection.getBoolean("glowing"));
             if(customItemSection.get("soulbound") != null)
-                baseCustomItem.setSoulbound(customItemSection.getBoolean("soulbound"));
+                baseCustomItem.getComponent(SoulboundComponent.class).setValue(customItemSection.getBoolean("soulbound"));
             if(customItemSection.get("stack-size") != null)
-                baseCustomItem.setStackSize(customItemSection.getInt("stack-size"));
+                baseCustomItem.getComponent(StackSizeComponent.class).setValue(customItemSection.getInt("stack-size"));
 
 
-            if(baseCustomItem instanceof BaseToolItem){
+            if(baseCustomItem instanceof BaseToolItem toolItem){
 
                 //Need to update to a map under a different section so you can create any amount of parts instead of set names on set types
                 if(componentsSection != null){
                     for(String key : componentsSection.getKeys(false)) {
                         PartSlots component = PartSlots.fromString(key);
-                        ((BaseToolItem) baseCustomItem).setPart(component, componentsSection.getString(key));
+                        toolItem.setPart(component, componentsSection.getString(key));
                     }
                 }
 
-            }else if(baseCustomItem instanceof BasePartItem){
+            }else if(baseCustomItem instanceof BasePartItem partItem){
                 //Change name to abilities to allow anything to have abilities instead of just pickaxe parts
                 for (String string : customItemSection.getStringList("pickaxe-abilities")) {
-                    ((BasePartItem) baseCustomItem).changeAbilityList(string);
+                    partItem.abilityComponent().toggle(string);
                 }
 
                 for (String string : customItemSection.getStringList("component-slot")) {
                     PartSlots toolComponent = PartSlots.fromString(string);
                     if(toolComponent == null)
                         continue;
-                    ((BasePartItem) baseCustomItem).changeComponentSlots(toolComponent);
+                    partItem.slotComponent().getValue().add(toolComponent);
                 }
-            }else if(baseCustomItem instanceof BaseFuelItem){
-                ((BaseFuelItem) baseCustomItem).setFuelAmount(customItemSection.getInt("fuel-amount"));
-            }else if(baseCustomItem instanceof BaseBackpackItem){
-                ((BaseBackpackItem) baseCustomItem).setStoredItemAmount(customItemSection.getInt("storage-amount"));
+            }else if(baseCustomItem instanceof BaseFuelItem fuelItem){
+                fuelItem.getComponent(FuelAmountComponent.class).setValue(customItemSection.getInt("fuel-amount"));
+            }else if(baseCustomItem instanceof BaseBackpackItem backpackItem){
+                backpackItem.storageAmountComponent().setValue(customItemSection.getInt("storage-amount"));
                 for (String string : customItemSection.getStringList("storage-list")) {
-                    ((BaseBackpackItem) baseCustomItem).changeStoredItemIdList(string);
+                    backpackItem.storageListComponent().toggle(string);
                 }
             }
 
