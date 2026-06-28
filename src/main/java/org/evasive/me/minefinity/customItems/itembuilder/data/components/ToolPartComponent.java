@@ -11,6 +11,7 @@ import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BaseToolItem;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.EditContext;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.OptionsGui;
 
@@ -84,7 +85,12 @@ public class ToolPartComponent implements ItemComponent, EditableComponent<Map<P
 
     @Override
     public void openEditor(EditContext ctx) {
-        ctx.openSelector(PartSlots.values(), new OptionsGui.OptionAdapter<>() {
+        // Only offer the slots this specific tool supports (e.g. a pickaxe shows only its slots).
+        PartSlots[] slots = (ctx.item() instanceof BaseToolItem tool)
+                ? tool.getToolSlots().toArray(new PartSlots[0])
+                : PartSlots.values();
+
+        ctx.openSelector(slots, new OptionsGui.OptionAdapter<>() {
             @Override
             public ItemStack render(PartSlots slot) {
                 String id = partMap.get(slot);

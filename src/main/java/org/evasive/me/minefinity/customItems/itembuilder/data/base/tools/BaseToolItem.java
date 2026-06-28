@@ -9,6 +9,7 @@ import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomIte
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.ToolPartComponent;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,6 +34,14 @@ public class BaseToolItem extends BaseCustomItem {
 
     public ToolPartComponent partComponent() {
         return getComponent(ToolPartComponent.class);
+    }
+
+    /**
+     * The part slots this tool exposes for editing/installing. Subclasses override with their
+     * tool-specific slots (e.g. a pickaxe uses PICKAXE_HEAD/CORE/HANDLE).
+     */
+    public List<PartSlots> getToolSlots() {
+        return List.of(PartSlots.HEAD, PartSlots.CORE, PartSlots.HANDLE);
     }
 
     public void setPart(PartSlots slot, String partId) {

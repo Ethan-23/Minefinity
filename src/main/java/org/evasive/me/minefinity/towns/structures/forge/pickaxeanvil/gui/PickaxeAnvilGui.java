@@ -64,9 +64,9 @@ public class PickaxeAnvilGui extends BaseGui {
 
     public void addPickaxeParts(ItemStack itemStack){
         BasePickaxeItem pickaxe = new BasePickaxeItem(itemStack);
-        String headId = pickaxe.getPart(PartSlots.HEAD);
-        String coreId = pickaxe.getPart(PartSlots.CORE);
-        String handleId = pickaxe.getPart(PartSlots.HANDLE);
+        String headId = pickaxe.getPart(PartSlots.PICKAXE_HEAD);
+        String coreId = pickaxe.getPart(PartSlots.PICKAXE_CORE);
+        String handleId = pickaxe.getPart(PartSlots.PICKAXE_HANDLE);
 
         inventory.setItem(HEAD_SLOT, headId == null || !customItemRegistryService.isRegistered(headId) ? EMPTY_HEAD_SLOT : customItemRegistryService.getRegisteredItemStack(headId).clone());
         inventory.setItem(CORE_SLOT, coreId == null || !customItemRegistryService.isRegistered(coreId) ? EMPTY_CORE_SLOT : customItemRegistryService.getRegisteredItemStack(coreId).clone());
@@ -99,9 +99,9 @@ public class PickaxeAnvilGui extends BaseGui {
 
         //Make change in the future to allow HEAD CORE and HANDLE to accept any type of head core or handle while PICKAXE_HEAD or AXE_HANDLE are specific to the type not just any
         switch (slot) {
-            case HEAD_SLOT -> toolSlot = PartSlots.HEAD;
-            case CORE_SLOT -> toolSlot = PartSlots.CORE;
-            case HANDLE_SLOT -> toolSlot = PartSlots.HANDLE;
+            case HEAD_SLOT -> toolSlot = PartSlots.PICKAXE_HEAD;
+            case CORE_SLOT -> toolSlot = PartSlots.PICKAXE_CORE;
+            case HANDLE_SLOT -> toolSlot = PartSlots.PICKAXE_HANDLE;
             case PICKAXE_SLOT -> pickaxeAnvilHandler.handlePickaxeSlot(e);
             default -> e.setCancelled(true);
         }

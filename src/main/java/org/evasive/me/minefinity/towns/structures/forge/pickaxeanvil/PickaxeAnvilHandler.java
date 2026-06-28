@@ -28,7 +28,7 @@ public class PickaxeAnvilHandler {
 
         BasePartItem baseToolComponent = new BasePartItem(itemStack);
 
-        return baseToolComponent.slotComponent().getValue().contains(toolSlot);
+        return PartSlots.isCompatible(baseToolComponent.slotComponent().getValue(), toolSlot);
     }
 
 
@@ -92,9 +92,9 @@ public class PickaxeAnvilHandler {
         String headId = customItemRegistryService.getItemId(head);
         String coreId = customItemRegistryService.getItemId(core);
         String handleId = customItemRegistryService.getItemId(handle);
-        basePickaxeItem.setPart(PartSlots.HEAD, customItemRegistryService.isRegistered(headId) ? headId : null);
-        basePickaxeItem.setPart(PartSlots.CORE, customItemRegistryService.isRegistered(coreId) ? coreId : null);
-        basePickaxeItem.setPart(PartSlots.HANDLE, customItemRegistryService.isRegistered(handleId) ? handleId : null);
+        basePickaxeItem.setPart(PartSlots.PICKAXE_HEAD, customItemRegistryService.isRegistered(headId) ? headId : null);
+        basePickaxeItem.setPart(PartSlots.PICKAXE_CORE, customItemRegistryService.isRegistered(coreId) ? coreId : null);
+        basePickaxeItem.setPart(PartSlots.PICKAXE_HANDLE, customItemRegistryService.isRegistered(handleId) ? handleId : null);
         return customItemRegistryService.buildItem(basePickaxeItem);
     }
 
