@@ -51,14 +51,13 @@ public class CoreModule {
 
     public CoreModule(PlayerDataService playerDataService) {
         new GenerateCustomWorlds().init();
-        EconomyService economyService = new EconomyService(playerDataService);
+        this.economyService = new EconomyService(playerDataService);
         this.vanishService = new VanishService();
         this.blockTypeRegistry = new BlockTypeRegistry();
         new MiningBlockRegistryConfig(blockTypeRegistry);
         this.scoreboardService = new ScoreboardService(playerDataService, economyService, vanishService, blockTypeRegistry);
         this.warpService = new WarpService();
         this.spawnService = new SpawnService();
-        this.economyService = new EconomyService(playerDataService);
         this.npcInstanceMap = new NpcInstanceMap();
         this.npcBehaviorRegistry = new NpcBehaviorRegistry();
         this.playerInputListener = new PlayerInputListener();

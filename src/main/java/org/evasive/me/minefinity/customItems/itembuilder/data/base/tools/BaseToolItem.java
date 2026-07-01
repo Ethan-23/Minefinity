@@ -62,7 +62,7 @@ public class BaseToolItem extends BaseCustomItem {
             String partId = parts.getPart(slot);
 
             if (partId == null || partId.isEmpty()) {
-                lore.add("<white>[Empty " + label + "]");
+                lore.add("<white>[" + "<gray>Empty " + label + "]");
             } else {
                 BaseCustomItem part = CustomItemRegistryService.get().getBaseItemById(partId);
                 Rarity rarity = part != null ? part.getRarity() : getRarity();
