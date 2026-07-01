@@ -9,7 +9,7 @@ import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.framework.ItemPickupService;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.mines.miner.service.AutoMinerService;
 import org.evasive.me.minefinity.core.data.BaseBlock;
@@ -48,7 +48,7 @@ public class MinerBlockSelectionGui extends BaseGui {
     }
 
     private void buildBlocks(Player player){
-        ItemBuilder noneBuilder = new ItemBuilder(Material.BARRIER, TextConversions.parse("<red>NONE"));
+        CustomItemBuilder noneBuilder = new CustomItemBuilder(Material.BARRIER, TextConversions.parse("<red>NONE"));
         if(autoMinerService.getAutoMinerBlockType(player) == null)
             setSelected(noneBuilder);
         inventory.setItem(NONE_SLOT, noneBuilder.build());
@@ -62,7 +62,7 @@ public class MinerBlockSelectionGui extends BaseGui {
             boolean unlocked = autoMinerService.getAutoMinerUnlockedBlockTier(player) >= blockTier;
 
             Component name = TextConversions.parse("<gray>(<" + (unlocked ? "white" : "red") + ">" + intToRoman(blockTier+1) +"<gray>) <white>" + baseBlock.name());
-            ItemBuilder blockBuilder = new ItemBuilder(baseBlock.material(), name);
+            CustomItemBuilder blockBuilder = new CustomItemBuilder(baseBlock.material(), name);
             blockBuilder.addLore(unlocked ? getBlockLore(baseBlock) : getLockedBlockLore());
 
             String autoMinerBlockId = autoMinerService.getAutoMinerBlockType(player);
@@ -74,7 +74,7 @@ public class MinerBlockSelectionGui extends BaseGui {
         }
     }
 
-    private void setSelected(ItemBuilder blockBuilder){
+    private void setSelected(CustomItemBuilder blockBuilder){
         blockBuilder.addLore("<bold><green>Selected").addGlow();
     }
 

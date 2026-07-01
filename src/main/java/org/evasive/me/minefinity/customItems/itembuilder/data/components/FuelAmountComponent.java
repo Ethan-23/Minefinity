@@ -2,7 +2,7 @@ package org.evasive.me.minefinity.customItems.itembuilder.data.components;
 
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.EditContext;
 
@@ -23,7 +23,7 @@ public class FuelAmountComponent implements ItemComponent, EditableComponent<Int
     }
 
     @Override
-    public void save(ItemBuilder builder) {
+    public void save(CustomItemBuilder builder) {
         builder.addPersistentDataContainer(FUEL_AMOUNT_KEY, PersistentDataType.INTEGER, this.fuelAmount);
     }
 

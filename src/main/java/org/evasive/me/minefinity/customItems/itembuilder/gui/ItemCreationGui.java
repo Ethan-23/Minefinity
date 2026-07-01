@@ -10,7 +10,7 @@ import org.evasive.me.minefinity.core.gui.ConfirmationGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemOptions;
@@ -45,7 +45,7 @@ public class ItemCreationGui extends BaseGui {
                            RegistryConfigHandler registryConfigHandler,
                            PlayerInputListener inputListener,
                            CustomItemRegistryService registry) {
-        super(player, INVENTORY_SIZE, TextConversions.parse("ItemBuilder"));
+        super(player, INVENTORY_SIZE, TextConversions.parse("CustomItemBuilder"));
 
         this.baseCustomItem = item;
         this.customItemType = item.getCustomItemType();
@@ -75,7 +75,7 @@ public class ItemCreationGui extends BaseGui {
         String text = registered
                 ? "<yellow>Left Click <gray>to <bold><yellow>OVERRIDE <reset><gray>in the item registry. This will update all items with this id globally."
                 : "<green>Left Click <gray>to <bold><green>save <reset><gray>to the item registry.";
-        ItemBuilder saveButton = new ItemBuilder(pane, TextConversions.parse(save));
+        CustomItemBuilder saveButton = new CustomItemBuilder(pane, TextConversions.parse(save));
         saveButton.addBlank().addLore(text);
         inventory.setItem(REGISTRY_SAVE_SLOT, saveButton.build());
     }
@@ -98,7 +98,7 @@ public class ItemCreationGui extends BaseGui {
         for (int i = 0; i < OPTION_SLOTS.size() && i < options.size(); i++) {
             ItemOptions option = options.get(i);
 
-            ItemBuilder item = new ItemBuilder(option.getIcon(), "<gold>" + option.getDisplayName());
+            CustomItemBuilder item = new CustomItemBuilder(option.getIcon(), "<gold>" + option.getDisplayName());
             item.addLore("<yellow>Current: <gray>" + currentValue(option));
             item.addLore("<gray>Click to edit");
 
@@ -185,7 +185,7 @@ public class ItemCreationGui extends BaseGui {
             case RARITY -> ctx.openSelector(Rarity.values(), new OptionsGui.OptionAdapter<>() {
                 @Override
                 public ItemStack render(Rarity rarity) {
-                    ItemBuilder icon = new ItemBuilder(rarity.getRarityBuilder().material(),
+                    CustomItemBuilder icon = new CustomItemBuilder(rarity.getRarityBuilder().material(),
                             TextConversions.buildRarityColor(rarity.name(), rarity));
                     if (baseCustomItem.getRarity() == rarity) icon.addGlow();
                     return icon.build();
@@ -201,7 +201,7 @@ public class ItemCreationGui extends BaseGui {
                     new OptionsGui.OptionAdapter<CustomItemType>() {
                         @Override
                         public ItemStack render(CustomItemType type) {
-                            ItemBuilder icon = new ItemBuilder(type.getDisplayMaterial(),
+                            CustomItemBuilder icon = new CustomItemBuilder(type.getDisplayMaterial(),
                                     "<gold>" + TextConversions.formatItemName(type.name()));
                             if (baseCustomItem.getCustomItemType() == type) icon.addGlow();
                             return icon.build();

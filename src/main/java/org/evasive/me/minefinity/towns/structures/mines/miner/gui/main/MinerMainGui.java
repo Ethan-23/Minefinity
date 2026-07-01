@@ -11,7 +11,7 @@ import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.framework.ItemPickupService;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.mines.miner.service.AutoMinerService;
@@ -61,9 +61,9 @@ public class MinerMainGui extends BaseGui {
     private void addButtons(Player player){
         ItemStack pickaxe = autoMinerService.getAutoMinerPickaxe(player);
         String blockId = autoMinerService.getAutoMinerBlockType(player);
-        inventory.setItem(PICKAXE_SLOT, pickaxe != null ? pickaxe : new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, TextConversions.parse("Pickaxe Slot")).build()); // Stored pickaxe
+        inventory.setItem(PICKAXE_SLOT, pickaxe != null ? pickaxe : new CustomItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, TextConversions.parse("Pickaxe Slot")).build()); // Stored pickaxe
         inventory.setItem(BLOCK_SLOT, blockId != null ? createBlockButton(player, blockId) : noneBarrier); // Stored selected block
-        inventory.setItem(UPGRADE_SLOT, new ItemBuilder(Material.INK_SAC, TextConversions.parse("INK")).build()); // Stored upgrade
+        inventory.setItem(UPGRADE_SLOT, new CustomItemBuilder(Material.INK_SAC, TextConversions.parse("INK")).build()); // Stored upgrade
         inventory.setItem(COLLECT_SLOT, createCollectButton(player)); // Stored upgrade
     }
 
@@ -75,7 +75,7 @@ public class MinerMainGui extends BaseGui {
 
         Component name = TextConversions.parse("<gray>(<white>" + intToRoman(blockTier+1) +"<gray>) <white>" + baseBlock.name());
 
-        return new ItemBuilder(baseBlock.material(), name).addLore(
+        return new CustomItemBuilder(baseBlock.material(), name).addLore(
                 List.of(
                         "<gray>Block Health: <white>" + baseBlock.health(),
                         "",
@@ -89,7 +89,7 @@ public class MinerMainGui extends BaseGui {
 
         String storageAmountString = "<gray>(" + autoMinerService.getAutoMinerStoredBlockAmount(player) + "/" + autoMinerService.getAutoMinerStorageCap(player) + ")";
 
-        ItemBuilder collectBuilder = new ItemBuilder(Material.CHEST_MINECART, TextConversions.parse("<gold><bold>Block Storage</bold>"));
+        CustomItemBuilder collectBuilder = new CustomItemBuilder(Material.CHEST_MINECART, TextConversions.parse("<gold><bold>Block Storage</bold>"));
 
         collectBuilder.addLore(storageAmountString).addBlank();
 
@@ -110,7 +110,7 @@ public class MinerMainGui extends BaseGui {
     }
 
     private void buildInformation(){
-        ItemBuilder itemBuilder = new ItemBuilder(Material.KNOWLEDGE_BOOK, TextConversions.parse("<bold><gold>Miner"));
+        CustomItemBuilder itemBuilder = new CustomItemBuilder(Material.KNOWLEDGE_BOOK, TextConversions.parse("<bold><gold>Miner"));
         itemBuilder.addLore("<gray>This is the miner. He be mining the blocks and stuff. He be mining all night and day. Might be a 'worker' if you catch my drift. 3 Netherite Ingots!");
         inventory.setItem(INFORMATION_SLOT, itemBuilder.build());
     }

@@ -11,7 +11,7 @@ import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.core.data.CustomItemStack;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseFuelItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
@@ -78,13 +78,13 @@ public class SmelterGui extends BaseGui {
     }
 
     private void buildRecipeSlot(){
-        ItemBuilder itemBuilder = new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, TextConversions.parse("<blue>Recipes"));
+        CustomItemBuilder itemBuilder = new CustomItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, TextConversions.parse("<blue>Recipes"));
         itemBuilder.addLore("<gray>Left-Click to view recipes");
         inventory.setItem(RECIPE_SLOT, itemBuilder.build());
     }
 
     private void buildStatus() {
-        ItemBuilder itemBuilder = new ItemBuilder(Material.BROWN_DYE, TextConversions.parse("<yellow>Idle"));
+        CustomItemBuilder itemBuilder = new CustomItemBuilder(Material.BROWN_DYE, TextConversions.parse("<yellow>Idle"));
         BaseCustomItem currentSmelt = customItemRegistryService.getBaseItemById(smelterService.getCurrentlySmelting(player));
 
         if(currentSmelt != null) {
@@ -111,7 +111,7 @@ public class SmelterGui extends BaseGui {
         BaseCustomItem customItem = customItemRegistryService.getRegisteredBaseItem(fuelId);
 
         if(!(customItem instanceof BaseFuelItem baseFuelItem) || totalFuel == 0){
-            ItemBuilder itemBuilder = new ItemBuilder(Material.RED_STAINED_GLASS_PANE, TextConversions.parse("<bold><gold>Fuel Input"));
+            CustomItemBuilder itemBuilder = new CustomItemBuilder(Material.RED_STAINED_GLASS_PANE, TextConversions.parse("<bold><gold>Fuel Input"));
             inventory.setItem(FUEL_SLOT, itemBuilder.build());
         }else{
             ItemStack fuelItem = baseFuelItem.buildItem();
@@ -121,7 +121,7 @@ public class SmelterGui extends BaseGui {
     }
 
     private void buildOutput() {
-        ItemBuilder itemBuilder = new ItemBuilder(Material.FURNACE_MINECART, TextConversions.parse("<bold><gold>Output"));
+        CustomItemBuilder itemBuilder = new CustomItemBuilder(Material.FURNACE_MINECART, TextConversions.parse("<bold><gold>Output"));
         itemBuilder.addLore("<gray>Items:");
         for (Map.Entry<String, Integer> entry : smelterService.getOutput(player).entrySet()) {
             if(entry.getValue() == 0) continue;
@@ -134,7 +134,7 @@ public class SmelterGui extends BaseGui {
     }
 
     private void buildInformation() {
-        ItemBuilder itemBuilder = new ItemBuilder(Material.KNOWLEDGE_BOOK, TextConversions.parse("<bold><yellow>Smelter"));
+        CustomItemBuilder itemBuilder = new CustomItemBuilder(Material.KNOWLEDGE_BOOK, TextConversions.parse("<bold><yellow>Smelter"));
         itemBuilder.addLore("<gray>Input items you want to smelt on the left side. The smelter will automatically smelt items after their smelt time if there is enough fuel.");
         inventory.setItem(INFORMATION_SLOT, itemBuilder.build());
     }

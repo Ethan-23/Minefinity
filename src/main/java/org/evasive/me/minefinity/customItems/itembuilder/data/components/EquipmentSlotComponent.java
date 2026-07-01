@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.EditContext;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.OptionsGui;
@@ -41,7 +41,7 @@ public class EquipmentSlotComponent implements ItemComponent, EditableComponent<
     }
 
     @Override
-    public void save(ItemBuilder builder) {
+    public void save(CustomItemBuilder builder) {
         builder.addPersistentDataContainer(
                 EQUIPMENT_SLOT_KEY,
                 PersistentDataType.STRING,
@@ -68,7 +68,7 @@ public class EquipmentSlotComponent implements ItemComponent, EditableComponent<
         ctx.openSelector(EquipmentSlot.values(), new OptionsGui.OptionAdapter<>() {
             @Override
             public ItemStack render(EquipmentSlot slot) {
-                ItemBuilder icon = new ItemBuilder(Material.ARMOR_STAND, TextConversions.formatItemName(slot.name()));
+                CustomItemBuilder icon = new CustomItemBuilder(Material.ARMOR_STAND, TextConversions.formatItemName(slot.name()));
                 icon.addLore("<gray>Click to toggle");
                 if (equipmentSlots.contains(slot)) icon.addGlow();
                 return icon.build();

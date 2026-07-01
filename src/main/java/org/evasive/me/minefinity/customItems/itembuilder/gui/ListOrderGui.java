@@ -7,7 +7,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 
 import java.util.Collections;
 import java.util.List;
@@ -44,7 +44,7 @@ public class ListOrderGui extends BaseGui {
     private void loadOptions(){
         for(int i = 0; i < editableList.size(); i++){
             Object obj = editableList.get(i);
-            ItemBuilder itemBuilder = new ItemBuilder(Material.BOOK, obj.toString());
+            CustomItemBuilder itemBuilder = new CustomItemBuilder(Material.BOOK, obj.toString());
             itemBuilder.addLore("<yellow>Left Click <gray>to move to the left");
             itemBuilder.addLore("<yellow>Right Click <gray>to move to the right");
             itemBuilder.addLore("<yellow>Shift-Right Click <gray>to remove");

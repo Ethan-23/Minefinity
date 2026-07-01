@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ public class OptionsGui<E extends Enum<E>> extends BaseGui {
         for (int i = 0; i < values.length && i < OPTION_SLOTS.size(); i++) {
             inventory.setItem(OPTION_SLOTS.get(i), adapter.render(values[i]));
         }
-        inventory.setItem(APPLY_SLOT, new ItemBuilder(Material.LIME_STAINED_GLASS_PANE, "<green><bold>Apply")
+        inventory.setItem(APPLY_SLOT, new CustomItemBuilder(Material.LIME_STAINED_GLASS_PANE, "<green><bold>Apply")
                 .addLore("<gray>Apply changes and return")
                 .build());
     }

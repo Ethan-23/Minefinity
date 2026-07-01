@@ -8,7 +8,7 @@ import org.evasive.me.minefinity.core.economy.EconomyService;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.mining.milestones.MilestoneService;
 import org.evasive.me.minefinity.playerdata.stats.data.Stats;
@@ -56,7 +56,7 @@ public class BlockGui extends BaseGui {
             String worldId = worldList.get(i);
             String blockId = blockTierService.getBlockTypeRegistryService().getBlockList(worldId).getFirst();
             BaseBlock baseBlock = blockTierService.getBlockTypeRegistryService().getBaseBlock(blockId);
-            ItemBuilder itemBuilder = new ItemBuilder(baseBlock.material(), TextConversions.formatItemName(worldId));
+            CustomItemBuilder itemBuilder = new CustomItemBuilder(baseBlock.material(), TextConversions.formatItemName(worldId));
 
             if(!blockTierService.hasWorldUnlocked(player, worldId))
                 itemBuilder.addLore("<red>Locked");
@@ -89,7 +89,7 @@ public class BlockGui extends BaseGui {
                     "<gray>(<" + (unlocked ? "white" : "red") + ">" + intToRoman(blockTier+1) +"<gray>) <white>" +
                             TextConversions.buildRarityColor(block.name(), CustomItemRegistryService.get().getRegisteredBaseItem(block.blockDropId()).getRarity()) +
                             (selected ? "<gray> - <green><bold>Selected" : ""));
-            ItemBuilder blockBuilder = new ItemBuilder(block.material(), name);
+            CustomItemBuilder blockBuilder = new CustomItemBuilder(block.material(), name);
             if(selected)
                 blockBuilder.setGlow(true);
             blockBuilder.addLore(unlocked ? getBlockLore(blockId, block, player) : getLockedBlockLore(block));

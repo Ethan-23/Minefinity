@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.EditContext;
@@ -39,7 +39,7 @@ public class PartSlotComponent implements ItemComponent, EditableComponent<Set<P
     }
 
     @Override
-    public void save(ItemBuilder builder) {
+    public void save(CustomItemBuilder builder) {
         String joined = partSlots.stream().map(Enum::name).collect(Collectors.joining(";;"));
         builder.addPersistentDataContainer(PART_SLOT_KEY, PersistentDataType.STRING, joined);
     }
@@ -63,7 +63,7 @@ public class PartSlotComponent implements ItemComponent, EditableComponent<Set<P
         ctx.openSelector(PartSlots.values(), new OptionsGui.OptionAdapter<>() {
             @Override
             public ItemStack render(PartSlots slot) {
-                ItemBuilder icon = new ItemBuilder(Material.PAPER, TextConversions.formatItemName(slot.name()));
+                CustomItemBuilder icon = new CustomItemBuilder(Material.PAPER, TextConversions.formatItemName(slot.name()));
                 icon.addLore("<gray>Click to toggle");
                 if (partSlots.contains(slot)) icon.addGlow();
                 return icon.build();

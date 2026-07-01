@@ -1,7 +1,7 @@
 package org.evasive.me.minefinity.towns.structures.forge.blacksmith.data;
 
 import org.bukkit.Material;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 
 public enum ForgeCategories {
     PICKAXES(Material.IRON_PICKAXE, "Pickaxe Templates"),
@@ -17,7 +17,7 @@ public enum ForgeCategories {
         this.name = name;
     }
 
-    public ItemBuilder toItemBuilder() {
-        return new ItemBuilder(material, "<yellow>" + name + "</yellow>");
+    public CustomItemBuilder toItemBuilder() {
+        return new CustomItemBuilder(material, "<yellow>" + name + "</yellow>");
     }
 }

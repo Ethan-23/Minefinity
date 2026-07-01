@@ -10,7 +10,7 @@ import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
@@ -39,10 +39,10 @@ public class PickaxeAnvilGui extends BaseGui {
     public PickaxeAnvilGui(Player player, CustomItemRegistryService customItemRegistryService, ItemStack pickaxe) {
         super(player, INVENTORY_SIZE, TextConversions.parse("Pickaxe Anvil"));
         this.customItemRegistryService = customItemRegistryService;
-        EMPTY_HEAD_SLOT = new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, "<yellow>Head Slot").build();
-        EMPTY_CORE_SLOT = new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, "<yellow>Core Slot").build();
-        EMPTY_HANDLE_SLOT = new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, "<yellow>Handle Slot").build();
-        EMPTY_SLOT = new ItemBuilder(Material.RED_STAINED_GLASS_PANE, "<red>Please insert an item").build();
+        EMPTY_HEAD_SLOT = new CustomItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, "<yellow>Head Slot").build();
+        EMPTY_CORE_SLOT = new CustomItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, "<yellow>Core Slot").build();
+        EMPTY_HANDLE_SLOT = new CustomItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, "<yellow>Handle Slot").build();
+        EMPTY_SLOT = new CustomItemBuilder(Material.RED_STAINED_GLASS_PANE, "<red>Please insert an item").build();
         this.pickaxeAnvilHandler = new PickaxeAnvilHandler(customItemRegistryService);
         if(pickaxe != null){
             inventory.setItem(PICKAXE_SLOT, pickaxe);

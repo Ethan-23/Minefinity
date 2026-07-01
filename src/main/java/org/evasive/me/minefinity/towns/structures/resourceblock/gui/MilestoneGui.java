@@ -10,7 +10,7 @@ import org.evasive.me.minefinity.core.economy.EconomyService;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.mining.milestones.MilestoneService;
@@ -66,7 +66,7 @@ public class MilestoneGui extends BaseGui {
         BaseBlock baseBlock = blockTierService.getBlockTypeRegistryService().getBaseBlock(blockId);
         BaseCustomItem baseCustomItem = customItemRegistryService.getBaseItemById(baseBlock.blockDropId());
 
-        inventory.setItem(BLOCK_DISPLAY, new ItemBuilder(baseBlock.material(), TextConversions.parse(buildRarityColor(baseBlock.name(), baseCustomItem.getRarity()))).build());
+        inventory.setItem(BLOCK_DISPLAY, new CustomItemBuilder(baseBlock.material(), TextConversions.parse(buildRarityColor(baseBlock.name(), baseCustomItem.getRarity()))).build());
         int playerMilestoneCount = milestoneService.getTierProgress(player, blockId);
         List<MilestoneTier> milestoneUnlocks = baseBlock.milestoneUnlocks();
 
@@ -89,7 +89,7 @@ public class MilestoneGui extends BaseGui {
             String color = completed ? "green" : started ? "yellow" : "red";
             Component milestoneName = TextConversions.parse("<"+color+">Milestone <tier></"+color+">", Placeholder.parsed("tier", intToRoman(tierCount + 1)));
 
-            ItemBuilder milestoneItem = new ItemBuilder(milestoneMaterial, milestoneName);
+            CustomItemBuilder milestoneItem = new CustomItemBuilder(milestoneMaterial, milestoneName);
             milestoneItem.addLore("<white>"+Math.min(playerMilestoneCount, milestoneAmount)+"/"+milestoneAmount+"</white>");
             milestoneItem.addLore("<yellow>Rewards:");
             Map<String, Integer> rewardStatsMap = milestoneTier.stats();

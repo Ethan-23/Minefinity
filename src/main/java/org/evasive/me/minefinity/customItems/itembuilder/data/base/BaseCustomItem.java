@@ -8,7 +8,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.*;
@@ -136,7 +136,7 @@ public class BaseCustomItem {
     }
 
     public ItemStack buildItem() {
-        ItemBuilder builder = new ItemBuilder(this.id, this.material, this.displayName);
+        CustomItemBuilder builder = new CustomItemBuilder(this.id, this.material, this.displayName);
         builder.setItemId(this.id);
         builder.setItemRarity(this.rarity);
         builder.setItemType(this.itemType);

@@ -10,7 +10,7 @@ import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.backpack.BackpackHandler;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseBackpackItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.jetbrains.annotations.NotNull;
@@ -56,14 +56,14 @@ public class GenericBackpackGui extends BaseGui {
         for(int i = inventorySize - 1; i > inventorySize - 10; i--){
             inventory.setItem(i, fillerPane);
         }
-        inventory.setItem(insertButton, new ItemBuilder(Material.CHEST, "<green>Insert Inventory").build());
+        inventory.setItem(insertButton, new CustomItemBuilder(Material.CHEST, "<green>Insert Inventory").build());
     }
 
     private ItemStack createItemStorage(String backpackId, Player player, String itemId){
         ItemStack customItem = customItemRegistryService.getRegisteredItemStack(itemId);
         int amount = backpackService.getBackpackStoredItemAmount(player, itemId);
         int totalStorage = new BackpackHandler(customItemRegistryService, backpackService).getTotalBackpackStorage(player, backpackId);
-        ItemBuilder storageBlock = new ItemBuilder(customItem).setLore(
+        CustomItemBuilder storageBlock = new CustomItemBuilder(customItem).setLore(
                 List.of(
                         "<gray>" + formatItemName(backpackId),
                         "",

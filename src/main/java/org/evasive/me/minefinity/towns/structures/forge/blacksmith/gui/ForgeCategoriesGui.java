@@ -9,7 +9,7 @@ import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.core.utils.TimeCalculator;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.RecipeRequirement;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.service.RecipeService;
@@ -84,7 +84,7 @@ public class ForgeCategoriesGui extends BaseGui {
      * @return ItemStack for selectable or selected category.
      */
     private ItemStack buildCategory(ForgeCategories category, ForgeCategories selectedCategory){
-        ItemBuilder builder = category.toItemBuilder();
+        CustomItemBuilder builder = category.toItemBuilder();
         if(category == selectedCategory){
             setSelected(builder);
         }
@@ -107,7 +107,7 @@ public class ForgeCategoriesGui extends BaseGui {
             BaseForgeRecipe currentRecipe = categoryList.get(slot);
             String itemId = currentRecipe.getResult();
 
-            ItemBuilder forgeItem = new ItemBuilder(customItemRegistryService.getRegisteredItemStack(itemId));
+            CustomItemBuilder forgeItem = new CustomItemBuilder(customItemRegistryService.getRegisteredItemStack(itemId));
 
             //Change to check if player just has recipe in set of recipes when I add that <<<<<<
             if(!recipeService.hasRecipeUnlocked(player.getUniqueId(), currentRecipe.getResult())){
@@ -149,10 +149,10 @@ public class ForgeCategoriesGui extends BaseGui {
     }
 
     /**
-     * Updated selected ItemBuilder to glow and add SELECTED lore
-     * @param builder ItemBuilder being changed.
+     * Updated selected CustomItemBuilder to glow and add SELECTED lore
+     * @param builder CustomItemBuilder being changed.
      */
-    public void setSelected(ItemBuilder builder){
+    public void setSelected(CustomItemBuilder builder){
         builder.addLore("<bold><green>SELECTED");
     }
 

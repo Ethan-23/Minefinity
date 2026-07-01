@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.EditContext;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.OptionsGui;
@@ -32,7 +32,7 @@ public class PartAbilityComponent implements ItemComponent, EditableComponent<Li
     }
 
     @Override
-    public void save(ItemBuilder builder) {
+    public void save(CustomItemBuilder builder) {
         builder.addPersistentDataContainer(ABILITY_KEY, PersistentDataType.STRING, String.join(";;", abilities));
     }
 
@@ -67,7 +67,7 @@ public class PartAbilityComponent implements ItemComponent, EditableComponent<Li
         ctx.openSelector(PickaxeAbilities.values(), new OptionsGui.OptionAdapter<>() {
             @Override
             public ItemStack render(PickaxeAbilities ability) {
-                ItemBuilder icon = new ItemBuilder(Material.WIND_CHARGE, TextConversions.formatItemName(ability.name()));
+                CustomItemBuilder icon = new CustomItemBuilder(Material.WIND_CHARGE, TextConversions.formatItemName(ability.name()));
                 icon.addLore(ability.getDescription());
                 icon.addLore("<gray>Click to toggle");
                 if (abilities.contains(ability.name())) icon.addGlow();
