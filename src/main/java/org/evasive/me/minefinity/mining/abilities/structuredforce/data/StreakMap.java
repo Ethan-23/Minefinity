@@ -1,6 +1,6 @@
 package org.evasive.me.minefinity.mining.abilities.structuredforce.data;
 
-import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
+import org.evasive.me.minefinity.core.data.BaseBlock;
 
 import java.util.HashMap;
 import java.util.Map;

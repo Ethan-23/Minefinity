@@ -1,11 +1,12 @@
 package org.evasive.me.minefinity.towns.structures.forge.smelter;
+import org.evasive.me.minefinity.playerdata.component.PlayerDataComponent;
 
-import org.evasive.me.minefinity.customItems.framework.CustomItemStack;
+import org.evasive.me.minefinity.core.data.CustomItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Smelter {
+public class Smelter implements PlayerDataComponent {
     private CustomItemStack[] inventoryItems; // set size to 9
     private String fuelId;
     private int totalFuel;

@@ -2,7 +2,7 @@ package org.evasive.me.minefinity.mining.abilities.earlybird;
 
 import org.evasive.me.minefinity.mining.abilities.MiningAbility;
 import org.evasive.me.minefinity.mining.context.HitContext;
-import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
+import org.evasive.me.minefinity.core.data.BaseBlock;
 
 public class EarlyBird implements MiningAbility {
 

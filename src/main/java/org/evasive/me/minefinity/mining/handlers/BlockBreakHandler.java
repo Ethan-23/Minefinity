@@ -13,7 +13,7 @@ import org.evasive.me.minefinity.mining.context.BreakContext;
 import org.evasive.me.minefinity.mining.context.StatsContext;
 import org.evasive.me.minefinity.mining.data.MiningDataMap;
 import org.evasive.me.minefinity.mining.milestones.MilestoneService;
-import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
+import org.evasive.me.minefinity.core.data.BaseBlock;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 
 import java.util.Random;

@@ -10,7 +10,7 @@ import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.framework.CustomItemStack;
+import org.evasive.me.minefinity.core.data.CustomItemStack;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseFuelItem;

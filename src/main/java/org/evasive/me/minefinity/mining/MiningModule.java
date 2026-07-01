@@ -10,12 +10,14 @@ import org.evasive.me.minefinity.mining.data.MiningDataMap;
 import org.evasive.me.minefinity.mining.data.SelectedBlockMap;
 import org.evasive.me.minefinity.mining.events.SwingPacketEvents;
 import org.evasive.me.minefinity.mining.handlers.BlockProgressHandler;
+import org.evasive.me.minefinity.mining.milestones.BlockMilestone;
 import org.evasive.me.minefinity.mining.milestones.MilestoneService;
 import org.evasive.me.minefinity.mining.utils.AnimationIDs;
+import org.evasive.me.minefinity.playerdata.component.PlayerDataComponentRegistry;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.playerdata.stats.service.StatsService;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
-import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTypeRegistryService;
+import org.evasive.me.minefinity.core.registry.BlockTypeRegistryService;
 import org.evasive.me.minefinity.towns.worldPackets.events.BlockPacketEvents;
 
 public class MiningModule {
@@ -31,7 +33,7 @@ public class MiningModule {
     private final MiningAbilityRegistry miningAbilityRegistry;
     private final MiningAbilityRunner miningAbilityRunner;
 
-    public MiningModule(PlayerDataService playerDataService, CustomItemRegistryService customItemRegistryService, BlockTypeRegistry blockTypeRegistry, ItemPickupService itemPickupService, PickaxeResolver pickaxeResolver, StatsService statsService) {
+    public MiningModule(PlayerDataService playerDataService, CustomItemRegistryService customItemRegistryService, BlockTypeRegistry blockTypeRegistry, ItemPickupService itemPickupService, PickaxeResolver pickaxeResolver, StatsService statsService, PlayerDataComponentRegistry componentRegistry) {
         this.animationIDs = new AnimationIDs();
         this.miningAbilityRegistry = new MiningAbilityRegistry(animationIDs);
         this.miningAbilityRunner = new MiningAbilityRunner(miningAbilityRegistry, pickaxeResolver);
@@ -44,6 +46,9 @@ public class MiningModule {
         this.blockProgressHandler = new BlockProgressHandler(pickaxeResolver, miningAbilityRunner, blockTierService, milestoneService, miningDataMap, customItemRegistryService, itemPickupService, statsService);
 
         this.customItemRegistryService = customItemRegistryService;
+
+        // Register mining's per-player data slice with playerdata
+        componentRegistry.register("milestone_data", BlockMilestone.class, BlockMilestone::new);
     }
 
     public void enable(){

@@ -1,4 +1,4 @@
-package org.evasive.me.minefinity.customItems.framework;
+package org.evasive.me.minefinity.core.data;
 
 public class CustomItemStack {
     private final String customItemId;

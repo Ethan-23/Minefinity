@@ -67,7 +67,8 @@ public final class Minefinity extends JavaPlugin {
                 coreModule.getBlockTypeRegistry(),
                 customItemModule.getItemPickupService(),
                 customItemModule.getPickaxeResolver(),
-                playerModule.getStatsService()
+                playerModule.getStatsService(),
+                playerModule.getComponentRegistry()
         );
 
         miningModule.enable();
@@ -83,7 +84,8 @@ public final class Minefinity extends JavaPlugin {
                 coreModule.getNpcBehaviorRegistry(),
                 coreModule.getBlockTypeRegistry(),
                 miningModule.getBlockTypeRegistryService(),
-                coreModule.getStructureRegistry()
+                coreModule.getStructureRegistry(),
+                playerModule.getComponentRegistry()
         );
 
         townModule.enable(this);

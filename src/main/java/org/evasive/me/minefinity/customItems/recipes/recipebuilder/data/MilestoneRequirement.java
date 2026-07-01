@@ -1,4 +1,5 @@
 package org.evasive.me.minefinity.customItems.recipes.recipebuilder.data;
+import org.evasive.me.minefinity.mining.milestones.BlockMilestone;
 
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.playerdata.model.PlayerData;
@@ -15,7 +16,7 @@ public class MilestoneRequirement implements RecipeRequirement{
 
     @Override
     public boolean isMet(PlayerData player) {
-        return player.getBlockMilestones().getTier(blockId) >= tier;
+        return player.get(BlockMilestone.class).getTier(blockId) >= tier;
     }
 
     @Override

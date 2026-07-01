@@ -1,7 +1,6 @@
-package org.evasive.me.minefinity.towns.structures.resourceblock.framework;
+package org.evasive.me.minefinity.core.data;
 
 import org.bukkit.Material;
-import org.evasive.me.minefinity.mining.milestones.MilestoneTier;
 
 import java.util.List;
 

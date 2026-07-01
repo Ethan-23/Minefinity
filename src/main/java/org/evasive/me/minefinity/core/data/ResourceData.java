@@ -1,4 +1,4 @@
-package org.evasive.me.minefinity.towns.structures.resourceblock.service;
+package org.evasive.me.minefinity.core.data;
 
 public class ResourceData {
     private int tier;

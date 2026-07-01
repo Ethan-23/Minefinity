@@ -14,6 +14,7 @@ import org.evasive.me.minefinity.playerdata.ranks.RankRegistry;
 import org.evasive.me.minefinity.playerdata.ranks.config.PermissionConfigManager;
 import org.evasive.me.minefinity.playerdata.ranks.config.PermissionLoader;
 import org.evasive.me.minefinity.playerdata.ranks.service.PermissionService;
+import org.evasive.me.minefinity.playerdata.component.PlayerDataComponentRegistry;
 import org.evasive.me.minefinity.playerdata.repository.PlayerDataRepository;
 import org.evasive.me.minefinity.playerdata.repository.PlayerRankRepository;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
@@ -25,6 +26,8 @@ public class PlayerDataModule {
 
     private final PlayersDatabaseManager playerDb;
     private final RankDatabaseManager rankDb;
+
+    private final PlayerDataComponentRegistry componentRegistry;
 
     private final PlayerDataService playerService;
     private final RankService rankService;
@@ -39,7 +42,8 @@ public class PlayerDataModule {
         playerDb = PlayersDatabaseManager.getInstance();
         rankDb = RankDatabaseManager.getInstance();
 
-        PlayerDataRepository playerRepo = new PlayerDataRepository(playerDb);
+        componentRegistry = new PlayerDataComponentRegistry();
+        PlayerDataRepository playerRepo = new PlayerDataRepository(playerDb, componentRegistry);
         PlayerRankRepository rankRepo = new PlayerRankRepository();
 
 
@@ -47,7 +51,7 @@ public class PlayerDataModule {
         permissionConfigManager.createPermissionConfig();
         permissionLoader = new PermissionLoader(permissionConfigManager, RankRegistry.getInstance());
 
-        playerService = new PlayerDataService(playerRepo);
+        playerService = new PlayerDataService(playerRepo, componentRegistry);
         permissionService = new PermissionService(Minefinity.getCore());
         rankService = new RankService(rankRepo, permissionService);
         statsService = new StatsService(playerService);
@@ -94,6 +98,10 @@ public class PlayerDataModule {
 
     public PlayerDataService getPlayerService() {
         return playerService;
+    }
+
+    public PlayerDataComponentRegistry getComponentRegistry() {
+        return componentRegistry;
     }
 
     public RankService getRankService() {

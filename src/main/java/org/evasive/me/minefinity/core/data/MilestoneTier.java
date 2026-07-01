@@ -1,4 +1,4 @@
-package org.evasive.me.minefinity.mining.milestones;
+package org.evasive.me.minefinity.core.data;
 
 import java.util.Map;
 

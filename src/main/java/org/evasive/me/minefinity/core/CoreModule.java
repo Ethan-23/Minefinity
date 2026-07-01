@@ -33,7 +33,7 @@ import org.evasive.me.minefinity.core.warp.service.WarpService;
 import org.evasive.me.minefinity.core.worlds.GenerateCustomWorlds;
 import org.evasive.me.minefinity.customItems.itembuilder.events.PlayerInputListener;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
-import org.evasive.me.minefinity.towns.structures.resourceblock.config.MiningBlockRegistryConfig;
+import org.evasive.me.minefinity.core.registry.config.MiningBlockRegistryConfig;
 
 public class CoreModule {
 

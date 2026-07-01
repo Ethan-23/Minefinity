@@ -6,7 +6,7 @@ import org.evasive.me.minefinity.mining.abilities.MiningAbility;
 import org.evasive.me.minefinity.mining.abilities.structuredforce.data.StreakMap;
 import org.evasive.me.minefinity.mining.context.BreakContext;
 import org.evasive.me.minefinity.mining.context.HitContext;
-import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
+import org.evasive.me.minefinity.core.data.BaseBlock;
 
 import java.util.UUID;
 

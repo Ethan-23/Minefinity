@@ -31,7 +31,7 @@ public class StructureService {
     }
 
     public TownData getTownData(UUID uuid) {
-        return playerDataService.getPlayerData(uuid).getTownData();
+        return playerDataService.getPlayerData(uuid).get(TownData.class);
     }
 
     public int getStructureLevel(Player player, Structure structure) {

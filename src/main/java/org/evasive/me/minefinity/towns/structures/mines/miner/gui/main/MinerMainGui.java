@@ -15,9 +15,9 @@ import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.mines.miner.service.AutoMinerService;
-import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
+import org.evasive.me.minefinity.core.data.BaseBlock;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
-import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTypeRegistryService;
+import org.evasive.me.minefinity.core.registry.BlockTypeRegistryService;
 
 import java.util.List;
 import java.util.Map;

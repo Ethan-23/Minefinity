@@ -1,4 +1,5 @@
 package org.evasive.me.minefinity.playerdata.stats.service;
+import org.evasive.me.minefinity.mining.milestones.BlockMilestone;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
@@ -10,13 +11,13 @@ import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePic
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.EquipmentSlotComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.StatsComponent;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
-import org.evasive.me.minefinity.mining.milestones.MilestoneTier;
+import org.evasive.me.minefinity.core.data.MilestoneTier;
 import org.evasive.me.minefinity.playerdata.model.PlayerData;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.playerdata.stats.PlayerDefaults;
 import org.evasive.me.minefinity.playerdata.stats.data.Stats;
-import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
-import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTypeRegistryService;
+import org.evasive.me.minefinity.core.data.BaseBlock;
+import org.evasive.me.minefinity.core.registry.BlockTypeRegistryService;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -90,7 +91,7 @@ public class StatsService {
         for (BaseBlock baseBlock : blockList) {
             List<MilestoneTier> milestoneTiers = baseBlock.milestoneUnlocks();
             String blockId = baseBlock.name();
-            int tier = playerDataService.getPlayerData(player.getUniqueId()).getBlockMilestones().getTier(blockId);
+            int tier = playerDataService.getPlayerData(player.getUniqueId()).get(BlockMilestone.class).getTier(blockId);
             for(int i = 0; i <= tier; i++){
                 if(i == 0)
                     continue;
