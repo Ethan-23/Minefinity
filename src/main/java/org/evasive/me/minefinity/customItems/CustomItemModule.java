@@ -2,7 +2,7 @@ package org.evasive.me.minefinity.customItems;
 
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.evasive.me.minefinity.core.registry.CustomItemRegistry;
+import org.evasive.me.minefinity.customItems.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
 import org.evasive.me.minefinity.customItems.backpack.events.ItemPickupListener;
 import org.evasive.me.minefinity.customItems.backpack.events.OpenBackpackListener;
@@ -10,7 +10,7 @@ import org.evasive.me.minefinity.customItems.framework.ItemPickupService;
 import org.evasive.me.minefinity.customItems.itembuilder.command.CreateCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.command.DeleteCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.command.MineGive;
-import org.evasive.me.minefinity.customItems.itembuilder.events.PlayerInputListener;
+import org.evasive.me.minefinity.core.events.PlayerInputListener;
 import org.evasive.me.minefinity.customItems.itembuilder.resolvers.PickaxeResolver;
 import org.evasive.me.minefinity.customItems.registry.CustomItemLoader;
 import org.evasive.me.minefinity.customItems.registry.config.ItemRegistryConfigManager;
@@ -27,8 +27,8 @@ public class CustomItemModule {
     private final CustomItemRegistryService customItemRegistryService;
     private final PlayerInputListener playerInputListener;
 
-    public CustomItemModule(PlayerDataService playerDataService, CustomItemRegistry customItemRegistry, PlayerInputListener playerInputListener) {
-        this.customItemRegistry = customItemRegistry;
+    public CustomItemModule(PlayerDataService playerDataService, PlayerInputListener playerInputListener) {
+        this.customItemRegistry = new CustomItemRegistry();
 
         ItemRegistryConfigManager itemRegistryConfigManager = new ItemRegistryConfigManager();
 

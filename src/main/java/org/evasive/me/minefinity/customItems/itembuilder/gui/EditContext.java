@@ -3,7 +3,7 @@ package org.evasive.me.minefinity.customItems.itembuilder.gui;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
-import org.evasive.me.minefinity.customItems.itembuilder.events.PlayerInputListener;
+import org.evasive.me.minefinity.core.events.PlayerInputListener;
 
 import java.util.function.Consumer;
 

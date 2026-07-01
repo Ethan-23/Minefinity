@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static org.evasive.me.minefinity.core.utils.guis.SwapItems.swapCursor;
+import static org.evasive.me.minefinity.customItems.itembuilder.util.SwapItems.swapCursor;
 
 public class SmelterGui extends BaseGui {
 

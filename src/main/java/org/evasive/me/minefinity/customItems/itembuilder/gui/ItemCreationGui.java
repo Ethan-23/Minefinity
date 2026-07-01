@@ -16,7 +16,7 @@ import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemOptions;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.EditableComponent;
-import org.evasive.me.minefinity.customItems.itembuilder.events.PlayerInputListener;
+import org.evasive.me.minefinity.core.events.PlayerInputListener;
 import org.evasive.me.minefinity.customItems.registry.config.RegistryConfigHandler;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 

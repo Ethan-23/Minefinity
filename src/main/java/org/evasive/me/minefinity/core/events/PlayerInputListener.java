@@ -1,4 +1,4 @@
-package org.evasive.me.minefinity.customItems.itembuilder.events;
+package org.evasive.me.minefinity.core.events;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;

@@ -53,7 +53,6 @@ public final class Minefinity extends JavaPlugin {
 
         customItemModule = new CustomItemModule(
                 playerDataService,
-                coreModule.getCustomItemRegistry(),
                 coreModule.getPlayerInputListener()
         );
 

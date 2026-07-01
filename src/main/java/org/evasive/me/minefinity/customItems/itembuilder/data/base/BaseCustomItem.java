@@ -148,7 +148,7 @@ public class BaseCustomItem {
 
         List<String> lore = getLore();
         lore.add("");
-        lore.add(buildItemRarity(this.rarity, this.itemType));
+        lore.add(buildItemRarity(this.rarity, this.itemType.name()));
         builder.setLore(lore);
 
         return builder.build();

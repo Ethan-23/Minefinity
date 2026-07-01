@@ -5,7 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.EquipmentSlot;
 import org.evasive.me.minefinity.core.rarity.Rarity;
-import org.evasive.me.minefinity.core.registry.CustomItemRegistry;
+import org.evasive.me.minefinity.customItems.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.*;
