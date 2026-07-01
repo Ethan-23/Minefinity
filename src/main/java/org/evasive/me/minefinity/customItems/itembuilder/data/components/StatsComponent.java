@@ -71,7 +71,6 @@ public class StatsComponent implements ItemComponent, EditableComponent<Map<Stri
         return statsMap.getOrDefault(stats.name(), 0);
     }
 
-    /** Sets a stat; a value of 0 removes it. */
     public void setStat(Stats stats, int value) {
         if (value == 0) {
             statsMap.remove(stats.name());

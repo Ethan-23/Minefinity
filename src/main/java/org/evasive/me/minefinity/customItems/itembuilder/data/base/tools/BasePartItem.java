@@ -8,10 +8,6 @@ import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomIte
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.PartAbilityComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.PartSlotComponent;
 
-/**
- * A tool part. Carries the slots it can fill ({@link PartSlotComponent}) and the abilities it
- * grants ({@link PartAbilityComponent}).
- */
 public class BasePartItem extends BaseCustomItem {
 
     public BasePartItem(String id, Material material, String name, Rarity rarity) {

@@ -22,9 +22,6 @@ import java.util.Map;
 
 import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemKeys.TOOL_PARTS_KEY;
 
-/**
- * The installed parts of a tool: slot -&gt; part item id. Single source of truth for a tool's parts.
- */
 public class ToolPartComponent implements ItemComponent, EditableComponent<Map<PartSlots, String>> {
 
     private static final Gson GSON = new Gson();
@@ -54,11 +51,6 @@ public class ToolPartComponent implements ItemComponent, EditableComponent<Map<P
 
     @Override
     public void addLore(List<String> lore) {
-        partMap.forEach((slot, id) -> {
-            if (id != null && !id.isEmpty()) {
-                lore.add("<gray>" + TextConversions.formatItemName(slot.name()) + ": <white>" + id);
-            }
-        });
     }
 
     @Override
@@ -85,7 +77,6 @@ public class ToolPartComponent implements ItemComponent, EditableComponent<Map<P
 
     @Override
     public void openEditor(EditContext ctx) {
-        // Only offer the slots this specific tool supports (e.g. a pickaxe shows only its slots).
         PartSlots[] slots = (ctx.item() instanceof BaseToolItem tool)
                 ? tool.getToolSlots().toArray(new PartSlots[0])
                 : PartSlots.values();

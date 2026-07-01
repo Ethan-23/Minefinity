@@ -3,19 +3,17 @@ package org.evasive.me.minefinity.customItems.itembuilder.data.base.tools;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.rarity.Rarity;
+import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.ToolPartComponent;
+import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Base for tools (pickaxe, axe, ...). A tool's installed parts are stored in a single
- * {@link ToolPartComponent}; the helpers here delegate to it so there is one source of truth.
- */
 public class BaseToolItem extends BaseCustomItem {
 
     public BaseToolItem(ItemStack itemStack) {
@@ -36,10 +34,6 @@ public class BaseToolItem extends BaseCustomItem {
         return getComponent(ToolPartComponent.class);
     }
 
-    /**
-     * The part slots this tool exposes for editing/installing. Subclasses override with their
-     * tool-specific slots (e.g. a pickaxe uses PICKAXE_HEAD/CORE/HANDLE).
-     */
     public List<PartSlots> getToolSlots() {
         return List.of(PartSlots.HEAD, PartSlots.CORE, PartSlots.HANDLE);
     }
@@ -54,5 +48,28 @@ public class BaseToolItem extends BaseCustomItem {
 
     public Map<PartSlots, String> getPartMap() {
         return Collections.unmodifiableMap(partComponent().getValue());
+    }
+
+    @Override
+    protected List<String> getLore() {
+        List<String> lore = super.getLore();
+
+        lore.add("");
+
+        ToolPartComponent parts = partComponent();
+        for (PartSlots slot : getToolSlots()) {
+            String label = TextConversions.formatItemName(slot.name());
+            String partId = parts.getPart(slot);
+
+            if (partId == null || partId.isEmpty()) {
+                lore.add("<white>[Empty " + label + "]");
+            } else {
+                BaseCustomItem part = CustomItemRegistryService.get().getBaseItemById(partId);
+                Rarity rarity = part != null ? part.getRarity() : getRarity();
+                lore.add("<white>[" + TextConversions.buildRarityColor(partId, rarity) + "<white>]");
+            }
+        }
+
+        return lore;
     }
 }

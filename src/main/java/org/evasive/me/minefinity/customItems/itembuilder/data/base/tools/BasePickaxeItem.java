@@ -37,11 +37,9 @@ public class BasePickaxeItem extends BaseToolItem {
     }
 
     public ItemStack buildItem(ToolItemData data) {
-        // Parts already contribute via the ToolPartComponent; data is resolved for stats/abilities.
         return buildItem();
     }
 
-    /** The pickaxe's own stats plus the stats contributed by every installed part. */
     public Map<String, Integer> getTotalStats(List<BasePartItem> parts) {
         Map<String, Integer> total = new HashMap<>();
 

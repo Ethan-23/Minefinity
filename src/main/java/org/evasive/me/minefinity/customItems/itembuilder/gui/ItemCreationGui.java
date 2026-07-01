@@ -159,7 +159,6 @@ public class ItemCreationGui extends BaseGui {
         handleCoreOption(option);
     }
 
-    /** Editing for the non-component "core" fields (id, material, name, rarity, type). */
     private void handleCoreOption(ItemOptions option) {
         EditContext ctx = new EditContext(player, baseCustomItem, inputListener, this);
 
@@ -215,11 +214,10 @@ public class ItemCreationGui extends BaseGui {
                         }
                     }, this::reopen).open();
 
-            default -> { /* no-op */ }
+            default -> { }
         }
     }
 
-    /** Rebuilds the working item as a new type, carrying over shared data via the built ItemStack. */
     private void changeItemType(CustomItemType type) {
         baseCustomItem.setItemType(type);
         this.baseCustomItem = type.create(baseCustomItem.buildItem());

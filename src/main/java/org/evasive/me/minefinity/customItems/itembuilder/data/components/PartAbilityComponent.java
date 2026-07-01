@@ -42,7 +42,6 @@ public class PartAbilityComponent implements ItemComponent, EditableComponent<Li
             try {
                 lore.add(PickaxeAbilities.valueOf(ability).getAbilityDisplay());
             } catch (IllegalArgumentException ignored) {
-                // skip unknown abilities from older data
             }
         }
     }
@@ -57,7 +56,6 @@ public class PartAbilityComponent implements ItemComponent, EditableComponent<Li
         return this.abilities;
     }
 
-    /** Add the ability if absent, remove it if present. */
     public void toggle(String abilityName) {
         if (!abilities.remove(abilityName)) {
             abilities.add(abilityName);

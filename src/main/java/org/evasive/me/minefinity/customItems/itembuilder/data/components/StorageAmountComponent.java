@@ -29,7 +29,6 @@ public class StorageAmountComponent implements ItemComponent, EditableComponent<
 
     @Override
     public void addLore(List<String> lore) {
-        // visual handled by the backpack GUI
     }
 
     @Override

@@ -7,13 +7,6 @@ import org.evasive.me.minefinity.customItems.itembuilder.events.PlayerInputListe
 
 import java.util.function.Consumer;
 
-/**
- * Everything a component needs to edit itself: the player, the item being edited,
- * the chat-input listener and a way back to the parent creation GUI.
- *
- * <p>Components receive this in {@code EditableComponent#openEditor} so the editing logic
- * lives with the component instead of in one central switch statement.</p>
- */
 public class EditContext {
 
     private final Player player;
@@ -36,15 +29,10 @@ public class EditContext {
         return item;
     }
 
-    /** Re-render and re-open the parent item creation GUI. */
     public void reopen() {
         gui.reopen();
     }
 
-    /**
-     * Prompt the player for free text in chat. {@code cancel} aborts.
-     * Always returns to {@code onDone} (defaults to reopening the item GUI).
-     */
     public void promptString(Consumer<String> onValue, Runnable onDone) {
         player.closeInventory();
         input.requestInput(player, raw -> {
@@ -59,7 +47,6 @@ public class EditContext {
         promptString(onValue, this::reopen);
     }
 
-    /** Prompt for an integer; re-prompts on bad input, {@code cancel} aborts. */
     public void promptInt(Consumer<Integer> onValue, Runnable onDone) {
         player.closeInventory();
         input.requestInput(player, raw -> {
@@ -80,7 +67,6 @@ public class EditContext {
         promptInt(onValue, this::reopen);
     }
 
-    /** Prompt for a non-negative float; re-prompts on bad input, {@code cancel} aborts. */
     public void promptFloat(Consumer<Float> onValue, Runnable onDone) {
         player.closeInventory();
         input.requestInput(player, raw -> {
@@ -106,7 +92,6 @@ public class EditContext {
         promptFloat(onValue, this::reopen);
     }
 
-    /** Open a generic enum selector, returning to this item GUI when the player backs out. */
     public <E extends Enum<E>> OptionsGui<E> openSelector(E[] values, OptionsGui.OptionAdapter<E> adapter) {
         OptionsGui<E> selector = new OptionsGui<>(player, values, adapter, this::reopen);
         selector.open();

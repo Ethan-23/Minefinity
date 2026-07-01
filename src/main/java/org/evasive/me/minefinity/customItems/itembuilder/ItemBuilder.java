@@ -262,10 +262,9 @@ public class ItemBuilder {
     public ItemBuilder setMaterial(Material material){
         ItemMeta meta = getMeta();
         ItemStack replacement = new ItemStack(material, this.itemStack.getAmount());
-        // Only carry the old meta over if it is valid for the new material (e.g. don't force
-        // SkullMeta onto a stone); otherwise keep the new material's default meta.
-        if (Bukkit.getItemFactory().isApplicable(meta, material)) {
-            replacement.setItemMeta(meta);
+        ItemMeta migrated = Bukkit.getItemFactory().asMetaFor(meta, material);
+        if (migrated != null) {
+            replacement.setItemMeta(migrated);
         }
         this.itemStack = replacement;
         return this;
@@ -293,7 +292,6 @@ public class ItemBuilder {
 
     public ItemStack build() {
         ItemMeta meta = getMeta();
-        // Always apply lore (null clears it) so setLore([]) can actually remove lore.
         meta.lore(lore.isEmpty() ? null : lore);
         itemStack.setItemMeta(meta);
         return itemStack.clone();

@@ -1,45 +1,37 @@
 items:
-  WOODEN_TEMPLATE:
+  WOODEN_PICKAXE:
     material: WOODEN_PICKAXE
     display-name: Wooden Pickaxe
     custom-item-type: PICKAXE
     rarity: MINOR
-    equipment-slot:
-      - HAND
     stats:
       BREAKING_POWER: 1
       MINING_SPEED: 30
+    equipment-slot:
+      - HAND
   DIRT:
     material: DIRT
     display-name: Dirt
     custom-item-type: RESOURCE
     rarity: MINOR
-    equipment-slot: []
-    stats: {}
     sell-value: 0.5
   GRAVEL:
     material: GRAVEL
     display-name: Gravel
     custom-item-type: RESOURCE
     rarity: MINOR
-    equipment-slot: []
-    stats: {}
     sell-value: 1.0
   CLAY_BALL:
     material: CLAY_BALL
     display-name: Clay
     custom-item-type: RESOURCE
     rarity: MINOR
-    equipment-slot: []
-    stats: {}
     sell-value: 2.0
   COAL:
     material: COAL
     display-name: Coal
     custom-item-type: FUEL
     rarity: UNIQUE
-    equipment-slot: []
-    stats: {}
     sell-value: 5.0
     fuel-amount: 1
   RAW_COPPER:
@@ -47,56 +39,42 @@ items:
     display-name: Raw Copper
     custom-item-type: RESOURCE
     rarity: UNIQUE
-    equipment-slot: []
-    stats: {}
     sell-value: 4.0
   TUFF:
     material: TUFF
     display-name: Tuff
     custom-item-type: RESOURCE
     rarity: UNIQUE
-    equipment-slot: []
-    stats: {}
     sell-value: 5.0
   MOSSY_COBBLESTONE:
     material: MOSSY_COBBLESTONE
     display-name: Mossy Cobblestone
     custom-item-type: RESOURCE
     rarity: UNIQUE
-    equipment-slot: []
-    stats: {}
     sell-value: 6.0
   DIORITE:
     material: DIORITE
     display-name: Diorite
     custom-item-type: RESOURCE
     rarity: UNIQUE
-    equipment-slot: []
-    stats: {}
     sell-value: 7.0
   RAW_IRON:
     material: RAW_IRON
     display-name: Raw Iron
     custom-item-type: RESOURCE
     rarity: RADIANT
-    equipment-slot: []
-    stats: {}
     sell-value: 7.0
   GRANITE:
     material: GRANITE
     display-name: Granite
     custom-item-type: RESOURCE
     rarity: RADIANT
-    equipment-slot: []
-    stats: {}
     sell-value: 10.0
   RESIN:
     material: RESIN_CLUMP
     display-name: Resin
     custom-item-type: FUEL
     rarity: RADIANT
-    equipment-slot: []
-    stats: {}
     sell-value: 12.0
     fuel-amount: 2
   CALCITE:
@@ -104,107 +82,85 @@ items:
     display-name: Calcite
     custom-item-type: RESOURCE
     rarity: RADIANT
-    equipment-slot: []
-    stats: {}
     sell-value: 15.0
   CLAY_HANDLE:
     material: CLAY_BALL
     display-name: Clay Handle
-    custom-item-type: PICKAXE_HANDLE
+    custom-item-type: TOOL_PART
     rarity: MINOR
-    equipment-slot: []
-    stats: {}
     glowing: true
     stack-size: 1
     pickaxe-abilities:
       - MOLDABLE_GRIP
+    component-slot:
+      - HANDLE
   FLINT_HEAD:
     material: FLINT
     display-name: Flint Head
-    custom-item-type: PICKAXE_HEAD
+    custom-item-type: TOOL_PART
     rarity: MINOR
-    equipment-slot: []
     stats:
       MINING_SPEED: 10
     glowing: true
     stack-size: 1
     pickaxe-abilities:
       - CRITICAL_FRACTURE
+    component-slot:
+      - HEAD
   ANDESITE:
     material: ANDESITE
     display-name: Andesite
     custom-item-type: RESOURCE
     rarity: MINOR
-    equipment-slot: []
-    stats: {}
     sell-value: 5.0
   COBBLESTONE:
     material: COBBLESTONE
     display-name: Cobblestone
     custom-item-type: RESOURCE
     rarity: MINOR
-    equipment-slot: []
-    stats: {}
     sell-value: 4.0
   BRICK_CORE:
     material: BRICK
     display-name: Brick Core
-    custom-item-type: PICKAXE_CORE
+    custom-item-type: TOOL_PART
     rarity: MINOR
-    equipment-slot: []
     stats:
       MINING_FORTUNE: 10
     glowing: true
     stack-size: 1
     pickaxe-abilities:
       - STRUCTURED_FORCE
-  STONE_TEMPLATE:
+    component-slot:
+      - CORE
+  STONE_PICKAXE:
     material: STONE_PICKAXE
     display-name: Stone Pickaxe
     custom-item-type: PICKAXE
     rarity: UNIQUE
-    equipment-slot:
-      - HAND
     stats:
       MINING_FORTUNE: 10
       BREAKING_POWER: 2
       MINING_SPEED: 50
+    equipment-slot:
+      - HAND
     stack-size: 1
   FLINT:
     material: FLINT
     display-name: Flint
     custom-item-type: RESOURCE
     rarity: MINOR
-    equipment-slot: []
-    stats: {}
     sell-value: 2.0
   GRASS:
     material: SHORT_GRASS
     display-name: Grass
     custom-item-type: RESOURCE
     rarity: MINOR
-    equipment-slot: []
-    stats: {}
     sell-value: 1.0
-  STICK:
-    material: ANDESITE
-    display-name: Andesite Core
-    custom-item-type: PICKAXE_CORE
-    rarity: UNIQUE
-    equipment-slot: []
-    stats:
-      MINING_FORTUNE: 10
-      MINING_SPEED: 20
-    glowing: true
-    stack-size: 1
-    pickaxe-abilities:
-      - METAL_DETECT
   ANDESITE_CORE:
     material: ANDESITE
     display-name: Andesite Core
-    custom-item-type: PICKAXE_CORE
+    custom-item-type: TOOL_PART
     rarity: UNIQUE
-    equipment-slot: []
     stats:
       MINING_FORTUNE: 10
       MINING_SPEED: 20
@@ -212,109 +168,86 @@ items:
     stack-size: 1
     pickaxe-abilities:
       - METAL_DETECT
+    component-slot:
+      - CORE
   COPPER_PICKAXE:
     material: COPPER_PICKAXE
     display-name: Copper Pickaxe
     custom-item-type: PICKAXE
     rarity: RADIANT
-    equipment-slot:
-      - HAND
-    stats:
-      MINING_FORTUNE: 15
-      MINING_SPEED: 100
-    stack-size: 1
-  COPPER_TEMPLATE:
-    material: COPPER_PICKAXE
-    display-name: Copper Pickaxe
-    custom-item-type: PICKAXE
-    rarity: RADIANT
-    equipment-slot:
-      - HAND
     stats:
       MINING_FORTUNE: 15
       BREAKING_POWER: 3
       MINING_SPEED: 100
+    equipment-slot:
+      - HAND
     stack-size: 1
   ROCK:
     material: COBBLESTONE_SLAB
     display-name: Rock
     custom-item-type: RESOURCE
     rarity: MINOR
-    equipment-slot: []
-    stats: {}
     sell-value: 3.0
   ROCKY_STONE:
     material: CRACKED_STONE_BRICKS
     display-name: Rocky Stone
     custom-item-type: RESOURCE
     rarity: MINOR
-    equipment-slot: []
-    stats: {}
     sell-value: 15.0
   TOUGH_STONE:
     material: TUFF_BRICKS
     display-name: Tough Stone
     custom-item-type: RESOURCE
     rarity: UNIQUE
-    equipment-slot: []
-    stats: {}
     sell-value: 15.0
   COPPER_INGOT:
     material: COPPER_INGOT
     display-name: Copper Ingot
     custom-item-type: RESOURCE
     rarity: UNIQUE
-    equipment-slot: []
-    stats: {}
     sell-value: 20.0
   STONE:
     material: STONE
     display-name: Stone
     custom-item-type: RESOURCE
     rarity: MINOR
-    equipment-slot: []
-    stats: {}
     sell-value: 2.0
   BRICK:
     material: BRICK
     display-name: Brick
     custom-item-type: RESOURCE
     rarity: MINOR
-    equipment-slot: []
-    stats: {}
     sell-value: 5.0
   ROCK_HANDLE:
     material: COBBLESTONE_SLAB
     display-name: Rock Handle
-    custom-item-type: PICKAXE_HANDLE
+    custom-item-type: TOOL_PART
     rarity: UNIQUE
-    equipment-slot: []
     stats:
       MINING_FORTUNE: 15
     glowing: true
     stack-size: 1
     pickaxe-abilities:
       - FRACTURED_VEIN
-  IRON_TEMPLATE:
+    component-slot:
+      - HANDLE
+  IRON_PICKAXE:
     material: IRON_PICKAXE
     display-name: Iron Pickaxe
     custom-item-type: PICKAXE
     rarity: EXQUISITE
-    equipment-slot:
-      - HAND
     stats:
       MINING_FORTUNE: 100
       BREAKING_POWER: 4
       MINING_SPEED: 500
+    equipment-slot:
+      - HAND
     stack-size: 1
   TEST_BACKPACK:
     material: SUGAR
     display-name: Test Backpack
     custom-item-type: STORAGE
     rarity: RADIANT
-    equipment-slot: []
-    stats: {}
-    visual-material: BUNDLE
     stack-size: 1
     storage-amount: 640
     storage-list:
@@ -324,14 +257,20 @@ items:
     display-name: Oak Plank
     custom-item-type: RESOURCE
     rarity: MINOR
-    equipment-slot: []
-    stats: {}
     sell-value: 1.0
   TIMBER:
     material: STRIPPED_OAK_LOG
     display-name: Timber
     custom-item-type: RESOURCE
     rarity: MINOR
-    equipment-slot: []
-    stats: {}
     sell-value: 14.0
+  WOODEN_AXE:
+    material: WOODEN_AXE
+    display-name: Wooden Axe
+    custom-item-type: AXE
+    rarity: MINOR
+    stats:
+      WOODCUTTING_POWER: 15
+      WOODCUTTING_FORTUNE: 5
+    equipment-slot:
+      - HAND

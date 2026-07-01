@@ -12,17 +12,8 @@ import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 
 import java.util.List;
 
-/**
- * Generic enum selector. Renders one icon per enum constant and forwards clicks to an
- * {@link OptionAdapter}. The adapter decides how each value looks and what a click does; this
- * GUI only handles layout, the back button and refreshing after a click.
- *
- * <p>Reusable for any "pick from an enum" editor (stats, equipment slots, abilities, part slots,
- * rarities, item types, ...) instead of the old type-by-type switch.</p>
- */
 public class OptionsGui<E extends Enum<E>> extends BaseGui {
 
-    /** Describes how to render and react to each enum value. */
     public interface OptionAdapter<E extends Enum<E>> {
         ItemStack render(E value);
 
@@ -30,7 +21,7 @@ public class OptionsGui<E extends Enum<E>> extends BaseGui {
     }
 
     private static final int INVENTORY_SIZE = 54;
-    private static final int BACK_SLOT = 49;
+    private static final int APPLY_SLOT = 49;
     private static final List<Integer> OPTION_SLOTS = List.of(
             10, 11, 12, 13, 14, 15, 16,
             19, 20, 21, 22, 23, 24, 25,
@@ -40,13 +31,13 @@ public class OptionsGui<E extends Enum<E>> extends BaseGui {
 
     private final E[] values;
     private final OptionAdapter<E> adapter;
-    private final Runnable onBack;
+    private final Runnable onApply;
 
-    public OptionsGui(Player player, E[] values, OptionAdapter<E> adapter, Runnable onBack) {
+    public OptionsGui(Player player, E[] values, OptionAdapter<E> adapter, Runnable onApply) {
         super(player, INVENTORY_SIZE, TextConversions.parse("Options"));
         this.values = values;
         this.adapter = adapter;
-        this.onBack = onBack;
+        this.onApply = onApply;
         build();
     }
 
@@ -56,10 +47,11 @@ public class OptionsGui<E extends Enum<E>> extends BaseGui {
         for (int i = 0; i < values.length && i < OPTION_SLOTS.size(); i++) {
             inventory.setItem(OPTION_SLOTS.get(i), adapter.render(values[i]));
         }
-        inventory.setItem(BACK_SLOT, new ItemBuilder(Material.ARROW, "<red>Back").build());
+        inventory.setItem(APPLY_SLOT, new ItemBuilder(Material.LIME_STAINED_GLASS_PANE, "<green><bold>Apply")
+                .addLore("<gray>Apply changes and return")
+                .build());
     }
 
-    /** Rebuild and re-open this selector (used after a chat prompt closed it). */
     public void reopenSelf() {
         build();
         open();
@@ -72,8 +64,8 @@ public class OptionsGui<E extends Enum<E>> extends BaseGui {
 
         int slot = e.getSlot();
 
-        if (slot == BACK_SLOT) {
-            onBack.run();
+        if (slot == APPLY_SLOT) {
+            onApply.run();
             return;
         }
 

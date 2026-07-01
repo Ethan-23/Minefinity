@@ -25,7 +25,6 @@ public class GlowComponent implements ItemComponent, EditableComponent<Boolean> 
 
     @Override
     public void addLore(List<String> lore) {
-        // visual only, no lore line
     }
 
     @Override

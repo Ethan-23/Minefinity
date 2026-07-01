@@ -128,7 +128,7 @@ public class ForgeConfirmationGui extends BaseGui {
         }
 
         if (clickedSlot == ForgeConfirmationGui.BACK_BUTTON_SLOT) {
-            new ForgeCategoriesGui(player, customItemRegistryService, ForgeCategories.PICKAXE_TEMPLATES, forgeRecipeManager, forgeService, recipeService).open();
+            new ForgeCategoriesGui(player, customItemRegistryService, ForgeCategories.PICKAXES, forgeRecipeManager, forgeService, recipeService).open();
         }
 
         if (clickedSlot == ForgeConfirmationGui.EXIT_BUTTON_SLOT) {

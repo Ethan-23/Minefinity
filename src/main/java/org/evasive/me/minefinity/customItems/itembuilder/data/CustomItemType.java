@@ -36,7 +36,6 @@ public enum CustomItemType {
         this.extraOptions = List.of(extraOptions);
     }
 
-    /** Options shown for every item type. (A method, not a static field, to avoid enum init order issues.) */
     private static List<ItemOptions> commonOptions() {
         return List.of(
                 MINEFINITY_ID, MATERIAL, DISPLAY_NAME, CUSTOM_ITEM_TYPE, RARITY,

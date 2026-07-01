@@ -21,9 +21,6 @@ import java.util.stream.Collectors;
 
 import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemKeys.PART_SLOT_KEY;
 
-/**
- * Which {@link PartSlots} a <i>part</i> item is allowed to fill (lives on part items, not tools).
- */
 public class PartSlotComponent implements ItemComponent, EditableComponent<Set<PartSlots>> {
 
     private Set<PartSlots> partSlots = new HashSet<>();
@@ -49,7 +46,6 @@ public class PartSlotComponent implements ItemComponent, EditableComponent<Set<P
 
     @Override
     public void addLore(List<String> lore) {
-        // visual only
     }
 
     @Override

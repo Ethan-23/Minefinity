@@ -31,7 +31,6 @@ public class VisualMaterialComponent implements ItemComponent, EditableComponent
 
     @Override
     public void addLore(List<String> lore) {
-        // visual only
     }
 
     @Override

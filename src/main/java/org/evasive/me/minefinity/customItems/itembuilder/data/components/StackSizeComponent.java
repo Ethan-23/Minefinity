@@ -26,7 +26,6 @@ public class StackSizeComponent implements ItemComponent, EditableComponent<Inte
 
     @Override
     public void addLore(List<String> lore) {
-        // visual only
     }
 
     @Override

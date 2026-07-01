@@ -65,10 +65,10 @@ public class ForgeCategoriesGui extends BaseGui {
      * Builds the frame of the gui
      */
     private void buildOptions(){
-        inventory.setItem(MATERIAL_CATEGORY_SLOT, buildCategory(ForgeCategories.PICKAXE_TEMPLATES, this.forgeCategory));
-        inventory.setItem(COMPONENT_CATEGORY_SLOT, buildCategory(ForgeCategories.PICKAXE_HEADS, this.forgeCategory));
-        inventory.setItem(PICKAXE_CATEGORY_SLOT, buildCategory(ForgeCategories.PICKAXE_CORES, this.forgeCategory));
-        inventory.setItem(STORAGE_CATEGORY_SLOT, buildCategory(ForgeCategories.PICKAXE_HANDLES, this.forgeCategory));
+        inventory.setItem(MATERIAL_CATEGORY_SLOT, buildCategory(ForgeCategories.PICKAXES, this.forgeCategory));
+        inventory.setItem(COMPONENT_CATEGORY_SLOT, buildCategory(ForgeCategories.TOOL_HEADS, this.forgeCategory));
+        inventory.setItem(PICKAXE_CATEGORY_SLOT, buildCategory(ForgeCategories.TOOL_CORES, this.forgeCategory));
+        inventory.setItem(STORAGE_CATEGORY_SLOT, buildCategory(ForgeCategories.TOOL_HANDLES, this.forgeCategory));
         inventory.setItem(BACK_SLOT, backPage);
         inventory.setItem(EXIT_SLOT, exit);
 

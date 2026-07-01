@@ -9,10 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Resolves the concrete part items installed in a tool from its {@link ToolPartComponent} map
- * (slot -&gt; part id). Used to total a tool's stats and collect its abilities.
- */
 public class ToolItemData {
 
     private final List<BasePartItem> parts = new ArrayList<>();
@@ -35,7 +31,6 @@ public class ToolItemData {
         return parts;
     }
 
-    /** Kept for existing callers (mining / stats). */
     public List<BasePartItem> getPickaxeParts() {
         return parts;
     }

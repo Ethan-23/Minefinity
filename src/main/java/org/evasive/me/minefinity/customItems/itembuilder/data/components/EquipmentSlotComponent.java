@@ -36,7 +36,6 @@ public class EquipmentSlotComponent implements ItemComponent, EditableComponent<
             try {
                 equipmentSlots.add(EquipmentSlot.valueOf(slot));
             } catch (IllegalArgumentException ignored) {
-                // skip unknown slots from older data
             }
         }
     }
@@ -52,7 +51,6 @@ public class EquipmentSlotComponent implements ItemComponent, EditableComponent<
 
     @Override
     public void addLore(List<String> lore) {
-        // visual only
     }
 
     @Override

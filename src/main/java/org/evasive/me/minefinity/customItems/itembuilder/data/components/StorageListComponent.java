@@ -35,7 +35,6 @@ public class StorageListComponent implements ItemComponent, EditableComponent<Li
 
     @Override
     public void addLore(List<String> lore) {
-        // shown in the backpack GUI, not on the item itself
     }
 
     @Override
@@ -48,7 +47,6 @@ public class StorageListComponent implements ItemComponent, EditableComponent<Li
         return this.storageList;
     }
 
-    /** Add the id if absent, remove it if present (used when loading config / toggling). */
     public void toggle(String itemId) {
         if (!storageList.remove(itemId)) {
             storageList.add(itemId);

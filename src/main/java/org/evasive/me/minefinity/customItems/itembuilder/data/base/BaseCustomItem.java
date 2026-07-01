@@ -62,11 +62,6 @@ public class BaseCustomItem {
         }
     }
 
-    /**
-     * Registers the components every custom item carries. Subclasses override to add their own,
-     * calling {@code super.registerComponents()} first. Components are added with sane defaults so
-     * their values are never {@code null} before {@link ItemComponent#load} runs.
-     */
     protected void registerComponents() {
         addComponent(new FlavorTextComponent());
         addComponent(new ValueComponent());
@@ -184,10 +179,6 @@ public class BaseCustomItem {
                 .orElse(null);
     }
 
-    /**
-     * Null-safe read of an editable component's value. Returns {@code fallback} when the component
-     * is absent or holds no value. Lets consumers read component data without repeating null checks.
-     */
     @SuppressWarnings("unchecked")
     public <T, C extends ItemComponent> T getComponentValue(Class<C> clazz, T fallback) {
         C component = getComponent(clazz);
