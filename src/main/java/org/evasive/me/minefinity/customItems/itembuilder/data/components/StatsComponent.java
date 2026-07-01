@@ -6,11 +6,11 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.EditContext;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.OptionsGui;
-import org.evasive.me.minefinity.playerdata.stats.data.Stats;
+import org.evasive.me.minefinity.core.data.Stats;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -42,7 +42,7 @@ public class StatsComponent implements ItemComponent, EditableComponent<Map<Stri
     }
 
     @Override
-    public void save(ItemBuilder builder) {
+    public void save(CustomItemBuilder builder) {
         builder.addPersistentDataContainer(STATS_KEY, PersistentDataType.STRING, GSON.toJson(statsMap));
     }
 
@@ -85,7 +85,7 @@ public class StatsComponent implements ItemComponent, EditableComponent<Map<Stri
             @Override
             public ItemStack render(Stats stat) {
                 Integer value = statsMap.get(stat.name());
-                ItemBuilder icon = new ItemBuilder(stat.getMaterial(), stat.getDisplay());
+                CustomItemBuilder icon = new CustomItemBuilder(stat.getMaterial(), stat.getDisplay());
                 icon.addLore(value != null ? "<white>Value: <yellow>" + value : "<red>Not set");
                 icon.addLore("<gray>Click to set a value (0 removes)");
                 if (value != null) icon.addGlow();

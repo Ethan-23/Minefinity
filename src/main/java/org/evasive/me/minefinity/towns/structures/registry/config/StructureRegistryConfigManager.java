@@ -4,7 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.config.BaseConfig;
-import org.evasive.me.minefinity.core.registry.StructureRegistry;
+import org.evasive.me.minefinity.towns.structures.registry.StructureRegistry;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.BaseItemRecipe;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.util.RequirementParser;
 import org.evasive.me.minefinity.towns.structures.data.Structure;

@@ -1,4 +1,4 @@
-package org.evasive.me.minefinity.playerdata.commands;
+package org.evasive.me.minefinity.towns.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

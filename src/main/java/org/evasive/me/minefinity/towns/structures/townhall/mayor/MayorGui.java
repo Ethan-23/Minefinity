@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.BaseItemRecipe;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.RecipeRequirement;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.service.RecipeService;
@@ -54,7 +54,7 @@ public class MayorGui extends BaseGui {
         int index = 0;
         for(Structure structure : structureService.getStructures()){
             int structureLevel = structureService.getStructureLevel(player, structure);
-            ItemBuilder structureItem = new ItemBuilder(structure.displayMaterial(), TextConversions.parse("<gray>(<#55FFFF>"+ structureLevel +"<gray>) " + "<yellow>" + TextConversions.formatItemName(structure.name())));
+            CustomItemBuilder structureItem = new CustomItemBuilder(structure.displayMaterial(), TextConversions.parse("<gray>(<#55FFFF>"+ structureLevel +"<gray>) " + "<yellow>" + TextConversions.formatItemName(structure.name())));
             if(structure.getMaxLevel() == structureLevel){
                 structureItem.addLore("<bold><green>Max Level");
             } else {
@@ -87,7 +87,7 @@ public class MayorGui extends BaseGui {
     }
 
     private void buildStats(){
-        inventory.setItem(PLAYER_STATS, new ItemBuilder(Material.PLAYER_HEAD, TextConversions.parse("<yellow>Player Stats:")).addSkullMeta(player).build());
+        inventory.setItem(PLAYER_STATS, new CustomItemBuilder(Material.PLAYER_HEAD, TextConversions.parse("<yellow>Player Stats:")).addSkullMeta(player).build());
     }
 
     @Override

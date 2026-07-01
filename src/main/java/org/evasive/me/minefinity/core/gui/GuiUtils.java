@@ -3,7 +3,7 @@ package org.evasive.me.minefinity.core.gui;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.lib.item.ItemBuilder;
 
 import java.util.List;
 

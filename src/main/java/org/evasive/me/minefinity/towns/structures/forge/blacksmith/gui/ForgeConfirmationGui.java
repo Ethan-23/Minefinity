@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.core.utils.TimeCalculator;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.service.RecipeService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.data.ForgeCategories;
@@ -78,7 +78,7 @@ public class ForgeConfirmationGui extends BaseGui {
     }
 
     private ItemStack buildStartButton() {
-        return new ItemBuilder(Material.FURNACE, TextConversions.parse("<bold><green>START")).addBlank()
+        return new CustomItemBuilder(Material.FURNACE, TextConversions.parse("<bold><green>START")).addBlank()
                 .addLore("<gold>Forge Time: <yellow>" + TimeCalculator.getString(crafting.getCraftTime() * 1000L))
                 .build();
     }

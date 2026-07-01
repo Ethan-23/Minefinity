@@ -8,7 +8,7 @@ import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.shops.merchant.service.MerchantHandler;
 
@@ -32,8 +32,8 @@ public class MerchantGui extends BaseGui {
     }
 
     private void addButtons(){
-        inventory.setItem(SELL_INVENTORY_SLOT, new ItemBuilder(Material.CHEST, TextConversions.parse("Sell Inventory")).build());
-        inventory.setItem(SELL_BACKPACK_SLOT, new ItemBuilder(Material.BUNDLE, TextConversions.parse("Sell Backpacks")).build());
+        inventory.setItem(SELL_INVENTORY_SLOT, new CustomItemBuilder(Material.CHEST, TextConversions.parse("Sell Inventory")).build());
+        inventory.setItem(SELL_BACKPACK_SLOT, new CustomItemBuilder(Material.BUNDLE, TextConversions.parse("Sell Backpacks")).build());
     }
 
     @Override

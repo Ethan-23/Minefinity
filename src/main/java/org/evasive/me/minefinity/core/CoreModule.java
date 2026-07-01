@@ -23,17 +23,15 @@ import org.evasive.me.minefinity.core.npcs.NpcInstanceMap;
 import org.evasive.me.minefinity.core.npcs.events.InteractEvent;
 import org.evasive.me.minefinity.core.npcs.events.NpcLoadEvents;
 import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
-import org.evasive.me.minefinity.core.registry.CustomItemRegistry;
-import org.evasive.me.minefinity.core.registry.StructureRegistry;
 import org.evasive.me.minefinity.core.scoreboard.ScoreboardService;
 import org.evasive.me.minefinity.core.spawn.command.Spawn;
 import org.evasive.me.minefinity.core.spawn.service.SpawnService;
 import org.evasive.me.minefinity.core.warp.command.Warp;
 import org.evasive.me.minefinity.core.warp.service.WarpService;
 import org.evasive.me.minefinity.core.worlds.GenerateCustomWorlds;
-import org.evasive.me.minefinity.customItems.itembuilder.events.PlayerInputListener;
+import org.evasive.me.minefinity.core.events.PlayerInputListener;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
-import org.evasive.me.minefinity.towns.structures.resourceblock.config.MiningBlockRegistryConfig;
+import org.evasive.me.minefinity.core.registry.config.MiningBlockRegistryConfig;
 
 public class CoreModule {
 
@@ -45,9 +43,7 @@ public class CoreModule {
     private final NpcInstanceMap npcInstanceMap;
     private final NpcBehaviorRegistry npcBehaviorRegistry;
     private final PlayerInputListener playerInputListener;
-    private final CustomItemRegistry customItemRegistry;
     private final BlockTypeRegistry blockTypeRegistry;
-    private final StructureRegistry structureRegistry;
 
     public CoreModule(PlayerDataService playerDataService) {
         new GenerateCustomWorlds().init();
@@ -61,8 +57,6 @@ public class CoreModule {
         this.npcInstanceMap = new NpcInstanceMap();
         this.npcBehaviorRegistry = new NpcBehaviorRegistry();
         this.playerInputListener = new PlayerInputListener();
-        this.customItemRegistry = new CustomItemRegistry();
-        this.structureRegistry = new StructureRegistry();
 
     }
 
@@ -122,15 +116,7 @@ public class CoreModule {
         return npcBehaviorRegistry;
     }
 
-    public CustomItemRegistry getCustomItemRegistry() {
-        return customItemRegistry;
-    }
-
     public BlockTypeRegistry getBlockTypeRegistry() {
         return blockTypeRegistry;
-    }
-
-    public StructureRegistry getStructureRegistry() {
-        return structureRegistry;
     }
 }

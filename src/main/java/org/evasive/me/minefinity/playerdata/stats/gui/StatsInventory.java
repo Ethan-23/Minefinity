@@ -7,14 +7,14 @@ import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
-import org.evasive.me.minefinity.playerdata.stats.data.Stats;
+import org.evasive.me.minefinity.lib.item.ItemBuilder;
+import org.evasive.me.minefinity.core.data.Stats;
 import org.evasive.me.minefinity.playerdata.stats.service.StatsService;
 
 import java.util.EnumMap;
 
-import static org.evasive.me.minefinity.playerdata.stats.data.Stats.MINING_FORTUNE;
-import static org.evasive.me.minefinity.playerdata.stats.data.Stats.MINING_SPEED;
+import static org.evasive.me.minefinity.core.data.Stats.MINING_FORTUNE;
+import static org.evasive.me.minefinity.core.data.Stats.MINING_SPEED;
 
 public class StatsInventory extends BaseGui {
 
@@ -66,7 +66,7 @@ public class StatsInventory extends BaseGui {
 
     private void displayCombatStats(){
         ItemBuilder itemBuilder = new ItemBuilder(Material.IRON_SWORD, "<gold>Combat Stats");
-        itemBuilder.setGlow(true);
+        itemBuilder.addGlow();
 
         for (Stats stats : COMBAT_STATS) {
             itemBuilder.addLore(stats.getDisplay() + ": " + statsMap.get(stats));
@@ -84,7 +84,7 @@ public class StatsInventory extends BaseGui {
 
     private void displayMiningStats(){
         ItemBuilder itemBuilder = new ItemBuilder(Material.IRON_PICKAXE, "<gold>Mining Stats");
-        itemBuilder.setGlow(true);
+        itemBuilder.addGlow();
 
         for (Stats stats : MINING_STATS) {
             itemBuilder.addLore(stats.getDisplay() + ": " + statsMap.get(stats));

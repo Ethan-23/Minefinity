@@ -1,6 +1,6 @@
 package org.evasive.me.minefinity.mining.context;
 
-import org.evasive.me.minefinity.playerdata.stats.data.Stats;
+import org.evasive.me.minefinity.core.data.Stats;
 
 import java.util.Map;
 

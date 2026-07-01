@@ -5,7 +5,6 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.evasive.me.minefinity.core.rarity.Rarity;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 
 public class TextConversions {
     private static final MiniMessage MM = MiniMessage.miniMessage();
@@ -49,8 +48,8 @@ public class TextConversions {
         return "<#555555>" + formatItemName(type);
     }
 
-    public static String buildItemRarity(Rarity rarity, CustomItemType customItemType){
-        return "<bold><"+rarity.getRarityBuilder().textColor().asHexString()+">" + rarity.name() + " " + customItemType.name().replace("_", " ");
+    public static String buildItemRarity(Rarity rarity, String itemType){
+        return "<bold><"+rarity.getRarityBuilder().textColor().asHexString()+">" + rarity.name() + " " + itemType.replace("_", " ");
     }
 
     public static String formatItemName(String rawName) {

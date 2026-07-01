@@ -1,7 +1,7 @@
 package org.evasive.me.minefinity.mining.context;
 
 import org.bukkit.entity.Player;
-import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
+import org.evasive.me.minefinity.core.data.BaseBlock;
 
 import java.util.UUID;
 

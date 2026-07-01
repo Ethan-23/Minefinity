@@ -1,7 +1,7 @@
-package org.evasive.me.minefinity.towns.structures.resourceblock.service;
+package org.evasive.me.minefinity.core.registry;
 
 import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
-import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
+import org.evasive.me.minefinity.core.data.BaseBlock;
 
 import java.util.List;
 

@@ -3,19 +3,25 @@ package org.evasive.me.minefinity.towns;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.core.admin.commands.PacketRefresh;
+import org.evasive.me.minefinity.towns.commands.PacketRefresh;
 import org.evasive.me.minefinity.core.economy.EconomyService;
 import org.evasive.me.minefinity.core.npcs.NpcBehaviorRegistry;
 import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
-import org.evasive.me.minefinity.core.registry.StructureRegistry;
+import org.evasive.me.minefinity.towns.structures.registry.StructureRegistry;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
 import org.evasive.me.minefinity.customItems.framework.ItemPickupService;
 import org.evasive.me.minefinity.customItems.recipes.RecipeUnlockManager;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.service.RecipeService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.mining.milestones.MilestoneService;
-import org.evasive.me.minefinity.playerdata.commands.MineData;
+import org.evasive.me.minefinity.towns.commands.MineData;
+import org.evasive.me.minefinity.playerdata.component.PlayerDataComponentRegistry;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
+import org.evasive.me.minefinity.towns.data.TownData;
+import org.evasive.me.minefinity.towns.structures.forge.blacksmith.data.ForgeItems;
+import org.evasive.me.minefinity.towns.structures.forge.smelter.Smelter;
+import org.evasive.me.minefinity.towns.structures.mines.miner.AutoMinerData;
+import org.evasive.me.minefinity.towns.structures.workshop.engineer.data.Engineer;
 import org.evasive.me.minefinity.towns.events.JoinListener;
 import org.evasive.me.minefinity.towns.structures.RepeatingTick;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.BlacksmithNpc;
@@ -36,7 +42,7 @@ import org.evasive.me.minefinity.towns.structures.registry.config.StructureRegis
 import org.evasive.me.minefinity.towns.structures.resourceblock.BlockMasterNpc;
 import org.evasive.me.minefinity.towns.structures.resourceblock.commands.BlockCommands;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
-import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTypeRegistryService;
+import org.evasive.me.minefinity.core.registry.BlockTypeRegistryService;
 import org.evasive.me.minefinity.towns.structures.service.StructureService;
 import org.evasive.me.minefinity.towns.structures.shops.GoblinTinkererNpc;
 import org.evasive.me.minefinity.towns.structures.shops.merchant.MerchantNpc;
@@ -74,7 +80,9 @@ public class TownModule {
     private final StructureRegistryConfigManager structureRegistryConfigManager;
     private final RecipeUnlockManager recipeUnlockManager;
 
-    public TownModule(PlayerDataService playerDataService, EconomyService economyService, CustomItemRegistryService customItemRegistryService, BackpackService backpackService, BlockTierService blockTierService, MilestoneService milestoneService, ItemPickupService itemPickupService, NpcBehaviorRegistry npcBehaviorRegistry, BlockTypeRegistry blockTypeRegistry, BlockTypeRegistryService blockTypeRegistryService, StructureRegistry structureRegistry) {
+    public TownModule(PlayerDataService playerDataService, EconomyService economyService, CustomItemRegistryService customItemRegistryService, BackpackService backpackService, BlockTierService blockTierService, MilestoneService milestoneService, ItemPickupService itemPickupService, NpcBehaviorRegistry npcBehaviorRegistry, BlockTypeRegistry blockTypeRegistry, BlockTypeRegistryService blockTypeRegistryService, PlayerDataComponentRegistry componentRegistry) {
+
+        StructureRegistry structureRegistry = new StructureRegistry();
 
         this.playerDataService = playerDataService;
         this.customItemRegistryService = customItemRegistryService;
@@ -118,6 +126,13 @@ public class TownModule {
         this.itemPickupService = itemPickupService;
 
         this.npcBehaviorRegistry = npcBehaviorRegistry;
+
+        // Register towns' per-player data slices with playerdata
+        componentRegistry.register("town_data", TownData.class, TownData::new);
+        componentRegistry.register("auto_miner_data", AutoMinerData.class, AutoMinerData::new);
+        componentRegistry.register("engineer_data", Engineer.class, Engineer::new);
+        componentRegistry.register("smelter_data", Smelter.class, Smelter::new);
+        componentRegistry.register("forge_items", ForgeItems.class, ForgeItems::new);
     }
 
     public void enable(JavaPlugin plugin) {

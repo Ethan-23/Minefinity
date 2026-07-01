@@ -1,10 +1,11 @@
 package org.evasive.me.minefinity.towns.structures.mines.miner;
+import org.evasive.me.minefinity.playerdata.component.PlayerDataComponent;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AutoMinerData {
+public class AutoMinerData implements PlayerDataComponent {
 
     private String pickaxeItemId;
     private int unlockedBlockTier;

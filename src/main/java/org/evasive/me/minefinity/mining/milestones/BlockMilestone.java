@@ -1,12 +1,13 @@
 package org.evasive.me.minefinity.mining.milestones;
+import org.evasive.me.minefinity.playerdata.component.PlayerDataComponent;
 
-import org.evasive.me.minefinity.towns.structures.resourceblock.service.ResourceData;
+import org.evasive.me.minefinity.core.data.ResourceData;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BlockMilestone {
+public class BlockMilestone implements PlayerDataComponent {
 
     private final Map<String, ResourceData> blockMilestoneMap;
 

@@ -1,6 +1,7 @@
 package org.evasive.me.minefinity.towns.data;
+import org.evasive.me.minefinity.playerdata.component.PlayerDataComponent;
 
-public class TownData {
+public class TownData implements PlayerDataComponent {
 
     private int townhallLevel;
     private int merchantLevel;

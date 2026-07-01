@@ -1,6 +1,7 @@
 package org.evasive.me.minefinity.playerdata.service;
 
 import org.bukkit.Bukkit;
+import org.evasive.me.minefinity.playerdata.component.PlayerDataComponentRegistry;
 import org.evasive.me.minefinity.playerdata.model.PlayerData;
 import org.evasive.me.minefinity.playerdata.repository.PlayerDataRepository;
 
@@ -14,11 +15,13 @@ public class PlayerDataService {
     private final Map<UUID, PlayerData> playerCache = new ConcurrentHashMap<>();
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private final PlayerDataRepository repository; // Handles DB operations
+    private final PlayerDataComponentRegistry componentRegistry;
 
     private static final int SAVE_INTERVAL_MINUTES = 5;
 
-    public PlayerDataService(PlayerDataRepository repository) {
+    public PlayerDataService(PlayerDataRepository repository, PlayerDataComponentRegistry componentRegistry) {
         this.repository = repository;
+        this.componentRegistry = componentRegistry;
 
         // Schedule periodic dirty saves
         scheduler.scheduleAtFixedRate(this::saveDirtyPlayers, SAVE_INTERVAL_MINUTES, SAVE_INTERVAL_MINUTES, TimeUnit.MINUTES);
@@ -44,7 +47,7 @@ public class PlayerDataService {
                     boolean firstJoin = optionalData.isEmpty();
 
                     PlayerData data = optionalData.orElseGet(() -> {
-                        PlayerData newData = new PlayerData(uuid);
+                        PlayerData newData = new PlayerData(uuid, componentRegistry);
                         repository.savePlayer(newData);
                         Bukkit.getConsoleSender().sendMessage("NEW DATA");
                         return newData;

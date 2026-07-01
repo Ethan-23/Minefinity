@@ -7,6 +7,7 @@ import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistry
 import org.evasive.me.minefinity.playerdata.model.PlayerData;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.data.BaseForgeItem;
+import org.evasive.me.minefinity.towns.structures.forge.blacksmith.data.ForgeItems;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.recipes.BaseForgeRecipe;
 
 import java.time.Instant;
@@ -31,7 +32,7 @@ public class ForgeService {
     }
 
     public Map<Integer, BaseForgeItem> getForgeMap(Player player){
-        return getPlayerData(player).getForgeItems();
+        return getPlayerData(player).get(ForgeItems.class).getItems();
     }
 
     public boolean hasForgeItem(Player player, int slot){
@@ -39,11 +40,11 @@ public class ForgeService {
     }
 
     public void addForgeItem(Player player, int slot, BaseForgeItem forgeItem){
-        getPlayerData(player).setForgeItem(slot, forgeItem);
+        getPlayerData(player).get(ForgeItems.class).setItem(slot, forgeItem);
     }
 
     public void removeForgeItem(Player player, int slot){
-        getPlayerData(player).removeForgeItem(slot);
+        getPlayerData(player).get(ForgeItems.class).removeItem(slot);
     }
 
     public BaseForgeItem getForgeItem(Player player, int slot){

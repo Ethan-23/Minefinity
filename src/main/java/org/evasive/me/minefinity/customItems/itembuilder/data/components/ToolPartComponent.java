@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BaseToolItem;
@@ -45,7 +45,7 @@ public class ToolPartComponent implements ItemComponent, EditableComponent<Map<P
     }
 
     @Override
-    public void save(ItemBuilder builder) {
+    public void save(CustomItemBuilder builder) {
         builder.addPersistentDataContainer(TOOL_PARTS_KEY, PersistentDataType.STRING, GSON.toJson(partMap));
     }
 
@@ -85,7 +85,7 @@ public class ToolPartComponent implements ItemComponent, EditableComponent<Map<P
             @Override
             public ItemStack render(PartSlots slot) {
                 String id = partMap.get(slot);
-                ItemBuilder icon = new ItemBuilder(Material.IRON_INGOT, TextConversions.formatItemName(slot.name()));
+                CustomItemBuilder icon = new CustomItemBuilder(Material.IRON_INGOT, TextConversions.formatItemName(slot.name()));
                 icon.addLore(id != null ? "<white>Part: <yellow>" + id : "<red>Empty");
                 icon.addLore("<gray>Click to set a part id (blank clears)");
                 if (id != null) icon.addGlow();

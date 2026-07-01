@@ -2,7 +2,7 @@ package org.evasive.me.minefinity.core.utils.guis;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.lib.item.ItemBuilder;
 
 public class GenericGuiItems {
 

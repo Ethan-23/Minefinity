@@ -1,4 +1,4 @@
-package org.evasive.me.minefinity.core.utils.guis;
+package org.evasive.me.minefinity.customItems.itembuilder.util;
 
 import org.bukkit.Material;
 import org.bukkit.event.inventory.ClickType;

@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.data.WorkshopMode;
@@ -85,7 +85,7 @@ public class EngineerGuiRenderer {
     }
 
     private void renderInfo(Inventory inventory){
-        ItemBuilder itemBuilder = new ItemBuilder(Material.KNOWLEDGE_BOOK, INFORMATION_TITLE);
+        CustomItemBuilder itemBuilder = new CustomItemBuilder(Material.KNOWLEDGE_BOOK, INFORMATION_TITLE);
         itemBuilder.addLore(INFORMATION_LORE);
         inventory.setItem(INFORMATION_SLOT, itemBuilder.build());
     }
@@ -94,7 +94,7 @@ public class EngineerGuiRenderer {
 
         boolean isCarpentry = mode == WorkshopMode.CARPENTRY;
 
-        ItemBuilder skillHeader = new ItemBuilder(isCarpentry ? Material.COPPER_AXE : Material.COPPER_SPEAR, "<bold><gold>" + formatItemName(mode.name()));
+        CustomItemBuilder skillHeader = new CustomItemBuilder(isCarpentry ? Material.COPPER_AXE : Material.COPPER_SPEAR, "<bold><gold>" + formatItemName(mode.name()));
         skillHeader.addLore(isCarpentry ? WOODWORKING_HEADER_LORE : STONEWORKING_HEADER_LORE);
         inventory.setItem(HEADER_SLOT,  skillHeader.build());
     }
@@ -108,13 +108,13 @@ public class EngineerGuiRenderer {
             return;
         }
 
-        ItemBuilder itemBuilder = new ItemBuilder(customItemRegistryService.getRegisteredItemStack(storedResource.name()));
+        CustomItemBuilder itemBuilder = new CustomItemBuilder(customItemRegistryService.getRegisteredItemStack(storedResource.name()));
         itemBuilder.setAmount(service.getWorkshopCurrentResourceCount(player, mode));
         inventory.setItem(RESOURCE_SLOT, itemBuilder.build());
     }
 
     private ItemStack buildEmptyResource(){
-        ItemBuilder emptyResourceSlot = new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, EMPTY_RESOURCE_TITLE);
+        CustomItemBuilder emptyResourceSlot = new CustomItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, EMPTY_RESOURCE_TITLE);
         emptyResourceSlot.addLore(EMPTY_RESOURCE_LORE);
         for(int i = 0; WorkshopToolsTiers.values().length > i; i++) {
             emptyResourceSlot.addLore(buildRarityColor(WorkshopToolsTiers.values()[i].name(), Rarity.values()[i]) + " <gray>x4");
@@ -127,14 +127,14 @@ public class EngineerGuiRenderer {
         WorkshopToolsTiers toolType = service.getWorkshopToolType(player, mode);
 
         if(toolType == null){
-            ItemBuilder emptyTool = new ItemBuilder(Material.IRON_BARS, EMPTY_TOOL_TITLE);
+            CustomItemBuilder emptyTool = new CustomItemBuilder(Material.IRON_BARS, EMPTY_TOOL_TITLE);
             emptyTool.addLore(EMPTY_TOOL_LORE);
             inventory.setItem(TOOL_SLOT, emptyTool.build());
             return;
         }
 
         int durability = service.getWorkshopToolDurability(player, mode);
-        ItemBuilder tool = new ItemBuilder(customItemRegistryService.getRegisteredItemStack(toolType.name()));
+        CustomItemBuilder tool = new CustomItemBuilder(customItemRegistryService.getRegisteredItemStack(toolType.name()));
         tool.setLore(new ArrayList<>());
         tool.addLore("<gray>Durability: <yellow>" + durability);
         tool.addBlank().addLore("<gray>Shift Right-Click to trash tool.");
@@ -149,7 +149,7 @@ public class EngineerGuiRenderer {
 
     private void renderSwapButton(Inventory inventory){
         boolean isCarpentry = mode == WorkshopMode.CARPENTRY;
-        ItemBuilder itemBuilder = new ItemBuilder(isCarpentry ? Material.GRINDSTONE : Material.STONECUTTER, "<yellow>Swap to <bold><gold>"+formatItemName(isCarpentry ? WorkshopMode.STONEWORKING.name() : WorkshopMode.CARPENTRY.name()));
+        CustomItemBuilder itemBuilder = new CustomItemBuilder(isCarpentry ? Material.GRINDSTONE : Material.STONECUTTER, "<yellow>Swap to <bold><gold>"+formatItemName(isCarpentry ? WorkshopMode.STONEWORKING.name() : WorkshopMode.CARPENTRY.name()));
         inventory.setItem(SWAP_SLOT, itemBuilder.build());
     }
 
@@ -162,7 +162,7 @@ public class EngineerGuiRenderer {
             if(workshopRecipe.getRequiredToolType() != mode)
                 continue;
 
-            ItemBuilder shopItem = new ItemBuilder(customItemRegistryService.getRegisteredItemStack(workshopRecipe.getResult()));
+            CustomItemBuilder shopItem = new CustomItemBuilder(customItemRegistryService.getRegisteredItemStack(workshopRecipe.getResult()));
             shopItem.setLore(new ArrayList<>());
             shopItem.addLore("<gray>Required Tool: " + workshopRecipe.getRequiredToolsTier().name());
             shopItem.addLore("<gray>Durability Usage: <yellow>" + workshopRecipe.getDurabilityUsage());

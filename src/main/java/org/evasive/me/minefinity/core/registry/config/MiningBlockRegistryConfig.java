@@ -1,12 +1,12 @@
-package org.evasive.me.minefinity.towns.structures.resourceblock.config;
+package org.evasive.me.minefinity.core.registry.config;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.config.BaseConfig;
 import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
-import org.evasive.me.minefinity.mining.milestones.MilestoneTier;
-import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
+import org.evasive.me.minefinity.core.data.MilestoneTier;
+import org.evasive.me.minefinity.core.data.BaseBlock;
 
 import java.util.ArrayList;
 import java.util.HashMap;

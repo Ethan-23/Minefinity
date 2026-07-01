@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.lib.item.ItemBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

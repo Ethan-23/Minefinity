@@ -7,7 +7,7 @@ import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePar
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.StatsComponent;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
-import org.evasive.me.minefinity.playerdata.stats.data.Stats;
+import org.evasive.me.minefinity.core.data.Stats;
 import org.evasive.me.minefinity.towns.structures.forge.pickaxeanvil.gui.PickaxeAnvilGui;
 
 public class PickaxeAnvilHandler {

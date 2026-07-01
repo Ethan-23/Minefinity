@@ -1,7 +1,7 @@
 package org.evasive.me.minefinity.mining.context;
 
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
-import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
+import org.evasive.me.minefinity.core.data.BaseBlock;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -10,7 +10,7 @@ import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.service.RecipeService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.recipes.ForgeRecipeManager;
@@ -53,7 +53,7 @@ public class ForgeGui extends BaseGui {
     }
 
     private void buildInformationSlot(){
-        ItemBuilder itemBuilder = new ItemBuilder(Material.KNOWLEDGE_BOOK, TextConversions.parse("<bold><gold>Miner"));
+        CustomItemBuilder itemBuilder = new CustomItemBuilder(Material.KNOWLEDGE_BOOK, TextConversions.parse("<bold><gold>Miner"));
         itemBuilder.addLore("<gray>This is the miner. He be mining the blocks and stuff. He be mining all night and day. Might be a 'worker' if you catch my drift. 3 Netherite Ingots!");
         inventory.setItem(INFORMATION_SLOT, itemBuilder.build());
     }
@@ -78,7 +78,7 @@ public class ForgeGui extends BaseGui {
             if(forgeService.isFinished(player, forgeId)){
                 inventory.setItem(FORGE_PANES.get(i), donePane);
             } else {
-                ItemBuilder progressPaneBuilder = new ItemBuilder(progressPane.clone());
+                CustomItemBuilder progressPaneBuilder = new CustomItemBuilder(progressPane.clone());
                 progressPaneBuilder.addLore("<gold>" + getString(milliseconds));
                 inventory.setItem(FORGE_PANES.get(i), progressPaneBuilder.build());
             }
@@ -87,13 +87,13 @@ public class ForgeGui extends BaseGui {
 
     public ItemStack buildForgeButton(Player player, int forgeNum){
         if(forgeService.hasForgeItem(player, forgeNum)){
-            ItemBuilder pendingForge = new ItemBuilder(forgeService.getForgeItemStack(player, forgeNum));
+            CustomItemBuilder pendingForge = new CustomItemBuilder(forgeService.getForgeItemStack(player, forgeNum));
             if(!forgeService.isFinished(player, forgeNum))
                 pendingForge.addLore("<gold>Time Remaining: <yellow>" + getString(forgeService.getMilisecondsRemaining(player, forgeNum)));
             return pendingForge.build();
 
         }else{
-            ItemBuilder forgeButton = new ItemBuilder(Material.FURNACE, TextConversions.parse("<yellow>Empty Forge Slot</yellow>"));
+            CustomItemBuilder forgeButton = new CustomItemBuilder(Material.FURNACE, TextConversions.parse("<yellow>Empty Forge Slot</yellow>"));
             forgeButton.addLore("<gray>Click to select a forge recipe");
             return forgeButton.build();
         }

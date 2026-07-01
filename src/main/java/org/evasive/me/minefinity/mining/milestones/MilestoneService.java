@@ -1,14 +1,15 @@
 package org.evasive.me.minefinity.mining.milestones;
+import org.evasive.me.minefinity.core.data.MilestoneTier;
 
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
-import org.evasive.me.minefinity.playerdata.stats.data.Stats;
+import org.evasive.me.minefinity.core.data.Stats;
 import org.evasive.me.minefinity.playerdata.stats.service.StatsService;
-import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
-import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTypeRegistryService;
-import org.evasive.me.minefinity.towns.structures.resourceblock.service.ResourceData;
+import org.evasive.me.minefinity.core.data.BaseBlock;
+import org.evasive.me.minefinity.core.registry.BlockTypeRegistryService;
+import org.evasive.me.minefinity.core.data.ResourceData;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ public class MilestoneService {
     }
 
     public ResourceData getResourceData(Player player, String blockId) {
-        return playerDataService.getPlayerData(player.getUniqueId()).getBlockMilestones().getResourceData(blockId);
+        return playerDataService.getPlayerData(player.getUniqueId()).get(BlockMilestone.class).getResourceData(blockId);
     }
 
     public int getTierProgress(Player player, String blockId) {

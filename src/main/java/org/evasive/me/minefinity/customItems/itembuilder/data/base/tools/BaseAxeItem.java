@@ -3,7 +3,7 @@ package org.evasive.me.minefinity.customItems.itembuilder.data.base.tools;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.rarity.Rarity;
-import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
@@ -27,7 +27,7 @@ public class BaseAxeItem extends BaseToolItem {
 
     @Override
     public ItemStack buildItem() {
-        return new ItemBuilder(super.buildItem())
+        return new CustomItemBuilder(super.buildItem())
                 .addUnbreakable()
                 .build();
     }

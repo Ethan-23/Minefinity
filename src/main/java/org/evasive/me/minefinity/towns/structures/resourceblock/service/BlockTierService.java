@@ -1,4 +1,5 @@
 package org.evasive.me.minefinity.towns.structures.resourceblock.service;
+import org.evasive.me.minefinity.core.registry.BlockTypeRegistryService;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.util.Vector3i;
@@ -14,7 +15,7 @@ import org.evasive.me.minefinity.mining.data.MiningDataMap;
 import org.evasive.me.minefinity.mining.data.SelectedBlockMap;
 import org.evasive.me.minefinity.playerdata.model.PlayerData;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
-import org.evasive.me.minefinity.towns.structures.resourceblock.framework.BaseBlock;
+import org.evasive.me.minefinity.core.data.BaseBlock;
 import org.evasive.me.minefinity.towns.worldPackets.service.MassBlockPacketSender;
 
 import java.util.List;

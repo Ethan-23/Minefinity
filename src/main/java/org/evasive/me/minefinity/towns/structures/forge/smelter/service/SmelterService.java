@@ -2,7 +2,7 @@ package org.evasive.me.minefinity.towns.structures.forge.smelter.service;
 
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.framework.CustomItemStack;
+import org.evasive.me.minefinity.core.data.CustomItemStack;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseFuelItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.FuelAmountComponent;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
@@ -31,7 +31,7 @@ public class SmelterService {
     }
 
     private Smelter getSmelter(Player player){
-        return getPlayerData(player).getSmelter();
+        return getPlayerData(player).get(Smelter.class);
     }
 
     public String getFuelId(Player player){

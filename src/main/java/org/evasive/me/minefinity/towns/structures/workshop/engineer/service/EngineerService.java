@@ -22,7 +22,7 @@ public class EngineerService {
     }
 
     private Engineer getEngineer(Player player){
-        return getPlayerData(player).getEngineer();
+        return getPlayerData(player).get(Engineer.class);
     }
 
     private EngineerTools getEngineerSkill(Engineer engineer, WorkshopMode workshopMode){

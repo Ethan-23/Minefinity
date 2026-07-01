@@ -1,8 +1,9 @@
 package org.evasive.me.minefinity.towns.structures.workshop.engineer.data;
-
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.tools.EngineerTools;
+import org.evasive.me.minefinity.playerdata.component.PlayerDataComponent;
 
-public class Engineer {
+
+public class Engineer implements PlayerDataComponent {
 
     EngineerTools carpentry;
     EngineerTools stoneworking;

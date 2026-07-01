@@ -1,14 +1,11 @@
 package org.evasive.me.minefinity.playerdata.model;
 
 import org.bukkit.Bukkit;
-import org.evasive.me.minefinity.mining.milestones.BlockMilestone;
-import org.evasive.me.minefinity.playerdata.stats.data.Stats;
-import org.evasive.me.minefinity.towns.data.TownData;
-import org.evasive.me.minefinity.towns.structures.forge.blacksmith.data.BaseForgeItem;
-import org.evasive.me.minefinity.towns.structures.forge.smelter.Smelter;
-import org.evasive.me.minefinity.towns.structures.mines.miner.AutoMinerData;
-import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTypeRegistryService;
-import org.evasive.me.minefinity.towns.structures.workshop.engineer.data.Engineer;
+import org.evasive.me.minefinity.core.registry.BlockTypeRegistryService;
+import org.evasive.me.minefinity.playerdata.component.ComponentType;
+import org.evasive.me.minefinity.playerdata.component.PlayerDataComponent;
+import org.evasive.me.minefinity.playerdata.component.PlayerDataComponentRegistry;
+import org.evasive.me.minefinity.core.data.Stats;
 
 import java.util.*;
 
@@ -22,64 +19,74 @@ public class PlayerData {
     private Map<String, String> selectedBlockTiers;
     private EnumMap<Stats, Integer> playerStats;
 
-    private BlockMilestone blockMilestones;
-
     //Economy Data
     private double balance;
 
-    //Town Data
-    private TownData townData;
-    //Miner data
-    private AutoMinerData autoMinerData;
-    //Engineer data
-    private Engineer engineer;
-    //Forge data
-    private Smelter smelter;
-    //Max size of 5
-    private Map<Integer, BaseForgeItem> forgeItems;
     //Backpack Storage Data
     private Map<String, Integer> backpackStorage;
 
-    public PlayerData(UUID uuid) {
+    // Feature-owned per-player data (engineer, smelter, town, ...), keyed by concrete component class.
+    // playerdata never names these types - feature modules register them and access their own slice.
+    private final Map<Class<? extends PlayerDataComponent>, PlayerDataComponent> components = new HashMap<>();
+
+    /**
+     * New player: default scalar data plus a fresh default instance of every registered component.
+     */
+    public PlayerData(UUID uuid, PlayerDataComponentRegistry registry) {
         this.uuid = uuid;
         this.username = Bukkit.getOfflinePlayer(uuid).getName();
+        this.playerStats = new EnumMap<>(Stats.class);
 
         BlockTypeRegistryService blockTypeRegistryService = BlockTypeRegistryService.getInstance();
         String worldId = blockTypeRegistryService.getWorldList().getFirst();
-        //Access world registry and set all worlds to tier 1 block
-        playerStats = new EnumMap<>(Stats.class);
 
-        //Block setup
+        //Block setup - all worlds start on tier 0
         this.unlockedBlockTiers = new HashMap<>();
         this.unlockedBlockTiers.put(worldId, 0);
         this.selectedBlockTiers = new HashMap<>();
         this.selectedBlockTiers.put(worldId, blockTypeRegistryService.getBlockIdByTier(worldId, 0));
 
-        this.blockMilestones = new BlockMilestone();
         this.balance = 0;
-        this.townData = new TownData();
-        this.autoMinerData = new AutoMinerData();
-        this.engineer = new Engineer();
-        this.smelter = new Smelter();
-        this.forgeItems = new HashMap<>();
         this.backpackStorage = new HashMap<>();
+
+        for (ComponentType<?> type : registry.all()) {
+            set(type.defaultFactory().get());
+        }
     }
 
-    public PlayerData(UUID uuid, String username, Map<String, Integer> unlockedBlockTier, Map<String, String> selectedBlockTier, BlockMilestone blockMilestones, double balance, TownData townData, AutoMinerData autoMinerData, Engineer engineer, Smelter smelter, Map<Integer, BaseForgeItem> forgeItems, Map<String, Integer> backpackStorage) {
+    /**
+     * Loaded player: scalar fields come from the database; components are populated afterwards by the
+     * repository via {@link #set(PlayerDataComponent)}.
+     */
+    public PlayerData(UUID uuid, String username, double balance,
+                      Map<String, Integer> unlockedBlockTiers, Map<String, String> selectedBlockTiers,
+                      Map<String, Integer> backpackStorage) {
         this.uuid = uuid;
-        playerStats = new EnumMap<>(Stats.class);
         this.username = username;
-        this.unlockedBlockTiers = unlockedBlockTier;
-        this.selectedBlockTiers = selectedBlockTier;
-        this.blockMilestones = blockMilestones;
         this.balance = balance;
-        this.townData = townData;
-        this.autoMinerData = autoMinerData;
-        this.engineer = engineer;
-        this.smelter = smelter;
-        this.forgeItems = forgeItems != null ? new HashMap<>(forgeItems) : new HashMap<>();
+        this.playerStats = new EnumMap<>(Stats.class);
+        this.unlockedBlockTiers = unlockedBlockTiers != null ? unlockedBlockTiers : new HashMap<>();
+        this.selectedBlockTiers = selectedBlockTiers != null ? selectedBlockTiers : new HashMap<>();
         this.backpackStorage = backpackStorage != null ? new HashMap<>(backpackStorage) : new HashMap<>();
     }
+
+    // ---- Feature component access ----
+
+    /**
+     * Get this player's slice of a feature's data, e.g. {@code playerData.get(Engineer.class)}.
+     */
+    public <T extends PlayerDataComponent> T get(Class<T> type) {
+        return type.cast(components.get(type));
+    }
+
+    /**
+     * Store or replace a component (keyed by its concrete class).
+     */
+    public void set(PlayerDataComponent component) {
+        components.put(component.getClass(), component);
+    }
+
+    // ---- Identity ----
 
     public UUID getUuid() {
         return uuid;
@@ -92,6 +99,8 @@ public class PlayerData {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    // ---- Mining block tiers ----
 
     public void setUnlockedBlockTiers(HashMap<String, Integer> unlockedBlockTiers) {
         this.unlockedBlockTiers = unlockedBlockTiers;
@@ -136,13 +145,7 @@ public class PlayerData {
         return selectedBlockTiers.containsKey(worldName);
     }
 
-    public BlockMilestone getBlockMilestones() {
-        return blockMilestones;
-    }
-
-    public void setBlockMilestones(BlockMilestone blockMilestones) {
-        this.blockMilestones = blockMilestones;
-    }
+    // ---- Economy ----
 
     public double getBalance() {
         return balance;
@@ -152,63 +155,7 @@ public class PlayerData {
         this.balance = balance;
     }
 
-    public TownData getTownData() {
-        return townData;
-    }
-
-    public void setTownData(TownData townData) {
-        this.townData = townData;
-    }
-
-    public AutoMinerData getAutoMinerData() {
-        return autoMinerData;
-    }
-
-    public void setAutoMinerData(AutoMinerData autoMinerData) {
-        this.autoMinerData = autoMinerData;
-    }
-
-    public Engineer getEngineer() {
-        return engineer;
-    }
-
-    public void setEngineer(Engineer engineer) {
-        this.engineer = engineer;
-    }
-
-    public Smelter getSmelter() {
-        return smelter;
-    }
-
-    public void setSmelter(Smelter smelter) {
-        this.smelter = smelter;
-    }
-
-    public Map<Integer, BaseForgeItem> getForgeItems() {
-        return Collections.unmodifiableMap(forgeItems);
-    }
-
-    public BaseForgeItem getForgeItem(int slot) {
-        return forgeItems.get(slot);
-    }
-
-    public void setForgeItem(int slot, BaseForgeItem baseForgeItem) {
-        if (slot < 1 || slot > 5)
-            throw new IllegalArgumentException("Forge slot out of bounds");
-        forgeItems.put(slot, baseForgeItem);
-    }
-
-    public void setForgeItems(Map<Integer, BaseForgeItem> forgeItems) {
-        this.forgeItems = forgeItems;
-    }
-
-    public boolean removeForgeItem(int slot) {
-        return forgeItems.remove(slot) != null;
-    }
-
-    public boolean isForgeSlotEmpty(int slot) {
-        return !forgeItems.containsKey(slot);
-    }
+    // ---- Backpack ----
 
     public Map<String, Integer> getBackpackStorage() {
         return Collections.unmodifiableMap(backpackStorage);
@@ -233,6 +180,8 @@ public class PlayerData {
     public void setBackpackStorage(Map<String, Integer> backpackStorage) {
         this.backpackStorage = backpackStorage;
     }
+
+    // ---- Stats (transient, not persisted) ----
 
     public EnumMap<Stats, Integer> getPlayerStats() {
         return playerStats;

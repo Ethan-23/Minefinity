@@ -1,4 +1,4 @@
-package org.evasive.me.minefinity.core.registry;
+package org.evasive.me.minefinity.customItems.registry;
 
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 

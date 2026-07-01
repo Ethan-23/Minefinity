@@ -14,7 +14,7 @@ import org.evasive.me.minefinity.towns.structures.workshop.engineer.recipes.Base
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.recipes.WorkshopRecipeManager;
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.tools.WorkshopToolsTiers;
 
-import static org.evasive.me.minefinity.core.utils.guis.SwapItems.swapCursor;
+import static org.evasive.me.minefinity.customItems.itembuilder.util.SwapItems.swapCursor;
 import static org.evasive.me.minefinity.towns.structures.workshop.engineer.gui.EngineerGui.*;
 
 public class EngineerClickHandler {
