@@ -14,7 +14,7 @@ import org.evasive.me.minefinity.customItems.recipes.RecipeUnlockManager;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.service.RecipeService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.mining.milestones.MilestoneService;
-import org.evasive.me.minefinity.playerdata.commands.MineData;
+import org.evasive.me.minefinity.towns.commands.MineData;
 import org.evasive.me.minefinity.playerdata.component.PlayerDataComponentRegistry;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.towns.data.TownData;

@@ -1,0 +1,47 @@
+package org.evasive.me.minefinity.mining.milestones;
+
+import org.bukkit.entity.Player;
+import org.evasive.me.minefinity.core.data.BaseBlock;
+import org.evasive.me.minefinity.core.data.MilestoneTier;
+import org.evasive.me.minefinity.core.data.Stats;
+import org.evasive.me.minefinity.core.registry.BlockTypeRegistryService;
+import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
+import org.evasive.me.minefinity.playerdata.stats.StatContributor;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Contributes the stat bonuses a player has unlocked through block-mining milestones.
+ * Owned by mining; registered with playerdata's stat registry at startup.
+ */
+public class MilestoneStatContributor implements StatContributor {
+
+    private final PlayerDataService playerDataService;
+
+    public MilestoneStatContributor(PlayerDataService playerDataService) {
+        this.playerDataService = playerDataService;
+    }
+
+    @Override
+    public Map<Stats, Integer> contribute(Player player) {
+        Map<Stats, Integer> statsMap = new HashMap<>();
+
+        List<BaseBlock> blockList = BlockTypeRegistryService.getInstance().getAllBlocks();
+
+        for (BaseBlock baseBlock : blockList) {
+            List<MilestoneTier> milestoneTiers = baseBlock.milestoneUnlocks();
+            String blockId = baseBlock.name();
+            int tier = playerDataService.getPlayerData(player.getUniqueId()).get(BlockMilestone.class).getTier(blockId);
+
+            for (int i = 1; i <= tier; i++) {
+                Map<String, Integer> statsStringMap = milestoneTiers.get(i - 1).stats();
+                for (String stat : statsStringMap.keySet()) {
+                    statsMap.merge(Stats.valueOf(stat), statsStringMap.get(stat), Integer::sum);
+                }
+            }
+        }
+        return statsMap;
+    }
+}

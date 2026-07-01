@@ -20,6 +20,7 @@ import org.evasive.me.minefinity.playerdata.repository.PlayerRankRepository;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.playerdata.service.RankService;
 import org.evasive.me.minefinity.playerdata.stats.events.StatsListeners;
+import org.evasive.me.minefinity.playerdata.stats.StatContributorRegistry;
 import org.evasive.me.minefinity.playerdata.stats.service.StatsService;
 
 public class PlayerDataModule {
@@ -28,6 +29,7 @@ public class PlayerDataModule {
     private final RankDatabaseManager rankDb;
 
     private final PlayerDataComponentRegistry componentRegistry;
+    private final StatContributorRegistry statContributorRegistry;
 
     private final PlayerDataService playerService;
     private final RankService rankService;
@@ -54,7 +56,8 @@ public class PlayerDataModule {
         playerService = new PlayerDataService(playerRepo, componentRegistry);
         permissionService = new PermissionService(Minefinity.getCore());
         rankService = new RankService(rankRepo, permissionService);
-        statsService = new StatsService(playerService);
+        statContributorRegistry = new StatContributorRegistry();
+        statsService = new StatsService(playerService, statContributorRegistry);
     }
 
     public void enable(JavaPlugin plugin) {
@@ -110,6 +113,10 @@ public class PlayerDataModule {
 
     public StatsService getStatsService() {
         return statsService;
+    }
+
+    public StatContributorRegistry getStatContributorRegistry() {
+        return statContributorRegistry;
     }
 
 }

@@ -9,7 +9,7 @@ import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistry
 import org.evasive.me.minefinity.mining.handlers.BlockProgressHandler;
 import org.evasive.me.minefinity.playerdata.model.PlayerData;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
-import org.evasive.me.minefinity.playerdata.stats.data.Stats;
+import org.evasive.me.minefinity.core.data.Stats;
 import org.evasive.me.minefinity.towns.structures.mines.miner.AutoMinerData;
 import org.evasive.me.minefinity.core.data.BaseBlock;
 import org.evasive.me.minefinity.core.registry.BlockTypeRegistryService;

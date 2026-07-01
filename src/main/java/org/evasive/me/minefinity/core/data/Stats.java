@@ -1,4 +1,4 @@
-package org.evasive.me.minefinity.playerdata.stats.data;
+package org.evasive.me.minefinity.core.data;
 
 import org.bukkit.Material;
 

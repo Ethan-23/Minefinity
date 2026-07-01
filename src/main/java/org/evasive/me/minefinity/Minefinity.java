@@ -53,7 +53,8 @@ public final class Minefinity extends JavaPlugin {
 
         customItemModule = new CustomItemModule(
                 playerDataService,
-                coreModule.getPlayerInputListener()
+                coreModule.getPlayerInputListener(),
+                playerModule.getStatContributorRegistry()
         );
 
         customItemModule.enable(this);
@@ -67,7 +68,8 @@ public final class Minefinity extends JavaPlugin {
                 customItemModule.getItemPickupService(),
                 customItemModule.getPickaxeResolver(),
                 playerModule.getStatsService(),
-                playerModule.getComponentRegistry()
+                playerModule.getComponentRegistry(),
+                playerModule.getStatContributorRegistry()
         );
 
         miningModule.enable();

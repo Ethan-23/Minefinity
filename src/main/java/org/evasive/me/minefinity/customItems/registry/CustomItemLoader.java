@@ -13,7 +13,7 @@ import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BaseToo
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePartItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.*;
 import org.evasive.me.minefinity.customItems.registry.config.ItemRegistryConfigManager;
-import org.evasive.me.minefinity.playerdata.stats.data.Stats;
+import org.evasive.me.minefinity.core.data.Stats;
 
 import java.util.HashMap;
 import java.util.Map;

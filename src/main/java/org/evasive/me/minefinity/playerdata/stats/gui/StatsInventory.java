@@ -7,14 +7,14 @@ import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
-import org.evasive.me.minefinity.playerdata.stats.data.Stats;
+import org.evasive.me.minefinity.lib.item.ItemBuilder;
+import org.evasive.me.minefinity.core.data.Stats;
 import org.evasive.me.minefinity.playerdata.stats.service.StatsService;
 
 import java.util.EnumMap;
 
-import static org.evasive.me.minefinity.playerdata.stats.data.Stats.MINING_FORTUNE;
-import static org.evasive.me.minefinity.playerdata.stats.data.Stats.MINING_SPEED;
+import static org.evasive.me.minefinity.core.data.Stats.MINING_FORTUNE;
+import static org.evasive.me.minefinity.core.data.Stats.MINING_SPEED;
 
 public class StatsInventory extends BaseGui {
 
@@ -51,7 +51,7 @@ public class StatsInventory extends BaseGui {
     }
 
     private void displayGear() {
-        CustomItemBuilder blank = new CustomItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, "<yellow>Empty");
+        ItemBuilder blank = new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE, "<yellow>Empty");
         ItemStack helmetItem = player.getInventory().getHelmet();
         ItemStack chestplateItem = player.getInventory().getChestplate();
         ItemStack leggingsItem = player.getInventory().getLeggings();
@@ -65,8 +65,8 @@ public class StatsInventory extends BaseGui {
     }
 
     private void displayCombatStats(){
-        CustomItemBuilder itemBuilder = new CustomItemBuilder(Material.IRON_SWORD, "<gold>Combat Stats");
-        itemBuilder.setGlow(true);
+        ItemBuilder itemBuilder = new ItemBuilder(Material.IRON_SWORD, "<gold>Combat Stats");
+        itemBuilder.addGlow();
 
         for (Stats stats : COMBAT_STATS) {
             itemBuilder.addLore(stats.getDisplay() + ": " + statsMap.get(stats));
@@ -76,15 +76,15 @@ public class StatsInventory extends BaseGui {
     }
 
     private void displaySelectedBlockStats(){
-        CustomItemBuilder itemBuilder = new CustomItemBuilder(Material.BEDROCK, "Selected Block Stats");
+        ItemBuilder itemBuilder = new ItemBuilder(Material.BEDROCK, "Selected Block Stats");
         itemBuilder.addLore(MINING_SPEED.getDisplay() + ": " + statsMap.get(MINING_SPEED));
         itemBuilder.addLore(MINING_FORTUNE.getDisplay() + ": " + statsMap.get(MINING_FORTUNE));
         inventory.setItem(SELECTED_BLOCK_STATS_SLOT, itemBuilder.build());
     }
 
     private void displayMiningStats(){
-        CustomItemBuilder itemBuilder = new CustomItemBuilder(Material.IRON_PICKAXE, "<gold>Mining Stats");
-        itemBuilder.setGlow(true);
+        ItemBuilder itemBuilder = new ItemBuilder(Material.IRON_PICKAXE, "<gold>Mining Stats");
+        itemBuilder.addGlow();
 
         for (Stats stats : MINING_STATS) {
             itemBuilder.addLore(stats.getDisplay() + ": " + statsMap.get(stats));

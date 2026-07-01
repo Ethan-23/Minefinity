@@ -5,7 +5,7 @@ import org.evasive.me.minefinity.core.registry.BlockTypeRegistryService;
 import org.evasive.me.minefinity.playerdata.component.ComponentType;
 import org.evasive.me.minefinity.playerdata.component.PlayerDataComponent;
 import org.evasive.me.minefinity.playerdata.component.PlayerDataComponentRegistry;
-import org.evasive.me.minefinity.playerdata.stats.data.Stats;
+import org.evasive.me.minefinity.core.data.Stats;
 
 import java.util.*;
 

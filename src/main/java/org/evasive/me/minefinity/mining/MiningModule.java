@@ -12,9 +12,11 @@ import org.evasive.me.minefinity.mining.events.SwingPacketEvents;
 import org.evasive.me.minefinity.mining.handlers.BlockProgressHandler;
 import org.evasive.me.minefinity.mining.milestones.BlockMilestone;
 import org.evasive.me.minefinity.mining.milestones.MilestoneService;
+import org.evasive.me.minefinity.mining.milestones.MilestoneStatContributor;
 import org.evasive.me.minefinity.mining.utils.AnimationIDs;
 import org.evasive.me.minefinity.playerdata.component.PlayerDataComponentRegistry;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
+import org.evasive.me.minefinity.playerdata.stats.StatContributorRegistry;
 import org.evasive.me.minefinity.playerdata.stats.service.StatsService;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 import org.evasive.me.minefinity.core.registry.BlockTypeRegistryService;
@@ -33,7 +35,7 @@ public class MiningModule {
     private final MiningAbilityRegistry miningAbilityRegistry;
     private final MiningAbilityRunner miningAbilityRunner;
 
-    public MiningModule(PlayerDataService playerDataService, CustomItemRegistryService customItemRegistryService, BlockTypeRegistry blockTypeRegistry, ItemPickupService itemPickupService, PickaxeResolver pickaxeResolver, StatsService statsService, PlayerDataComponentRegistry componentRegistry) {
+    public MiningModule(PlayerDataService playerDataService, CustomItemRegistryService customItemRegistryService, BlockTypeRegistry blockTypeRegistry, ItemPickupService itemPickupService, PickaxeResolver pickaxeResolver, StatsService statsService, PlayerDataComponentRegistry componentRegistry, StatContributorRegistry statContributorRegistry) {
         this.animationIDs = new AnimationIDs();
         this.miningAbilityRegistry = new MiningAbilityRegistry(animationIDs);
         this.miningAbilityRunner = new MiningAbilityRunner(miningAbilityRegistry, pickaxeResolver);
@@ -49,6 +51,9 @@ public class MiningModule {
 
         // Register mining's per-player data slice with playerdata
         componentRegistry.register("milestone_data", BlockMilestone.class, BlockMilestone::new);
+
+        // Register mining's stat source with playerdata
+        statContributorRegistry.register(new MilestoneStatContributor(playerDataService));
     }
 
     public void enable(){
