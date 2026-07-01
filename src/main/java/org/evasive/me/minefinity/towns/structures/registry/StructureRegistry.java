@@ -1,4 +1,4 @@
-package org.evasive.me.minefinity.core.registry;
+package org.evasive.me.minefinity.towns.structures.registry;
 
 import org.evasive.me.minefinity.towns.structures.data.Structure;
 

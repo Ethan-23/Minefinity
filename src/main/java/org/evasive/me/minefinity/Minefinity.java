@@ -83,7 +83,6 @@ public final class Minefinity extends JavaPlugin {
                 coreModule.getNpcBehaviorRegistry(),
                 coreModule.getBlockTypeRegistry(),
                 miningModule.getBlockTypeRegistryService(),
-                coreModule.getStructureRegistry(),
                 playerModule.getComponentRegistry()
         );
 

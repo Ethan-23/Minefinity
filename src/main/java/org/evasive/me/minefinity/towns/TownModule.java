@@ -3,11 +3,11 @@ package org.evasive.me.minefinity.towns;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.core.admin.commands.PacketRefresh;
+import org.evasive.me.minefinity.towns.commands.PacketRefresh;
 import org.evasive.me.minefinity.core.economy.EconomyService;
 import org.evasive.me.minefinity.core.npcs.NpcBehaviorRegistry;
 import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
-import org.evasive.me.minefinity.core.registry.StructureRegistry;
+import org.evasive.me.minefinity.towns.structures.registry.StructureRegistry;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
 import org.evasive.me.minefinity.customItems.framework.ItemPickupService;
 import org.evasive.me.minefinity.customItems.recipes.RecipeUnlockManager;
@@ -80,7 +80,9 @@ public class TownModule {
     private final StructureRegistryConfigManager structureRegistryConfigManager;
     private final RecipeUnlockManager recipeUnlockManager;
 
-    public TownModule(PlayerDataService playerDataService, EconomyService economyService, CustomItemRegistryService customItemRegistryService, BackpackService backpackService, BlockTierService blockTierService, MilestoneService milestoneService, ItemPickupService itemPickupService, NpcBehaviorRegistry npcBehaviorRegistry, BlockTypeRegistry blockTypeRegistry, BlockTypeRegistryService blockTypeRegistryService, StructureRegistry structureRegistry, PlayerDataComponentRegistry componentRegistry) {
+    public TownModule(PlayerDataService playerDataService, EconomyService economyService, CustomItemRegistryService customItemRegistryService, BackpackService backpackService, BlockTierService blockTierService, MilestoneService milestoneService, ItemPickupService itemPickupService, NpcBehaviorRegistry npcBehaviorRegistry, BlockTypeRegistry blockTypeRegistry, BlockTypeRegistryService blockTypeRegistryService, PlayerDataComponentRegistry componentRegistry) {
+
+        StructureRegistry structureRegistry = new StructureRegistry();
 
         this.playerDataService = playerDataService;
         this.customItemRegistryService = customItemRegistryService;

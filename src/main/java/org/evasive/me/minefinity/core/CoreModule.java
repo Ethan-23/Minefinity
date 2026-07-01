@@ -23,7 +23,6 @@ import org.evasive.me.minefinity.core.npcs.NpcInstanceMap;
 import org.evasive.me.minefinity.core.npcs.events.InteractEvent;
 import org.evasive.me.minefinity.core.npcs.events.NpcLoadEvents;
 import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
-import org.evasive.me.minefinity.core.registry.StructureRegistry;
 import org.evasive.me.minefinity.core.scoreboard.ScoreboardService;
 import org.evasive.me.minefinity.core.spawn.command.Spawn;
 import org.evasive.me.minefinity.core.spawn.service.SpawnService;
@@ -45,7 +44,6 @@ public class CoreModule {
     private final NpcBehaviorRegistry npcBehaviorRegistry;
     private final PlayerInputListener playerInputListener;
     private final BlockTypeRegistry blockTypeRegistry;
-    private final StructureRegistry structureRegistry;
 
     public CoreModule(PlayerDataService playerDataService) {
         new GenerateCustomWorlds().init();
@@ -59,7 +57,6 @@ public class CoreModule {
         this.npcInstanceMap = new NpcInstanceMap();
         this.npcBehaviorRegistry = new NpcBehaviorRegistry();
         this.playerInputListener = new PlayerInputListener();
-        this.structureRegistry = new StructureRegistry();
 
     }
 
@@ -121,9 +118,5 @@ public class CoreModule {
 
     public BlockTypeRegistry getBlockTypeRegistry() {
         return blockTypeRegistry;
-    }
-
-    public StructureRegistry getStructureRegistry() {
-        return structureRegistry;
     }
 }
