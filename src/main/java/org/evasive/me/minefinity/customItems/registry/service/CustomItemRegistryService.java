@@ -7,9 +7,10 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.core.registry.CustomItemRegistry;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BaseToolItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.itembuilder.resolvers.PickaxeResolver;
 import org.evasive.me.minefinity.customItems.itembuilder.service.PickaxeService;
 import org.evasive.me.minefinity.customItems.registry.config.RegistryConfigHandler;
@@ -84,14 +85,13 @@ public class CustomItemRegistryService {
 
         BaseCustomItem baseCustomItem = customItemRegistry.getByID(itemId).getBaseItem().copy();
 
-        if(!(baseCustomItem instanceof BasePickaxeItem basePickaxeItem))
+        if(!(baseCustomItem instanceof BaseToolItem baseComponentItem))
             return baseCustomItem;
 
         PersistentDataContainer pdc = itemStack.getItemMeta().getPersistentDataContainer();
-        basePickaxeItem.setPickaxeHeadId(pdc.get(PICKAXE_HEAD_KEY, PersistentDataType.STRING));
-        basePickaxeItem.setPickaxeCoreId(pdc.get(PICKAXE_CORE_KEY, PersistentDataType.STRING));
-        basePickaxeItem.setPickaxeHandleId(pdc.get(PICKAXE_HANDLE_KEY, PersistentDataType.STRING));
-        return basePickaxeItem;
+        //Check parts
+
+        return baseComponentItem;
     }
 
     public BaseCustomItem getBaseItemById(String itemId){
@@ -119,9 +119,9 @@ public class CustomItemRegistryService {
         return itemStack.getItemMeta().getPersistentDataContainer().get(namespacedKey, PersistentDataType.STRING);
     }
 
-    public void saveCustomItem(CustomItem customItem){
-        registryConfigHandler.addSingleEntry((BaseCustomItem) customItem);
-        customItemRegistry.overrideCustomItem(customItem);
+    public void saveCustomItem(BaseCustomItem baseCustomItem){
+        registryConfigHandler.addSingleEntry(baseCustomItem);
+        customItemRegistry.overrideCustomItem(baseCustomItem);
     }
 
     public void removeRegisteredItem(String itemId) {

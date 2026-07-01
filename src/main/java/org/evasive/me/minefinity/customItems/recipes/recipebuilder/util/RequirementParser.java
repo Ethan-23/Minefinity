@@ -1,6 +1,5 @@
 package org.evasive.me.minefinity.customItems.recipes.recipebuilder.util;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.MilestoneRequirement;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.RecipeRequirement;
@@ -17,12 +16,9 @@ public class RequirementParser {
 
         // Milestones
         ConfigurationSection milestoneSection = section.getConfigurationSection("milestones");
-        Bukkit.getConsoleSender().sendMessage("GETTING MILESTONES");
         if (milestoneSection != null) {
-            Bukkit.getConsoleSender().sendMessage("FOUND MILESTONES");
             for (String key : milestoneSection.getKeys(false)) {
                 int level = milestoneSection.getInt(key);
-                Bukkit.getConsoleSender().sendMessage("GOT THIS: " + key);
                 requirements.add(new MilestoneRequirement(key, level));
             }
         }

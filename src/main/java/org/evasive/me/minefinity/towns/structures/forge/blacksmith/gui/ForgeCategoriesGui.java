@@ -10,7 +10,6 @@ import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.core.utils.TimeCalculator;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.RecipeRequirement;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.service.RecipeService;
@@ -66,10 +65,10 @@ public class ForgeCategoriesGui extends BaseGui {
      * Builds the frame of the gui
      */
     private void buildOptions(){
-        inventory.setItem(MATERIAL_CATEGORY_SLOT, buildCategory(ForgeCategories.PICKAXE_TEMPLATES, this.forgeCategory));
-        inventory.setItem(COMPONENT_CATEGORY_SLOT, buildCategory(ForgeCategories.PICKAXE_HEADS, this.forgeCategory));
-        inventory.setItem(PICKAXE_CATEGORY_SLOT, buildCategory(ForgeCategories.PICKAXE_CORES, this.forgeCategory));
-        inventory.setItem(STORAGE_CATEGORY_SLOT, buildCategory(ForgeCategories.PICKAXE_HANDLES, this.forgeCategory));
+        inventory.setItem(MATERIAL_CATEGORY_SLOT, buildCategory(ForgeCategories.PICKAXES, this.forgeCategory));
+        inventory.setItem(COMPONENT_CATEGORY_SLOT, buildCategory(ForgeCategories.TOOL_HEADS, this.forgeCategory));
+        inventory.setItem(PICKAXE_CATEGORY_SLOT, buildCategory(ForgeCategories.TOOL_CORES, this.forgeCategory));
+        inventory.setItem(STORAGE_CATEGORY_SLOT, buildCategory(ForgeCategories.TOOL_HANDLES, this.forgeCategory));
         inventory.setItem(BACK_SLOT, backPage);
         inventory.setItem(EXIT_SLOT, exit);
 
@@ -116,16 +115,17 @@ public class ForgeCategoriesGui extends BaseGui {
                 forgeItem.setDisplayName(TextConversions.formatItemName(itemId) + " <red>(Locked)");
                 forgeItem.setLore(new ArrayList<>());
                 forgeItem.addBlank();
-                forgeItem.addLore("<red>Requirements:");
+                forgeItem.addLore("<gold>Requirements:");
                 for (RecipeRequirement recipeRequirement : currentRecipe.getRequirements()) {
-                    forgeItem.addLore(recipeRequirement.getDisplay());
+                    String color = recipeService.checkRecipeRequirement(player, recipeRequirement) ? "<strikethrough><green>" : "<red>";
+                    forgeItem.addLore(color + recipeRequirement.getDisplay());
                 }
             } else {
                 forgeItem.addBlank().addLore("<bold><gold>Recipe:");
 
                 for (Map.Entry<String, Integer> entry : currentRecipe.getRecipe().entrySet()) {
 
-                    CustomItem customItem = customItemRegistryService.getRegisteredBaseItem(entry.getKey());
+                    BaseCustomItem customItem = customItemRegistryService.getRegisteredBaseItem(entry.getKey());
 
                     if(customItem != null){
 
@@ -133,7 +133,7 @@ public class ForgeCategoriesGui extends BaseGui {
 
                         int amount = entry.getValue();
                         String name = baseCustomItem.getDisplayName();
-                        forgeItem.addLore(TextConversions.buildRarityColor(name, baseCustomItem.getRarity()) + "<white> x" + amount).build();
+                        forgeItem.addLore(TextConversions.setRarityColor(name, baseCustomItem.getRarity()) + "<white> x" + amount).build();
                     }else {
                         forgeItem.addLore("<red>Unknown Item <bold>" +  entry.getKey());
                     }

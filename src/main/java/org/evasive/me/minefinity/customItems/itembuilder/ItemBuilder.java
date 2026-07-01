@@ -2,6 +2,7 @@ package org.evasive.me.minefinity.customItems.itembuilder;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -192,14 +193,14 @@ public class ItemBuilder {
     public ItemBuilder addUnbreakable() {
         ItemMeta meta = getMeta();
         meta.setUnbreakable(true);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         this.itemStack.setItemMeta(meta);
         return this;
     }
 
     public ItemBuilder addGlow() {
         ItemMeta meta = getMeta();
-        meta.addEnchant(Enchantment.UNBREAKING, 1, true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        meta.setEnchantmentGlintOverride(true);
         this.itemStack.setItemMeta(meta);
         return this;
     }
@@ -255,13 +256,17 @@ public class ItemBuilder {
         ItemMeta meta = getMeta();
         meta.setItemModel(material.getKey());
         itemStack.setItemMeta(meta);
-        return addPersistentDataContainer(VISUAL_ID_KEY, PersistentDataType.STRING, material.name());
+        return addPersistentDataContainer(VISUAL_MATERIAL_KEY, PersistentDataType.STRING, material.name());
     }
 
     public ItemBuilder setMaterial(Material material){
         ItemMeta meta = getMeta();
-        this.itemStack = new ItemStack(material);
-        this.itemStack.setItemMeta(meta);
+        ItemStack replacement = new ItemStack(material, this.itemStack.getAmount());
+        ItemMeta migrated = Bukkit.getItemFactory().asMetaFor(meta, material);
+        if (migrated != null) {
+            replacement.setItemMeta(migrated);
+        }
+        this.itemStack = replacement;
         return this;
     }
 
@@ -287,8 +292,7 @@ public class ItemBuilder {
 
     public ItemStack build() {
         ItemMeta meta = getMeta();
-        if (!lore.isEmpty())
-            meta.lore(lore);
+        meta.lore(lore.isEmpty() ? null : lore);
         itemStack.setItemMeta(meta);
         return itemStack.clone();
     }

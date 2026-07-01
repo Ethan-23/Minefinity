@@ -1,0 +1,48 @@
+package org.evasive.me.minefinity.customItems.itembuilder.data.components;
+
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
+import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
+import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
+import org.evasive.me.minefinity.customItems.itembuilder.gui.EditContext;
+
+import java.util.List;
+
+import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemKeys.VALUE_KEY;
+
+public class ValueComponent implements ItemComponent, EditableComponent<Float> {
+
+    private Float value;
+
+    @Override
+    public void load(PersistentDataContainer pdc) {
+        value = pdc.get(VALUE_KEY, PersistentDataType.FLOAT);
+    }
+
+    @Override
+    public void save(ItemBuilder builder) {
+        if (value != null) builder.setValue(value);
+    }
+
+    @Override
+    public void addLore(List<String> lore) {
+        if (value != null && value > 0) {
+            lore.add("<gold>Value: <yellow>" + value);
+        }
+    }
+
+    @Override
+    public void setValue(Float value) {
+        this.value = value;
+    }
+
+    @Override
+    public Float getValue() {
+        return value;
+    }
+
+    @Override
+    public void openEditor(EditContext ctx) {
+        ctx.promptFloat(v -> value = v);
+    }
+}

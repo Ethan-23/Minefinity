@@ -12,7 +12,6 @@ import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.framework.CustomItemStack;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseFuelItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
@@ -86,7 +85,7 @@ public class SmelterGui extends BaseGui {
 
     private void buildStatus() {
         ItemBuilder itemBuilder = new ItemBuilder(Material.BROWN_DYE, TextConversions.parse("<yellow>Idle"));
-        CustomItem currentSmelt = customItemRegistryService.getBaseItemById(smelterService.getCurrentlySmelting(player));
+        BaseCustomItem currentSmelt = customItemRegistryService.getBaseItemById(smelterService.getCurrentlySmelting(player));
 
         if(currentSmelt != null) {
             String outputId = smelterRecipeManager.getRecipe(currentSmelt.getID()).getResult();
@@ -109,7 +108,7 @@ public class SmelterGui extends BaseGui {
         String fuelId = smelterService.getFuelId(player);
         int totalFuel = smelterService.getTotalFuel(player);
 
-        CustomItem customItem = customItemRegistryService.getRegisteredBaseItem(fuelId);
+        BaseCustomItem customItem = customItemRegistryService.getRegisteredBaseItem(fuelId);
 
         if(!(customItem instanceof BaseFuelItem baseFuelItem) || totalFuel == 0){
             ItemBuilder itemBuilder = new ItemBuilder(Material.RED_STAINED_GLASS_PANE, TextConversions.parse("<bold><gold>Fuel Input"));
@@ -127,7 +126,7 @@ public class SmelterGui extends BaseGui {
         for (Map.Entry<String, Integer> entry : smelterService.getOutput(player).entrySet()) {
             if(entry.getValue() == 0) continue;
 
-            CustomItem customItem = customItemRegistryService.getRegisteredBaseItem(entry.getKey());
+            BaseCustomItem customItem = customItemRegistryService.getRegisteredBaseItem(entry.getKey());
 
             itemBuilder.addLore(customItemRegistryService.isRegistered(entry.getKey()) ? TextConversions.buildRarityColor(customItem.getID(), customItem.getBaseItem().getRarity()) + " <gray>x" + entry.getValue() : "<bold><red>Null (" + entry.getKey()+")" + " x" + entry.getValue());
         }
@@ -178,7 +177,7 @@ public class SmelterGui extends BaseGui {
 
         BaseCustomItem replacementFuelItem = customItemRegistryService.getRegisteredBaseItem(cursorItem);
 
-        CustomItem customItem = customItemRegistryService.getRegisteredBaseItem(smelterService.getFuelId(player));
+        BaseCustomItem customItem = customItemRegistryService.getRegisteredBaseItem(smelterService.getFuelId(player));
 
         if(replacementFuelItem == null && !(customItem instanceof BaseFuelItem)) return;
 

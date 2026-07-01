@@ -12,7 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.mining.data.MiningBlockData;
 import org.evasive.me.minefinity.mining.data.MiningDataMap;

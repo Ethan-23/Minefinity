@@ -112,7 +112,7 @@ public class TownModule {
         this.structureService = new StructureService(playerDataService, structureRegistry);
 
         this.recipeUnlockManager = new RecipeUnlockManager(smelterRecipeManager, forgeRecipeManager);
-        this.recipeService = new RecipeService(backpackService, customItemRegistryService, economyService, recipeUnlockManager);
+        this.recipeService = new RecipeService(playerDataService, backpackService, customItemRegistryService, economyService, recipeUnlockManager);
 
         this.backpackService = backpackService;
         this.itemPickupService = itemPickupService;

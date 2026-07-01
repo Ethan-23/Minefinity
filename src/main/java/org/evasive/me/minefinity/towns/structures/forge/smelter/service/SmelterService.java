@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.framework.CustomItemStack;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseFuelItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.components.FuelAmountComponent;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.playerdata.model.PlayerData;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
@@ -71,7 +72,7 @@ public class SmelterService {
         setLastUpdated(player);
         setFuelTier(player, fuelId);
         if(getFuelEfficiency(player) <= 0){
-            setFuelEfficiency(player, ((BaseFuelItem)customItemRegistryService.getBaseItemById(fuelId).getBaseItem()).getFuelAmount());
+            setFuelEfficiency(player, ((BaseFuelItem)customItemRegistryService.getBaseItemById(fuelId).getBaseItem()).getComponent(FuelAmountComponent.class).getValue());
             amount--;
         }
         setTotalFuel(player, amount);
@@ -188,7 +189,7 @@ public class SmelterService {
 
         if(remainingFuel <= 0){
             setTotalFuel(player, getTotalFuel(player) - 1);
-            setFuelEfficiency(player, ((BaseFuelItem)customItemRegistryService.getBaseItemById(getFuelId(player))).getFuelAmount());
+            setFuelEfficiency(player, ((BaseFuelItem)customItemRegistryService.getBaseItemById(getFuelId(player))).getComponent(FuelAmountComponent.class).getValue());
             remainingFuel = getFuelEfficiency(player);
         }
         return remainingFuel;
@@ -228,7 +229,7 @@ public class SmelterService {
         String fuelId = getFuelId(player);
         if(getTotalFuel(player) == 0 && getFuelEfficiency(player) == 0 || fuelId == null) return;
 
-        int totalFuelValue = getFuelEfficiency(player) + getTotalFuel(player) * ((BaseFuelItem)customItemRegistryService.getBaseItemById(fuelId).getBaseItem()).getFuelAmount();
+        int totalFuelValue = getFuelEfficiency(player) + getTotalFuel(player) * ((BaseFuelItem)customItemRegistryService.getBaseItemById(fuelId).getBaseItem()).getComponent(FuelAmountComponent.class).getValue();
 
         for(int i = 0; i < getInventory(player).length; i++){
 
@@ -273,8 +274,8 @@ public class SmelterService {
 
         BaseFuelItem baseFuelItem = (BaseFuelItem) customItemRegistryService.getBaseItemById(fuelId);
 
-        setTotalFuel(player, totalFuelValue / baseFuelItem.getFuelAmount());
-        setFuelEfficiency(player, totalFuelValue % baseFuelItem.getFuelAmount());
+        setTotalFuel(player, totalFuelValue / baseFuelItem.getComponent(FuelAmountComponent.class).getValue());
+        setFuelEfficiency(player, totalFuelValue % baseFuelItem.getComponent(FuelAmountComponent.class).getValue());
         player.sendMessage(TextConversions.parse("<gold>Smelter has made progress while you were offline!"));
     }
 

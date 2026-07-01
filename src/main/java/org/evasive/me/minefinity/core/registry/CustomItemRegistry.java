@@ -1,6 +1,6 @@
 package org.evasive.me.minefinity.core.registry;
 
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,10 +9,10 @@ import java.util.Set;
 
 public class CustomItemRegistry {
 
-    private final Map<String, CustomItem> ITEMS_BY_ID = new HashMap<>();
+    private final Map<String, BaseCustomItem> ITEMS_BY_ID = new HashMap<>();
 
     public CustomItemRegistry() {
-        for (CustomItem item : getAllItems()) {
+        for (BaseCustomItem item : getAllItems()) {
             item.getBaseItem().buildItem();
         }
     }
@@ -21,7 +21,7 @@ public class CustomItemRegistry {
      * Adds new custom item to the ITEMS_BY_ID map.
      * @param item item being added to the map.
      */
-    public void registerCustomItem(CustomItem item) {
+    public void registerCustomItem(BaseCustomItem item) {
         if (ITEMS_BY_ID.containsKey(item.getID())) {
             throw new IllegalArgumentException("Item with ID '" + item.getID() + "' is already registered!");
         }
@@ -31,10 +31,10 @@ public class CustomItemRegistry {
 
     /**
      * Adds custom item to the ITEMS_BY_ID map.
-     * @param item item being added to the map.
+     * @param baseCustomItem item being added to the map.
      */
-    public void overrideCustomItem(CustomItem item) {
-        ITEMS_BY_ID.put(item.getID(), item);
+    public void overrideCustomItem(BaseCustomItem baseCustomItem) {
+        ITEMS_BY_ID.put(baseCustomItem.getID(), baseCustomItem);
     }
 
     /**
@@ -42,7 +42,7 @@ public class CustomItemRegistry {
      * @param id item id string.
      * @return returns the CustomItem type of item id.
      */
-    public CustomItem getByID(String id) {
+    public BaseCustomItem getByID(String id) {
         return ITEMS_BY_ID.get(id);
     }
 
@@ -58,7 +58,7 @@ public class CustomItemRegistry {
      * Gets a collection of all items.
      * @return Collection of all CustomItem types.
      */
-    public Collection<CustomItem> getAllItems() {
+    public Collection<BaseCustomItem> getAllItems() {
         return ITEMS_BY_ID.values();
     }
 
@@ -76,7 +76,7 @@ public class CustomItemRegistry {
      * @param item Existing custom item type.
      * @return True if registered. False if not.
      */
-    public boolean isRegistered(CustomItem item) {
+    public boolean isRegistered(BaseCustomItem item) {
         return ITEMS_BY_ID.containsKey(item.getID());
     }
 

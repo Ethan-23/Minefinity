@@ -81,11 +81,15 @@ public class StructureRegistryConfigManager extends BaseConfig {
 
                             float cost = (float) levelSection.getDouble("cost");
 
-                            BaseItemRecipe baseItemRecipe = new BaseItemRecipe(recipeMap, cost, RequirementParser.parse(levelSection));
+                            ConfigurationSection requirementSection = levelSection.getConfigurationSection(".requirements");
+
+                            BaseItemRecipe baseItemRecipe = new BaseItemRecipe(recipeMap, cost, RequirementParser.parse(requirementSection));
                             recipes.add(baseItemRecipe);
                         }
 
-                        ConfigurationSection milestoneSection = levelSection.getConfigurationSection(".milestones");
+                        /*
+                        if(requirementSection == null) continue;
+                        ConfigurationSection milestoneSection = requirementSection.getConfigurationSection(".milestones");
 
                         if(milestoneSection != null){
                             Map<String, Integer> milestoneMap = new LinkedHashMap<>();
@@ -97,6 +101,8 @@ public class StructureRegistryConfigManager extends BaseConfig {
 
                             milestoneRequirements.add(milestoneMap);
                         }
+
+                         */
                     }
                 }
 

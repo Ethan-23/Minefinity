@@ -4,10 +4,10 @@ import org.bukkit.Material;
 import org.evasive.me.minefinity.customItems.itembuilder.ItemBuilder;
 
 public enum ForgeCategories {
-    PICKAXE_TEMPLATES(Material.IRON_PICKAXE, "Pickaxe Templates"),
-    PICKAXE_HEADS(Material.IRON_INGOT, "Pickaxe Heads"),
-    PICKAXE_CORES(Material.NETHER_STAR, "Pickaxe Cores"),
-    PICKAXE_HANDLES(Material.STICK, "Pickaxe Handles");
+    PICKAXES(Material.IRON_PICKAXE, "Pickaxe Templates"),
+    TOOL_HEADS(Material.IRON_INGOT, "Tool Heads"),
+    TOOL_CORES(Material.NETHER_STAR, "Tool Cores"),
+    TOOL_HANDLES(Material.STICK, "Tool Handles");
 
     private final Material material;
     private final String name;

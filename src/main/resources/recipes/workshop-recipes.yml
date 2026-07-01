@@ -8,7 +8,7 @@ recipes:
       OAK_PLANK: 5
   MOSSY_TIMBER:
     workshop-mode: CARPENTRY
-    workshop-tool-tier: BRONZE
+    workshop-tool-tier: BRONZE_INGOT
     unlock-level: 2
     durability-usage: 2
     recipe:
@@ -20,10 +20,10 @@ recipes:
     unlock-level: 1
     durability-usage: 1
     recipe:
-      ROCKS: 5
+      ROCK: 5
   TOUGH_STONE:
     workshop-mode: STONEWORKING
-    workshop-tool-tier: BRONZE
+    workshop-tool-tier: BRONZE_INGOT
     unlock-level: 2
     durability-usage: 2
     recipe:

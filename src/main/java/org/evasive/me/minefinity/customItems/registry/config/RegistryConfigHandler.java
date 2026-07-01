@@ -2,12 +2,14 @@ package org.evasive.me.minefinity.customItems.registry.config;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
+import org.bukkit.inventory.EquipmentSlot;
+import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.*;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePartItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BaseToolItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.components.*;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 public class RegistryConfigHandler {
 
@@ -17,65 +19,74 @@ public class RegistryConfigHandler {
         this.itemRegistryConfigManager = itemRegistryConfigManager;
     }
 
-    public void saveEntireRegistry(Collection<CustomItem> customItems) {
-        customItems.forEach(item -> addSingleEntry((BaseCustomItem) item));
+    public void saveEntireRegistry(Collection<BaseCustomItem> customItems) {
+        customItems.forEach(this::addSingleEntry);
         itemRegistryConfigManager.saveItemRegistryConfig();
     }
 
     public void addSingleEntry(BaseCustomItem item){
-        ConfigurationSection individualItemSection = itemRegistryConfigManager.getItemConfigSection().createSection(item.getID());
+        ConfigurationSection section = itemRegistryConfigManager.getItemConfigSection().createSection(item.getID());
 
-        CustomItemType customItemType = item.getCustomItemType();
+        section.set("material", item.getMaterial().name());
+        section.set("display-name", item.getDisplayName());
+        section.set("custom-item-type", item.getCustomItemType().name());
+        section.set("rarity", item.getRarity().name());
 
-        individualItemSection.set("material", item.getMaterial().name());
-        individualItemSection.set("display-name", item.getDisplayName());
-        individualItemSection.set("custom-item-type", customItemType.name());
-        individualItemSection.set("rarity", item.getRarity().name());
-        individualItemSection.set(
-                "equipment-slot",
-                item.getEquipmentSlots().stream()
-                        .map(Enum::name)
-                        .toList()
-        );
-
-        individualItemSection.set("stats", item.getStatsMap());
-
-        Optional<Float> value = item.getValue();
-        value.ifPresent(aFloat -> individualItemSection.set("sell-value", aFloat));
-        Optional<Material> visualMaterial = item.getVisualMaterial();
-        visualMaterial.ifPresent(aMaterial -> individualItemSection.set("visual-material", aMaterial.name()));
-        Optional<String> flavorText = item.getFlavorText();
-        flavorText.ifPresent(aFlavor -> individualItemSection.set("flavor-text", aFlavor));
-        Optional<Boolean> glowing = item.isGlowing();
-        glowing.ifPresent(aGlowing -> individualItemSection.set("glowing", aGlowing));
-        Optional<Boolean> soulbound = item.isSoulbound();
-        soulbound.ifPresent(aSoulbound -> individualItemSection.set("soulbound", aSoulbound));
-        Optional<Integer> stackSize = item.getStackSize();
-        stackSize.ifPresent(aStackSize -> individualItemSection.set("stack-size", aStackSize));
-
-
-
-        switch (item) {
-            case BasePickaxeItem basePickaxeItem -> {
-                individualItemSection.set("pickaxe-head", basePickaxeItem.getPickaxeHeadId());
-                individualItemSection.set("pickaxe-core", basePickaxeItem.getPickaxeCoreId());
-                individualItemSection.set("pickaxe-handle", basePickaxeItem.getPickaxeHandleId());
-            }
-            case BasePickaxeComponent basePickaxeComponent -> {
-                individualItemSection.set("pickaxe-abilities", basePickaxeComponent.getPickaxeAbilityList());
-            }
-            case BaseFuelItem baseFuelItem -> {
-                individualItemSection.set("fuel-amount", baseFuelItem.getFuelAmount());
-            }
-            case BaseBackpackItem baseBackpackItem -> {
-                individualItemSection.set("storage-amount", baseBackpackItem.getStoredItemAmount());
-                individualItemSection.set("storage-list", baseBackpackItem.getStoredItemIdList());
-            }
-            default -> {
-            }
-        }
+        writeUniversalComponents(section, item);
+        writeTypeSpecificComponents(section, item);
 
         itemRegistryConfigManager.saveItemRegistryConfig();
+    }
+
+    private void writeUniversalComponents(ConfigurationSection section, BaseCustomItem item) {
+        Map<String, Integer> stats = item.getComponent(StatsComponent.class).getValue();
+        if (!stats.isEmpty()) {
+            ConfigurationSection statsSection = section.createSection("stats");
+            stats.forEach(statsSection::set);
+        }
+
+        Set<EquipmentSlot> equipmentSlots = item.getComponent(EquipmentSlotComponent.class).getValue();
+        if (!equipmentSlots.isEmpty()) {
+            section.set("equipment-slot", equipmentSlots.stream().map(Enum::name).toList());
+        }
+
+        Float sellValue = item.getComponent(ValueComponent.class).getValue();
+        if (sellValue != null) section.set("sell-value", sellValue);
+
+        Material visualMaterial = item.getComponent(VisualMaterialComponent.class).getValue();
+        if (visualMaterial != null) section.set("visual-material", visualMaterial.name());
+
+        String flavorText = item.getComponent(FlavorTextComponent.class).getValue();
+        if (flavorText != null) section.set("flavor-text", flavorText);
+
+        if (Boolean.TRUE.equals(item.getComponent(GlowComponent.class).getValue())) section.set("glowing", true);
+        if (Boolean.TRUE.equals(item.getComponent(SoulboundComponent.class).getValue())) section.set("soulbound", true);
+
+        Integer stackSize = item.getComponent(StackSizeComponent.class).getValue();
+        if (stackSize != null) section.set("stack-size", stackSize);
+    }
+
+    private void writeTypeSpecificComponents(ConfigurationSection section, BaseCustomItem item) {
+        if (item instanceof BaseToolItem tool) {
+            Map<PartSlots, String> parts = tool.partComponent().getValue();
+            if (!parts.isEmpty()) {
+                ConfigurationSection partsSection = section.createSection("components");
+                parts.forEach((slot, partId) -> partsSection.set(slot.name(), partId));
+            }
+        } else if (item instanceof BasePartItem part) {
+            List<String> abilities = part.abilityComponent().getValue();
+            if (!abilities.isEmpty()) section.set("pickaxe-abilities", abilities);
+
+            Set<PartSlots> partSlots = part.slotComponent().getValue();
+            if (!partSlots.isEmpty()) section.set("component-slot", partSlots.stream().map(Enum::name).toList());
+        } else if (item instanceof BaseFuelItem fuel) {
+            section.set("fuel-amount", fuel.getComponent(FuelAmountComponent.class).getValue());
+        } else if (item instanceof BaseBackpackItem backpack) {
+            section.set("storage-amount", backpack.storageAmountComponent().getValue());
+
+            List<String> storageList = backpack.storageListComponent().getValue();
+            if (!storageList.isEmpty()) section.set("storage-list", storageList);
+        }
     }
 
     public void removeSingleEntry(BaseCustomItem item){

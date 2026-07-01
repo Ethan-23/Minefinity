@@ -48,7 +48,7 @@ public class ForgeHandler {
 
         if(!forgeService.hasForgeItem(player, selectedSlot)) {
             forgeService.setSelectedForge(player, selectedSlot);
-            new ForgeCategoriesGui(player, customItemRegistryService, ForgeCategories.PICKAXE_TEMPLATES, forgeRecipeManager, forgeService, recipeService).open();
+            new ForgeCategoriesGui(player, customItemRegistryService, ForgeCategories.PICKAXES, forgeRecipeManager, forgeService, recipeService).open();
         }
         if(forgeService.hasForgeItem(player, selectedSlot) && forgeService.getForgeFinishTime(player, selectedSlot) < Instant.now().toEpochMilli()){
             player.getInventory().addItem(forgeService.getForgeItemStack(player, selectedSlot));

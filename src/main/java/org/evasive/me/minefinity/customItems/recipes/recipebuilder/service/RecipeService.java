@@ -7,7 +7,10 @@ import org.evasive.me.minefinity.core.economy.EconomyService;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
 import org.evasive.me.minefinity.customItems.recipes.RecipeUnlockManager;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.BaseItemRecipe;
+import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.RecipeRequirement;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
+import org.evasive.me.minefinity.playerdata.model.PlayerData;
+import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.recipes.BaseForgeRecipe;
 
 import java.util.HashMap;
@@ -16,16 +19,22 @@ import java.util.UUID;
 
 public class RecipeService {
 
+    private final PlayerDataService playerDataService;
     private final BackpackService backpackService;
     private final CustomItemRegistryService customItemRegistryService;
     private final EconomyService economyService;
     private final RecipeUnlockManager recipeUnlockManager;
 
-    public RecipeService(BackpackService backpackService, CustomItemRegistryService customItemRegistryService, EconomyService economyService, RecipeUnlockManager recipeUnlockManager) {
+    public RecipeService(PlayerDataService playerDataService, BackpackService backpackService, CustomItemRegistryService customItemRegistryService, EconomyService economyService, RecipeUnlockManager recipeUnlockManager) {
+        this.playerDataService = playerDataService;
         this.backpackService = backpackService;
         this.customItemRegistryService = customItemRegistryService;
         this.economyService = economyService;
         this.recipeUnlockManager = recipeUnlockManager;
+    }
+
+    private PlayerData getPlayerData(Player player) {
+        return playerDataService.getPlayerData(player.getUniqueId());
     }
 
     public boolean tryPurchaseItem(Player player, BaseItemRecipe recipe){
@@ -123,4 +132,7 @@ public class RecipeService {
         return recipeUnlockManager.hasRecipeUnlocked(uuid, recipeId);
     }
 
+    public boolean checkRecipeRequirement(Player player, RecipeRequirement recipeRequirement) {
+        return recipeRequirement.isMet(getPlayerData(player));
+    }
 }

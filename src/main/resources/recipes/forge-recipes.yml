@@ -1,41 +1,52 @@
 recipes:
-  WOODEN_TEMPLATE:
-    forge-category: PICKAXE_TEMPLATES
+  WOODEN_PICKAXE:
+    forge-category: PICKAXES
     craft-time: 30
     recipe:
       OAK_PLANK: 5
-  STONE_TEMPLATE:
-    forge-category: PICKAXE_TEMPLATES
+    requirements:
+      milestones:
+        COBBLESTONE: 3
+  STONE_PICKAXE:
+    forge-category: PICKAXES
     craft-time: 30
     recipe:
       STONE: 5
-  COPPER_TEMPLATE:
-    forge-category: PICKAXE_TEMPLATES
+    requirements:
+      milestones:
+        COPPER_ORE: 3
+        IRON_ORE: 3
+  COPPER_PICKAXE:
+    forge-category: PICKAXES
     craft-time: 30
     recipe:
       COPPER_INGOT: 5
+    requirements:
+      milestones:
+        COBBLESTONE: 5
+        CALCITE: 5
   FLINT_HEAD:
-    forge-category: PICKAXE_HEADS
+    forge-category: TOOL_HEADS
     craft-time: 30
     recipe:
       FLINT: 5
   BRICK_CORE:
-    forge-category: PICKAXE_CORES
+    forge-category: TOOL_CORES
     craft-time: 30
     recipe:
       BRICK: 5
   CLAY_HANDLE:
-    forge-category: PICKAXE_HANDLES
+    forge-category: TOOL_HANDLES
     craft-time: 30
     recipe:
-      CLAY: 5
+      CLAY_BALL: 5
   ANDESITE_CORE:
-    forge-category: PICKAXE_CORES
+    forge-category: TOOL_CORES
     craft-time: 30
     recipe:
       ANDESITE: 5
   ROCK_HANDLE:
-    forge-category: PICKAXE_HANDLES
+    forge-category: TOOL_HANDLES
     craft-time: 30
     recipe:
       ROCK: 5
