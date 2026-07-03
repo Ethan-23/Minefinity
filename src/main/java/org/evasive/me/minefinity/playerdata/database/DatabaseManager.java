@@ -6,17 +6,9 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class PlayersDatabaseManager {
+public class DatabaseManager {
 
-    private static PlayersDatabaseManager instance;
     private HikariDataSource dataSource;
-
-    private PlayersDatabaseManager() {}
-
-    public static PlayersDatabaseManager getInstance() {
-        if (instance == null) instance = new PlayersDatabaseManager();
-        return instance;
-    }
 
     public void connect(String host, int port, String database, String username, String password) {
         HikariConfig config = new HikariConfig();

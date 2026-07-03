@@ -1,7 +1,7 @@
 package org.evasive.me.minefinity.playerdata.repository;
 
 import org.bukkit.Bukkit;
-import org.evasive.me.minefinity.playerdata.database.RankDatabaseManager;
+import org.evasive.me.minefinity.playerdata.database.DatabaseManager;
 import org.evasive.me.minefinity.playerdata.model.PlayerRanks;
 
 import java.sql.Connection;
@@ -13,10 +13,10 @@ import java.util.UUID;
 
 public class PlayerRankRepository {
 
-    private final RankDatabaseManager dbManager;
+    private final DatabaseManager dbManager;
 
-    public PlayerRankRepository() {
-        this.dbManager = RankDatabaseManager.getInstance();
+    public PlayerRankRepository(DatabaseManager databaseManager) {
+        this.dbManager = databaseManager;
     }
 
     /**

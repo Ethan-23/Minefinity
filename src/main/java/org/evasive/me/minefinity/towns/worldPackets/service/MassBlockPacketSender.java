@@ -44,14 +44,12 @@ public class MassBlockPacketSender {
                 "FastAsyncWorldEdit/schematics/" + schematicName + ".schem");
 
         if(!file.exists()){
-            Bukkit.getConsoleSender().sendMessage("Schematic not found!");
             return null;
         }
 
         ClipboardFormat format = ClipboardFormats.findByFile(file);
 
         if(format == null){
-            Bukkit.getConsoleSender().sendMessage("NO FILE FOUND");
             return null;
         }
 

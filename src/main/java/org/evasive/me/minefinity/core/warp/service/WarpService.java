@@ -2,7 +2,7 @@ package org.evasive.me.minefinity.core.warp.service;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
-import org.evasive.me.minefinity.Minefinity;
+import org.evasive.me.minefinity.core.config.LocationConfig;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,17 +11,20 @@ import java.util.Set;
 public class WarpService {
 
     Map<String, Location> warps = new HashMap<>();;
+    private final LocationConfig locationConfig;
     private final ConfigurationSection warpConfiguration;
 
-    public WarpService() {
-        warpConfiguration = Minefinity.getCore().getConfig().getConfigurationSection("warps");
+    public WarpService(LocationConfig locationConfig) {
+        this.locationConfig = locationConfig;
 
-        if(warpConfiguration == null){
-            Minefinity.getCore().getConfig().createSection("warps");
-            Minefinity.getCore().saveConfig();
-        }else{
-            loadWarpLocation();
+        ConfigurationSection section = locationConfig.getConfig().getConfigurationSection("warps");
+        if (section == null) {
+            section = locationConfig.getConfig().createSection("warps");
+            locationConfig.save();
         }
+        this.warpConfiguration = section;
+
+        loadWarpLocation();
     }
 
     public void addWarpLocation(String warpName, Location location){
@@ -47,11 +50,15 @@ public class WarpService {
     }
 
     public void saveWarpLocations(){
-        warpConfiguration.set("warps", null);
+        for (String key : warpConfiguration.getKeys(false)) {
+            warpConfiguration.set(key, null);
+        }
+
         for(Map.Entry<String, Location> entry : warps.entrySet()){
             warpConfiguration.set(entry.getKey(), entry.getValue());
         }
-        Minefinity.getCore().saveConfig();
+
+        locationConfig.save();
     }
 
     public Set<String> getWarpNames(){

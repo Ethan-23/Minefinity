@@ -1,12 +1,12 @@
 package org.evasive.me.minefinity.playerdata;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.playerdata.commands.StatCommand;
 import org.evasive.me.minefinity.playerdata.commands.rank.MineRank;
-import org.evasive.me.minefinity.playerdata.database.PlayersDatabaseManager;
-import org.evasive.me.minefinity.playerdata.database.RankDatabaseManager;
+import org.evasive.me.minefinity.playerdata.database.DatabaseManager;
 import org.evasive.me.minefinity.playerdata.listener.PlayerChatListener;
 import org.evasive.me.minefinity.playerdata.listener.PlayerJoinListener;
 import org.evasive.me.minefinity.playerdata.listener.PlayerQuitListener;
@@ -23,10 +23,12 @@ import org.evasive.me.minefinity.playerdata.stats.events.StatsListeners;
 import org.evasive.me.minefinity.playerdata.stats.StatContributorRegistry;
 import org.evasive.me.minefinity.playerdata.stats.service.StatsService;
 
+import static org.bukkit.Bukkit.getLogger;
+
 public class PlayerDataModule {
 
-    private final PlayersDatabaseManager playerDb;
-    private final RankDatabaseManager rankDb;
+    private final DatabaseManager playerDb;
+    private final DatabaseManager rankDb;
 
     private final PlayerDataComponentRegistry componentRegistry;
     private final StatContributorRegistry statContributorRegistry;
@@ -41,12 +43,12 @@ public class PlayerDataModule {
 
     public PlayerDataModule() {
 
-        playerDb = PlayersDatabaseManager.getInstance();
-        rankDb = RankDatabaseManager.getInstance();
+        playerDb = new DatabaseManager();
+        rankDb = new DatabaseManager();
 
         componentRegistry = new PlayerDataComponentRegistry();
         PlayerDataRepository playerRepo = new PlayerDataRepository(playerDb, componentRegistry);
-        PlayerRankRepository rankRepo = new PlayerRankRepository();
+        PlayerRankRepository rankRepo = new PlayerRankRepository(rankDb);
 
 
         permissionConfigManager = new PermissionConfigManager();
@@ -64,9 +66,14 @@ public class PlayerDataModule {
 
         permissionLoader.loadRanks();
 
+        ConfigurationSection databases = plugin.getConfig().getConfigurationSection("databases");
+
+        if(databases == null)
+            return;
+
         // Connect databases
-        playerDb.connect("127.0.0.1", 3306, "minefinity", "admin", "jdf7tA@tf");
-        rankDb.connect("127.0.0.1", 3306, "minefinity_ranks", "admin", "jdf7tA@tf");
+        connectDatabase(playerDb, databases.getConfigurationSection("players"), "players");
+        connectDatabase(rankDb, databases.getConfigurationSection("ranks"), "ranks");
 
         // Register listeners
         PluginManager pm = plugin.getServer().getPluginManager();
@@ -87,6 +94,7 @@ public class PlayerDataModule {
         new MineRank(rankService);
         new StatCommand(statsService);
     }
+
 
     public void disable() {
 
@@ -117,6 +125,34 @@ public class PlayerDataModule {
 
     public StatContributorRegistry getStatContributorRegistry() {
         return statContributorRegistry;
+    }
+
+    private void connectDatabase(DatabaseManager databaseManager, ConfigurationSection databaseInfo, String label) {
+        if (databaseManager == null) return;
+        if (databaseInfo == null) {
+            Minefinity.SendLogMessage("No config section for the '" + label + "' database. Skipping connection.");
+            return;
+        }
+
+        String host = databaseInfo.getString("host");
+        String database = databaseInfo.getString("database");
+        String username = databaseInfo.getString("username");
+        String password = databaseInfo.getString("password");
+
+        if (host == null || database == null || username == null || password == null) {
+            Minefinity.SendLogMessage("Incomplete '" + label + "' database config (host/database/username/password). Skipping connection.");
+            return;
+        }
+
+        int port = databaseInfo.getInt("port", 3306); // default instead of silent 0
+
+        try {
+            databaseManager.connect(host, port, database, username, password);
+            Minefinity.SendLogMessage("Connected to '" + label + "' database (" + database + ").");
+        } catch (Exception e) {
+            Minefinity.getCore().getLogger().log(java.util.logging.Level.SEVERE,
+                    "Failed to connect to '" + label + "' database (" + database + ")", e);
+        }
     }
 
 }

@@ -57,7 +57,6 @@ public class ScoreboardService {
         int playerBlockTier = playerDataService.getPlayerData(player.getUniqueId()).getUnlockedBlockTier(worldName);
 
         String blockTierRoman = intToRoman(playerBlockTier + 1);
-        //Bukkit.getConsoleSender().sendMessage();
         BaseBlock baseBlock = blockTypeRegistry.getBlock(blockTypeRegistry.getBlockList(worldName).get(playerBlockTier));
 
         // Here you can add other main stats (e.g., player currency, login time, etc.)

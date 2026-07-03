@@ -2,25 +2,27 @@ package org.evasive.me.minefinity.core.spawn.service;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.evasive.me.minefinity.Minefinity;
+import org.evasive.me.minefinity.core.config.LocationConfig;
 
 import java.util.Objects;
 
 public class SpawnService {
 
     private Location spawnLocation;
+    private final LocationConfig locationConfig;
 
-    public SpawnService() {
-        spawnLocation = Minefinity.getCore().getConfig().getLocation("spawn");
+    public SpawnService(LocationConfig locationConfig) {
+        this.locationConfig = locationConfig;
+
+        this.spawnLocation = loadSpawnLocation();
 
         if(spawnLocation == null){
 
             Location location = Objects.requireNonNull(Bukkit.getWorld("world")).getSpawnLocation();
             this.spawnLocation = location;
             saveNewSpawnLocation(location);
-        }else{
-            this.spawnLocation = loadSpawnLocation();
         }
+
     }
 
     public Location getSpawnLocation() {
@@ -33,12 +35,12 @@ public class SpawnService {
     }
 
     private void saveNewSpawnLocation(Location location){
-        Minefinity.getCore().getConfig().set("spawn", location);
-        Minefinity.getCore().saveConfig();
+        locationConfig.getConfig().set("spawn", location);
+        locationConfig.save();
     }
 
     private Location loadSpawnLocation(){
-        return Minefinity.getCore().getConfig().getLocation("spawn");
+        return locationConfig.getConfig().getLocation("spawn");
     }
 
 }

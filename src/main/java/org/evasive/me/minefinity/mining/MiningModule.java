@@ -1,5 +1,6 @@
 package org.evasive.me.minefinity.mining;
 
+import org.bukkit.plugin.java.JavaPlugin;
 import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
 import org.evasive.me.minefinity.customItems.framework.ItemPickupService;
 import org.evasive.me.minefinity.customItems.itembuilder.resolvers.PickaxeResolver;
@@ -56,7 +57,7 @@ public class MiningModule {
         statContributorRegistry.register(new MilestoneStatContributor(playerDataService));
     }
 
-    public void enable(){
+    public void enable(JavaPlugin plugin){
         com.github.retrooper.packetevents.PacketEvents.getAPI().getEventManager().registerListener(new SwingPacketEvents(customItemRegistryService, selectedBlockMap, miningDataMap, animationIDs, blockProgressHandler));
         com.github.retrooper.packetevents.PacketEvents.getAPI().getEventManager().registerListener(new BlockPacketEvents());
     }

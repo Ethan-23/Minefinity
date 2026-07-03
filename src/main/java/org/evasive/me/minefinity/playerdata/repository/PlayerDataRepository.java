@@ -5,7 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import org.evasive.me.minefinity.playerdata.component.ComponentType;
 import org.evasive.me.minefinity.playerdata.component.PlayerDataComponent;
 import org.evasive.me.minefinity.playerdata.component.PlayerDataComponentRegistry;
-import org.evasive.me.minefinity.playerdata.database.PlayersDatabaseManager;
+import org.evasive.me.minefinity.playerdata.database.DatabaseManager;
 import org.evasive.me.minefinity.playerdata.model.PlayerData;
 
 import java.lang.reflect.Type;
@@ -29,11 +29,11 @@ public class PlayerDataRepository {
     private static final List<String> SCALAR_COLUMNS = List.of(
             "uuid", "username", "balance", "unlocked_block_tiers", "selected_block_tiers", "backpack_storage");
 
-    private final PlayersDatabaseManager dbManager;
+    private final DatabaseManager dbManager;
     private final PlayerDataComponentRegistry componentRegistry;
     private final Gson gson = new Gson();
 
-    public PlayerDataRepository(PlayersDatabaseManager dbManager, PlayerDataComponentRegistry componentRegistry) {
+    public PlayerDataRepository(DatabaseManager dbManager, PlayerDataComponentRegistry componentRegistry) {
         this.dbManager = dbManager;
         this.componentRegistry = componentRegistry;
     }

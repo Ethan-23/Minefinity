@@ -40,7 +40,7 @@ public final class Minefinity extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        worldGuardCheck();
+        if(!hasWorldGuard()) return;
         com.github.retrooper.packetevents.PacketEvents.getAPI().init();
 
         saveDefaultConfig();
@@ -72,7 +72,7 @@ public final class Minefinity extends JavaPlugin {
                 playerModule.getStatContributorRegistry()
         );
 
-        miningModule.enable();
+        miningModule.enable(this);
 
         townModule = new TownModule(
                 playerDataService,
@@ -91,9 +91,11 @@ public final class Minefinity extends JavaPlugin {
         townModule.enable(this);
     }
 
-    private void worldGuardCheck(){
-        if(Bukkit.getPluginManager().getPlugin("WorldGuard") != null) return;
+    private boolean hasWorldGuard(){
+        if(Bukkit.getPluginManager().getPlugin("WorldGuard") != null)
+            return true;
         getServer().getPluginManager().disablePlugin(this);
+        return false;
     }
 
     public static Minefinity getCore() {
@@ -112,5 +114,9 @@ public final class Minefinity extends JavaPlugin {
 
     public static void SendConsoleMessage(String message){
         Bukkit.getConsoleSender().sendMessage(TextConversions.parse("[Minefinity] " + message));
+    }
+
+    public static void SendLogMessage(String message){
+        getCore().getLogger().severe(message);
     }
 }

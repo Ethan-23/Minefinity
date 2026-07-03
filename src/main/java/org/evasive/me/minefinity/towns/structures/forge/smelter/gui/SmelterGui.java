@@ -159,7 +159,6 @@ public class SmelterGui extends BaseGui {
 
         if(INPUT_SLOTS.contains(slot)){
             if(!cursorItem.isEmpty() && customItemRegistryService.getRegisteredBaseItem(cursorItem) == null){
-                Bukkit.getConsoleSender().sendMessage("SOMTEHING");
                 return;
             }
 

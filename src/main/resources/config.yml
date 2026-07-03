@@ -1,0 +1,13 @@
+databases:
+  players:
+    host: 127.0.0.1
+    port: 3306
+    database: minefinity
+    username: minefinity_player
+    password: changeme
+  ranks:
+    host: 127.0.0.1
+    port: 3306
+    database: minefinity_ranks
+    username: minefinity_rank
+    password: changeme

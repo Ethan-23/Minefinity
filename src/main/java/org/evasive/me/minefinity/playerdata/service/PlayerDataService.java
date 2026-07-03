@@ -33,12 +33,9 @@ public class PlayerDataService {
     public void loadPlayerAsync(UUID uuid, Consumer<Boolean> onComplete) {
         // If already loaded, just run the callback
         if (playerCache.containsKey(uuid)) {
-            Bukkit.getConsoleSender().sendMessage("PLAYER ALREADY EXISTS");
             if (onComplete != null) onComplete.accept(false);
             return;
         }
-
-        Bukkit.getConsoleSender().sendMessage("STARTING LOAD");
 
         CompletableFuture
                 .supplyAsync(() -> repository.loadPlayer(uuid))
@@ -49,11 +46,9 @@ public class PlayerDataService {
                     PlayerData data = optionalData.orElseGet(() -> {
                         PlayerData newData = new PlayerData(uuid, componentRegistry);
                         repository.savePlayer(newData);
-                        Bukkit.getConsoleSender().sendMessage("NEW DATA");
                         return newData;
                     });
 
-                    Bukkit.getConsoleSender().sendMessage("ADDED " + uuid);
                     playerCache.put(uuid, data);
 
                     if (onComplete != null) {

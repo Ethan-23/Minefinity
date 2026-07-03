@@ -21,7 +21,6 @@ public class LunarNametag {
 
         NametagModule nametagModule = Apollo.getModuleManager().getModule(NametagModule.class);
         if (nametagModule == null) {
-            Bukkit.getConsoleSender().sendMessage("NameTag module not loaded");
             return;
         }
 

@@ -1,6 +1,5 @@
 package org.evasive.me.minefinity.playerdata.listener;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -28,7 +27,6 @@ public class PlayerJoinListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        Bukkit.getConsoleSender().sendMessage("LOADING PLAYERS");
         playerDataService.loadPlayerAsync(player.getUniqueId(), firstJoin -> {
 
             if (firstJoin) {
