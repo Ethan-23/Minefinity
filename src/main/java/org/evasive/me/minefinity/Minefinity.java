@@ -15,7 +15,7 @@ import org.evasive.me.minefinity.towns.TownModule;
 
 public final class Minefinity extends JavaPlugin {
 
-    public static Minefinity core;
+    private static Minefinity instance;
 
     private PlayerDataModule playerModule;
     private PlayerDataService playerDataService;
@@ -31,7 +31,7 @@ public final class Minefinity extends JavaPlugin {
 
     @Override
     public void onLoad(){
-        core = this;
+        instance = this;
         //Needs to be called before any other packet events
         com.github.retrooper.packetevents.PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
         //On Bukkit, calling this here is essential, hence the name "load"
@@ -99,7 +99,7 @@ public final class Minefinity extends JavaPlugin {
     }
 
     public static Minefinity getCore() {
-        return core;
+        return instance;
     }
 
     @Override

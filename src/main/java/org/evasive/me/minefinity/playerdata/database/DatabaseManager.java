@@ -15,7 +15,7 @@ public class DatabaseManager {
         config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + "?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true");
         config.setUsername(username);
         config.setPassword(password);
-        config.setMaximumPoolSize(20);
+        config.setMaximumPoolSize(10);
         config.setMinimumIdle(2);
         config.setIdleTimeout(30000);
         config.setMaxLifetime(1800000);

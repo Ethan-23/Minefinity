@@ -1,6 +1,5 @@
 package org.evasive.me.minefinity.core.registry;
 
-import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
 import org.evasive.me.minefinity.core.data.BaseBlock;
 
 import java.util.List;
@@ -11,6 +10,8 @@ public class BlockTypeRegistryService {
     private static BlockTypeRegistryService blockTypeRegistryService;
 
     public static BlockTypeRegistryService getInstance() {
+        if (blockTypeRegistryService == null)
+            throw new IllegalStateException("BlockTypeRegistryService not initialized");
         return blockTypeRegistryService;
     }
 

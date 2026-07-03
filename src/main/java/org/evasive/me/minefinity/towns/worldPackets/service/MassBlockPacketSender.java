@@ -23,6 +23,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
+import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.towns.worldPackets.ChunkSection;
 
 import java.io.*;
@@ -60,8 +61,6 @@ public class MassBlockPacketSender {
 
             clipboard = reader.read();
 
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -72,6 +71,11 @@ public class MassBlockPacketSender {
     public void showSchematic(Player player, String schematicName, BlockVector3 position){
 
         Clipboard clipboard = getClipboard(schematicName);
+        if (clipboard == null) {
+            Minefinity.getCore().getLogger().warning(
+                    "Schematic '" + schematicName + "' could not be loaded (missing file or unknown format); skipping.");
+            return;
+        }
         Region region = clipboard.getRegion();
         BlockVector3 min = region.getMinimumPoint();
 

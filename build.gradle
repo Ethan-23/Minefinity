@@ -69,7 +69,7 @@ tasks.withType(JavaCompile).configureEach {
 
 tasks.shadowJar {
     destinationDirectory = file("D:/Minecraft Coding/Test Servers/1.21.11/plugins")
-    archiveFileName = 'MinevolutionCore.jar'
+    archiveFileName = 'Minefinity.jar'
 }
 
 processResources {

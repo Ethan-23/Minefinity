@@ -77,7 +77,7 @@ public class ScoreboardService {
     }
 
     public void repeatingScoreboardUpdate() {
-        Bukkit.getScheduler().runTaskTimer(Minefinity.core, () -> {
+        Bukkit.getScheduler().runTaskTimer(Minefinity.getCore(), () -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 setupMainScoreboard(player);
             }
