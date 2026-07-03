@@ -1,5 +1,4 @@
 package org.evasive.me.minefinity.towns.structures.forge.blacksmith.recipes.config;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.evasive.me.minefinity.core.config.BaseConfig;

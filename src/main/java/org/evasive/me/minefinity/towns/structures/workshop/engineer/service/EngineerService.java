@@ -1,7 +1,6 @@
 package org.evasive.me.minefinity.towns.structures.workshop.engineer.service;
 
 import org.bukkit.entity.Player;
-import org.evasive.me.minefinity.playerdata.model.PlayerData;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.data.Engineer;
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.data.WorkshopMode;
@@ -17,12 +16,8 @@ public class EngineerService {
         this.playerDataService = playerDataService;
     }
 
-    private PlayerData getPlayerData(Player player){
-        return playerDataService.getPlayerData(player.getUniqueId());
-    }
-
     private Engineer getEngineer(Player player){
-        return getPlayerData(player).get(Engineer.class);
+        return playerDataService.getPlayerData(player).get(Engineer.class);
     }
 
     private EngineerTools getEngineerSkill(Engineer engineer, WorkshopMode workshopMode){

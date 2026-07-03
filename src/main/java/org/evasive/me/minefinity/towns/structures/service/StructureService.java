@@ -5,6 +5,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.towns.structures.registry.StructureRegistry;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
+import org.evasive.me.minefinity.towns.data.Regions;
 import org.evasive.me.minefinity.towns.data.TownData;
 import org.evasive.me.minefinity.towns.structures.data.Structure;
 import org.evasive.me.minefinity.towns.worldPackets.service.MassBlockPacketSender;
@@ -19,12 +20,6 @@ public class StructureService {
     private final MassBlockPacketSender massBlockPacketSender = new MassBlockPacketSender();
     private final StructureRegistry structureRegistry;
 
-    public final String TOWNHALL_REGION = "WORLD_TOWNHALL";
-    public final String MERCHANT_REGION = "WORLD_MERCHANT";
-    public final String WORKSHOP_REGION = "WORLD_WORKSHOP";
-    public final String FORGE_REGION = "WORLD_FORGE";
-
-
     public StructureService(PlayerDataService playerDataService, StructureRegistry structureRegistry) {
         this.playerDataService = playerDataService;
         this.structureRegistry = structureRegistry;
@@ -37,10 +32,10 @@ public class StructureService {
     public int getStructureLevel(Player player, Structure structure) {
         TownData townData = getTownData(player.getUniqueId());
         return switch (structure.id()) {
-            case "WORLD_MERCHANT" -> townData.getMerchantLevel();
-            case "WORLD_WORKSHOP" -> townData.getWorkshopLevel();
-            case "WORLD_FORGE" -> townData.getForgeLevel();
-            case "WORLD_TOWNHALL" -> townData.getTownhallLevel();
+            case Regions.MERCHANT -> townData.getMerchantLevel();
+            case Regions.WORKSHOP -> townData.getWorkshopLevel();
+            case Regions.FORGE    -> townData.getForgeLevel();
+            case Regions.TOWNHALL -> townData.getTownhallLevel();
             default -> throw new IllegalStateException("Unexpected value: " + structure.id());
         };
     }
@@ -49,19 +44,19 @@ public class StructureService {
         TownData townData = getTownData(player.getUniqueId());
 
         switch (structure.id()) {
-            case "WORLD_TOWNHALL":
+            case Regions.TOWNHALL:
                 townData.setTownhallLevel(level);
                 handleTownhallArea(player);
                 break;
-            case "WORLD_MERCHANT":
+            case Regions.MERCHANT:
                 townData.setMerchantLevel(level);
                 handleMerchantArea(player);
                 break;
-            case "WORLD_WORKSHOP":
+            case Regions.WORKSHOP:
                 townData.setWorkshopLevel(level);
                 handleWorkshopArea(player);
                 break;
-            case "WORLD_FORGE":
+            case Regions.FORGE:
                 townData.setForgeLevel(level);
                 handleForgeArea(player);
                 break;
@@ -69,19 +64,19 @@ public class StructureService {
     }
 
     public void handleMerchantArea(Player player) {
-        updateWorldPackets(player, MERCHANT_REGION, structureRegistry.getStructure("WORLD_MERCHANT"));
+        updateWorldPackets(player, Regions.MERCHANT, structureRegistry.getStructure(Regions.MERCHANT));
     }
 
     public void handleTownhallArea(Player player) {
-        updateWorldPackets(player, TOWNHALL_REGION, structureRegistry.getStructure("WORLD_TOWNHALL"));
+        updateWorldPackets(player, Regions.TOWNHALL, structureRegistry.getStructure(Regions.TOWNHALL));
     }
 
     public void handleForgeArea(Player player) {
-        updateWorldPackets(player, FORGE_REGION, structureRegistry.getStructure("WORLD_FORGE"));
+        updateWorldPackets(player, Regions.FORGE, structureRegistry.getStructure(Regions.FORGE));
     }
 
     public void handleWorkshopArea(Player player) {
-        updateWorldPackets(player, WORKSHOP_REGION, structureRegistry.getStructure("WORLD_WORKSHOP"));
+        updateWorldPackets(player, Regions.WORKSHOP, structureRegistry.getStructure(Regions.WORKSHOP));
 
     }
 

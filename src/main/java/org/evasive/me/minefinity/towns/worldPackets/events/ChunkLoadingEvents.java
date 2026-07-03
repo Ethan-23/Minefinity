@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 import org.evasive.me.minefinity.towns.structures.service.StructureService;
+import org.evasive.me.minefinity.towns.data.Regions;
 
 public class ChunkLoadingEvents implements Listener {
 
@@ -29,15 +30,15 @@ public class ChunkLoadingEvents implements Listener {
         Player player = event.getPlayer();
         Chunk chunk = event.getChunk();
 
-        if(hasRegion(player, chunk, blockTierService.MAIN_BLOCK_REGION))
+        if(hasRegion(player, chunk, Regions.MAIN_BLOCK))
             blockTierService.handleMainBlock(player);
-        if(hasRegion(player, chunk, townService.TOWNHALL_REGION))
+        if(hasRegion(player, chunk, Regions.TOWNHALL))
             townService.handleTownhallArea(player);
-        if(hasRegion(player, chunk, townService.MERCHANT_REGION))
+        if(hasRegion(player, chunk, Regions.MERCHANT))
             townService.handleMerchantArea(player);
-        if(hasRegion(player, chunk, townService.FORGE_REGION))
+        if(hasRegion(player, chunk, Regions.FORGE))
             townService.handleForgeArea(player);
-        if(hasRegion(player, chunk, townService.WORKSHOP_REGION))
+        if(hasRegion(player, chunk, Regions.WORKSHOP))
             townService.handleWorkshopArea(player);
     }
 

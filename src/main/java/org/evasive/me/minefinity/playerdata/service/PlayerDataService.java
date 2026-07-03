@@ -1,6 +1,7 @@
 package org.evasive.me.minefinity.playerdata.service;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.playerdata.component.PlayerDataComponentRegistry;
 import org.evasive.me.minefinity.playerdata.model.PlayerData;
@@ -75,6 +76,10 @@ public class PlayerDataService {
      */
     public PlayerData getPlayerData(UUID uuid) {
         return playerCache.get(uuid);
+    }
+
+    public PlayerData getPlayerData(Player player) {
+        return getPlayerData(player.getUniqueId());
     }
 
     /**

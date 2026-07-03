@@ -13,14 +13,11 @@ import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.RecipeRe
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.service.RecipeService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.mining.milestones.MilestoneService;
-import org.evasive.me.minefinity.playerdata.model.PlayerData;
-import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.towns.structures.data.Structure;
 import org.evasive.me.minefinity.towns.structures.service.StructureService;
 
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Map;
 
 import static org.evasive.me.minefinity.core.utils.TextConversions.buildRarityColor;
 

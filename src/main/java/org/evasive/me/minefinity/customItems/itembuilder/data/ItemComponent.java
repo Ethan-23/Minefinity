@@ -2,7 +2,6 @@ package org.evasive.me.minefinity.customItems.itembuilder.data;
 
 import org.bukkit.persistence.PersistentDataContainer;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 

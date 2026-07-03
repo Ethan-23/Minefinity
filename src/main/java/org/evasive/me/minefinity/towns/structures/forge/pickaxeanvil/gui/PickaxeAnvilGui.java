@@ -17,10 +17,8 @@ import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistry
 import org.evasive.me.minefinity.towns.structures.forge.pickaxeanvil.PickaxeAnvilHandler;
 
 import java.util.List;
-import java.util.Objects;
 
 import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemKeys.*;
-import static org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService.getStringPDC;
 
 public class PickaxeAnvilGui extends BaseGui {
 

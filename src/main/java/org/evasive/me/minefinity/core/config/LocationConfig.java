@@ -1,7 +1,5 @@
 package org.evasive.me.minefinity.core.config;
 
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.evasive.me.minefinity.Minefinity;
 
 public class LocationConfig extends BaseConfig{

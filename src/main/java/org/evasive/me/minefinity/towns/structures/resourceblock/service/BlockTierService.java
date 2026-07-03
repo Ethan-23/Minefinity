@@ -13,10 +13,10 @@ import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.mining.data.MiningDataMap;
 import org.evasive.me.minefinity.mining.data.SelectedBlockMap;
-import org.evasive.me.minefinity.playerdata.model.PlayerData;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.core.data.BaseBlock;
 import org.evasive.me.minefinity.towns.worldPackets.service.MassBlockPacketSender;
+import org.evasive.me.minefinity.towns.data.Regions;
 
 import java.util.List;
 import java.util.Map;
@@ -24,7 +24,6 @@ import java.util.Map;
 
 public class BlockTierService {
 
-    public final String MAIN_BLOCK_REGION = "minefinity_block";
     private final PlayerDataService playerDataService;
     private final MassBlockPacketSender massBlockPacketSender = new MassBlockPacketSender();
     private final MiningDataMap miningDataMap;
@@ -40,12 +39,8 @@ public class BlockTierService {
         this.blockTypeRegistryService = blockTypeRegistryService;
     }
 
-    private PlayerData getPlayerData(Player player) {
-        return playerDataService.getPlayerData(player.getUniqueId());
-    }
-
     public String getSelectedMiningBlock(Player player, String worldId) {
-        return getPlayerData(player).getSelectedBlockTier(worldId);
+        return playerDataService.getPlayerData(player).getSelectedBlockTier(worldId);
     }
 
     public int getSelectedMiningTier(Player player, String worldId) {
@@ -55,15 +50,15 @@ public class BlockTierService {
 
     public BaseBlock getSelectedBaseBlock(Player player){
         String worldName = player.getWorld().getName();
-        return blockTypeRegistryService.getBaseBlock(getPlayerData(player).getSelectedBlockTier(worldName));
+        return blockTypeRegistryService.getBaseBlock(playerDataService.getPlayerData(player).getSelectedBlockTier(worldName));
     }
 
     public int getUnlockedMiningBlock(Player player, String worldId) {
-        return getPlayerData(player).getUnlockedBlockTier(worldId);
+        return playerDataService.getPlayerData(player).getUnlockedBlockTier(worldId);
     }
 
     public void setSelectedMiningBlock(Player player, String worldName, int blockTier){
-        getPlayerData(player).setSelectedBlockTier(worldName, blockTypeRegistryService.getBlockIdByTier(worldName, blockTier));
+        playerDataService.getPlayerData(player).setSelectedBlockTier(worldName, blockTypeRegistryService.getBlockIdByTier(worldName, blockTier));
 
         if(player.getWorld().getName().equals(worldName))
             handleMainBlock(player);
@@ -72,24 +67,24 @@ public class BlockTierService {
     }
 
     public void setUnlockedMiningBlock(Player player, String worldName, int blockNumber){
-        getPlayerData(player).setUnlockedBlockTier(worldName, blockNumber);
+        playerDataService.getPlayerData(player).setUnlockedBlockTier(worldName, blockNumber);
         setSelectedMiningBlock(player, worldName, blockNumber);
     }
 
     public ItemStack getSelectedBlockDrop(Player player){
-        String selectedBlockId = getPlayerData(player).getSelectedBlockTier(player.getWorld().getName());
+        String selectedBlockId = playerDataService.getPlayerData(player).getSelectedBlockTier(player.getWorld().getName());
         BaseBlock baseBlock = blockTypeRegistryService.getBaseBlock(selectedBlockId);
         return customItemRegistryService.getRegisteredItemStack(baseBlock.blockDropId());
     }
 
     public ItemStack getSelectedSpecialDrop(Player player){
-        String specialBlockId = getPlayerData(player).getSelectedBlockTier(player.getWorld().getName());
+        String specialBlockId = playerDataService.getPlayerData(player).getSelectedBlockTier(player.getWorld().getName());
         BaseBlock baseBlock = blockTypeRegistryService.getBaseBlock(specialBlockId);
         return customItemRegistryService.getRegisteredItemStack(baseBlock.specialBlockDropId());
     }
 
     public double getBlockUnlockCost(Player player, String worldId){
-        return blockTypeRegistryService.getNextUnlockCost(getPlayerData(player).getUnlockedBlockTier(worldId), worldId);
+        return blockTypeRegistryService.getNextUnlockCost(playerDataService.getPlayerData(player).getUnlockedBlockTier(worldId), worldId);
     }
 
     //Move to where swapping block tiers is
@@ -102,8 +97,8 @@ public class BlockTierService {
 
     public void handleMainBlock(Player player){
         World world = player.getWorld();
-        ProtectedRegion region = massBlockPacketSender.getRegion(world, MAIN_BLOCK_REGION);
-        massBlockPacketSender.createBlockReplacementMap(player, world, region, Map.of(Material.SPONGE, blockTypeRegistryService.getBaseBlock(getPlayerData(player).getSelectedBlockTier(player.getWorld().getName())).material()));
+        ProtectedRegion region = massBlockPacketSender.getRegion(world, Regions.MAIN_BLOCK);
+        massBlockPacketSender.createBlockReplacementMap(player, world, region, Map.of(Material.SPONGE, blockTypeRegistryService.getBaseBlock(playerDataService.getPlayerData(player).getSelectedBlockTier(player.getWorld().getName())).material()));
     }
 
     private void sendCleanPacket(Player player, Block block){
@@ -124,6 +119,6 @@ public class BlockTierService {
     }
 
     public boolean hasWorldUnlocked(Player player, String worldId){
-        return getPlayerData(player).hasWorldUnlocked(worldId);
+        return playerDataService.getPlayerData(player).hasWorldUnlocked(worldId);
     }
 }

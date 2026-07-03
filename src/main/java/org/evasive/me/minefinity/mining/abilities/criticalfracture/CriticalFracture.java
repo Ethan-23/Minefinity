@@ -29,6 +29,9 @@ public class CriticalFracture implements MiningAbility {
     private final static float SPEED_MULTIPLIER = 1.25f;
     private final static long MAX_CRIT_TIME = 5000;//ms
 
+    private static final float BLOCK_CENTER_OFFSET = 0.5f;
+    private static final float BLOCK_OUTTER_OFFSET = 0.8f;
+
     public CriticalFracture(CriticalMap criticalMap) {
         this.criticalMap = criticalMap;
     }
@@ -79,11 +82,11 @@ public class CriticalFracture implements MiningAbility {
 
     private Location generateRandomCritLocation(Block block, BlockFace face){
 
-        Location loc = block.getLocation().add(0.5, 0.5, 0.5);
+        Location loc = block.getLocation().add(BLOCK_CENTER_OFFSET, BLOCK_CENTER_OFFSET, BLOCK_CENTER_OFFSET);
 
-        double randX = (Math.random() - 0.5) * 0.8;
-        double randY = (Math.random() - 0.5) * 0.8;
-        double randZ = (Math.random() - 0.5) * 0.8;
+        double randX = (Math.random() - BLOCK_CENTER_OFFSET) * BLOCK_OUTTER_OFFSET;
+        double randY = (Math.random() - BLOCK_CENTER_OFFSET) * BLOCK_OUTTER_OFFSET;
+        double randZ = (Math.random() - BLOCK_CENTER_OFFSET) * BLOCK_OUTTER_OFFSET;
 
         switch (face) {
 
@@ -118,9 +121,9 @@ public class CriticalFracture implements MiningAbility {
             }
         }
         loc.add(
-                face.getModX() * 0.05,
-                face.getModY() * 0.05,
-                face.getModZ() * 0.05
+                face.getModX() * BLOCK_CENTER_OFFSET,
+                face.getModY() * BLOCK_CENTER_OFFSET,
+                face.getModZ() * BLOCK_CENTER_OFFSET
         );
         return loc;
     }

@@ -25,10 +25,6 @@ public class StatsService {
         this.contributorRegistry = contributorRegistry;
     }
 
-    private PlayerData getPlayerData(Player player) {
-        return playerDataService.getPlayerData(player.getUniqueId());
-    }
-
     public void createPlayer(Player player) {
         UUID uuid = player.getUniqueId();
         cachedStats.put(uuid, playerDataService.getPlayerData(uuid).getPlayerStats());
@@ -52,7 +48,7 @@ public class StatsService {
     public void recalculateStats(Player player) {
         UUID uuid = player.getUniqueId();
 
-        PlayerData data = getPlayerData(player);
+        PlayerData data = playerDataService.getPlayerData(player);
         if (data == null) return;
 
         EnumMap<Stats, Integer> result = new EnumMap<>(Stats.class);
@@ -87,13 +83,13 @@ public class StatsService {
 
     public void addStats(Player player, Map<Stats, Integer> stats) {
         for (Map.Entry<Stats, Integer> entry : stats.entrySet()) {
-            getPlayerData(player).addPlayerStats(entry.getKey(), entry.getValue());
+            playerDataService.getPlayerData(player).addPlayerStats(entry.getKey(), entry.getValue());
         }
     }
 
     public void removeStats(Player player, Map<Stats, Integer> stats) {
         for (Map.Entry<Stats, Integer> entry : stats.entrySet()) {
-            getPlayerData(player).removePlayerStats(entry.getKey(), entry.getValue());
+            playerDataService.getPlayerData(player).removePlayerStats(entry.getKey(), entry.getValue());
         }
     }
 }

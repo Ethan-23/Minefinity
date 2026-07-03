@@ -22,7 +22,6 @@ import java.util.Map;
 
 import static org.evasive.me.minefinity.core.utils.TextConversions.buildRarityColor;
 import static org.evasive.me.minefinity.core.utils.TextConversions.formatItemName;
-import static org.evasive.me.minefinity.core.utils.guis.GenericGuiItems.fillerPane;
 import static org.evasive.me.minefinity.towns.structures.workshop.engineer.gui.EngineerGui.*;
 
 public class EngineerGuiRenderer {

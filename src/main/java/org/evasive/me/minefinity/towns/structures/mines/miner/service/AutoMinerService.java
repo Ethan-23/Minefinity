@@ -7,7 +7,6 @@ import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePic
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.StatsComponent;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.mining.handlers.BlockProgressHandler;
-import org.evasive.me.minefinity.playerdata.model.PlayerData;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.core.data.Stats;
 import org.evasive.me.minefinity.towns.structures.mines.miner.AutoMinerData;
@@ -28,12 +27,8 @@ public class AutoMinerService {
         this.blockTypeRegistryService = blockTypeRegistryService;
     }
 
-    private PlayerData getPlayerData(Player player){
-        return playerDataService.getPlayerData(player.getUniqueId());
-    }
-
     private AutoMinerData getAutoMiner(Player player) {
-        return getPlayerData(player).get(AutoMinerData.class);
+        return playerDataService.getPlayerData(player).get(AutoMinerData.class);
     }
 
     public void setAutoMinerUnlockedBlockTier(Player player, int blockTier){

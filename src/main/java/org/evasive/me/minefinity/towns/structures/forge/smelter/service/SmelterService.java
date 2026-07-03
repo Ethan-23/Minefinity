@@ -6,7 +6,6 @@ import org.evasive.me.minefinity.core.data.CustomItemStack;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseFuelItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.FuelAmountComponent;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
-import org.evasive.me.minefinity.playerdata.model.PlayerData;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.towns.structures.forge.smelter.Smelter;
 import org.evasive.me.minefinity.towns.structures.forge.smelter.recipes.BaseSmelterRecipe;
@@ -26,12 +25,8 @@ public class SmelterService {
         this.customItemRegistryService = customItemRegistryService;
     }
 
-    private PlayerData getPlayerData(Player player){
-        return playerDataService.getPlayerData(player.getUniqueId());
-    }
-
     private Smelter getSmelter(Player player){
-        return getPlayerData(player).get(Smelter.class);
+        return playerDataService.getPlayerData(player).get(Smelter.class);
     }
 
     public String getFuelId(Player player){

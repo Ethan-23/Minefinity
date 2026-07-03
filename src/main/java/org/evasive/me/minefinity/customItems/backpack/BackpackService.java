@@ -1,7 +1,6 @@
 package org.evasive.me.minefinity.customItems.backpack;
 
 import org.bukkit.entity.Player;
-import org.evasive.me.minefinity.playerdata.model.PlayerData;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 
 import java.util.Map;
@@ -14,22 +13,18 @@ public class BackpackService {
         this.playerDataService = playerDataService;
     }
 
-    private PlayerData getPlayerData(Player player) {
-        return playerDataService.getPlayerData(player.getUniqueId());
-    }
-
     public Map<String, Integer> getBackpackStorage(Player player){
-        return getPlayerData(player).getBackpackStorage();
+        return playerDataService.getPlayerData(player).getBackpackStorage();
     }
 
     public int getBackpackStoredItemAmount(Player player, String itemId) {
-        if(!getPlayerData(player).getBackpackStorage().containsKey(itemId))
+        if(!playerDataService.getPlayerData(player).getBackpackStorage().containsKey(itemId))
             setBackpackItem(player, itemId, 0);
         return getBackpackStorage(player).get(itemId);
     }
 
     private void setBackpackItem(Player player, String itemId, int amount) {
-        getPlayerData(player).changeBackpackStorage(itemId, amount);
+        playerDataService.getPlayerData(player).changeBackpackStorage(itemId, amount);
     }
 
     public void removeBackpackItem(Player player, String itemId, int amount) {
@@ -41,6 +36,6 @@ public class BackpackService {
     }
 
     public void clearBackpackStorage(Player player) {
-        getPlayerData(player).clearBackpackStorage();
+        playerDataService.getPlayerData(player).clearBackpackStorage();
     }
 }

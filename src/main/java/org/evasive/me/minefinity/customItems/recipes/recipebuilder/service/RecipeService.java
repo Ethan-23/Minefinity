@@ -9,7 +9,6 @@ import org.evasive.me.minefinity.customItems.recipes.RecipeUnlockManager;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.BaseItemRecipe;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.RecipeRequirement;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
-import org.evasive.me.minefinity.playerdata.model.PlayerData;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.recipes.BaseForgeRecipe;
 
@@ -31,10 +30,6 @@ public class RecipeService {
         this.customItemRegistryService = customItemRegistryService;
         this.economyService = economyService;
         this.recipeUnlockManager = recipeUnlockManager;
-    }
-
-    private PlayerData getPlayerData(Player player) {
-        return playerDataService.getPlayerData(player.getUniqueId());
     }
 
     public boolean tryPurchaseItem(Player player, BaseItemRecipe recipe){
@@ -133,6 +128,6 @@ public class RecipeService {
     }
 
     public boolean checkRecipeRequirement(Player player, RecipeRequirement recipeRequirement) {
-        return recipeRequirement.isMet(getPlayerData(player));
+        return recipeRequirement.isMet(playerDataService.getPlayerData(player));
     }
 }

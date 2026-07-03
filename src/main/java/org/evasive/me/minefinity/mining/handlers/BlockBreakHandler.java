@@ -30,6 +30,12 @@ public class BlockBreakHandler {
     private final BlockTierService blockTierService;
     private final MiningDataMap miningDataMap;
 
+    private static final int SPECIAL_PERCENT_ROLL_MIN = 1;
+    private static final int SPECIAL_PERCENT_ROLL_MAX = 101; // Exclusive Bound
+
+    private static final int FORTUNE_PERCENT_ROLL_MIN = 1;
+    private static final int FORTUNE_PERCENT_ROLL_MAX = 101; // Exclusive Bound
+
     public BlockBreakHandler(CustomItemRegistryService customItemRegistryService, ItemPickupService itemPickupService, MilestoneService milestoneService, BlockTierService blockTierService, MiningDataMap miningDataMap) {
         this.customItemRegistryService = customItemRegistryService;
         this.itemPickupService = itemPickupService;
@@ -46,7 +52,7 @@ public class BlockBreakHandler {
 
         handlePlayerData(player, location);
 
-        statsContext.setSpecialDrop(baseBlock.specialBlockDropId() != null && new Random().nextInt(1, 101) <= statsContext.getSpecialChance());
+        statsContext.setSpecialDrop(baseBlock.specialBlockDropId() != null && ThreadLocalRandom.current().nextInt(SPECIAL_PERCENT_ROLL_MIN, SPECIAL_PERCENT_ROLL_MAX) <= statsContext.getSpecialChance());
 
         if(basePickaxeItem != null)
             miningAbilityRunner.runOnBreak(basePickaxeItem, breakContext);
@@ -79,7 +85,7 @@ public class BlockBreakHandler {
         int guaranteed = (int) fortuneStat / 100;
         int remainder = (int) (fortuneStat % 100);
 
-        int randomNum = random.nextInt(1, 101);
+        int randomNum = random.nextInt(FORTUNE_PERCENT_ROLL_MIN, FORTUNE_PERCENT_ROLL_MAX);
 
         return guaranteed + (randomNum <= remainder ? 1 : 0);
     }
