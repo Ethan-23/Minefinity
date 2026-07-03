@@ -72,8 +72,7 @@ public class PlayerDataRepository {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            return Optional.empty();
+            throw new RuntimeException("Failed to load player " + uuid, e);
         }
     }
 

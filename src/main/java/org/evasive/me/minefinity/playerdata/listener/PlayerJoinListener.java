@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.playerdata.ranks.service.PermissionService;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.playerdata.service.RankService;
@@ -17,6 +18,8 @@ public class PlayerJoinListener implements Listener {
     private final RankService playerRankService;
     private final PermissionService permissionService;
 
+    private final String joinMessage = "Welcome to the Minefinity!";
+
     public PlayerJoinListener(PlayerDataService playerDataService, RankService playerRankService, PermissionService permissionService) {
         this.playerDataService = playerDataService;
         this.playerRankService = playerRankService;
@@ -27,14 +30,14 @@ public class PlayerJoinListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        playerDataService.loadPlayerAsync(player.getUniqueId(), firstJoin -> {
 
-            if (firstJoin) {
-                player.sendMessage("Welcome to the Minefinity!");
-            }
+        if (playerDataService.consumeFirstJoin(uuid)) {
+            player.sendMessage(joinMessage);
+        }
 
+        playerRankService.loadRanksAsync(uuid, ranks -> {
+            if (player.isOnline()) permissionService.applyPermissions(player, ranks);
         });
-        permissionService.applyPermissions(player, playerRankService.loadRanks(uuid));
     }
 
 }

@@ -1,23 +1,40 @@
 package org.evasive.me.minefinity.playerdata.service;
 
 import org.bukkit.Bukkit;
+import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.playerdata.component.PlayerDataComponentRegistry;
 import org.evasive.me.minefinity.playerdata.model.PlayerData;
 import org.evasive.me.minefinity.playerdata.repository.PlayerDataRepository;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.*;
-import java.util.function.Consumer;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
 
 public class PlayerDataService {
 
     private final Map<UUID, PlayerData> playerCache = new ConcurrentHashMap<>();
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+
+    private final ExecutorService dbExecutor = Executors.newFixedThreadPool(4, new ThreadFactory() {
+        private final AtomicInteger count = new AtomicInteger(1);
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread t = new Thread(r, "minefinity-db-" + count.getAndIncrement());
+            t.setDaemon(true);
+            return t;
+        }
+    });
+
     private final PlayerDataRepository repository; // Handles DB operations
     private final PlayerDataComponentRegistry componentRegistry;
 
     private static final int SAVE_INTERVAL_MINUTES = 5;
+
+    private final Set<UUID> firstJoinPlayers = ConcurrentHashMap.newKeySet();
 
     public PlayerDataService(PlayerDataRepository repository, PlayerDataComponentRegistry componentRegistry) {
         this.repository = repository;
@@ -27,34 +44,30 @@ public class PlayerDataService {
         scheduler.scheduleAtFixedRate(this::saveDirtyPlayers, SAVE_INTERVAL_MINUTES, SAVE_INTERVAL_MINUTES, TimeUnit.MINUTES);
     }
 
-    /**
-     * Load player data asynchronously on join.
-     */
-    public void loadPlayerAsync(UUID uuid, Consumer<Boolean> onComplete) {
-        // If already loaded, just run the callback
-        if (playerCache.containsKey(uuid)) {
-            if (onComplete != null) onComplete.accept(false);
-            return;
+    public boolean loadPlayer(UUID uuid) {
+        if (playerCache.containsKey(uuid)) return true;
+        try {
+            Optional<PlayerData> optional = repository.loadPlayer(uuid);
+            boolean firstJoin = optional.isEmpty();
+
+            PlayerData data = optional.orElseGet(() -> {
+                PlayerData newData = new PlayerData(uuid, componentRegistry);
+                repository.savePlayer(newData);
+                return newData;
+            });
+
+            playerCache.put(uuid, data);
+            if (firstJoin) firstJoinPlayers.add(uuid);
+            return true;
+        } catch (RuntimeException e) {
+            Minefinity.getCore().getLogger().log(Level.SEVERE,
+                    "Failed to load data for " + uuid + "; denying login to protect existing data.", e);
+            return false;
         }
+    }
 
-        CompletableFuture
-                .supplyAsync(() -> repository.loadPlayer(uuid))
-                .thenAccept(optionalData -> {
-
-                    boolean firstJoin = optionalData.isEmpty();
-
-                    PlayerData data = optionalData.orElseGet(() -> {
-                        PlayerData newData = new PlayerData(uuid, componentRegistry);
-                        repository.savePlayer(newData);
-                        return newData;
-                    });
-
-                    playerCache.put(uuid, data);
-
-                    if (onComplete != null) {
-                        onComplete.accept(firstJoin);
-                    }
-                });
+    public boolean consumeFirstJoin(UUID uuid) {
+        return firstJoinPlayers.remove(uuid);
     }
 
     /**
@@ -68,9 +81,7 @@ public class PlayerDataService {
      * Mark player as dirty and save immediately.
      */
     public void savePlayer(PlayerData playerData, boolean removeIfOffline) {
-        CompletableFuture.runAsync(() -> {
-            savePlayerSync(playerData, removeIfOffline);
-        });
+        CompletableFuture.runAsync(() -> savePlayerSync(playerData, removeIfOffline), dbExecutor);
     }
 
     public void savePlayerSync(PlayerData playerData, boolean removeIfOffline) {
@@ -102,13 +113,19 @@ public class PlayerDataService {
      * Shutdown scheduler cleanly (on server stop)
      */
     public void shutdown() {
-        scheduler.shutdown();
+        shutdownExecutor(scheduler);
+        shutdownExecutor(dbExecutor);
+    }
+
+    private void shutdownExecutor(ExecutorService executor) {
+        executor.shutdown();
         try {
-            if (!scheduler.awaitTermination(10, TimeUnit.SECONDS)) {
-                scheduler.shutdownNow();
+            if (!executor.awaitTermination(10, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
             }
         } catch (InterruptedException e) {
-            scheduler.shutdownNow();
+            executor.shutdownNow();
+            Thread.currentThread().interrupt();
         }
     }
 }

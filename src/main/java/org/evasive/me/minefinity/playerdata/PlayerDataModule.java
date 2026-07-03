@@ -9,6 +9,7 @@ import org.evasive.me.minefinity.playerdata.commands.rank.MineRank;
 import org.evasive.me.minefinity.playerdata.database.DatabaseManager;
 import org.evasive.me.minefinity.playerdata.listener.PlayerChatListener;
 import org.evasive.me.minefinity.playerdata.listener.PlayerJoinListener;
+import org.evasive.me.minefinity.playerdata.listener.PlayerPreLoginListener;
 import org.evasive.me.minefinity.playerdata.listener.PlayerQuitListener;
 import org.evasive.me.minefinity.playerdata.ranks.RankRegistry;
 import org.evasive.me.minefinity.playerdata.ranks.config.PermissionConfigManager;
@@ -78,6 +79,7 @@ public class PlayerDataModule {
         // Register listeners
         PluginManager pm = plugin.getServer().getPluginManager();
 
+        pm.registerEvents(new PlayerPreLoginListener(playerService), plugin);
         pm.registerEvents(new PlayerJoinListener(playerService, rankService, permissionService), plugin);
         pm.registerEvents(new PlayerQuitListener(playerService, rankService, permissionService), plugin);
         pm.registerEvents(new PlayerChatListener(rankService), plugin);

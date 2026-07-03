@@ -2,6 +2,7 @@ package org.evasive.me.minefinity.playerdata.service;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.playerdata.model.PlayerRanks;
 import org.evasive.me.minefinity.playerdata.ranks.service.PermissionService;
 import org.evasive.me.minefinity.playerdata.repository.PlayerRankRepository;
@@ -9,6 +10,7 @@ import org.evasive.me.minefinity.playerdata.repository.PlayerRankRepository;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 public class RankService {
 
@@ -33,6 +35,13 @@ public class RankService {
 
         rankCache.put(uuid, ranks);
         return ranks;
+    }
+
+    public void loadRanksAsync(UUID uuid, Consumer<PlayerRanks> callback) {
+        Bukkit.getScheduler().runTaskAsynchronously(Minefinity.getCore(), () -> {
+            PlayerRanks ranks = loadRanks(uuid);
+            Bukkit.getScheduler().runTask(Minefinity.getCore(), () -> callback.accept(ranks));
+        });
     }
 
     /**
