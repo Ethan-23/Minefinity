@@ -18,10 +18,8 @@ public final class Minefinity extends JavaPlugin {
     private static Minefinity instance;
 
     private PlayerDataModule playerModule;
-    private PlayerDataService playerDataService;
 
     private CustomItemModule customItemModule;
-    private BackpackService backpackService;
 
     private CoreModule coreModule;
 
@@ -46,7 +44,7 @@ public final class Minefinity extends JavaPlugin {
         saveDefaultConfig();
         playerModule = new PlayerDataModule();
         playerModule.enable(this);
-        playerDataService = playerModule.getPlayerService();
+        PlayerDataService playerDataService = playerModule.getPlayerService();
 
         coreModule = new CoreModule(playerDataService);
         coreModule.enable(this);
@@ -59,14 +57,13 @@ public final class Minefinity extends JavaPlugin {
 
         customItemModule.enable(this);
 
-        backpackService = customItemModule.getBackpackService();
+        BackpackService backpackService = customItemModule.getBackpackService();
 
         miningModule = new MiningModule(
                 playerDataService,
                 customItemModule.getCustomItemRegistryService(),
                 coreModule.getBlockTypeRegistry(),
                 customItemModule.getItemPickupService(),
-                customItemModule.getPickaxeResolver(),
                 playerModule.getStatsService(),
                 playerModule.getComponentRegistry(),
                 playerModule.getStatContributorRegistry(),

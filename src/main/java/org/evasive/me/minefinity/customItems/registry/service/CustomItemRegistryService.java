@@ -1,7 +1,6 @@
 package org.evasive.me.minefinity.customItems.registry.service;
 
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -10,8 +9,6 @@ import org.evasive.me.minefinity.customItems.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BaseToolItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
-import org.evasive.me.minefinity.customItems.itembuilder.resolvers.PickaxeResolver;
-import org.evasive.me.minefinity.customItems.itembuilder.service.PickaxeService;
 import org.evasive.me.minefinity.customItems.registry.config.RegistryConfigHandler;
 
 import java.util.Set;
@@ -22,17 +19,12 @@ public class CustomItemRegistryService {
 
     private final CustomItemRegistry customItemRegistry;
     private final RegistryConfigHandler registryConfigHandler;
-    private final PickaxeResolver pickaxeResolver;
-    private final PickaxeService pickaxeService;
 
     private static CustomItemRegistryService instance;
 
     public CustomItemRegistryService(CustomItemRegistry customItemRegistry, RegistryConfigHandler registryConfigHandler) {
         this.customItemRegistry = customItemRegistry;
         this.registryConfigHandler = registryConfigHandler;
-
-        this.pickaxeResolver = new PickaxeResolver(this);
-        this.pickaxeService = new PickaxeService(pickaxeResolver);
     }
 
     public static void init(CustomItemRegistry customItemRegistry,
@@ -63,10 +55,6 @@ public class CustomItemRegistryService {
         return itemStack.getItemMeta().getPersistentDataContainer().get(ITEM_ID_KEY, PersistentDataType.STRING);
     }
 
-    public String getItemType(ItemStack itemStack){
-        return itemStack.getItemMeta().getPersistentDataContainer().get(ITEM_TYPE_KEY, PersistentDataType.STRING);
-    }
-
     public BaseCustomItem getRegisteredBaseItem(String itemId){
         if(!customItemRegistry.isRegistered(itemId)){
             return new BaseCustomItem(itemId, Material.YELLOW_STAINED_GLASS, itemId, Rarity.MINOR);
@@ -88,7 +76,8 @@ public class CustomItemRegistryService {
             return baseCustomItem;
 
         PersistentDataContainer pdc = itemStack.getItemMeta().getPersistentDataContainer();
-        //Check parts
+
+        baseComponentItem.partComponent().load(pdc);
 
         return baseComponentItem;
     }
@@ -109,13 +98,9 @@ public class CustomItemRegistryService {
             return getUnregisteredItem(itemId).buildItem().clone();
         BaseCustomItem baseCustomItem = getRegisteredBaseItem(itemId);
         if(baseCustomItem instanceof BasePickaxeItem pickaxe)
-            return pickaxeService.buildItem(pickaxe);
+            return pickaxe.buildItem();
         return customItemRegistry.getByID(itemId).getBaseItem().buildItem();
 
-    }
-
-    public static String getStringPDC(ItemStack itemStack, NamespacedKey namespacedKey){
-        return itemStack.getItemMeta().getPersistentDataContainer().get(namespacedKey, PersistentDataType.STRING);
     }
 
     public void saveCustomItem(BaseCustomItem baseCustomItem){
@@ -139,7 +124,7 @@ public class CustomItemRegistryService {
         BaseCustomItem baseCustomItem = getRegisteredBaseItem(itemStack);
         ItemStack rebuiltItemStack;
         if (baseCustomItem instanceof BasePickaxeItem pickaxe) {
-            rebuiltItemStack = pickaxeService.buildItem(pickaxe);
+            rebuiltItemStack = pickaxe.buildItem();
         } else {
             rebuiltItemStack = baseCustomItem.buildItem();
         }
@@ -149,12 +134,8 @@ public class CustomItemRegistryService {
 
     public ItemStack buildItem(BaseCustomItem item) {
         if (item instanceof BasePickaxeItem pickaxe) {
-            return pickaxeService.buildItem(pickaxe);
+            return pickaxe.buildItem();
         }
         return item.buildItem();
-    }
-
-    public PickaxeResolver getPickaxeResolver() {
-        return pickaxeResolver;
     }
 }

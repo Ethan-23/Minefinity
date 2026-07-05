@@ -11,7 +11,6 @@ import org.evasive.me.minefinity.customItems.itembuilder.command.CreateCustomIte
 import org.evasive.me.minefinity.customItems.itembuilder.command.DeleteCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.command.MineGive;
 import org.evasive.me.minefinity.core.events.PlayerInputListener;
-import org.evasive.me.minefinity.customItems.itembuilder.resolvers.PickaxeResolver;
 import org.evasive.me.minefinity.customItems.registry.CustomItemLoader;
 import org.evasive.me.minefinity.customItems.registry.config.ItemRegistryConfigManager;
 import org.evasive.me.minefinity.customItems.registry.config.RegistryConfigHandler;
@@ -77,10 +76,6 @@ public class CustomItemModule {
 
     public CustomItemRegistryService getCustomItemRegistryService(){
         return customItemRegistryService;
-    }
-
-    public PickaxeResolver getPickaxeResolver(){
-        return customItemRegistryService.getPickaxeResolver();
     }
 
 }

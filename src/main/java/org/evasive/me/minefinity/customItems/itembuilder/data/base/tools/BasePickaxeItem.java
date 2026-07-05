@@ -6,7 +6,6 @@ import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
-import org.evasive.me.minefinity.customItems.itembuilder.data.ToolItemData;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.StatsComponent;
 
@@ -36,9 +35,6 @@ public class BasePickaxeItem extends BaseToolItem {
                 .build();
     }
 
-    public ItemStack buildItem(ToolItemData data) {
-        return buildItem();
-    }
 
     public Map<String, Integer> getTotalStats(List<BasePartItem> parts) {
         Map<String, Integer> total = new HashMap<>();
@@ -58,6 +54,8 @@ public class BasePickaxeItem extends BaseToolItem {
 
         return total;
     }
+
+
 
     @Override
     public BaseCustomItem copy() {

@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
-import org.evasive.me.minefinity.customItems.itembuilder.resolvers.PickaxeResolver;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.mining.abilities.MiningAbilityRunner;
 import org.evasive.me.minefinity.mining.context.HitContext;
@@ -29,15 +28,13 @@ public class BlockProgressHandler {
     private final StatsService statsService;
     private final MiningDataMap miningDataMap;
     private final MiningAbilityRunner miningAbilityRunner;
-    private final PickaxeResolver pickaxeResolver;
     private final BlockTierService blockTierService;
     private final BlockBreakHandler blockBreak;
 
-    public BlockProgressHandler(PickaxeResolver pickaxeResolver, MiningAbilityRunner miningAbilityRunner,
+    public BlockProgressHandler(MiningAbilityRunner miningAbilityRunner,
                                 BlockTierService blockTierService, MiningDataMap miningDataMap,
                                 CustomItemRegistryService customItemRegistryService, StatsService statsService,
                                 BlockBreakHandler blockBreak) {
-        this.pickaxeResolver = pickaxeResolver;
         this.miningAbilityRunner = miningAbilityRunner;
         this.blockTierService = blockTierService;
         this.miningDataMap = miningDataMap;
@@ -47,8 +44,8 @@ public class BlockProgressHandler {
     }
 
     public static final int MAX_SPEED_DENOMINATION = 4;
-    private final int ANIMATION_STAGES = 10;
-    private final float SPEED_DENOM = 10;
+    private static final int ANIMATION_STAGES = 10;
+    private static final float SPEED_DENOM = 10;
 
     public void addBlockProgress(Location location, Player player){
         UUID uuid = player.getUniqueId();

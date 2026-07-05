@@ -31,6 +31,7 @@ public class CriticalFracture implements MiningAbility {
 
     private static final float BLOCK_CENTER_OFFSET = 0.5f;
     private static final float BLOCK_OUTTER_OFFSET = 0.8f;
+    private static final float BLOCK_FACE_OFFSET = 0.05f;
 
     public CriticalFracture(CriticalMap criticalMap) {
         this.criticalMap = criticalMap;
@@ -121,9 +122,9 @@ public class CriticalFracture implements MiningAbility {
             }
         }
         loc.add(
-                face.getModX() * BLOCK_CENTER_OFFSET,
-                face.getModY() * BLOCK_CENTER_OFFSET,
-                face.getModZ() * BLOCK_CENTER_OFFSET
+                face.getModX() * BLOCK_FACE_OFFSET,
+                face.getModY() * BLOCK_FACE_OFFSET,
+                face.getModZ() * BLOCK_FACE_OFFSET
         );
         return loc;
     }
