@@ -1,10 +1,9 @@
 package org.evasive.me.minefinity.mining.handlers;
 
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.core.utils.TextConversions;
+import org.evasive.me.minefinity.core.notifications.NotificationService;
 import org.evasive.me.minefinity.customItems.framework.ItemPickupService;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
@@ -12,23 +11,22 @@ import org.evasive.me.minefinity.mining.abilities.MiningAbilityRunner;
 import org.evasive.me.minefinity.mining.context.BreakContext;
 import org.evasive.me.minefinity.mining.context.StatsContext;
 import org.evasive.me.minefinity.mining.data.MiningDataMap;
-import org.evasive.me.minefinity.mining.milestones.MilestoneService;
+import org.evasive.me.minefinity.mining.milestones.MiningMilestoneService;
 import org.evasive.me.minefinity.core.data.BaseBlock;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static org.evasive.me.minefinity.core.utils.TextConversions.buildRarityColor;
-
 
 public class BlockBreakHandler {
 
     private final CustomItemRegistryService customItemRegistryService;
     private final ItemPickupService itemPickupService;
-    private final MilestoneService milestoneService;
+    private final MiningMilestoneService milestoneService;
     private final BlockTierService blockTierService;
     private final MiningDataMap miningDataMap;
+    private final BlockBreakNotifier blockBreakNotifier;
 
     private static final int SPECIAL_PERCENT_ROLL_MIN = 1;
     private static final int SPECIAL_PERCENT_ROLL_MAX = 101; // Exclusive Bound
@@ -36,12 +34,13 @@ public class BlockBreakHandler {
     private static final int FORTUNE_PERCENT_ROLL_MIN = 1;
     private static final int FORTUNE_PERCENT_ROLL_MAX = 101; // Exclusive Bound
 
-    public BlockBreakHandler(CustomItemRegistryService customItemRegistryService, ItemPickupService itemPickupService, MilestoneService milestoneService, BlockTierService blockTierService, MiningDataMap miningDataMap) {
+    public BlockBreakHandler(CustomItemRegistryService customItemRegistryService, ItemPickupService itemPickupService, MiningMilestoneService milestoneService, BlockTierService blockTierService, MiningDataMap miningDataMap, NotificationService notificationService) {
         this.customItemRegistryService = customItemRegistryService;
         this.itemPickupService = itemPickupService;
         this.milestoneService = milestoneService;
         this.blockTierService = blockTierService;
         this.miningDataMap = miningDataMap;
+        this.blockBreakNotifier = new BlockBreakNotifier(notificationService);
     }
 
     public void handleBlockBreak(Location location, Player player, BaseBlock baseBlock, BasePickaxeItem basePickaxeItem, StatsContext statsContext, MiningAbilityRunner miningAbilityRunner) {
@@ -57,21 +56,14 @@ public class BlockBreakHandler {
         if(basePickaxeItem != null)
             miningAbilityRunner.runOnBreak(basePickaxeItem, breakContext);
 
-        playBreakSound(player, statsContext.isSpecialDrop());
+        boolean specialDrop = statsContext.isSpecialDrop();
 
-        ItemStack drop = statsContext.isSpecialDrop() ? blockTierService.getSelectedSpecialDrop(player) : blockTierService.getSelectedBlockDrop(player);
-        if(itemPickupService.givePlayerDrops(player, drop, amount) == 0)
-            sendActionBar(player, statsContext.isSpecialDrop() ? baseBlock.specialBlockDropId() : baseBlock.blockDropId(), amount);
+        ItemStack drop = specialDrop ? blockTierService.getSelectedSpecialDrop(player) : blockTierService.getSelectedBlockDrop(player);
 
-    }
+        int drops = itemPickupService.givePlayerDrops(player, drop, amount);
 
-    private void sendActionBar(Player player, String dropId, int amount){
-        player.sendActionBar(TextConversions.parse("<green>+" + amount + " " + buildRarityColor(dropId, customItemRegistryService.getBaseItemById(dropId).getRarity())));
-    }
+        blockBreakNotifier.blockBreak(player, customItemRegistryService.getRegisteredBaseItem(drop), amount, specialDrop, drops > 0);
 
-    private void playBreakSound(Player player, boolean specialDrop){
-        Sound sound = specialDrop ? Sound.BLOCK_SPAWNER_BREAK : Sound.BLOCK_GILDED_BLACKSTONE_BREAK;
-        player.playSound(player.getLocation(), sound, 0.3f, 0.3f);
     }
 
     private void handleMilestone(Player player, String blockId){

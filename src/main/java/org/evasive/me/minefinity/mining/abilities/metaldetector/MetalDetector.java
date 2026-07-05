@@ -9,7 +9,8 @@ public class MetalDetector implements MiningAbility {
     @Override
     public void onBreak(BreakContext context) {
 
-        context.statsContext().addSpecialChance(5);
+        int METAL_DETECT_CHANCE = 5;
+        context.statsContext().addSpecialChance(METAL_DETECT_CHANCE);
 
         if(!context.statsContext().isSpecialDrop())
             return;

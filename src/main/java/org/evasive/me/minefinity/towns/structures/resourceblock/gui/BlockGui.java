@@ -10,7 +10,7 @@ import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
-import org.evasive.me.minefinity.mining.milestones.MilestoneService;
+import org.evasive.me.minefinity.mining.milestones.MiningMilestoneService;
 import org.evasive.me.minefinity.core.data.Stats;
 import org.evasive.me.minefinity.core.data.BaseBlock;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
@@ -27,10 +27,10 @@ public class BlockGui extends BaseGui {
     static final List<Integer> WORLD_TRACK = List.of(38, 39, 40, 41, 42);
     private final BlockGuiHandler blockGuiHandler;
     private final BlockTierService blockTierService;
-    private final MilestoneService milestoneService;
+    private final MiningMilestoneService milestoneService;
     private String SELECTED_WORLD;
 
-    public BlockGui(Player player, BlockTierService blockTierService, CustomItemRegistryService customItemRegistryService, MilestoneService milestoneService, EconomyService economyService, String worldId) {
+    public BlockGui(Player player, BlockTierService blockTierService, CustomItemRegistryService customItemRegistryService, MiningMilestoneService milestoneService, EconomyService economyService, String worldId) {
         super(player, INVENTORY_SIZE, TextConversions.parse("Blocks"));
         this.blockTierService = blockTierService;
         this.milestoneService = milestoneService;

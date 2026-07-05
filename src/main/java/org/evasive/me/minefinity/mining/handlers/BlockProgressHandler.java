@@ -7,7 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.customItems.framework.ItemPickupService;
+import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.itembuilder.resolvers.PickaxeResolver;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
@@ -15,7 +15,6 @@ import org.evasive.me.minefinity.mining.abilities.MiningAbilityRunner;
 import org.evasive.me.minefinity.mining.context.HitContext;
 import org.evasive.me.minefinity.mining.context.StatsContext;
 import org.evasive.me.minefinity.mining.data.MiningDataMap;
-import org.evasive.me.minefinity.mining.milestones.MilestoneService;
 import org.evasive.me.minefinity.core.data.Stats;
 import org.evasive.me.minefinity.playerdata.stats.service.StatsService;
 import org.evasive.me.minefinity.core.data.BaseBlock;
@@ -31,35 +30,41 @@ public class BlockProgressHandler {
     private final MiningDataMap miningDataMap;
     private final MiningAbilityRunner miningAbilityRunner;
     private final PickaxeResolver pickaxeResolver;
-    BlockTierService blockTierService;
-    BlockBreakHandler blockBreak;
+    private final BlockTierService blockTierService;
+    private final BlockBreakHandler blockBreak;
 
-    public BlockProgressHandler(PickaxeResolver pickaxeResolver, MiningAbilityRunner miningAbilityRunner, BlockTierService blockTierService, MilestoneService milestoneService, MiningDataMap miningDataMap, CustomItemRegistryService customItemRegistryService, ItemPickupService itemPickupService, StatsService statsService) {
-        this.blockTierService = blockTierService;
-        this.statsService = statsService;
-        this.miningDataMap = miningDataMap;
+    public BlockProgressHandler(PickaxeResolver pickaxeResolver, MiningAbilityRunner miningAbilityRunner,
+                                BlockTierService blockTierService, MiningDataMap miningDataMap,
+                                CustomItemRegistryService customItemRegistryService, StatsService statsService,
+                                BlockBreakHandler blockBreak) {
         this.pickaxeResolver = pickaxeResolver;
         this.miningAbilityRunner = miningAbilityRunner;
+        this.blockTierService = blockTierService;
+        this.miningDataMap = miningDataMap;
         this.customItemRegistryService = customItemRegistryService;
-        this.blockBreak = new BlockBreakHandler(customItemRegistryService, itemPickupService, milestoneService, blockTierService, miningDataMap);
+        this.statsService = statsService;
+        this.blockBreak = blockBreak;
     }
 
-    final public static int MAX_SPEED_DENOMINATION = 4;
-    final int ANIMATION_STAGES = 10;
+    public static final int MAX_SPEED_DENOMINATION = 4;
+    private final int ANIMATION_STAGES = 10;
+    private final float SPEED_DENOM = 10;
 
     public void addBlockProgress(Location location, Player player){
         UUID uuid = player.getUniqueId();
 
         Map<Stats, Integer> playerStats = statsService.getStats(uuid);
 
-        int breakingPower = playerStats.get(Stats.BREAKING_POWER);
+        int breakingPower = playerStats.getOrDefault(Stats.BREAKING_POWER, 0);
 
         ItemStack item = player.getInventory().getItemInMainHand();
 
         BasePickaxeItem basePickaxeItem = null;
 
-        if(!item.isEmpty())
-            basePickaxeItem = (BasePickaxeItem) customItemRegistryService.getRegisteredBaseItem(item);
+        BaseCustomItem baseCustomItem = customItemRegistryService.getRegisteredBaseItem(item);
+
+        if(baseCustomItem instanceof BasePickaxeItem)
+            basePickaxeItem = (BasePickaxeItem) baseCustomItem;
 
         BaseBlock baseBlock = blockTierService.getSelectedBaseBlock(player);
 
@@ -75,7 +80,7 @@ public class BlockProgressHandler {
             miningAbilityRunner.runOnHit(basePickaxeItem, new HitContext(player, baseBlock, statsContext));
         }
 
-        float progress = statsContext.getSpeed() / 10f; // divide by 10 to allow for bigger numbers for better display
+        float progress = statsContext.getSpeed() / SPEED_DENOM;
 
         int health = baseBlock.health();
 

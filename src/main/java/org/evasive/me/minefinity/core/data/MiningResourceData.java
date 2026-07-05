@@ -1,11 +1,11 @@
 package org.evasive.me.minefinity.core.data;
 
-public class ResourceData {
+public class MiningResourceData {
     private int tier;
     private int blockMined;
     private int progress;
 
-    public ResourceData(int tier, int blockMined, int progress) {
+    public MiningResourceData(int tier, int blockMined, int progress) {
         this.tier = tier;
         this.blockMined = blockMined;
         this.progress = progress;
@@ -33,5 +33,17 @@ public class ResourceData {
 
     public void setProgress(int progress) {
         this.progress = progress;
+    }
+
+    public void increaseBlocksMined(int amount){
+        this.blockMined += amount;
+    }
+
+    public void increaseTier(int amount){
+        this.tier += amount;
+    }
+
+    public void increaseProgress(int amount){
+        this.progress += amount;
     }
 }

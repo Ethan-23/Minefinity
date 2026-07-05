@@ -13,7 +13,7 @@ import org.evasive.me.minefinity.customItems.framework.ItemPickupService;
 import org.evasive.me.minefinity.customItems.recipes.RecipeUnlockManager;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.service.RecipeService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
-import org.evasive.me.minefinity.mining.milestones.MilestoneService;
+import org.evasive.me.minefinity.mining.milestones.MiningMilestoneService;
 import org.evasive.me.minefinity.towns.commands.MineData;
 import org.evasive.me.minefinity.playerdata.component.PlayerDataComponentRegistry;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
@@ -69,7 +69,7 @@ public class TownModule {
     private final WorkshopRecipeManager workshopRecipeManager;
     private final StructureService structureService;
     private final EconomyService economyService;
-    private final MilestoneService milestoneService;
+    private final MiningMilestoneService milestoneService;
     private final BlockTierService blockTierService;
     private final CustomItemRegistryService customItemRegistryService;
     private final ItemPickupService itemPickupService;
@@ -80,7 +80,7 @@ public class TownModule {
     private final StructureRegistryConfigManager structureRegistryConfigManager;
     private final RecipeUnlockManager recipeUnlockManager;
 
-    public TownModule(PlayerDataService playerDataService, EconomyService economyService, CustomItemRegistryService customItemRegistryService, BackpackService backpackService, BlockTierService blockTierService, MilestoneService milestoneService, ItemPickupService itemPickupService, NpcBehaviorRegistry npcBehaviorRegistry, BlockTypeRegistry blockTypeRegistry, BlockTypeRegistryService blockTypeRegistryService, PlayerDataComponentRegistry componentRegistry) {
+    public TownModule(PlayerDataService playerDataService, EconomyService economyService, CustomItemRegistryService customItemRegistryService, BackpackService backpackService, BlockTierService blockTierService, MiningMilestoneService milestoneService, ItemPickupService itemPickupService, NpcBehaviorRegistry npcBehaviorRegistry, BlockTypeRegistry blockTypeRegistry, BlockTypeRegistryService blockTypeRegistryService, PlayerDataComponentRegistry componentRegistry) {
 
         StructureRegistry structureRegistry = new StructureRegistry();
 

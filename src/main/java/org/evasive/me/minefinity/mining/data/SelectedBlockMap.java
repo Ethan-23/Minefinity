@@ -5,10 +5,11 @@ import org.bukkit.block.Block;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SelectedBlockMap {
 
-    private final Map<UUID, Block> selectedBlockMap = new HashMap<>();
+    private final ConcurrentHashMap<UUID, Block> selectedBlockMap = new ConcurrentHashMap<>();
 
     public void addSelectedBlock(UUID uuid, Block block){
         selectedBlockMap.put(uuid, block);

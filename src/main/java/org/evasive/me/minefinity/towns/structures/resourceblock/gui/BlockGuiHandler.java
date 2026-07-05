@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.core.economy.EconomyService;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
-import org.evasive.me.minefinity.mining.milestones.MilestoneService;
+import org.evasive.me.minefinity.mining.milestones.MiningMilestoneService;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 
 
@@ -15,12 +15,12 @@ public class BlockGuiHandler {
     private final Component INVALID_PURCHASE_AMOUNT = TextConversions.parse("<red>You cannot afford to purchase this block tier</red>");
     private final Component VALID_PURCHASE_MESSAGE = TextConversions.parse("<white>You have purchased the next block tier</white>");
 
-    private final MilestoneService milestoneService;
+    private final MiningMilestoneService milestoneService;
     private final BlockTierService blockTierService;
     private final EconomyService economyService;
     private final CustomItemRegistryService customItemRegistryService;
 
-    public BlockGuiHandler(MilestoneService milestoneService, CustomItemRegistryService customItemRegistryService, BlockTierService blockTierService, EconomyService economyService) {
+    public BlockGuiHandler(MiningMilestoneService milestoneService, CustomItemRegistryService customItemRegistryService, BlockTierService blockTierService, EconomyService economyService) {
         this.milestoneService = milestoneService;
         this.blockTierService = blockTierService;
         this.economyService = economyService;

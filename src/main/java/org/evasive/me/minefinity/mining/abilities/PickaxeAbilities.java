@@ -1,5 +1,6 @@
 package org.evasive.me.minefinity.mining.abilities;
 
+import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 
@@ -61,5 +62,14 @@ public enum PickaxeAbilities {
 
     public String getAbilityDisplay(){
         return TextConversions.buildRarityColor(this.name(), this.getRarity()) + " <dark_gray>- <gray>" + this.getDescription();
+    }
+
+    public static PickaxeAbilities getPickaxeAbilities(String abilityId){
+        try {
+            return PickaxeAbilities.valueOf(abilityId);
+        }catch (IllegalArgumentException e){
+            Minefinity.SendLogMessage("Invalid Pickaxe Ability: " + abilityId);
+            return null;
+        }
     }
 }

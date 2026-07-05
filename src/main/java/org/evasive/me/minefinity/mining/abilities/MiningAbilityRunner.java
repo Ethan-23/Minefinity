@@ -1,5 +1,6 @@
 package org.evasive.me.minefinity.mining.abilities;
 
+import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ToolItemData;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePartItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
@@ -27,7 +28,9 @@ public class MiningAbilityRunner {
             if(part == null) continue;
             for (String abilityId : part.abilityComponent().getValue()) {
                 MiningAbility miningAbility = miningAbilityRegistry.getAbility(abilityId);
-                PickaxeAbilities pickaxeAbility = PickaxeAbilities.valueOf(abilityId);
+
+                PickaxeAbilities pickaxeAbility = PickaxeAbilities.getPickaxeAbilities(abilityId);
+
                 if(miningAbility == null || pickaxeAbilitiesList.contains(pickaxeAbility)) continue;
                 pickaxeAbilitiesList.add(pickaxeAbility);
                 miningAbilityRegistry.getAbility(abilityId).onHit(hitContext);
@@ -44,7 +47,7 @@ public class MiningAbilityRunner {
             if(part == null) continue;
             for (String abilityId : part.abilityComponent().getValue()) {
                 MiningAbility miningAbility = miningAbilityRegistry.getAbility(abilityId);
-                PickaxeAbilities pickaxeAbility = PickaxeAbilities.valueOf(abilityId);
+                PickaxeAbilities pickaxeAbility = PickaxeAbilities.getPickaxeAbilities(abilityId);
                 if(miningAbility == null || pickaxeAbilitiesList.contains(pickaxeAbility)) continue;
                 pickaxeAbilitiesList.add(pickaxeAbility);
                 miningAbilityRegistry.getAbility(abilityId).onBreak(breakContext);

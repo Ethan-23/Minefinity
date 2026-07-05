@@ -6,12 +6,14 @@ import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.protocol.player.DiggingAction;
 import com.github.retrooper.packetevents.util.Vector3i;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerDigging;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.mining.data.MiningBlockData;
@@ -58,7 +60,7 @@ public class SwingPacketEvents extends PacketListenerAbstract {
 
         if(checkForIncorrectBlock(block)) return;
 
-        handleMiningProgress(player, block);
+        Bukkit.getScheduler().runTask(Minefinity.getCore(), () -> handleMiningProgress(player, block));
     }
 
     public void handleDiggingPacket(PacketReceiveEvent event){

@@ -13,7 +13,7 @@ import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
-import org.evasive.me.minefinity.mining.milestones.MilestoneService;
+import org.evasive.me.minefinity.mining.milestones.MiningMilestoneService;
 import org.evasive.me.minefinity.core.data.MilestoneTier;
 import org.evasive.me.minefinity.core.data.Stats;
 import org.evasive.me.minefinity.core.data.BaseBlock;
@@ -40,11 +40,11 @@ public class MilestoneGui extends BaseGui {
     String IN_PROGRESS = "<bold><yellow>IN PROGRESS";
 
     private final BlockTierService blockTierService;
-    private final MilestoneService milestoneService;
+    private final MiningMilestoneService milestoneService;
     private final EconomyService economyService;
     private final CustomItemRegistryService customItemRegistryService;
 
-    public MilestoneGui(Player player, String blockId, CustomItemRegistryService customItemRegistryService, BlockTierService blockTierService, MilestoneService milestoneService, EconomyService economyService, String worldId) {
+    public MilestoneGui(Player player, String blockId, CustomItemRegistryService customItemRegistryService, BlockTierService blockTierService, MiningMilestoneService milestoneService, EconomyService economyService, String worldId) {
         super(player, INVENTORY_SIZE, TextConversions.parse("Milestones"));
         this.blockId = blockId;
         this.blockTierService = blockTierService;

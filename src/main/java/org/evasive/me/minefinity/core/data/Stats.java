@@ -1,6 +1,7 @@
 package org.evasive.me.minefinity.core.data;
 
 import org.bukkit.Material;
+import org.evasive.me.minefinity.Minefinity;
 
 public enum Stats {
 
@@ -61,5 +62,14 @@ public enum Stats {
 
     public Material getMaterial() {
         return material;
+    }
+
+    public static Stats getStat(String statId){
+        try {
+            return Stats.valueOf(statId);
+        }catch (IllegalArgumentException e){
+            Minefinity.SendLogMessage("Invalid Stat ID: " + statId);
+            return null;
+        }
     }
 }

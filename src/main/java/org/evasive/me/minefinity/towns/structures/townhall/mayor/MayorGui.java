@@ -12,7 +12,7 @@ import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.BaseItem
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.RecipeRequirement;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.service.RecipeService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
-import org.evasive.me.minefinity.mining.milestones.MilestoneService;
+import org.evasive.me.minefinity.mining.milestones.MiningMilestoneService;
 import org.evasive.me.minefinity.towns.structures.data.Structure;
 import org.evasive.me.minefinity.towns.structures.service.StructureService;
 
@@ -27,11 +27,11 @@ public class MayorGui extends BaseGui {
     private static final int PLAYER_STATS = 13;
     private static final List<Integer> townListing = List.of(28, 29, 30, 31, 32, 33, 34);
     private final StructureService structureService;
-    private final MilestoneService milestoneService;
+    private final MiningMilestoneService milestoneService;
     private final RecipeService recipeService;
     private final CustomItemRegistryService customItemRegistryService;
 
-    public MayorGui(Player player, CustomItemRegistryService customItemRegistryService, StructureService structureService, RecipeService recipeService, MilestoneService milestoneService) {
+    public MayorGui(Player player, CustomItemRegistryService customItemRegistryService, StructureService structureService, RecipeService recipeService, MiningMilestoneService milestoneService) {
         super(player, INVENTORY_SIZE, TextConversions.parse("Town Manager"));
         this.milestoneService = milestoneService;
         this.customItemRegistryService = customItemRegistryService;

@@ -16,11 +16,11 @@ import java.util.Map;
  * Contributes the stat bonuses a player has unlocked through block-mining milestones.
  * Owned by mining; registered with playerdata's stat registry at startup.
  */
-public class MilestoneStatContributor implements StatContributor {
+public class MiningMilestoneStatContributor implements StatContributor {
 
     private final PlayerDataService playerDataService;
 
-    public MilestoneStatContributor(PlayerDataService playerDataService) {
+    public MiningMilestoneStatContributor(PlayerDataService playerDataService) {
         this.playerDataService = playerDataService;
     }
 
@@ -33,12 +33,14 @@ public class MilestoneStatContributor implements StatContributor {
         for (BaseBlock baseBlock : blockList) {
             List<MilestoneTier> milestoneTiers = baseBlock.milestoneUnlocks();
             String blockId = baseBlock.name();
-            int tier = playerDataService.getPlayerData(player.getUniqueId()).get(BlockMilestone.class).getTier(blockId);
+            int tier = playerDataService.getPlayerData(player.getUniqueId()).get(MiningBlockMilestones.class).getTier(blockId);
 
             for (int i = 1; i <= tier; i++) {
                 Map<String, Integer> statsStringMap = milestoneTiers.get(i - 1).stats();
-                for (String stat : statsStringMap.keySet()) {
-                    statsMap.merge(Stats.valueOf(stat), statsStringMap.get(stat), Integer::sum);
+                for (String statId : statsStringMap.keySet()) {
+                    Stats stat = Stats.getStat(statId);
+                    if(stat == null) continue;
+                    statsMap.merge(stat, statsStringMap.get(statId), Integer::sum);
                 }
             }
         }

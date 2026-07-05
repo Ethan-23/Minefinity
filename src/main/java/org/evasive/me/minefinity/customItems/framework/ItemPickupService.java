@@ -91,7 +91,7 @@ public class ItemPickupService {
         int overflow = attemptBackpackStorage(player, drop, amount);
 
         if(overflow > 0)
-            overflow = attemptInventoryStorage(player, drop, amount);
+            overflow = attemptInventoryStorage(player, drop, overflow);
 
         if(overflow > 0){
             fullInventoryNotification(player);

@@ -19,6 +19,7 @@ import org.evasive.me.minefinity.core.economy.commands.balance.Balance;
 import org.evasive.me.minefinity.core.events.ServerJoinEvent;
 import org.evasive.me.minefinity.core.events.ServerSpawnEvents;
 import org.evasive.me.minefinity.core.gui.GuiListener;
+import org.evasive.me.minefinity.core.notifications.NotificationService;
 import org.evasive.me.minefinity.core.npcs.NpcBehaviorRegistry;
 import org.evasive.me.minefinity.core.npcs.NpcInstanceMap;
 import org.evasive.me.minefinity.core.npcs.events.InteractEvent;
@@ -45,6 +46,7 @@ public class CoreModule {
     private final NpcBehaviorRegistry npcBehaviorRegistry;
     private final PlayerInputListener playerInputListener;
     private final BlockTypeRegistry blockTypeRegistry;
+    private final NotificationService notificationService;
 
     public CoreModule(PlayerDataService playerDataService) {
         new GenerateCustomWorlds().init();
@@ -59,6 +61,7 @@ public class CoreModule {
         this.npcInstanceMap = new NpcInstanceMap();
         this.npcBehaviorRegistry = new NpcBehaviorRegistry();
         this.playerInputListener = new PlayerInputListener();
+        this.notificationService = new NotificationService();
 
     }
 
@@ -120,5 +123,9 @@ public class CoreModule {
 
     public BlockTypeRegistry getBlockTypeRegistry() {
         return blockTypeRegistry;
+    }
+
+    public NotificationService getNotificationService() {
+        return notificationService;
     }
 }
