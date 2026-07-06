@@ -5,12 +5,14 @@ import org.evasive.me.minefinity.core.notifications.NotificationService;
 import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
 import org.evasive.me.minefinity.customItems.framework.ItemPickupService;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
+import org.evasive.me.minefinity.mining.abilities.AbilityNotifier;
 import org.evasive.me.minefinity.mining.abilities.MiningAbilityRegistry;
 import org.evasive.me.minefinity.mining.abilities.MiningAbilityRunner;
 import org.evasive.me.minefinity.mining.data.MiningDataMap;
 import org.evasive.me.minefinity.mining.data.SelectedBlockMap;
 import org.evasive.me.minefinity.mining.events.SwingPacketEvents;
 import org.evasive.me.minefinity.mining.handlers.BlockBreakHandler;
+import org.evasive.me.minefinity.mining.handlers.BlockBreakNotifier;
 import org.evasive.me.minefinity.mining.handlers.BlockProgressHandler;
 import org.evasive.me.minefinity.mining.milestones.MiningBlockMilestones;
 import org.evasive.me.minefinity.mining.milestones.MiningMilestoneService;
@@ -38,7 +40,7 @@ public class MiningModule {
 
     public MiningModule(PlayerDataService playerDataService, CustomItemRegistryService customItemRegistryService, BlockTypeRegistry blockTypeRegistry, ItemPickupService itemPickupService, StatsService statsService, PlayerDataComponentRegistry componentRegistry, StatContributorRegistry statContributorRegistry, NotificationService notificationService) {
         this.animationIDs = new AnimationIDs();
-        MiningAbilityRegistry miningAbilityRegistry = new MiningAbilityRegistry(animationIDs);
+        MiningAbilityRegistry miningAbilityRegistry = new MiningAbilityRegistry(new AbilityNotifier(notificationService));
         MiningAbilityRunner miningAbilityRunner = new MiningAbilityRunner(miningAbilityRegistry);
         this.miningDataMap = new MiningDataMap(animationIDs);
         this.selectedBlockMap = new SelectedBlockMap();
@@ -46,7 +48,7 @@ public class MiningModule {
         this.milestoneService = new MiningMilestoneService(playerDataService, blockTypeRegistryService, statsService, new MiningMilestoneNotifier(notificationService));
         this.blockTierService = new BlockTierService(playerDataService, customItemRegistryService, blockTypeRegistryService, miningDataMap, selectedBlockMap);
 
-        BlockBreakHandler blockBreakHandler = new BlockBreakHandler(customItemRegistryService, itemPickupService,milestoneService,blockTierService,miningDataMap, notificationService);
+        BlockBreakHandler blockBreakHandler = new BlockBreakHandler(customItemRegistryService, itemPickupService,milestoneService,blockTierService,miningDataMap, new BlockBreakNotifier(notificationService));
         this.blockProgressHandler = new BlockProgressHandler(miningAbilityRunner, blockTierService, miningDataMap, customItemRegistryService, statsService, blockBreakHandler);
         this.customItemRegistryService = customItemRegistryService;
 

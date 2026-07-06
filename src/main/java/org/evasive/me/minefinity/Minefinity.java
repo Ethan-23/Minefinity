@@ -115,6 +115,11 @@ public final class Minefinity extends JavaPlugin {
     }
 
     public static void SendLogMessage(String message){
+        // Fall back to a plain logger when the plugin isn't loaded (e.g. unit tests) so this never NPEs.
+        if (getCore() == null) {
+            java.util.logging.Logger.getLogger("Minefinity").severe(message);
+            return;
+        }
         getCore().getLogger().severe(message);
     }
 }

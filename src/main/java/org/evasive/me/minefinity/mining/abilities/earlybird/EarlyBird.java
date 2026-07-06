@@ -16,7 +16,6 @@ public class EarlyBird implements MiningAbility {
         if (breakingPower != 1)
             return;
 
-        //10% increase
         context.getStatsContext().multiplySpeed(MINING_SPEED_MULTIPLIER);
     }
 }

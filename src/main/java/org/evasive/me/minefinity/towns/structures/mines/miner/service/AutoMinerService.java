@@ -6,7 +6,7 @@ import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.StatsComponent;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
-import org.evasive.me.minefinity.mining.handlers.BlockProgressHandler;
+import org.evasive.me.minefinity.mining.utils.MiningProgress;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.core.data.Stats;
 import org.evasive.me.minefinity.towns.structures.mines.miner.AutoMinerData;
@@ -29,10 +29,6 @@ public class AutoMinerService {
 
     private AutoMinerData getAutoMiner(Player player) {
         return playerDataService.getPlayerData(player).get(AutoMinerData.class);
-    }
-
-    public void setAutoMinerUnlockedBlockTier(Player player, int blockTier){
-        getAutoMiner(player).setUnlockedBlockTier(blockTier);
     }
 
     public int getAutoMinerUnlockedBlockTier(Player player){
@@ -63,20 +59,8 @@ public class AutoMinerService {
         return pickaxeItem == null ? null : pickaxeItem.buildItem();
     }
 
-    public void setAutoMinerLevel(Player player, int level) {
-        getAutoMiner(player).setLevel(level);
-    }
-
-    public int getAutoMinerLevel(Player player) {
-        return getAutoMiner(player).getLevel();
-    }
-
     public int getAutoMinerStorageCap(Player player){
         return getAutoMiner(player).getStorageCap();
-    }
-
-    public void setAutoMinerStorageCap(Player player, int amount){
-        getAutoMiner(player).setStorageCap(amount);
     }
 
     public int getAutoMinerStoredBlockAmount(Player player) {
@@ -110,8 +94,8 @@ public class AutoMinerService {
         if(basePickaxeItem == null) return;
         float progressPerTick = basePickaxeItem.getComponent(StatsComponent.class).getStatAmount(Stats.MINING_SPEED);
 
-        if(progressPerTick > blockHardness / BlockProgressHandler.MAX_SPEED_DENOMINATION)
-            progressPerTick = blockHardness / BlockProgressHandler.MAX_SPEED_DENOMINATION;
+        if(progressPerTick > blockHardness / MiningProgress.MAX_SPEED_DENOMINATION)
+            progressPerTick = blockHardness / MiningProgress.MAX_SPEED_DENOMINATION;
 
         float storedProgress = autoMiner.getStoredProgress();
 

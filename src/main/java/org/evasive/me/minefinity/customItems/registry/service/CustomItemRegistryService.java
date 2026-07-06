@@ -5,9 +5,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.core.rarity.Rarity;
+import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
 import org.evasive.me.minefinity.customItems.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BaseToolItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.registry.config.RegistryConfigHandler;
 
@@ -65,21 +65,17 @@ public class CustomItemRegistryService {
     public BaseCustomItem getRegisteredBaseItem(ItemStack itemStack){
         if(itemStack == null || itemStack.isEmpty())
             return null;
-        String itemId = getItemId(itemStack);
-
-        if(itemId == null || !customItemRegistry.isRegistered(itemId))
+        String id = getItemId(itemStack);
+        if(id == null || !customItemRegistry.isRegistered(id))
             return null;
 
-        BaseCustomItem baseCustomItem = customItemRegistry.getByID(itemId).getBaseItem().copy();
-
-        if(!(baseCustomItem instanceof BaseToolItem baseComponentItem))
-            return baseCustomItem;
-
+        BaseCustomItem item = customItemRegistry.getByID(id).getBaseItem().copy();
         PersistentDataContainer pdc = itemStack.getItemMeta().getPersistentDataContainer();
 
-        baseComponentItem.partComponent().load(pdc);
+        for (ItemComponent c : item.getComponents())
+            if (c.isInstanceData()) c.load(pdc);
 
-        return baseComponentItem;
+        return item;
     }
 
     public BaseCustomItem getBaseItemById(String itemId){

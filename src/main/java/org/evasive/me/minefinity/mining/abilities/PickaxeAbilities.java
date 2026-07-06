@@ -30,7 +30,8 @@ public enum PickaxeAbilities {
     ),
     METAL_DETECT(
             "Increases the chance of finding secondary resources.",
-            Rarity.UNIQUE
+            Rarity.UNIQUE,
+            "block.beacon.activate"
     ),
 
     //Radiant?
@@ -46,10 +47,20 @@ public enum PickaxeAbilities {
 
     private final String description;
     private final Rarity rarity;
+    private final String soundKey;
 
     PickaxeAbilities(String description, Rarity rarity) {
+        this(description, rarity, null);
+    }
+
+    PickaxeAbilities(String description, Rarity rarity, String soundKey) {
         this.description = description;
         this.rarity = rarity;
+        this.soundKey = soundKey;
+    }
+
+    public boolean hasSound() {
+        return soundKey != null;
     }
 
     public String getDescription() {
@@ -60,8 +71,16 @@ public enum PickaxeAbilities {
         return rarity;
     }
 
+    public String getSoundKey() {
+        return soundKey;
+    }
+
     public String getAbilityDisplay(){
-        return TextConversions.buildRarityColor(this.name(), this.getRarity()) + " <dark_gray>- <gray>" + this.getDescription();
+        return TextConversions.buildRarityColor(this.name(), this.rarity) + " <dark_gray>- <gray>" + this.description;
+    }
+
+    public String getAbilityNameDisplay(){
+        return TextConversions.buildRarityColor(this.name(), this.rarity);
     }
 
     public static PickaxeAbilities getPickaxeAbilities(String abilityId){

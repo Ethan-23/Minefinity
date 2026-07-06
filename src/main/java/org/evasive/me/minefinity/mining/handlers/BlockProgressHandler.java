@@ -15,12 +15,15 @@ import org.evasive.me.minefinity.mining.context.HitContext;
 import org.evasive.me.minefinity.mining.context.StatsContext;
 import org.evasive.me.minefinity.mining.data.MiningDataMap;
 import org.evasive.me.minefinity.core.data.Stats;
+import org.evasive.me.minefinity.mining.utils.MiningProgress;
 import org.evasive.me.minefinity.playerdata.stats.service.StatsService;
 import org.evasive.me.minefinity.core.data.BaseBlock;
 import org.evasive.me.minefinity.towns.structures.resourceblock.service.BlockTierService;
 
-import java.util.Map;
 import java.util.UUID;
+
+import static org.evasive.me.minefinity.mining.utils.MiningProgress.ANIMATION_STAGES;
+import static org.evasive.me.minefinity.mining.utils.MiningProgress.crossedStage;
 
 public class BlockProgressHandler {
 
@@ -43,46 +46,31 @@ public class BlockProgressHandler {
         this.blockBreak = blockBreak;
     }
 
-    public static final int MAX_SPEED_DENOMINATION = 4;
-    private static final int ANIMATION_STAGES = 10;
-    private static final float SPEED_DENOM = 10;
+
 
     public void addBlockProgress(Location location, Player player){
         UUID uuid = player.getUniqueId();
 
-        Map<Stats, Integer> playerStats = statsService.getStats(uuid);
-
-        int breakingPower = playerStats.getOrDefault(Stats.BREAKING_POWER, 0);
-
-        ItemStack item = player.getInventory().getItemInMainHand();
-
-        BasePickaxeItem basePickaxeItem = null;
-
-        BaseCustomItem baseCustomItem = customItemRegistryService.getRegisteredBaseItem(item);
-
-        if(baseCustomItem instanceof BasePickaxeItem)
-            basePickaxeItem = (BasePickaxeItem) baseCustomItem;
-
         BaseBlock baseBlock = blockTierService.getSelectedBaseBlock(player);
 
-        if(baseBlock.breakingPower() > breakingPower)
+        int playerBreakingPower = statsService.getStats(uuid).getOrDefault(Stats.BREAKING_POWER, 0);
+
+        if(!MiningProgress.canBreak(playerBreakingPower, baseBlock.breakingPower()))
             return;
 
-        //Mining stats being used
         StatsContext statsContext = new StatsContext();
 
         statsContext.addStats(statsService.getStringIdStats(player.getUniqueId()));
+
+        BasePickaxeItem basePickaxeItem = getItemInHand(player);
 
         if (basePickaxeItem != null){
             miningAbilityRunner.runOnHit(basePickaxeItem, new HitContext(player, baseBlock, statsContext));
         }
 
-        float progress = statsContext.getSpeed() / SPEED_DENOM;
-
         int health = baseBlock.health();
 
-        if(progress > (float) health /MAX_SPEED_DENOMINATION)
-            progress = (float) health /MAX_SPEED_DENOMINATION;
+        float progress = MiningProgress.hitProgress(statsContext.getSpeed(), health);
 
         createNewAnimation(player, progress, health, location.getBlock());
 
@@ -95,21 +83,37 @@ public class BlockProgressHandler {
 
     }
 
-    private void createNewAnimation(Player player, float progress, int health, Block block) {
+    private BasePickaxeItem getItemInHand(Player player) {
+        ItemStack item = player.getInventory().getItemInMainHand();
+
+        BaseCustomItem baseCustomItem = customItemRegistryService.getRegisteredBaseItem(item);
+
+        if(baseCustomItem instanceof BasePickaxeItem)
+            return (BasePickaxeItem) baseCustomItem;
+
+        return null;
+    }
+
+    private void createNewAnimation(Player player, float incomingProgress, int totalBlockHealth, Block block) {
 
         if(!isBlockStillValid(block.getLocation()))
             return;
 
         float currentProgress = miningDataMap.getBlockProgress(block.getLocation(), player.getUniqueId());
-        int animUpdate = health / ANIMATION_STAGES;
 
-        if((int)(currentProgress + progress) / animUpdate > (int)currentProgress / animUpdate || currentProgress == 0)
-            sendAnimationPacket(player, block, (byte) ((currentProgress + progress) / animUpdate));
+        int animationChange = MiningProgress.stageStep(totalBlockHealth);
+
+        int totalProgress = (int) (currentProgress + incomingProgress);
+
+        if(crossedStage(currentProgress, totalProgress, animationChange))
+            sendAnimationPacket(player, block, (byte) (totalProgress / animationChange));
 
     }
 
+
     public void sendAnimationPacket(Player player, Block block, byte blockProgress){
-        if(blockProgress > ANIMATION_STAGES - 1) blockProgress = ANIMATION_STAGES - 1;
+
+        blockProgress = (byte) Math.min(blockProgress, ANIMATION_STAGES - 1);
 
         WrapperPlayServerBlockBreakAnimation progressAnimation = new WrapperPlayServerBlockBreakAnimation(
                 miningDataMap.getBlockAnimationID(block.getLocation(), player.getUniqueId()),

@@ -6,28 +6,26 @@ import org.evasive.me.minefinity.mining.abilities.earlybird.EarlyBird;
 import org.evasive.me.minefinity.mining.abilities.metaldetector.MetalDetector;
 import org.evasive.me.minefinity.mining.abilities.structuredforce.StructuredForce;
 import org.evasive.me.minefinity.mining.abilities.structuredforce.data.StreakMap;
-import org.evasive.me.minefinity.mining.utils.AnimationIDs;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class MiningAbilityRegistry {
 
-    private final AnimationIDs animationIDs;
     private final Map<String, MiningAbility> abilities;
+    private final AbilityNotifier abilityNotifier;
 
-    public MiningAbilityRegistry(AnimationIDs animationIDs) {
-        this.animationIDs = animationIDs;
-
+    public MiningAbilityRegistry(AbilityNotifier abilityNotifier) {
+        this.abilityNotifier = abilityNotifier;
         this.abilities = new HashMap<>();
         initializeAbilities();
     }
 
     private void initializeAbilities(){
         abilities.put(PickaxeAbilities.CRITICAL_FRACTURE.name(), new CriticalFracture(new CriticalMap()));
-        abilities.put(PickaxeAbilities.STRUCTURED_FORCE.name(), new StructuredForce(new StreakMap()));
+        abilities.put(PickaxeAbilities.STRUCTURED_FORCE.name(), new StructuredForce(new StreakMap(), abilityNotifier));
         abilities.put(PickaxeAbilities.EARLY_BIRD.name(), new EarlyBird());
-        abilities.put(PickaxeAbilities.METAL_DETECT.name(), new MetalDetector());
+        abilities.put(PickaxeAbilities.METAL_DETECT.name(), new MetalDetector(abilityNotifier));
     }
 
     public MiningAbility getAbility(String abilityId){

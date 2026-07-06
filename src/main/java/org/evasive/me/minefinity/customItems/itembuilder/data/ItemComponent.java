@@ -12,4 +12,6 @@ public interface ItemComponent {
     void save(CustomItemBuilder builder);
 
     void addLore(List<String> lore);
+
+    default boolean isInstanceData() { return false; }
 }

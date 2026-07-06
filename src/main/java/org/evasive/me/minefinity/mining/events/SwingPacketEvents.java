@@ -33,6 +33,8 @@ public class SwingPacketEvents extends PacketListenerAbstract {
     private final MiningDataMap miningDataMap;
     private final AnimationIDs animationIDs;
 
+    private final static int PACKET_ID = 0x3C;
+
     public SwingPacketEvents(
             CustomItemRegistryService customItemRegistryService,
             SelectedBlockMap selectedBlockMap,
@@ -89,7 +91,7 @@ public class SwingPacketEvents extends PacketListenerAbstract {
     }
 
     public boolean validateTargetBlock(Player player, PacketReceiveEvent event){
-        if(event.getPacketId() != 0x3C || player.getGameMode() != GameMode.SURVIVAL || player.getTargetBlockExact(5) == null || selectedBlockMap.getSelectedBlock(player.getUniqueId()) == null)
+        if(event.getPacketId() != PACKET_ID || player.getGameMode() != GameMode.SURVIVAL || player.getTargetBlockExact(5) == null || selectedBlockMap.getSelectedBlock(player.getUniqueId()) == null)
             return false;
 
         return selectedBlockMap.getSelectedBlock(player.getUniqueId()).getLocation().equals(Objects.requireNonNull(player.getTargetBlockExact(5)).getLocation());

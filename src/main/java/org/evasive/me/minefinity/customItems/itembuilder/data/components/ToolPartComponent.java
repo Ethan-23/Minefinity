@@ -98,4 +98,9 @@ public class ToolPartComponent implements ItemComponent, EditableComponent<Map<P
             }
         });
     }
+
+    @Override
+    public boolean isInstanceData() {
+        return true;
+    }
 }

@@ -4,6 +4,7 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.evasive.me.minefinity.core.data.CustomItemStack;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.backpack.BackpackHandler;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
@@ -92,6 +93,20 @@ public class ItemPickupService {
 
         if(overflow > 0)
             overflow = attemptInventoryStorage(player, drop, overflow);
+
+        if(overflow > 0){
+            fullInventoryNotification(player);
+            return overflow;
+        }
+        return 0;
+    }
+
+    public int givePlayerDrops(Player player, CustomItemStack customItemStack){
+        ItemStack itemStack = customItemRegistryService.getRegisteredItemStack(customItemStack.getCustomItem());
+        int overflow = attemptBackpackStorage(player, itemStack, customItemStack.getAmount());
+
+        if(overflow > 0)
+            overflow = attemptInventoryStorage(player, itemStack, overflow);
 
         if(overflow > 0){
             fullInventoryNotification(player);
