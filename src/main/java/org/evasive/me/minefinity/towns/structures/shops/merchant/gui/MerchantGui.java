@@ -3,7 +3,7 @@ package org.evasive.me.minefinity.towns.structures.shops.merchant.gui;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.evasive.me.minefinity.core.economy.EconomyService;
+import org.evasive.me.minefinity.playerdata.economy.EconomyService;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;

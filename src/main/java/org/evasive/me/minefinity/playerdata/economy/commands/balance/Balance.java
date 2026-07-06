@@ -1,13 +1,13 @@
-package org.evasive.me.minefinity.core.economy.commands.balance;
+package org.evasive.me.minefinity.playerdata.economy.commands.balance;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.core.economy.EconomyService;
-import org.evasive.me.minefinity.core.economy.commands.balance.sub.BalanceOtherSub;
-import org.evasive.me.minefinity.core.economy.commands.balance.sub.BalanceSelfSub;
+import org.evasive.me.minefinity.playerdata.economy.EconomyService;
+import org.evasive.me.minefinity.playerdata.economy.commands.balance.sub.BalanceOtherSub;
+import org.evasive.me.minefinity.playerdata.economy.commands.balance.sub.BalanceSelfSub;
 import org.evasive.me.minefinity.core.utils.command.SubCommand;
 import org.jetbrains.annotations.NotNull;
 

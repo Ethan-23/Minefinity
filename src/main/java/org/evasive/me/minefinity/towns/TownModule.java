@@ -4,7 +4,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.towns.commands.PacketRefresh;
-import org.evasive.me.minefinity.core.economy.EconomyService;
+import org.evasive.me.minefinity.playerdata.economy.EconomyService;
 import org.evasive.me.minefinity.core.npcs.NpcBehaviorRegistry;
 import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
 import org.evasive.me.minefinity.towns.structures.registry.StructureRegistry;

@@ -1,4 +1,4 @@
-package org.evasive.me.minefinity.core.lunar;
+package org.evasive.me.minefinity.playerdata.lunar;
 
 import com.google.common.collect.Lists;
 import com.lunarclient.apollo.Apollo;

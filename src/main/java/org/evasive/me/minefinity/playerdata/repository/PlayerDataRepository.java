@@ -1,33 +1,27 @@
 package org.evasive.me.minefinity.playerdata.repository;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import org.evasive.me.minefinity.playerdata.component.ComponentType;
 import org.evasive.me.minefinity.playerdata.component.PlayerDataComponent;
 import org.evasive.me.minefinity.playerdata.component.PlayerDataComponentRegistry;
 import org.evasive.me.minefinity.playerdata.database.DatabaseManager;
 import org.evasive.me.minefinity.playerdata.model.PlayerData;
 
-import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.UUID;
 
 public class PlayerDataRepository {
 
-    private static final Type MAP_STR_INT = new TypeToken<Map<String, Integer>>() {}.getType();
-    private static final Type MAP_STR_STR = new TypeToken<Map<String, String>>() {}.getType();
-
     // Fixed scalar columns; feature component columns are appended from the registry.
     private static final List<String> SCALAR_COLUMNS = List.of(
-            "uuid", "username", "balance", "unlocked_block_tiers", "selected_block_tiers", "backpack_storage");
+            "uuid", "username", "balance");
 
     private final DatabaseManager dbManager;
     private final PlayerDataComponentRegistry componentRegistry;
@@ -50,17 +44,10 @@ public class PlayerDataRepository {
             try (ResultSet rs = stmt.executeQuery()) {
                 if (!rs.next()) return Optional.empty();
 
-                Map<String, Integer> unlockedBlockTiers = gson.fromJson(rs.getString("unlocked_block_tiers"), MAP_STR_INT);
-                Map<String, String> selectedBlockTiers = gson.fromJson(rs.getString("selected_block_tiers"), MAP_STR_STR);
-                Map<String, Integer> backpackStorage = gson.fromJson(rs.getString("backpack_storage"), MAP_STR_INT);
-
                 PlayerData player = new PlayerData(
                         uuid,
                         rs.getString("username"),
-                        rs.getDouble("balance"),
-                        unlockedBlockTiers,
-                        selectedBlockTiers,
-                        backpackStorage
+                        rs.getDouble("balance")
                 );
 
                 // Each feature's slice is deserialized generically via its registered type.
@@ -98,9 +85,6 @@ public class PlayerDataRepository {
             stmt.setString(i++, player.getUuid().toString());
             stmt.setString(i++, player.getUsername());
             stmt.setDouble(i++, player.getBalance());
-            stmt.setString(i++, gson.toJson(player.getUnlockedBlockTiers()));
-            stmt.setString(i++, gson.toJson(player.getSelectedBlockTiers()));
-            stmt.setString(i++, gson.toJson(player.getBackpackStorage()));
             for (ComponentType<?> type : components) {
                 stmt.setString(i++, gson.toJson(player.get(type.type())));
             }

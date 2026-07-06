@@ -1,23 +1,23 @@
-package org.evasive.me.minefinity.core.admin.commands.economy.sub;
+package org.evasive.me.minefinity.playerdata.commands.economy.sub;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.evasive.me.minefinity.core.economy.EconomyService;
+import org.evasive.me.minefinity.playerdata.economy.EconomyService;
 import org.evasive.me.minefinity.core.utils.command.CommandFeedback;
 import org.evasive.me.minefinity.core.utils.command.SubCommand;
 
-public class EconomySetSub implements SubCommand {
+public class EconomySubSub implements SubCommand {
 
     EconomyService economyService;
 
-    public EconomySetSub(EconomyService economyService) {
+    public EconomySubSub(EconomyService economyService) {
         this.economyService = economyService;
     }
 
     @Override
     public String getName() {
-        return "setEconomy";
+        return "subEconomy";
     }
 
     @Override
@@ -28,10 +28,10 @@ public class EconomySetSub implements SubCommand {
 
         double amount = Double.parseDouble(args[2]);
 
-        economyService.setBalance(target, amount);
+        economyService.subBalance(target, amount);
 
         assert target != null;
-        sender.sendMessage(CommandFeedback.SET_PLAYERS_BALANCE(target, amount));
+        sender.sendMessage(CommandFeedback.SUB_PLAYERS_BALANCE(target, amount));
 
     }
 }

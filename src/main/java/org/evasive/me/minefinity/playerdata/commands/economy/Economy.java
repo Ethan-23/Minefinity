@@ -1,4 +1,4 @@
-package org.evasive.me.minefinity.core.admin.commands.economy;
+package org.evasive.me.minefinity.playerdata.commands.economy;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -7,10 +7,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.core.admin.commands.economy.sub.EconomyAddSub;
-import org.evasive.me.minefinity.core.admin.commands.economy.sub.EconomySetSub;
-import org.evasive.me.minefinity.core.admin.commands.economy.sub.EconomySubSub;
-import org.evasive.me.minefinity.core.economy.EconomyService;
+import org.evasive.me.minefinity.playerdata.commands.economy.sub.EconomyAddSub;
+import org.evasive.me.minefinity.playerdata.commands.economy.sub.EconomySetSub;
+import org.evasive.me.minefinity.playerdata.commands.economy.sub.EconomySubSub;
+import org.evasive.me.minefinity.playerdata.economy.EconomyService;
 import org.evasive.me.minefinity.core.utils.command.CommandFeedback;
 import org.evasive.me.minefinity.core.utils.command.SubCommand;
 import org.jetbrains.annotations.NotNull;

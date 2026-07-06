@@ -1,4 +1,4 @@
-package org.evasive.me.minefinity.core.scoreboard;
+package org.evasive.me.minefinity.mining.scoreboard;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -8,9 +8,10 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.admin.service.VanishService;
-import org.evasive.me.minefinity.core.economy.EconomyService;
+import org.evasive.me.minefinity.playerdata.economy.EconomyService;
 import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
 import org.evasive.me.minefinity.core.utils.TextConversions;
+import org.evasive.me.minefinity.mining.blocks.PlayerBlockTiers;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.core.data.BaseBlock;
 
@@ -54,7 +55,7 @@ public class ScoreboardService {
 
         String worldName = player.getWorld().getName();
 
-        int playerBlockTier = playerDataService.getPlayerData(player.getUniqueId()).getUnlockedBlockTier(worldName);
+        int playerBlockTier = playerDataService.getPlayerData(player.getUniqueId()).get(PlayerBlockTiers.class).getUnlockedBlockTier(worldName);
 
         String blockTierRoman = intToRoman(playerBlockTier + 1);
         BaseBlock baseBlock = blockTypeRegistry.getBlock(blockTypeRegistry.getBlockList(worldName).get(playerBlockTier));

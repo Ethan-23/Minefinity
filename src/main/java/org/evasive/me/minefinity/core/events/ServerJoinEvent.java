@@ -7,28 +7,23 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.evasive.me.minefinity.core.admin.service.VanishService;
-import org.evasive.me.minefinity.core.scoreboard.ScoreboardService;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 
 public class ServerJoinEvent implements Listener {
 
     private final VanishService vanishService;
-    private final ScoreboardService scoreboard;
 
     private static final String PLAYER_JOIN = "<gray>[<#555555>+<gray>] <#55FFFF>";
     private static final String PLAYER_LEAVE = "<gray>[<#555555>-<gray>] <#55FFFF>";
 
-    public ServerJoinEvent(VanishService vanishService, ScoreboardService scoreboard) {
+    public ServerJoinEvent(VanishService vanishService) {
         this.vanishService = vanishService;
-        this.scoreboard = scoreboard;
     }
 
     @EventHandler (priority = EventPriority.HIGHEST)
     public void onJoin(PlayerJoinEvent event){
         Player player = event.getPlayer();
         event.joinMessage(vanishService.isVanished(player) ? null : TextConversions.parse(PLAYER_JOIN + player.getName()));
-        scoreboard.setupMainScoreboard(player);
-
     }
 
     @EventHandler

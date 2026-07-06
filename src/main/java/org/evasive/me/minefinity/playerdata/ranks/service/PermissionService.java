@@ -7,7 +7,7 @@ import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.core.lunar.LunarNametag;
+import org.evasive.me.minefinity.playerdata.lunar.LunarNametag;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.playerdata.model.PlayerRanks;
 import org.evasive.me.minefinity.playerdata.model.Rank;

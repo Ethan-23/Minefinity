@@ -3,7 +3,7 @@ package org.evasive.me.minefinity.customItems.recipes.recipebuilder.service;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.core.economy.EconomyService;
+import org.evasive.me.minefinity.playerdata.economy.EconomyService;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
 import org.evasive.me.minefinity.customItems.recipes.RecipeUnlockManager;
 import org.evasive.me.minefinity.customItems.recipes.recipebuilder.data.BaseItemRecipe;

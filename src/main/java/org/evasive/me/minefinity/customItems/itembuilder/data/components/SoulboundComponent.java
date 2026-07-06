@@ -25,8 +25,14 @@ public class SoulboundComponent implements ItemComponent, EditableComponent<Bool
 
     @Override
     public void addLore(List<String> lore) {
+
+    }
+
+    @Override
+    public void addFooter(List<String> footer){
         if (soulbound) {
-            lore.add("<gray>Soulbound");
+            footer.add("");
+            footer.add("<dark_gray>* Soulbound *");
         }
     }
 

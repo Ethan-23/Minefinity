@@ -125,7 +125,7 @@ public class ItemBuilder {
 
     /**
      * Appends a line of lore, word-wrapping at {@link #MAX_LORE_CHARACTERS} and carrying the last
-     * active colour tag onto each wrapped continuation line. An empty string adds a blank line.
+     * active color tag onto each wrapped continuation line. An empty string adds a blank line.
      *
      * @param line MiniMessage lore line (null is ignored)
      * @return this builder

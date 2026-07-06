@@ -5,8 +5,12 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.playerdata.commands.StatCommand;
+import org.evasive.me.minefinity.playerdata.commands.economy.Economy;
 import org.evasive.me.minefinity.playerdata.commands.rank.MineRank;
 import org.evasive.me.minefinity.playerdata.database.DatabaseManager;
+import org.evasive.me.minefinity.playerdata.economy.EconomyService;
+import org.evasive.me.minefinity.playerdata.economy.commands.Pay;
+import org.evasive.me.minefinity.playerdata.economy.commands.balance.Balance;
 import org.evasive.me.minefinity.playerdata.listener.PlayerChatListener;
 import org.evasive.me.minefinity.playerdata.listener.PlayerJoinListener;
 import org.evasive.me.minefinity.playerdata.listener.PlayerPreLoginListener;
@@ -24,8 +28,6 @@ import org.evasive.me.minefinity.playerdata.stats.events.StatsListeners;
 import org.evasive.me.minefinity.playerdata.stats.StatContributorRegistry;
 import org.evasive.me.minefinity.playerdata.stats.service.StatsService;
 
-import static org.bukkit.Bukkit.getLogger;
-
 public class PlayerDataModule {
 
     private final DatabaseManager playerDb;
@@ -34,7 +36,7 @@ public class PlayerDataModule {
     private final PlayerDataComponentRegistry componentRegistry;
     private final StatContributorRegistry statContributorRegistry;
 
-    private final PlayerDataService playerService;
+    private final PlayerDataService playerDataService;
     private final RankService rankService;
     private final StatsService statsService;
 
@@ -42,25 +44,28 @@ public class PlayerDataModule {
     private final PermissionService permissionService;
     private final PermissionLoader permissionLoader;
 
+    private final EconomyService economyService;
+
     public PlayerDataModule() {
 
-        playerDb = new DatabaseManager();
-        rankDb = new DatabaseManager();
+        this.playerDb = new DatabaseManager();
+        this.rankDb = new DatabaseManager();
 
-        componentRegistry = new PlayerDataComponentRegistry();
+        this.componentRegistry = new PlayerDataComponentRegistry();
         PlayerDataRepository playerRepo = new PlayerDataRepository(playerDb, componentRegistry);
         PlayerRankRepository rankRepo = new PlayerRankRepository(rankDb);
 
+        this.permissionConfigManager = new PermissionConfigManager();
+        this.permissionConfigManager.createPermissionConfig();
+        this.permissionLoader = new PermissionLoader(permissionConfigManager, RankRegistry.getInstance());
 
-        permissionConfigManager = new PermissionConfigManager();
-        permissionConfigManager.createPermissionConfig();
-        permissionLoader = new PermissionLoader(permissionConfigManager, RankRegistry.getInstance());
+        this.playerDataService = new PlayerDataService(playerRepo, componentRegistry);
+        this.permissionService = new PermissionService(Minefinity.getCore());
+        this.rankService = new RankService(rankRepo, permissionService);
+        this.statContributorRegistry = new StatContributorRegistry();
+        statsService = new StatsService(playerDataService, statContributorRegistry);
 
-        playerService = new PlayerDataService(playerRepo, componentRegistry);
-        permissionService = new PermissionService(Minefinity.getCore());
-        rankService = new RankService(rankRepo, permissionService);
-        statContributorRegistry = new StatContributorRegistry();
-        statsService = new StatsService(playerService, statContributorRegistry);
+        this.economyService = new EconomyService(playerDataService);
     }
 
     public void enable(JavaPlugin plugin) {
@@ -79,15 +84,21 @@ public class PlayerDataModule {
         // Register listeners
         PluginManager pm = plugin.getServer().getPluginManager();
 
-        pm.registerEvents(new PlayerPreLoginListener(playerService), plugin);
-        pm.registerEvents(new PlayerJoinListener(playerService, rankService, permissionService), plugin);
-        pm.registerEvents(new PlayerQuitListener(playerService, rankService, permissionService), plugin);
+        //Commands
+        new Balance(economyService);
+        new Pay(economyService);
+        new Economy(economyService);
+
+        pm.registerEvents(new PlayerPreLoginListener(playerDataService), plugin);
+        pm.registerEvents(new PlayerJoinListener(playerDataService, rankService, permissionService), plugin);
+        pm.registerEvents(new PlayerQuitListener(playerDataService, rankService, permissionService), plugin);
         pm.registerEvents(new PlayerChatListener(rankService), plugin);
         pm.registerEvents(new StatsListeners(statsService), plugin);
+
         // autosave task for player data
         plugin.getServer().getScheduler().runTaskTimerAsynchronously(
                 plugin,
-                playerService::saveDirtyPlayers,
+                playerDataService::saveDirtyPlayers,
                 20 * 60 * 5,
                 20 * 60 * 5
         );
@@ -101,16 +112,16 @@ public class PlayerDataModule {
     public void disable() {
 
         // Save player data
-        playerService.saveDirtyPlayersSync();
-        playerService.shutdown();
+        playerDataService.saveDirtyPlayersSync();
+        playerDataService.shutdown();
 
         // Close pools
         playerDb.closePool();
         rankDb.closePool();
     }
 
-    public PlayerDataService getPlayerService() {
-        return playerService;
+    public PlayerDataService getPlayerDataService() {
+        return playerDataService;
     }
 
     public PlayerDataComponentRegistry getComponentRegistry() {
@@ -127,6 +138,10 @@ public class PlayerDataModule {
 
     public StatContributorRegistry getStatContributorRegistry() {
         return statContributorRegistry;
+    }
+
+    public EconomyService getEconomyService() {
+        return economyService;
     }
 
     private void connectDatabase(DatabaseManager databaseManager, ConfigurationSection databaseInfo, String label) {

@@ -13,5 +13,9 @@ public interface ItemComponent {
 
     void addLore(List<String> lore);
 
+    default void addFooter(List<String> lore){
+
+    }
+
     default boolean isInstanceData() { return false; }
 }

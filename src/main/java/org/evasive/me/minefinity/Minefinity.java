@@ -6,10 +6,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.evasive.me.minefinity.core.CoreModule;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.CustomItemModule;
-import org.evasive.me.minefinity.customItems.backpack.BackpackService;
 import org.evasive.me.minefinity.mining.MiningModule;
 import org.evasive.me.minefinity.playerdata.PlayerDataModule;
-import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.towns.TownModule;
 
 
@@ -42,41 +40,40 @@ public final class Minefinity extends JavaPlugin {
         com.github.retrooper.packetevents.PacketEvents.getAPI().init();
 
         saveDefaultConfig();
-        playerModule = new PlayerDataModule();
-        playerModule.enable(this);
-        PlayerDataService playerDataService = playerModule.getPlayerService();
-
-        coreModule = new CoreModule(playerDataService);
+        coreModule = new CoreModule();
         coreModule.enable(this);
 
-        customItemModule = new CustomItemModule(
-                playerDataService,
-                coreModule.getPlayerInputListener(),
-                playerModule.getStatContributorRegistry()
-        );
+        playerModule = new PlayerDataModule();
+        playerModule.enable(this);
 
+        customItemModule = new CustomItemModule(
+                playerModule.getPlayerDataService(),
+                coreModule.getPlayerInputListener(),
+                playerModule.getStatContributorRegistry(),
+                playerModule.getComponentRegistry()
+        );
         customItemModule.enable(this);
 
-        BackpackService backpackService = customItemModule.getBackpackService();
-
         miningModule = new MiningModule(
-                playerDataService,
+                playerModule.getPlayerDataService(),
                 customItemModule.getCustomItemRegistryService(),
                 coreModule.getBlockTypeRegistry(),
                 customItemModule.getItemPickupService(),
                 playerModule.getStatsService(),
                 playerModule.getComponentRegistry(),
                 playerModule.getStatContributorRegistry(),
-                coreModule.getNotificationService()
+                coreModule.getNotificationService(),
+                playerModule.getEconomyService(),
+                coreModule.getVanishService()
         );
 
         miningModule.enable(this);
 
         townModule = new TownModule(
-                playerDataService,
-                coreModule.getEconomyService(),
+                playerModule.getPlayerDataService(),
+                playerModule.getEconomyService(),
                 customItemModule.getCustomItemRegistryService(),
-                backpackService,
+                customItemModule.getBackpackService(),
                 miningModule.getBlockTierService(),
                 miningModule.getMilestoneService(),
                 customItemModule.getItemPickupService(),

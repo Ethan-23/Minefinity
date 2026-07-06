@@ -1,4 +1,4 @@
-package org.evasive.me.minefinity.core.economy.commands;
+package org.evasive.me.minefinity.playerdata.economy.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -6,7 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.core.economy.EconomyService;
+import org.evasive.me.minefinity.playerdata.economy.EconomyService;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.core.utils.command.CommandFeedback;
 import org.jetbrains.annotations.NotNull;

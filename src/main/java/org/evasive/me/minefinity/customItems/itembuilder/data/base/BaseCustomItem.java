@@ -68,9 +68,9 @@ public class BaseCustomItem {
         addComponent(new GlowComponent());
         addComponent(new VisualMaterialComponent());
         addComponent(new StackSizeComponent());
-        addComponent(new SoulboundComponent());
         addComponent(new StatsComponent());
         addComponent(new EquipmentSlotComponent());
+        addComponent(new SoulboundComponent());
     }
 
     public void addComponent(ItemComponent component) {
@@ -149,6 +149,7 @@ public class BaseCustomItem {
         List<String> lore = getLore();
         lore.add("");
         lore.add(buildItemRarity(this.rarity, this.itemType.name()));
+        lore.addAll(getFooter());
         builder.setLore(lore);
 
         return builder.build();
@@ -169,6 +170,15 @@ public class BaseCustomItem {
 
         lore.removeIf(Objects::isNull);
         return lore;
+    }
+
+    protected List<String> getFooter(){
+        List<String> footer = new ArrayList<>();
+        for (ItemComponent component : components) {
+            component.addFooter(footer);
+        }
+        footer.removeIf(Objects::isNull);
+        return footer;
     }
 
     @SuppressWarnings("unchecked")

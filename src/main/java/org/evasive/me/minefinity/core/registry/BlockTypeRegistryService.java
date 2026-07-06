@@ -7,17 +7,9 @@ import java.util.List;
 public class BlockTypeRegistryService {
 
     private final BlockTypeRegistry blockTypeRegistry;
-    private static BlockTypeRegistryService blockTypeRegistryService;
-
-    public static BlockTypeRegistryService getInstance() {
-        if (blockTypeRegistryService == null)
-            throw new IllegalStateException("BlockTypeRegistryService not initialized");
-        return blockTypeRegistryService;
-    }
 
     public BlockTypeRegistryService(BlockTypeRegistry blockTypeRegistry) {
         this.blockTypeRegistry = blockTypeRegistry;
-        blockTypeRegistryService = this;
     }
 
     public BaseBlock getBaseBlock(String blockId){

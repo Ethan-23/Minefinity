@@ -1,6 +1,8 @@
 package org.evasive.me.minefinity.mining;
 
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.evasive.me.minefinity.core.admin.service.VanishService;
 import org.evasive.me.minefinity.core.notifications.NotificationService;
 import org.evasive.me.minefinity.core.registry.BlockTypeRegistry;
 import org.evasive.me.minefinity.customItems.framework.ItemPickupService;
@@ -8,6 +10,8 @@ import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistry
 import org.evasive.me.minefinity.mining.abilities.AbilityNotifier;
 import org.evasive.me.minefinity.mining.abilities.MiningAbilityRegistry;
 import org.evasive.me.minefinity.mining.abilities.MiningAbilityRunner;
+import org.evasive.me.minefinity.mining.blocks.PlayerBlockTiers;
+import org.evasive.me.minefinity.mining.blocks.listener.PlayerBlockTiersJoinListener;
 import org.evasive.me.minefinity.mining.data.MiningDataMap;
 import org.evasive.me.minefinity.mining.data.SelectedBlockMap;
 import org.evasive.me.minefinity.mining.events.SwingPacketEvents;
@@ -18,8 +22,11 @@ import org.evasive.me.minefinity.mining.milestones.MiningBlockMilestones;
 import org.evasive.me.minefinity.mining.milestones.MiningMilestoneService;
 import org.evasive.me.minefinity.mining.milestones.MiningMilestoneNotifier;
 import org.evasive.me.minefinity.mining.milestones.MiningMilestoneStatContributor;
+import org.evasive.me.minefinity.mining.scoreboard.ScoreboardService;
+import org.evasive.me.minefinity.mining.scoreboard.listener.ScoreboardJoinEvent;
 import org.evasive.me.minefinity.mining.utils.AnimationIDs;
 import org.evasive.me.minefinity.playerdata.component.PlayerDataComponentRegistry;
+import org.evasive.me.minefinity.playerdata.economy.EconomyService;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
 import org.evasive.me.minefinity.playerdata.stats.StatContributorRegistry;
 import org.evasive.me.minefinity.playerdata.stats.service.StatsService;
@@ -37,8 +44,10 @@ public class MiningModule {
     private final CustomItemRegistryService customItemRegistryService;
     private final BlockTypeRegistryService blockTypeRegistryService;
     private final BlockProgressHandler blockProgressHandler;
+    private final ScoreboardService scoreboardService;
+    private final PlayerDataService playerDataService;
 
-    public MiningModule(PlayerDataService playerDataService, CustomItemRegistryService customItemRegistryService, BlockTypeRegistry blockTypeRegistry, ItemPickupService itemPickupService, StatsService statsService, PlayerDataComponentRegistry componentRegistry, StatContributorRegistry statContributorRegistry, NotificationService notificationService) {
+    public MiningModule(PlayerDataService playerDataService, CustomItemRegistryService customItemRegistryService, BlockTypeRegistry blockTypeRegistry, ItemPickupService itemPickupService, StatsService statsService, PlayerDataComponentRegistry componentRegistry, StatContributorRegistry statContributorRegistry, NotificationService notificationService, EconomyService economyService, VanishService vanishService) {
         this.animationIDs = new AnimationIDs();
         MiningAbilityRegistry miningAbilityRegistry = new MiningAbilityRegistry(new AbilityNotifier(notificationService));
         MiningAbilityRunner miningAbilityRunner = new MiningAbilityRunner(miningAbilityRegistry);
@@ -51,17 +60,27 @@ public class MiningModule {
         BlockBreakHandler blockBreakHandler = new BlockBreakHandler(customItemRegistryService, itemPickupService,milestoneService,blockTierService,miningDataMap, new BlockBreakNotifier(notificationService));
         this.blockProgressHandler = new BlockProgressHandler(miningAbilityRunner, blockTierService, miningDataMap, customItemRegistryService, statsService, blockBreakHandler);
         this.customItemRegistryService = customItemRegistryService;
+        this.playerDataService = playerDataService;
+        this.scoreboardService = new ScoreboardService(playerDataService, economyService, vanishService, blockTypeRegistry);
 
-        // Register mining's per-player data slice with playerdata
+        // Register mining's per-player data slices with playerdata
         componentRegistry.register("milestone_data", MiningBlockMilestones.class, MiningBlockMilestones::new);
+        componentRegistry.register("block_tiers", PlayerBlockTiers.class, PlayerBlockTiers::new);
 
         // Register mining's stat source with playerdata
-        statContributorRegistry.register(new MiningMilestoneStatContributor(playerDataService));
+        statContributorRegistry.register(new MiningMilestoneStatContributor(playerDataService, blockTypeRegistryService));
     }
 
     public void enable(JavaPlugin plugin){
         com.github.retrooper.packetevents.PacketEvents.getAPI().getEventManager().registerListener(new SwingPacketEvents(customItemRegistryService, selectedBlockMap, miningDataMap, animationIDs, blockProgressHandler));
         com.github.retrooper.packetevents.PacketEvents.getAPI().getEventManager().registerListener(new BlockPacketEvents());
+
+        PluginManager pm = plugin.getServer().getPluginManager();
+        pm.registerEvents(new PlayerBlockTiersJoinListener(playerDataService, blockTypeRegistryService), plugin);
+        pm.registerEvents(new ScoreboardJoinEvent(scoreboardService), plugin);
+
+        //repeating scoreboard update
+        scoreboardService.repeatingScoreboardUpdate();
     }
 
     public void disable(){

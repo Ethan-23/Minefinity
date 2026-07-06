@@ -19,16 +19,18 @@ import java.util.Map;
 public class MiningMilestoneStatContributor implements StatContributor {
 
     private final PlayerDataService playerDataService;
+    private final BlockTypeRegistryService blockTypeRegistryService;
 
-    public MiningMilestoneStatContributor(PlayerDataService playerDataService) {
+    public MiningMilestoneStatContributor(PlayerDataService playerDataService, BlockTypeRegistryService blockTypeRegistryService) {
         this.playerDataService = playerDataService;
+        this.blockTypeRegistryService = blockTypeRegistryService;
     }
 
     @Override
     public Map<Stats, Integer> contribute(Player player) {
         Map<Stats, Integer> statsMap = new HashMap<>();
 
-        List<BaseBlock> blockList = BlockTypeRegistryService.getInstance().getAllBlocks();
+        List<BaseBlock> blockList = blockTypeRegistryService.getAllBlocks();
 
         for (BaseBlock baseBlock : blockList) {
             List<MilestoneTier> milestoneTiers = baseBlock.milestoneUnlocks();

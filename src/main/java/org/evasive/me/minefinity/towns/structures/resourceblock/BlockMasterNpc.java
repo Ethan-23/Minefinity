@@ -1,7 +1,7 @@
 package org.evasive.me.minefinity.towns.structures.resourceblock;
 
 import org.bukkit.entity.Player;
-import org.evasive.me.minefinity.core.economy.EconomyService;
+import org.evasive.me.minefinity.playerdata.economy.EconomyService;
 import org.evasive.me.minefinity.core.npcs.framework.NpcBehavior;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.mining.milestones.MiningMilestoneService;

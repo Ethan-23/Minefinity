@@ -7,10 +7,7 @@ import org.evasive.me.minefinity.playerdata.component.PlayerDataComponentRegistr
 import org.evasive.me.minefinity.playerdata.model.PlayerData;
 import org.evasive.me.minefinity.playerdata.repository.PlayerDataRepository;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
@@ -33,6 +30,7 @@ public class PlayerDataService {
     private final PlayerDataRepository repository; // Handles DB operations
     private final PlayerDataComponentRegistry componentRegistry;
 
+
     private static final int SAVE_INTERVAL_MINUTES = 5;
 
     private final Set<UUID> firstJoinPlayers = ConcurrentHashMap.newKeySet();
@@ -40,7 +38,6 @@ public class PlayerDataService {
     public PlayerDataService(PlayerDataRepository repository, PlayerDataComponentRegistry componentRegistry) {
         this.repository = repository;
         this.componentRegistry = componentRegistry;
-
         // Schedule periodic dirty saves
         scheduler.scheduleAtFixedRate(this::saveDirtyPlayers, SAVE_INTERVAL_MINUTES, SAVE_INTERVAL_MINUTES, TimeUnit.MINUTES);
     }
@@ -57,6 +54,8 @@ public class PlayerDataService {
                 return newData;
             });
 
+            checkUsername(uuid, data);
+
             playerCache.put(uuid, data);
             if (firstJoin) firstJoinPlayers.add(uuid);
             return true;
@@ -65,6 +64,20 @@ public class PlayerDataService {
                     "Failed to load data for " + uuid + "; denying login to protect existing data.", e);
             return false;
         }
+    }
+
+    private void checkUsername(UUID uuid, PlayerData playerData) {
+        Player player = Bukkit.getPlayer(uuid);
+
+        if(player == null)
+            return;
+
+        String username = player.getName();
+
+        if(playerData.getUsername().equals(username))
+            return;
+
+        playerData.setUsername(username);
     }
 
     public boolean consumeFirstJoin(UUID uuid) {

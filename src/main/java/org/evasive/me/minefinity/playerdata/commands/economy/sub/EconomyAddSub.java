@@ -1,9 +1,9 @@
-package org.evasive.me.minefinity.core.admin.commands.economy.sub;
+package org.evasive.me.minefinity.playerdata.commands.economy.sub;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.evasive.me.minefinity.core.economy.EconomyService;
+import org.evasive.me.minefinity.playerdata.economy.EconomyService;
 import org.evasive.me.minefinity.core.utils.command.CommandFeedback;
 import org.evasive.me.minefinity.core.utils.command.SubCommand;
 
