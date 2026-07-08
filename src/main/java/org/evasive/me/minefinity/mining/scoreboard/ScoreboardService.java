@@ -60,10 +60,17 @@ public class ScoreboardService {
             board.resetScores(entry);
 
         String worldName = player.getWorld().getName();
-        int tier = playerDataService.getPlayerData(player.getUniqueId())
+
+        var blockList = blockTypeRegistry.getBlockList(worldName);
+        if (blockList == null || blockList.isEmpty())
+            return;
+
+        int rawTier = playerDataService.getPlayerData(player.getUniqueId())
                 .get(PlayerBlockTiers.class).getUnlockedBlockTier(worldName);
+        int tier = Math.clamp(rawTier, 0, blockList.size() - 1);
+
         String tierRoman = intToRoman(tier + 1);
-        BaseBlock baseBlock = blockTypeRegistry.getBlock(blockTypeRegistry.getBlockList(worldName).get(tier));
+        BaseBlock baseBlock = blockTypeRegistry.getBlock(blockList.get(tier));
 
         String name = vanishService.isVanished(player)
                 ? "<gray>(<aqua>V<gray>) " + player.getName()
