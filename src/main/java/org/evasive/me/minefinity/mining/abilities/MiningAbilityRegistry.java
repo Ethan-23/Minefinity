@@ -30,7 +30,7 @@ public class MiningAbilityRegistry {
         abilities.put(PickaxeAbilities.CRITICAL_FRACTURE.name(), new CriticalFracture(criticalMap));
         abilities.put(PickaxeAbilities.STRUCTURED_FORCE.name(), new StructuredForce(streakMap, abilityNotifier));
         abilities.put(PickaxeAbilities.EARLY_BIRD.name(), new EarlyBird());
-        abilities.put(PickaxeAbilities.METAL_DETECT.name(), new MetalDetector(abilityNotifier));
+        abilities.put(PickaxeAbilities.METAL_DETECT.name(), new MetalDetector());
     }
 
     public MiningAbility getAbility(String abilityId){
