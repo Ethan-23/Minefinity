@@ -65,7 +65,9 @@ public class BlockProgressHandler {
         BasePickaxeItem basePickaxeItem = getItemInHand(player);
 
         if (basePickaxeItem != null){
-            miningAbilityRunner.runOnHit(basePickaxeItem, new HitContext(player, baseBlock, statsContext));
+            HitContext hitContext = new HitContext(player, baseBlock, statsContext);
+            miningAbilityRunner.runApplyStats(basePickaxeItem, hitContext);
+            miningAbilityRunner.runOnHit(basePickaxeItem, hitContext);
         }
 
         int health = baseBlock.health();

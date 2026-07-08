@@ -40,14 +40,16 @@ public class AnimationIDsTest {
     }
 
     @Test
-    void doubleReleaseHandsSameIdToTwoCallers() {
+    void releasingTheSameIdTwiceIsDedupedSoTwoCallersNeverShareIt() {
         AnimationIDs pool = new AnimationIDs();
         pool.releaseAnimationId(7);
-        pool.releaseAnimationId(7);          // released twice — no dedup guard
-        int a = pool.getUniqueAnimationId();
-        int b = pool.getUniqueAnimationId();
-        assertNotEquals(a, b,
-                "two live animations must never share an id — this FAILS today, exposing the missing guard");
+        pool.releaseAnimationId(7);   // the trackQueue guard drops this duplicate release
+
+        // Only one copy of 7 is recycled, so the second caller falls through to a fresh id instead of
+        // colliding on 7.
+        assertEquals(7, pool.getUniqueAnimationId(), "the single recycled copy comes back first");
+        assertEquals(Integer.MAX_VALUE, pool.getUniqueAnimationId(),
+                "there is no second copy of 7 — the next caller gets a fresh id");
     }
 
 }

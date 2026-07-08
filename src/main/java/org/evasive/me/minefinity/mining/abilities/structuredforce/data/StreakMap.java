@@ -33,4 +33,8 @@ public class StreakMap {
             streakMap.put(uuid, new BlockStreak(baseBlock, 1));
         }
     }
+
+    public void removeStreak(UUID uuid){
+        streakMap.remove(uuid);
+    }
 }

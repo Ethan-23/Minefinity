@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.evasive.me.minefinity.mining.utils.AnimationIDs;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -51,4 +52,15 @@ public class MiningDataMap {
         return miningMap.get(location).get(uuid).getAnimationID();
     }
 
+    public void removeAllForPlayer(UUID uuid){
+        Iterator<Map.Entry<Location, Map<UUID, MiningBlockData>>> it = miningMap.entrySet().iterator();
+        while(it.hasNext()){
+            Map<UUID, MiningBlockData> inner = it.next().getValue();
+            MiningBlockData data = inner.remove(uuid);
+            if(data != null)
+                animationIDs.releaseAnimationId(data.getAnimationID());
+            if(inner.isEmpty())
+                it.remove();   // also stops the location map from growing unbounded
+        }
+    }
 }

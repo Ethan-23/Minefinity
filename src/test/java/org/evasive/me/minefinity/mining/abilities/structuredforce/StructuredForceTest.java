@@ -39,32 +39,32 @@ class StructuredForceTest {
     }
 
     @Test
-    void onHitWithNoActiveStreakLeavesSpeedAlone() {
+    void applyStatsWithNoActiveStreakLeavesSpeedAlone() {
         StatsContext stats = new StatsContext();
 
-        ability.onHit(new HitContext(player, block, stats));
+        ability.applyStats(new HitContext(player, block, stats));
 
         assertEquals(0f, stats.getSpeed(), 0f, "no streak recorded yet -> no speed bonus");
     }
 
     @Test
-    void onHitAddsSpeedScaledByTheCurrentStreak() {
+    void applyStatsAddsSpeedScaledByTheCurrentStreak() {
         streaks.addStreak(uuid, block);   // streak 1
         StatsContext stats = new StatsContext();
 
-        ability.onHit(new HitContext(player, block, stats));
+        ability.applyStats(new HitContext(player, block, stats));
 
         assertEquals(0.02f, stats.getSpeed(), 1e-6, "streak 1 -> min(5, 1 * 0.02)");
     }
 
     @Test
-    void onHitSpeedBonusIsCappedAtFive() {
+    void applyStatsSpeedBonusIsCappedAtFive() {
         for (int i = 0; i < 300; i++) {
             streaks.addStreak(uuid, block);   // streak 300 -> 300 * 0.02 == 6, capped to 5
         }
         StatsContext stats = new StatsContext();
 
-        ability.onHit(new HitContext(player, block, stats));
+        ability.applyStats(new HitContext(player, block, stats));
 
         assertEquals(5f, stats.getSpeed(), 1e-6, "the bonus is Math.min(5, streak * 0.02)");
     }

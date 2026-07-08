@@ -107,6 +107,21 @@ class MiningAbilityRunnerTest {
     }
 
     @Test
+    void applyStatsFiresTheAbilityBelongingToAnInstalledPart() {
+        MiningAbility ability = mock(MiningAbility.class);
+        when(registry.getAbility("METAL_DETECT")).thenReturn(ability);
+        BasePartItem core = partWithAbilities("METAL_DETECT");
+        when(service.getBaseItemById("core")).thenReturn(core);
+
+        HitContext ctx = hitContext();
+        BasePickaxeItem pickaxe = pickaxeWith(Map.of(PartSlots.PICKAXE_CORE, "core"));
+
+        runner.runApplyStats(pickaxe, ctx);
+
+        verify(ability).applyStats(ctx);
+    }
+
+    @Test
     void aPickaxeWithNoPartsInvokesNoAbilities() {
         BasePickaxeItem pickaxe = pickaxeWith(Map.of());
 

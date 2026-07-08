@@ -16,9 +16,9 @@ public class PlayerBlockTiers implements PlayerDataComponent {
 
     public int getUnlockedBlockTier(String worldName){
         if(!this.unlockedBlockTiers.containsKey(worldName)){
-            return unlockedBlockTiers.get("world");
+            return unlockedBlockTiers.getOrDefault("world", 0);
         }
-        return this.unlockedBlockTiers.get(worldName);
+        return this.unlockedBlockTiers.getOrDefault(worldName, 0);
     }
 
     public void setSelectedBlockTier(String worldName, String tierName){

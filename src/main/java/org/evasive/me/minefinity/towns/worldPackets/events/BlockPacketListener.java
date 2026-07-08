@@ -22,14 +22,15 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.evasive.me.minefinity.Minefinity;
 
 
-public class BlockPacketEvents extends PacketListenerAbstract {
+public class BlockPacketListener extends PacketListenerAbstract {
 
     @Override
     public void onPacketReceive(PacketReceiveEvent event) {
         Player player = event.getPlayer();
 
         //Player is null sometimes
-        if(player == null) return;
+        if(player == null)
+            return;
 
         if(player.getGameMode() == GameMode.CREATIVE)
             return;

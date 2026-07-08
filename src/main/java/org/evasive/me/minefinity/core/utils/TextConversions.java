@@ -1,5 +1,6 @@
 package org.evasive.me.minefinity.core.utils;
 
+import io.github.retrooper.packetevents.adventure.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -61,5 +62,9 @@ public class TextConversions {
         }
 
         return String.join(" ", parts);
+    }
+
+    public static String toLegacy(String mm) {
+        return LegacyComponentSerializer.legacySection().serialize(parse(mm));
     }
 }

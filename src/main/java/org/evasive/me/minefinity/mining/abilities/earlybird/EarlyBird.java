@@ -9,7 +9,7 @@ public class EarlyBird implements MiningAbility {
     private final static float MINING_SPEED_MULTIPLIER = 1.1f;
 
     @Override
-    public void onHit(HitContext context) {
+    public void applyStats(HitContext context) {
         BaseBlock baseBlock = context.getBaseBlock();
         int breakingPower = baseBlock.breakingPower();
 

@@ -2,8 +2,6 @@ package org.evasive.me.minefinity.mining.data;
 
 import org.bukkit.block.Block;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -21,6 +19,10 @@ public class SelectedBlockMap {
 
     public boolean hasPlayer(UUID uuid){
         return selectedBlockMap.containsKey(uuid);
+    }
+
+    public void removePlayer(UUID uuid){
+        selectedBlockMap.remove(uuid);
     }
 
 }

@@ -103,4 +103,57 @@ class MiningDataMapTest {
         // There is no null-guard on the inner map lookup, so querying an unknown location blows up.
         assertThrows(NullPointerException.class, () -> map.getBlockProgress(loc, player));
     }
+
+    @Test
+    void removeAllForPlayerRecyclesEveryAnimationIdThatPlayerHeld() {
+        int idA = animationIDs.getUniqueAnimationId();
+        int idB = animationIDs.getUniqueAnimationId();
+        Location locB = new Location(null, 4, 5, 6);
+        map.addMiningData(loc, player, new MiningBlockData(idA, 0f));
+        map.addMiningData(locB, player, new MiningBlockData(idB, 0f));
+
+        map.removeAllForPlayer(player);
+
+        // Both ids should be back in the pool; the next two pulls hand them straight back (the location
+        // iteration order isn't guaranteed, so accept either release order).
+        int first = animationIDs.getUniqueAnimationId();
+        int second = animationIDs.getUniqueAnimationId();
+        assertTrue((first == idA && second == idB) || (first == idB && second == idA),
+                "every animation id the quitting player held should be recycled");
+    }
+
+    @Test
+    void removeAllForPlayerPrunesLocationsThatBecomeEmpty() {
+        map.addMiningData(loc, player, new MiningBlockData(1, 0f));
+
+        map.removeAllForPlayer(player);
+
+        // Contrast with removeBlockPos, which leaves an empty inner map behind: removeAllForPlayer
+        // deliberately drops the now-empty location key so the outer map can't grow unbounded.
+        assertFalse(map.containsBlockLocation(loc),
+                "an emptied location should not linger after its last miner is purged");
+    }
+
+    @Test
+    void removeAllForPlayerLeavesOtherMinersAtASharedLocationIntact() {
+        UUID other = UUID.randomUUID();
+        map.addMiningData(loc, player, new MiningBlockData(1, 5f));
+        map.addMiningData(loc, other, new MiningBlockData(2, 7f));
+
+        map.removeAllForPlayer(player);
+
+        assertFalse(map.containsPlayerAtLocation(loc, player));
+        assertTrue(map.containsBlockLocation(loc), "the location survives while another miner remains");
+        assertEquals(7f, map.getBlockProgress(loc, other), 1e-6, "the remaining miner is untouched");
+    }
+
+    @Test
+    void removeAllForPlayerForAnUnknownPlayerIsASafeNoOp() {
+        map.addMiningData(loc, player, new MiningBlockData(1, 0f));
+
+        assertDoesNotThrow(() -> map.removeAllForPlayer(UUID.randomUUID()));
+
+        assertTrue(map.containsPlayerAtLocation(loc, player),
+                "purging an unrelated player must not disturb existing data");
+    }
 }

@@ -5,6 +5,7 @@ import org.evasive.me.minefinity.mining.abilities.AbilityNotifier;
 import org.evasive.me.minefinity.mining.abilities.MiningAbility;
 import org.evasive.me.minefinity.mining.abilities.PickaxeAbilities;
 import org.evasive.me.minefinity.mining.context.BreakContext;
+import org.evasive.me.minefinity.mining.context.HitContext;
 
 public class MetalDetector implements MiningAbility {
 
@@ -16,15 +17,16 @@ public class MetalDetector implements MiningAbility {
     }
 
     @Override
+    public void applyStats(HitContext context) {
+        context.getStatsContext().addSpecialChance(METAL_DETECT_CHANCE);
+    }
+
+    @Override
     public void onBreak(BreakContext context) {
-
-        context.statsContext().addSpecialChance(METAL_DETECT_CHANCE);
-
         if(!context.statsContext().isSpecialDrop())
             return;
 
         sendMetalDetectMessage(context.player());
-
     }
 
     private void sendMetalDetectMessage(Player player){

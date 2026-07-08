@@ -26,7 +26,7 @@ public class StructuredForce implements MiningAbility {
     }
 
     @Override
-    public void onHit(HitContext context) {
+    public void applyStats(HitContext context) {
         UUID uuid = context.getUUID();
         BaseBlock baseBlock = streakMap.getBaseBlock(uuid);
         if(baseBlock == null)

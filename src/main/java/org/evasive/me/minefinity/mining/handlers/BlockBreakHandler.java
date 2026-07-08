@@ -45,17 +45,15 @@ public class BlockBreakHandler {
 
         boolean isSpecial = MiningDrops.addBlockDrops(drops, baseBlock, statsContext.getFortune(), statsContext.getSpecialChance());
 
-        if(drops.isEmpty()){
-            miningDataMap.removeBlockPos(location, player.getUniqueId());
-            return;
-        }
-
         statsContext.setSpecialDrop(isSpecial);
-
-        handlePlayerData(player, location);
 
         if(basePickaxeItem != null)
             miningAbilityRunner.runOnBreak(basePickaxeItem, breakContext);
+
+        handlePlayerData(player, location);
+
+        if(drops.isEmpty())
+            return;
 
         int dropCount = 0;
 
@@ -65,7 +63,7 @@ public class BlockBreakHandler {
 
         BaseCustomItem baseCustomItem = customItemRegistryService.getBaseItemById(drops.getFirst().getCustomItem());
 
-        blockBreakNotifier.blockBreak(player, drops.getFirst(), baseCustomItem.getRarity(), isSpecial, dropCount > 0);
+        blockBreakNotifier.blockBreak(player, baseBlock.material(), drops.getFirst(), baseCustomItem.getRarity(), isSpecial, dropCount > 0);
 
     }
 

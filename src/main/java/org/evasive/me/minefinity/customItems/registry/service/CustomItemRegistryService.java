@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.core.rarity.Rarity;
+import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
 import org.evasive.me.minefinity.customItems.registry.CustomItemRegistry;
 import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
@@ -133,5 +134,11 @@ public class CustomItemRegistryService {
             return pickaxe.buildItem();
         }
         return item.buildItem();
+    }
+
+    public boolean isPickaxe(ItemStack itemStack) {
+        String id = getItemId(itemStack);
+        if (id == null || !customItemRegistry.isRegistered(id)) return false;
+        return customItemRegistry.getByID(id).getBaseItem().getCustomItemType() == CustomItemType.PICKAXE;
     }
 }

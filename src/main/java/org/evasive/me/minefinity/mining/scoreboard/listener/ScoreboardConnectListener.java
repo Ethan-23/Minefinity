@@ -6,11 +6,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.evasive.me.minefinity.mining.scoreboard.ScoreboardService;
 
-public class ScoreboardJoinEvent implements Listener {
+public class ScoreboardConnectListener implements Listener {
 
     private final ScoreboardService scoreboardService;
 
-    public ScoreboardJoinEvent(ScoreboardService scoreboardService) {
+    public ScoreboardConnectListener(ScoreboardService scoreboardService) {
         this.scoreboardService = scoreboardService;
     }
 

@@ -30,11 +30,18 @@ public class CriticalFracture implements MiningAbility {
     private final static long MAX_CRIT_TIME = 5000;//ms
 
     private static final float BLOCK_CENTER_OFFSET = 0.5f;
-    private static final float BLOCK_OUTTER_OFFSET = 0.8f;
+    private static final float BLOCK_OUTER_OFFSET = 0.8f;
     private static final float BLOCK_FACE_OFFSET = 0.05f;
 
     public CriticalFracture(CriticalMap criticalMap) {
         this.criticalMap = criticalMap;
+    }
+
+    @Override
+    public void applyStats(HitContext context) {
+        UUID uuid = context.getUUID();
+        if(criticalMap.containsCritical(uuid) && criticalMap.getCritical(uuid).isHit())
+            context.getStatsContext().multiplySpeed(SPEED_MULTIPLIER);
     }
 
     @Override
@@ -44,7 +51,6 @@ public class CriticalFracture implements MiningAbility {
         UUID uuid = context.getUUID();
 
         if(criticalMap.containsCritical(uuid) && criticalMap.getCritical(uuid).isHit()){
-            context.getStatsContext().multiplySpeed(SPEED_MULTIPLIER);
             criticalMap.getCritical(uuid).setCreationTime();
             return;
         }
@@ -73,7 +79,7 @@ public class CriticalFracture implements MiningAbility {
         criticalMap.getCritical(uuid).setCreationTime();
 
         if(criticalMap.getCritical(uuid).isInside(hitLoc)){
-            player.playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 1f, 1f);
+            player.playSound(player.getLocation(), Sound.UI_HUD_BUBBLE_POP, 1f, 1f);
             sendHitCriticalPacket(player);
             criticalMap.getCritical(uuid).getRepeatingTask().cancel();
             criticalMap.hitCritical(uuid, null);
@@ -85,9 +91,9 @@ public class CriticalFracture implements MiningAbility {
 
         Location loc = block.getLocation().add(BLOCK_CENTER_OFFSET, BLOCK_CENTER_OFFSET, BLOCK_CENTER_OFFSET);
 
-        double randX = (Math.random() - BLOCK_CENTER_OFFSET) * BLOCK_OUTTER_OFFSET;
-        double randY = (Math.random() - BLOCK_CENTER_OFFSET) * BLOCK_OUTTER_OFFSET;
-        double randZ = (Math.random() - BLOCK_CENTER_OFFSET) * BLOCK_OUTTER_OFFSET;
+        double randX = (Math.random() - BLOCK_CENTER_OFFSET) * BLOCK_OUTER_OFFSET;
+        double randY = (Math.random() - BLOCK_CENTER_OFFSET) * BLOCK_OUTER_OFFSET;
+        double randZ = (Math.random() - BLOCK_CENTER_OFFSET) * BLOCK_OUTER_OFFSET;
 
         switch (face) {
 

@@ -17,12 +17,12 @@ import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
  * the defaulting here instead. Idempotent: only seeds when the starting world isn't present, so
  * it's safe on every join (new players and players whose column predates this component).
  */
-public class PlayerBlockTiersJoinListener implements Listener {
+public class BlockTierListener implements Listener {
 
     private final PlayerDataService playerDataService;
     private final BlockTypeRegistryService blockTypeRegistryService;
 
-    public PlayerBlockTiersJoinListener(PlayerDataService playerDataService, BlockTypeRegistryService blockTypeRegistryService) {
+    public BlockTierListener(PlayerDataService playerDataService, BlockTypeRegistryService blockTypeRegistryService) {
         this.playerDataService = playerDataService;
         this.blockTypeRegistryService = blockTypeRegistryService;
     }
@@ -38,7 +38,6 @@ public class PlayerBlockTiersJoinListener implements Listener {
         String worldId = blockTypeRegistryService.getWorldList().getFirst();
         if (tiers.hasWorldUnlocked(worldId)) return;
 
-        // Starting world begins on tier 0
         tiers.setUnlockedBlockTier(worldId, 0);
         tiers.setSelectedBlockTier(worldId, blockTypeRegistryService.getBlockIdByTier(worldId, 0));
     }

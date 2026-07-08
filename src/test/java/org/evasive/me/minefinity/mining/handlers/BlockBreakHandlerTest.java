@@ -24,6 +24,7 @@ import org.mockito.InOrder;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -151,13 +152,15 @@ class BlockBreakHandlerTest {
     }
 
     @Test
-    void theBreakNotificationCarriesTheDropAmountRarityAndFlags() {
+    void theBreakNotificationCarriesTheBlockMaterialDropAmountRarityAndFlags() {
         StatsContext stats = new StatsContext();   // not special, one drop, inventory not full
 
         handler.handleBlockBreak(location, player, plainBlock(), null, stats, runner);
 
+        // The BaseBlock's material (not the sponge placeholder in the world) is forwarded so the notifier
+        // can resolve the real break sound.
         ArgumentCaptor<CustomItemStack> drop = ArgumentCaptor.forClass(CustomItemStack.class);
-        verify(blockBreakNotifier).blockBreak(eq(player), drop.capture(), eq(Rarity.MINOR), eq(false), eq(false));
+        verify(blockBreakNotifier).blockBreak(eq(player), eq(Material.STONE), drop.capture(), eq(Rarity.MINOR), eq(false), eq(false));
         assertEquals(1, drop.getValue().getAmount());
     }
 
@@ -168,35 +171,68 @@ class BlockBreakHandlerTest {
 
         handler.handleBlockBreak(location, player, plainBlock(), null, new StatsContext(), runner);
 
-        verify(blockBreakNotifier).blockBreak(eq(player), any(CustomItemStack.class), any(Rarity.class),
+        verify(blockBreakNotifier).blockBreak(eq(player), any(Material.class), any(CustomItemStack.class), any(Rarity.class),
                 eq(false), eq(true));
     }
 
     @Test
-    void theSpecialDropRollIsLockedInBeforePickaxeAbilitiesRun() {
+    void pickaxeReactionsRunAfterTheSpecialDropIsResolved() {
         StatsContext stats = spy(new StatsContext());
         BasePickaxeItem pickaxe = mock(BasePickaxeItem.class);
 
         handler.handleBlockBreak(location, player, specialBlock(), pickaxe, stats, runner);
 
-        // Documents an ordering issue: the special roll is locked in BEFORE abilities fire, so a
-        // pickaxe ability that boosts specialChance (e.g. MetalDetector) cannot affect this break.
+        // Reactions now fire AFTER the roll is locked in, so an onBreak ability (e.g. MetalDetector's
+        // proc) can read the resolved special-drop flag. Chance contributions happen upstream in applyStats.
         InOrder inOrder = inOrder(stats, runner);
         inOrder.verify(stats).setSpecialDrop(anyBoolean());
         inOrder.verify(runner).runOnBreak(eq(pickaxe), any(BreakContext.class));
     }
 
     @Test
-    void aBlockWithNoConfiguredDropIsANoOpAsideFromReleasingTheBlock() {
+    void aReactionAbilityObservesTheResolvedSpecialDropDuringOnBreak() {
+        // The pay-off of the ordering: by the time runOnBreak fires, isSpecialDrop() reflects this break,
+        // so MetalDetector's proc check works. (Chance is already on the context via applyStats upstream.)
+        StatsContext stats = new StatsContext();
+        stats.addSpecialChance(99);   // 1 + 99 == 100 -> the roll is guaranteed to be special
+        BasePickaxeItem pickaxe = mock(BasePickaxeItem.class);
+        AtomicBoolean sawSpecial = new AtomicBoolean(false);
+        doAnswer(inv -> { sawSpecial.set(stats.isSpecialDrop()); return null; })
+                .when(runner).runOnBreak(eq(pickaxe), any(BreakContext.class));
+
+        handler.handleBlockBreak(location, player, specialBlock(), pickaxe, stats, runner);
+
+        assertTrue(sawSpecial.get(), "onBreak runs after setSpecialDrop, so a reaction sees the special result");
+    }
+
+    @Test
+    void reactionsStillFireWhenTheBlockYieldsNoDrops() {
+        // runOnBreak sits ABOVE the empty-drops return, so a no-drop block still procs onBreak abilities
+        // by design — an ability may want to react to the swing even when there's nothing to hand out.
+        // The block is still released, but nothing is given or announced.
+        BaseBlock noDrop = new BaseBlock("Broken", Material.STONE, 1, 100, null, null, 0f, List.of());
+        BasePickaxeItem pickaxe = mock(BasePickaxeItem.class);
+
+        handler.handleBlockBreak(location, player, noDrop, pickaxe, new StatsContext(), runner);
+
+        verify(runner).runOnBreak(eq(pickaxe), any(BreakContext.class));
+        verify(miningDataMap).removeBlockPos(eq(location), any(UUID.class));
+        verify(itemPickupService, never()).givePlayerDrops(any(Player.class), any(CustomItemStack.class));
+        verify(blockBreakNotifier, never()).blockBreak(any(), any(), any(), any(), anyBoolean(), anyBoolean());
+    }
+
+    @Test
+    void aBlockWithNoConfiguredDropStillCountsTheMineButGivesNothing() {
         BaseBlock broken = new BaseBlock("Broken", Material.STONE, 1, 100, null, null, 0f, List.of());
 
         handler.handleBlockBreak(location, player, broken, null, new StatsContext(), runner);
 
-        // No valid drop -> nothing is given, nothing is announced, and no progress is awarded...
-        verify(itemPickupService, never()).givePlayerDrops(any(Player.class), any(CustomItemStack.class));
-        verify(blockBreakNotifier, never()).blockBreak(any(), any(), any(), anyBoolean(), anyBoolean());
-        verify(milestoneService, never()).increaseTierProgress(any(), any(), anyInt());
-        // ...but the in-progress block is still released so it doesn't get stuck.
+        // The mine still counts toward milestones and the block is released...
+        verify(milestoneService).increaseTierProgress(player, BLOCK_ID, 1);
+        verify(milestoneService).increaseBlocksMined(player, BLOCK_ID, 1);
         verify(miningDataMap).removeBlockPos(eq(location), any(UUID.class));
+        // ...but with no valid drop, nothing is handed out or announced.
+        verify(itemPickupService, never()).givePlayerDrops(any(Player.class), any(CustomItemStack.class));
+        verify(blockBreakNotifier, never()).blockBreak(any(), any(), any(), any(), anyBoolean(), anyBoolean());
     }
 }

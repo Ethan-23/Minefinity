@@ -9,23 +9,23 @@ import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPl
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.Minefinity;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.mining.data.MiningBlockData;
 import org.evasive.me.minefinity.mining.data.MiningDataMap;
 import org.evasive.me.minefinity.mining.data.SelectedBlockMap;
 import org.evasive.me.minefinity.mining.handlers.BlockProgressHandler;
 import org.evasive.me.minefinity.mining.utils.AnimationIDs;
+import org.jspecify.annotations.NonNull;
 
-import java.util.Objects;
 import java.util.UUID;
 
-public class SwingPacketEvents extends PacketListenerAbstract {
+public class SwingPacketListener extends PacketListenerAbstract {
 
     private final BlockProgressHandler blockProgressHandler;
     private final CustomItemRegistryService customItemRegistryService;
@@ -33,9 +33,9 @@ public class SwingPacketEvents extends PacketListenerAbstract {
     private final MiningDataMap miningDataMap;
     private final AnimationIDs animationIDs;
 
-    private final static int PACKET_ID = 0x3C;
+    private final static int SWING_ARM_PACKET_ID = 0x3C;
 
-    public SwingPacketEvents(
+    public SwingPacketListener(
             CustomItemRegistryService customItemRegistryService,
             SelectedBlockMap selectedBlockMap,
             MiningDataMap miningDataMap,
@@ -51,65 +51,89 @@ public class SwingPacketEvents extends PacketListenerAbstract {
 
 
     @Override
-    public void onPacketReceive(PacketReceiveEvent event) {
+    public void onPacketReceive(@NonNull PacketReceiveEvent event) {
+
+        boolean playerDigging = event.getPacketType() == PacketType.Play.Client.PLAYER_DIGGING;
+        boolean swingArm = event.getPacketId() == SWING_ARM_PACKET_ID;
+
+        if(!playerDigging && !swingArm)
+            return;
+
         Player player = event.getPlayer();
 
-        handleDiggingPacket(event);
+        if(player.getGameMode() != GameMode.SURVIVAL)
+            return;
 
-        if(!isMiningAttemptValid(player, event)) return;
+        if(playerDigging)
+            handleDiggingPacket(event);
 
-        Block block = selectedBlockMap.getSelectedBlock(player.getUniqueId());
+        if(!swingArm)
+            return;
 
-        if(checkForIncorrectBlock(block)) return;
+        Bukkit.getScheduler().runTask(Minefinity.getCore(), () ->
+                handleSwingOnServer(player));
+    }
 
-        Bukkit.getScheduler().runTask(Minefinity.getCore(), () -> handleMiningProgress(player, block));
+    private void handleSwingOnServer(Player player) {
+
+        if(!player.isOnline())
+            return;
+
+        Block selectedBlock = selectedBlockMap.getSelectedBlock(player.getUniqueId());
+
+        if(!isMiningToolValid(player) || !isBlockValid(player, selectedBlock))
+            return;
+
+        handleMiningProgress(player, selectedBlock);
     }
 
     public void handleDiggingPacket(PacketReceiveEvent event){
 
-        if(event.getPacketType() != PacketType.Play.Client.PLAYER_DIGGING) return;
+        WrapperPlayClientPlayerDigging digging = new WrapperPlayClientPlayerDigging(event);
+
+        if(digging.getAction() != DiggingAction.START_DIGGING)
+            return;
 
         Player player = event.getPlayer();
+        Vector3i blockPos = digging.getBlockPosition();
+        World world = player.getWorld();
 
-        if(!checkForCorrectGameMode(player)) return;
+        int x = blockPos.getX();
+        int y = blockPos.getY();
+        int z = blockPos.getZ();
 
-        WrapperPlayClientPlayerDigging digging = new WrapperPlayClientPlayerDigging(event);
-        Vector3i blockPosition = digging.getBlockPosition();
-        Block block = player.getWorld().getBlockAt(blockPosition.getX(), blockPosition.getY(), blockPosition.getZ());
+        if(!world.isChunkLoaded(x >> 4, z >> 4))
+            return;
 
-        if(digging.getAction() != DiggingAction.START_DIGGING) return;
+        Block block = world.getBlockAt(x, y, z);
 
-        if (checkForIncorrectBlock(block)) return;
+        if(block.getType() != Material.SPONGE)
+            return;
 
         event.setCancelled(true);
+        handleStartDiggingPacket(player, block);
+    }
 
+    private void handleStartDiggingPacket(Player player, Block block){
         selectedBlockMap.addSelectedBlock(player.getUniqueId(), block);
     }
 
-    public boolean isMiningAttemptValid(Player player, PacketReceiveEvent event){
-        return validateTargetBlock(player, event) && validateItemInHand(player.getInventory().getItemInMainHand()) && checkForCorrectGameMode(player);
+    public boolean isMiningToolValid(Player player){
+        ItemStack itemInHand = player.getInventory().getItemInMainHand();
+        return customItemRegistryService.isPickaxe(itemInHand) || itemInHand.isEmpty();
     }
 
-    public boolean validateTargetBlock(Player player, PacketReceiveEvent event){
-        if(event.getPacketId() != PACKET_ID || player.getGameMode() != GameMode.SURVIVAL || player.getTargetBlockExact(5) == null || selectedBlockMap.getSelectedBlock(player.getUniqueId()) == null)
+    private boolean isBlockValid(Player player, Block block) {
+        Block targetBlock = player.getTargetBlockExact(5);
+        if(targetBlock == null || block == null || !block.getType().equals(Material.SPONGE))
             return false;
 
-        return selectedBlockMap.getSelectedBlock(player.getUniqueId()).getLocation().equals(Objects.requireNonNull(player.getTargetBlockExact(5)).getLocation());
-    }
-
-    public boolean validateItemInHand(ItemStack itemStack){
-        return customItemRegistryService.getRegisteredBaseItem(itemStack) instanceof BasePickaxeItem || itemStack.isEmpty();
-    }
-
-    public boolean checkForCorrectGameMode(Player player){
-        return player.getGameMode().equals(GameMode.SURVIVAL);
+        return block.getLocation().equals(targetBlock.getLocation());
     }
 
     public void handleMiningProgress(Player player, Block block){
         if(!miningDataMap.containsPlayerAtLocation(block.getLocation(), player.getUniqueId()))
             addBlockLocation(player.getUniqueId(), block.getLocation());
-
-        if(checkForIncorrectBlock(block)) return;
 
         blockProgressHandler.addBlockProgress(block.getLocation(), player);
     }
@@ -118,7 +142,4 @@ public class SwingPacketEvents extends PacketListenerAbstract {
         miningDataMap.addMiningData(location, uuid, new MiningBlockData(animationIDs.getUniqueAnimationId(), 0));
     }
 
-    public boolean checkForIncorrectBlock(Block block){
-        return !block.getType().equals(Material.SPONGE);
-    }
 }
