@@ -1,6 +1,7 @@
 package org.evasive.me.minefinity.customItems.itembuilder.data.components;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -21,6 +22,8 @@ import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemK
 public class PartAbilityComponent implements ItemComponent, EditableComponent<List<String>> {
 
     private List<String> abilities = new ArrayList<>();
+
+    private static final String SECTION_ID = "pickaxe-abilities";
 
     @Override
     public void load(PersistentDataContainer pdc) {
@@ -70,7 +73,8 @@ public class PartAbilityComponent implements ItemComponent, EditableComponent<Li
                 CustomItemBuilder icon = new CustomItemBuilder(Material.WIND_CHARGE, TextConversions.formatItemName(ability.name()));
                 icon.addLore(ability.getDescription());
                 icon.addLore("<gray>Click to toggle");
-                if (abilities.contains(ability.name())) icon.addGlow();
+                if (abilities.contains(ability.name()))
+                    icon.addGlow();
                 return icon.build();
             }
 
@@ -79,5 +83,16 @@ public class PartAbilityComponent implements ItemComponent, EditableComponent<Li
                 toggle(ability.name());
             }
         });
+    }
+
+    @Override
+    public void saveToConfig(ConfigurationSection s) {
+        if (!abilities.isEmpty())
+            s.set(SECTION_ID, abilities);
+    }
+
+    @Override
+    public void loadFromConfig(ConfigurationSection s) {
+        this.abilities = new ArrayList<>(s.getStringList(SECTION_ID));
     }
 }

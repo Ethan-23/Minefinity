@@ -1,6 +1,7 @@
 package org.evasive.me.minefinity.customItems.itembuilder.data.components;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -25,12 +26,15 @@ public class PartSlotComponent implements ItemComponent, EditableComponent<Set<P
 
     private Set<PartSlots> partSlots = new HashSet<>();
 
+    private static final String SECTION_ID = "part-slot";
+
     @Override
     public void load(PersistentDataContainer pdc) {
         this.partSlots = new HashSet<>();
 
         String partSlotData = pdc.get(PART_SLOT_KEY, PersistentDataType.STRING);
-        if (partSlotData == null || partSlotData.isEmpty()) return;
+        if (partSlotData == null || partSlotData.isEmpty())
+            return;
 
         this.partSlots = Arrays.stream(partSlotData.split(";;"))
                 .map(PartSlots::fromString)
@@ -65,7 +69,8 @@ public class PartSlotComponent implements ItemComponent, EditableComponent<Set<P
             public ItemStack render(PartSlots slot) {
                 CustomItemBuilder icon = new CustomItemBuilder(Material.PAPER, TextConversions.formatItemName(slot.name()));
                 icon.addLore("<gray>Click to toggle");
-                if (partSlots.contains(slot)) icon.addGlow();
+                if (partSlots.contains(slot))
+                    icon.addGlow();
                 return icon.build();
             }
 
@@ -76,5 +81,21 @@ public class PartSlotComponent implements ItemComponent, EditableComponent<Set<P
                 }
             }
         });
+    }
+
+    @Override
+    public void saveToConfig(ConfigurationSection s) {
+        if (!partSlots.isEmpty())
+            s.set(SECTION_ID, partSlots.stream().map(Enum::name).toList());
+    }
+
+    @Override
+    public void loadFromConfig(ConfigurationSection s) {
+        this.partSlots = new HashSet<>();
+        for (String slot : s.getStringList(SECTION_ID)) {
+            PartSlots parsed = PartSlots.fromString(slot);
+            if (parsed != null)
+                partSlots.add(parsed);
+        }
     }
 }

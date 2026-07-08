@@ -1,5 +1,6 @@
 package org.evasive.me.minefinity.customItems.itembuilder.data;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 
@@ -11,11 +12,16 @@ public interface ItemComponent {
 
     void save(CustomItemBuilder builder);
 
-    void addLore(List<String> lore);
-
-    default void addFooter(List<String> lore){
+    default void saveToConfig(ConfigurationSection s) {
 
     }
+    default void loadFromConfig(ConfigurationSection s) {
+
+    }
+
+    void addLore(List<String> lore);
+
+    default void addFooter(List<String> lore){}
 
     default boolean isInstanceData() { return false; }
 }

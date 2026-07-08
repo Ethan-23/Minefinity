@@ -2,6 +2,8 @@ package org.evasive.me.minefinity.customItems.itembuilder.data.components;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -26,14 +28,18 @@ public class StatsComponent implements ItemComponent, EditableComponent<Map<Stri
 
     private Map<String, Integer> statsMap = new HashMap<>();
 
+    private static final String SECTION_ID = "stats";
+
     @Override
     public void load(PersistentDataContainer pdc) {
         this.statsMap = new HashMap<>();
 
-        if (!pdc.has(STATS_KEY)) return;
+        if (!pdc.has(STATS_KEY))
+            return;
 
         String mapJson = pdc.get(STATS_KEY, PersistentDataType.STRING);
-        if (mapJson == null || mapJson.isEmpty()) return;
+        if (mapJson == null || mapJson.isEmpty())
+            return;
 
         Map<String, Integer> parsed = GSON.fromJson(mapJson, MAP_TYPE);
         if (parsed != null) {
@@ -48,11 +54,13 @@ public class StatsComponent implements ItemComponent, EditableComponent<Map<Stri
 
     @Override
     public void addLore(List<String> lore) {
-        if (statsMap.isEmpty()) return;
+        if (statsMap.isEmpty())
+            return;
 
         for (Stats stat : Stats.values()) {
             Integer value = statsMap.get(stat.name());
-            if (value == null) continue;
+            if (value == null)
+                continue;
             lore.add(stat.getDisplay() + ": " + (value < 0 ? "<red>" : "<white>") + value);
         }
     }
@@ -88,7 +96,8 @@ public class StatsComponent implements ItemComponent, EditableComponent<Map<Stri
                 CustomItemBuilder icon = new CustomItemBuilder(stat.getMaterial(), stat.getDisplay());
                 icon.addLore(value != null ? "<white>Value: <yellow>" + value : "<red>Not set");
                 icon.addLore("<gray>Click to set a value (0 removes)");
-                if (value != null) icon.addGlow();
+                if (value != null)
+                    icon.addGlow();
                 return icon.build();
             }
 
@@ -97,5 +106,28 @@ public class StatsComponent implements ItemComponent, EditableComponent<Map<Stri
                 ctx.promptInt(value -> setStat(stat, value), gui::reopenSelf);
             }
         });
+    }
+
+    @Override
+    public void saveToConfig(ConfigurationSection s) {
+        if (!statsMap.isEmpty()) {
+            ConfigurationSection statsSection = s.createSection(SECTION_ID);
+            statsMap.forEach(statsSection::set);
+        }
+    }
+
+    @Override
+    public void loadFromConfig(ConfigurationSection s) {
+        this.statsMap = new HashMap<>();
+        ConfigurationSection statsSection = s.getConfigurationSection(SECTION_ID);
+        if (statsSection == null)
+            return;
+        for (String key : statsSection.getKeys(false)) {
+            try {
+                statsMap.put(Stats.valueOf(key).name(), statsSection.getInt(key));
+            } catch (IllegalArgumentException e) {
+                Bukkit.getLogger().warning("Invalid stat found: " + key);
+            }
+        }
     }
 }

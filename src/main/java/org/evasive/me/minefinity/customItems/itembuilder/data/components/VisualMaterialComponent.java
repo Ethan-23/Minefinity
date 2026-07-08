@@ -1,6 +1,7 @@
 package org.evasive.me.minefinity.customItems.itembuilder.data.components;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.core.utils.TextConversions;
@@ -15,6 +16,8 @@ import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemK
 public class VisualMaterialComponent implements ItemComponent, EditableComponent<Material> {
 
     private Material material;
+
+    private static final String SECTION_ID = "visual-material";
 
     @Override
     public void load(PersistentDataContainer pdc) {
@@ -53,5 +56,22 @@ public class VisualMaterialComponent implements ItemComponent, EditableComponent
             }
             material = parsed;
         });
+    }
+
+    @Override
+    public void saveToConfig(ConfigurationSection s) {
+        if (material != null)
+            s.set(SECTION_ID, material.name());
+    }
+
+    @Override
+    public void loadFromConfig(ConfigurationSection s) {
+        if (s.isSet(SECTION_ID)) {
+            String materialId = s.getString(SECTION_ID);
+            if(materialId == null)
+                return;
+            material = Material.getMaterial(materialId);
+        }
+
     }
 }

@@ -1,5 +1,6 @@
 package org.evasive.me.minefinity.customItems.itembuilder.data.components;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
@@ -14,6 +15,8 @@ public class StackSizeComponent implements ItemComponent, EditableComponent<Inte
 
     private Integer stackSize;
 
+    private static final String SECTION_ID = "stack-size";
+
     @Override
     public void load(PersistentDataContainer pdc) {
         stackSize = pdc.get(STACK_SIZE_KEY, PersistentDataType.INTEGER);
@@ -21,7 +24,8 @@ public class StackSizeComponent implements ItemComponent, EditableComponent<Inte
 
     @Override
     public void save(CustomItemBuilder builder) {
-        if (stackSize != null) builder.setStackSize(stackSize);
+        if (stackSize != null)
+            builder.setStackSize(stackSize);
     }
 
     @Override
@@ -40,6 +44,18 @@ public class StackSizeComponent implements ItemComponent, EditableComponent<Inte
 
     @Override
     public void openEditor(EditContext ctx) {
-        ctx.promptInt(value -> stackSize = Math.max(1, Math.min(99, value)));
+        ctx.promptInt(value -> stackSize = Math.clamp(value, 1, 99));
+    }
+
+    @Override
+    public void saveToConfig(ConfigurationSection s) {
+        if (stackSize != null)
+            s.set(SECTION_ID, stackSize);
+    }
+
+    @Override
+    public void loadFromConfig(ConfigurationSection s) {
+        if (s.isSet(SECTION_ID))
+            stackSize = s.getInt(SECTION_ID);
     }
 }

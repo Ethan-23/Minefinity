@@ -1,5 +1,6 @@
 package org.evasive.me.minefinity.customItems.itembuilder.data.components;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
@@ -14,6 +15,8 @@ import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemK
 public class FuelAmountComponent implements ItemComponent, EditableComponent<Integer> {
 
     private int fuelAmount;
+
+    private static final String SECTION_ID = "fuel-amount";
 
     @Override
     public void load(PersistentDataContainer pdc) {
@@ -45,5 +48,15 @@ public class FuelAmountComponent implements ItemComponent, EditableComponent<Int
     @Override
     public void openEditor(EditContext ctx) {
         ctx.promptInt(value -> fuelAmount = Math.max(0, value));
+    }
+
+    @Override
+    public void saveToConfig(ConfigurationSection s) {
+        s.set(SECTION_ID, fuelAmount);
+    }
+
+    @Override
+    public void loadFromConfig(ConfigurationSection s) {
+        fuelAmount = s.getInt(SECTION_ID);
     }
 }

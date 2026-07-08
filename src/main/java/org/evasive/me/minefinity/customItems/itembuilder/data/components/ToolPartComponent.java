@@ -3,6 +3,7 @@ package org.evasive.me.minefinity.customItems.itembuilder.data.components;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -29,14 +30,18 @@ public class ToolPartComponent implements ItemComponent, EditableComponent<Map<P
 
     private Map<PartSlots, String> partMap = new LinkedHashMap<>();
 
+    private static final String SECTION_ID = "parts";
+
     @Override
     public void load(PersistentDataContainer pdc) {
         this.partMap = new LinkedHashMap<>();
 
-        if (!pdc.has(TOOL_PARTS_KEY, PersistentDataType.STRING)) return;
+        if (!pdc.has(TOOL_PARTS_KEY, PersistentDataType.STRING))
+            return;
 
         String json = pdc.get(TOOL_PARTS_KEY, PersistentDataType.STRING);
-        if (json == null || json.isEmpty()) return;
+        if (json == null || json.isEmpty())
+            return;
 
         Map<PartSlots, String> loaded = GSON.fromJson(json, MAP_TYPE);
         if (loaded != null) {
@@ -88,7 +93,8 @@ public class ToolPartComponent implements ItemComponent, EditableComponent<Map<P
                 CustomItemBuilder icon = new CustomItemBuilder(Material.IRON_INGOT, TextConversions.formatItemName(slot.name()));
                 icon.addLore(id != null ? "<white>Part: <yellow>" + id : "<red>Empty");
                 icon.addLore("<gray>Click to set a part id (blank clears)");
-                if (id != null) icon.addGlow();
+                if (id != null)
+                    icon.addGlow();
                 return icon.build();
             }
 
@@ -102,5 +108,27 @@ public class ToolPartComponent implements ItemComponent, EditableComponent<Map<P
     @Override
     public boolean isInstanceData() {
         return true;
+    }
+
+    @Override
+    public void saveToConfig(ConfigurationSection s) {
+        if (!partMap.isEmpty()) {
+            ConfigurationSection partsSection = s.createSection(SECTION_ID);
+            partMap.forEach((slot, partId) -> partsSection.set(slot.name(), partId));
+        }
+    }
+
+    @Override
+    public void loadFromConfig(ConfigurationSection s) {
+        this.partMap = new LinkedHashMap<>();
+        ConfigurationSection partsSection = s.getConfigurationSection(SECTION_ID);
+        if (partsSection == null)
+            return;
+        for (String key : partsSection.getKeys(false)) {
+            PartSlots slot = PartSlots.fromString(key);
+            if (slot == null)
+                continue;
+            setPart(slot, partsSection.getString(key));
+        }
     }
 }

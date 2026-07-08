@@ -14,24 +14,27 @@ public class ItemRegistryConfigManager {
     private final File itemRegistryConfigFile;
     private final FileConfiguration itemRegistryConfig;
 
+    private static final String CONFIG_FILE = "custom-item-registry.yml";
+    private static final String ITEM_SECTION = "items";
+
     public ItemRegistryConfigManager() {
-        this.itemRegistryConfigFile = new File(Minefinity.getCore().getDataFolder(), "custom-item-registry.yml");
+        this.itemRegistryConfigFile = new File(Minefinity.getCore().getDataFolder(), CONFIG_FILE);
         this.itemRegistryConfig = new YamlConfiguration();
 
         if(!createItemRegistryConfig()){
             return;
         }
 
-        ConfigurationSection itemSection = itemRegistryConfig.getConfigurationSection("items");
+        ConfigurationSection itemSection = itemRegistryConfig.getConfigurationSection(ITEM_SECTION);
         if(itemSection == null)
-            itemRegistryConfig.createSection("items");
+            itemRegistryConfig.createSection(ITEM_SECTION);
 
         saveItemRegistryConfig();
     }
 
     public boolean createItemRegistryConfig() {
         if (!itemRegistryConfigFile.exists()) {
-            Minefinity.getCore().saveResource("custom-item-registry.yml", false);
+            Minefinity.getCore().saveResource(CONFIG_FILE, false);
         }
 
         try {
@@ -57,7 +60,7 @@ public class ItemRegistryConfigManager {
     }
 
     public ConfigurationSection getItemConfigSection(){
-        return itemRegistryConfig.getConfigurationSection("items");
+        return itemRegistryConfig.getConfigurationSection(ITEM_SECTION);
     }
 
 }

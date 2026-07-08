@@ -1,5 +1,6 @@
 package org.evasive.me.minefinity.customItems.itembuilder.data.components;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
@@ -12,6 +13,8 @@ import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemK
 public class SoulboundComponent implements ItemComponent, EditableComponent<Boolean> {
 
     private boolean soulbound;
+
+    private static final String SECTION_ID = "soulbound";
 
     @Override
     public void load(PersistentDataContainer pdc) {
@@ -50,5 +53,15 @@ public class SoulboundComponent implements ItemComponent, EditableComponent<Bool
     public void openEditor(EditContext ctx) {
         soulbound = !soulbound;
         ctx.reopen();
+    }
+
+    @Override
+    public void saveToConfig(ConfigurationSection s) {
+        s.set(SECTION_ID, soulbound);
+    }
+
+    @Override
+    public void loadFromConfig(ConfigurationSection s) {
+        soulbound = s.getBoolean(SECTION_ID);
     }
 }

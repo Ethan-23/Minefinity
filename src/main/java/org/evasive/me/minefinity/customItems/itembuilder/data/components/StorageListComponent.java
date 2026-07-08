@@ -1,5 +1,6 @@
 package org.evasive.me.minefinity.customItems.itembuilder.data.components;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.core.utils.TextConversions;
@@ -15,6 +16,8 @@ import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemK
 public class StorageListComponent implements ItemComponent, EditableComponent<List<String>> {
 
     private List<String> storageList = new ArrayList<>();
+
+    private static final String SECTION_ID = "storage-list";
 
     @Override
     public void load(PersistentDataContainer pdc) {
@@ -62,5 +65,16 @@ public class StorageListComponent implements ItemComponent, EditableComponent<Li
                 ctx.player().sendMessage(TextConversions.parse("<gray>Storage list now: <white>" + storageList));
             }
         });
+    }
+
+    @Override
+    public void saveToConfig(ConfigurationSection s) {
+        if (!storageList.isEmpty())
+            s.set(SECTION_ID, storageList);
+    }
+
+    @Override
+    public void loadFromConfig(ConfigurationSection s) {
+        this.storageList = new ArrayList<>(s.getStringList(SECTION_ID));
     }
 }

@@ -1,5 +1,6 @@
 package org.evasive.me.minefinity.customItems.itembuilder.data.components;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
@@ -13,6 +14,8 @@ import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemK
 public class FlavorTextComponent implements ItemComponent, EditableComponent<String> {
 
     private String flavorText;
+
+    private static final String SECTION_ID = "flavor-text";
 
     @Override
     public void load(PersistentDataContainer pdc) {
@@ -44,5 +47,17 @@ public class FlavorTextComponent implements ItemComponent, EditableComponent<Str
     @Override
     public void openEditor(EditContext ctx) {
         ctx.promptString(value -> flavorText = value.isBlank() ? null : value);
+    }
+
+    @Override
+    public void saveToConfig(ConfigurationSection s) {
+        if (flavorText != null)
+            s.set(SECTION_ID, flavorText);
+    }
+
+    @Override
+    public void loadFromConfig(ConfigurationSection s) {
+        if (s.isSet(SECTION_ID))
+            flavorText = s.getString(SECTION_ID);
     }
 }

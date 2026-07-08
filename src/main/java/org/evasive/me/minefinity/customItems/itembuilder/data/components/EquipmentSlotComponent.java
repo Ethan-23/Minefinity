@@ -1,6 +1,7 @@
 package org.evasive.me.minefinity.customItems.itembuilder.data.components;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -23,14 +24,18 @@ public class EquipmentSlotComponent implements ItemComponent, EditableComponent<
 
     private Set<EquipmentSlot> equipmentSlots = new HashSet<>();
 
+    private static final String SECTION_ID = "equipment-slot";
+
     @Override
     public void load(PersistentDataContainer pdc) {
         this.equipmentSlots = new HashSet<>();
 
-        if (!pdc.has(EQUIPMENT_SLOT_KEY)) return;
+        if (!pdc.has(EQUIPMENT_SLOT_KEY))
+            return;
 
         String joined = pdc.get(EQUIPMENT_SLOT_KEY, PersistentDataType.STRING);
-        if (joined == null || joined.isEmpty()) return;
+        if (joined == null || joined.isEmpty())
+            return;
 
         for (String slot : joined.split(";;")) {
             try {
@@ -70,7 +75,8 @@ public class EquipmentSlotComponent implements ItemComponent, EditableComponent<
             public ItemStack render(EquipmentSlot slot) {
                 CustomItemBuilder icon = new CustomItemBuilder(Material.ARMOR_STAND, TextConversions.formatItemName(slot.name()));
                 icon.addLore("<gray>Click to toggle");
-                if (equipmentSlots.contains(slot)) icon.addGlow();
+                if (equipmentSlots.contains(slot))
+                    icon.addGlow();
                 return icon.build();
             }
 
@@ -81,5 +87,23 @@ public class EquipmentSlotComponent implements ItemComponent, EditableComponent<
                 }
             }
         });
+    }
+
+    @Override
+    public void saveToConfig(ConfigurationSection s) {
+        if (!equipmentSlots.isEmpty()) {
+            s.set(SECTION_ID, equipmentSlots.stream().map(Enum::name).toList());
+        }
+    }
+
+    @Override
+    public void loadFromConfig(ConfigurationSection s) {
+        this.equipmentSlots = new HashSet<>();
+        for (String slot : s.getStringList(SECTION_ID)) {
+            try {
+                equipmentSlots.add(EquipmentSlot.valueOf(slot));
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
     }
 }

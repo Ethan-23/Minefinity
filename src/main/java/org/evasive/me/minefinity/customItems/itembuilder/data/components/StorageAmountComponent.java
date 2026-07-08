@@ -1,5 +1,6 @@
 package org.evasive.me.minefinity.customItems.itembuilder.data.components;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
@@ -14,6 +15,8 @@ import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemK
 public class StorageAmountComponent implements ItemComponent, EditableComponent<Integer> {
 
     private int storageAmount;
+
+    private static final String SECTION_ID = "storage-amount";
 
     @Override
     public void load(PersistentDataContainer pdc) {
@@ -44,5 +47,15 @@ public class StorageAmountComponent implements ItemComponent, EditableComponent<
     @Override
     public void openEditor(EditContext ctx) {
         ctx.promptInt(value -> storageAmount = Math.max(0, value));
+    }
+
+    @Override
+    public void saveToConfig(ConfigurationSection s) {
+        s.set(SECTION_ID, storageAmount);
+    }
+
+    @Override
+    public void loadFromConfig(ConfigurationSection s) {
+        storageAmount = s.getInt(SECTION_ID);
     }
 }

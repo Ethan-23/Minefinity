@@ -1,5 +1,6 @@
 package org.evasive.me.minefinity.customItems.itembuilder.data.components;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
@@ -14,6 +15,8 @@ public class ValueComponent implements ItemComponent, EditableComponent<Float> {
 
     private Float value;
 
+    private static final String SECTION_ID = "sell-value";
+
     @Override
     public void load(PersistentDataContainer pdc) {
         value = pdc.get(VALUE_KEY, PersistentDataType.FLOAT);
@@ -21,7 +24,8 @@ public class ValueComponent implements ItemComponent, EditableComponent<Float> {
 
     @Override
     public void save(CustomItemBuilder builder) {
-        if (value != null) builder.setValue(value);
+        if (value != null)
+            builder.setValue(value);
     }
 
     @Override
@@ -44,5 +48,17 @@ public class ValueComponent implements ItemComponent, EditableComponent<Float> {
     @Override
     public void openEditor(EditContext ctx) {
         ctx.promptFloat(v -> value = v);
+    }
+
+    @Override
+    public void saveToConfig(ConfigurationSection s) {
+        if (value != null)
+            s.set(SECTION_ID, value);
+    }
+
+    @Override
+    public void loadFromConfig(ConfigurationSection s) {
+        if (s.isSet(SECTION_ID))
+            value = (float) s.getDouble(SECTION_ID);
     }
 }
