@@ -6,6 +6,7 @@ import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomIte
 import org.evasive.me.minefinity.core.events.PlayerInputListener;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class EditContext {
 
@@ -34,13 +35,7 @@ public class EditContext {
     }
 
     public void promptString(Consumer<String> onValue, Runnable onDone) {
-        player.closeInventory();
-        input.requestInput(player, raw -> {
-            if (!raw.equalsIgnoreCase("cancel")) {
-                onValue.accept(raw);
-            }
-            onDone.run();
-        });
+        prompt(raw -> raw, onValue, onDone);
     }
 
     public void promptString(Consumer<String> onValue) {
@@ -48,19 +43,7 @@ public class EditContext {
     }
 
     public void promptInt(Consumer<Integer> onValue, Runnable onDone) {
-        player.closeInventory();
-        input.requestInput(player, raw -> {
-            if (raw.equalsIgnoreCase("cancel")) {
-                onDone.run();
-                return;
-            }
-            try {
-                onValue.accept(Integer.parseInt(raw.trim()));
-            } catch (NumberFormatException e) {
-                player.sendMessage(TextConversions.parse("<red>That is not a whole number."));
-            }
-            onDone.run();
-        });
+        prompt(this::parseInt, onValue, onDone);
     }
 
     public void promptInt(Consumer<Integer> onValue) {
@@ -68,33 +51,52 @@ public class EditContext {
     }
 
     public void promptFloat(Consumer<Float> onValue, Runnable onDone) {
-        player.closeInventory();
-        input.requestInput(player, raw -> {
-            if (raw.equalsIgnoreCase("cancel")) {
-                onDone.run();
-                return;
-            }
-            try {
-                float value = Float.parseFloat(raw.trim());
-                if (value < 0) {
-                    player.sendMessage(TextConversions.parse("<red>Number must be positive."));
-                } else {
-                    onValue.accept(value);
-                }
-            } catch (NumberFormatException e) {
-                player.sendMessage(TextConversions.parse("<red>That is not a number."));
-            }
-            onDone.run();
-        });
+        prompt(this::parseFloat, onValue, onDone);
     }
 
     public void promptFloat(Consumer<Float> onValue) {
         promptFloat(onValue, this::reopen);
     }
 
-    public <E extends Enum<E>> OptionsGui<E> openSelector(E[] values, OptionsGui.OptionAdapter<E> adapter) {
+    private <T> void prompt(Function<String, T> parser, Consumer<T> onValue, Runnable onDone) {
+        player.closeInventory();
+        input.requestInput(player, raw -> {
+            if (raw.equalsIgnoreCase("cancel")) {
+                onDone.run();
+                return;
+            }
+            T value = parser.apply(raw);
+            if (value != null)
+                onValue.accept(value);
+            onDone.run();
+        });
+    }
+
+    private Integer parseInt(String raw) {
+        try {
+            return Integer.parseInt(raw.trim());
+        } catch (NumberFormatException e) {
+            player.sendMessage(TextConversions.parse("<red>That is not a whole number."));
+            return null;
+        }
+    }
+
+    private Float parseFloat(String raw) {
+        try {
+            float value = Float.parseFloat(raw.trim());
+            if (value < 0) {
+                player.sendMessage(TextConversions.parse("<red>Number must be positive."));
+                return null;
+            }
+            return value;
+        } catch (NumberFormatException e) {
+            player.sendMessage(TextConversions.parse("<red>That is not a number."));
+            return null;
+        }
+    }
+
+    public <E extends Enum<E>> void openSelector(E[] values, OptionsGui.OptionAdapter<E> adapter) {
         OptionsGui<E> selector = new OptionsGui<>(player, values, adapter, this::reopen);
         selector.open();
-        return selector;
     }
 }
