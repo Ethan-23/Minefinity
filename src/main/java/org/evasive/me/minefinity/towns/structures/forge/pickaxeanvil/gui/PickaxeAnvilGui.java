@@ -11,14 +11,12 @@ import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
-import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.parts.PartSlots;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.forge.pickaxeanvil.PickaxeAnvilHandler;
 
 import java.util.List;
-
-import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemKeys.*;
 
 public class PickaxeAnvilGui extends BaseGui {
 
@@ -62,9 +60,9 @@ public class PickaxeAnvilGui extends BaseGui {
 
     public void addPickaxeParts(ItemStack itemStack){
         BasePickaxeItem pickaxe = new BasePickaxeItem(itemStack);
-        String headId = pickaxe.getPart(PartSlots.PICKAXE_HEAD);
-        String coreId = pickaxe.getPart(PartSlots.PICKAXE_CORE);
-        String handleId = pickaxe.getPart(PartSlots.PICKAXE_HANDLE);
+        String headId = pickaxe.getPart(PartSlots.HEAD);
+        String coreId = pickaxe.getPart(PartSlots.CORE);
+        String handleId = pickaxe.getPart(PartSlots.HANDLE);
 
         inventory.setItem(HEAD_SLOT, headId == null || !customItemRegistryService.isRegistered(headId) ? EMPTY_HEAD_SLOT : customItemRegistryService.getRegisteredItemStack(headId).clone());
         inventory.setItem(CORE_SLOT, coreId == null || !customItemRegistryService.isRegistered(coreId) ? EMPTY_CORE_SLOT : customItemRegistryService.getRegisteredItemStack(coreId).clone());
@@ -95,11 +93,10 @@ public class PickaxeAnvilGui extends BaseGui {
         int slot = e.getSlot();
         PartSlots toolSlot = null;
 
-        //Make change in the future to allow HEAD CORE and HANDLE to accept any type of head core or handle while PICKAXE_HEAD or AXE_HANDLE are specific to the type not just any
         switch (slot) {
-            case HEAD_SLOT -> toolSlot = PartSlots.PICKAXE_HEAD;
-            case CORE_SLOT -> toolSlot = PartSlots.PICKAXE_CORE;
-            case HANDLE_SLOT -> toolSlot = PartSlots.PICKAXE_HANDLE;
+            case HEAD_SLOT -> toolSlot = PartSlots.HEAD;
+            case CORE_SLOT -> toolSlot = PartSlots.CORE;
+            case HANDLE_SLOT -> toolSlot = PartSlots.HANDLE;
             case PICKAXE_SLOT -> pickaxeAnvilHandler.handlePickaxeSlot(e);
             default -> e.setCancelled(true);
         }

@@ -1,8 +1,7 @@
 package org.evasive.me.minefinity.mining.abilities;
 
-import org.evasive.me.minefinity.customItems.itembuilder.data.ToolItemData;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePartItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BasePartItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.mining.context.BreakContext;
 import org.evasive.me.minefinity.mining.context.HitContext;
 
@@ -34,8 +33,7 @@ public class MiningAbilityRunner {
      *  given action. Shared by the apply-stats / hit / break passes so they can never drift apart. */
     private void forEachAbility(BasePickaxeItem basePickaxeItem, Consumer<MiningAbility> action){
         List<PickaxeAbilities> firedAbilities = new ArrayList<>();
-        ToolItemData pickaxeData = new ToolItemData(basePickaxeItem);
-        for (BasePartItem part : pickaxeData.getPickaxeParts()) {
+        for (BasePartItem part : basePickaxeItem.getInstalledParts()) {
             if(part == null) continue;
             for (String abilityId : part.abilityComponent().getValue()) {
                 MiningAbility miningAbility = miningAbilityRegistry.getAbility(abilityId);

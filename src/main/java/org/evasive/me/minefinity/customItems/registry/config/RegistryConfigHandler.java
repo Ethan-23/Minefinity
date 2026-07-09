@@ -1,8 +1,8 @@
 package org.evasive.me.minefinity.customItems.registry.config;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.components.ItemComponent;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseCustomItem;
 
 import java.util.Collection;
 

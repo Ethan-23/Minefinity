@@ -1,8 +1,8 @@
-package org.evasive.me.minefinity.customItems.itembuilder.data;
+package org.evasive.me.minefinity.customItems.itembuilder.data.components;
 
 import org.bukkit.Material;
 import org.evasive.me.minefinity.core.rarity.Rarity;
-import org.evasive.me.minefinity.customItems.itembuilder.data.components.*;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.CustomItemType;
 
 public enum ItemOptions {
 
@@ -17,6 +17,7 @@ public enum ItemOptions {
     TOOL_PARTS("Tool Parts", Material.IRON_INGOT, ToolPartComponent.class),
     PART_SLOT("Part Slots", Material.ACACIA_BOAT, PartSlotComponent.class),
     PART_ABILITY("Part Abilities", Material.WIND_CHARGE, PartAbilityComponent.class),
+    ACCEPTABLE_TOOLS("Acceptable Tools", Material.SMITHING_TABLE, AcceptableToolsComponent.class),
 
     FUEL_AMOUNT("Fuel Amount", Material.CHARCOAL, FuelAmountComponent.class),
     STORAGE_AMOUNT("Storage Amount", Material.CHEST, StorageAmountComponent.class),
@@ -45,10 +46,6 @@ public enum ItemOptions {
 
     public Material getIcon() {
         return icon;
-    }
-
-    public Class<?> getOptionClass() {
-        return optionClass;
     }
 
     public boolean isComponent() {

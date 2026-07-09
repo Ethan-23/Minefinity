@@ -5,13 +5,17 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.core.rarity.Rarity;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
-import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.CustomItemType;
+import org.evasive.me.minefinity.customItems.itembuilder.data.components.ItemComponent;
+import org.evasive.me.minefinity.customItems.itembuilder.data.parts.PartSlots;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BasePartItem;
 import org.evasive.me.minefinity.customItems.registry.CustomItemRegistry;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.registry.config.RegistryConfigHandler;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemKeys.*;
@@ -140,5 +144,21 @@ public class CustomItemRegistryService {
         String id = getItemId(itemStack);
         if (id == null || !customItemRegistry.isRegistered(id)) return false;
         return customItemRegistry.getByID(id).getBaseItem().getCustomItemType() == CustomItemType.PICKAXE;
+    }
+
+    public List<BasePartItem> getCompatibleParts(PartSlots category, CustomItemType toolType){
+        List<BasePartItem> compatiblePartList = new ArrayList<>();
+
+        for(BaseCustomItem baseCustomItem : customItemRegistry.getAllItems()){
+
+            if(baseCustomItem.getCustomItemType() != CustomItemType.TOOL_PART)
+                continue;
+
+            BasePartItem partItem = (BasePartItem) baseCustomItem;
+
+            if(partItem.fits(category, toolType))
+                compatiblePartList.add(partItem);
+        }
+        return compatiblePartList;
     }
 }

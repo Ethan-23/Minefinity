@@ -10,8 +10,8 @@ import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.CustomItemType;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseCustomItem;
 import org.evasive.me.minefinity.core.events.PlayerInputListener;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.ItemCreationGui;
 import org.evasive.me.minefinity.customItems.registry.config.RegistryConfigHandler;
@@ -24,13 +24,11 @@ import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemK
 
 public class CreateCustomItem implements CommandExecutor {
 
-    RegistryConfigHandler registryConfigHandler;
     PlayerInputListener playerInputListener;
     private final CustomItemRegistryService customItemRegistryService;
 
-    public CreateCustomItem(CustomItemRegistryService customItemRegistryService, RegistryConfigHandler registryConfigHandler, PlayerInputListener playerInputListener) {
+    public CreateCustomItem(CustomItemRegistryService customItemRegistryService, PlayerInputListener playerInputListener) {
         Objects.requireNonNull(Minefinity.getCore().getCommand("createcustomitem")).setExecutor(this);
-        this.registryConfigHandler = registryConfigHandler;
         this.customItemRegistryService = customItemRegistryService;
         this.playerInputListener = playerInputListener;
     }
@@ -59,7 +57,7 @@ public class CreateCustomItem implements CommandExecutor {
         }
 
 
-        new ItemCreationGui(player, item, registryConfigHandler, playerInputListener, customItemRegistryService).open();
+        new ItemCreationGui(player, item, playerInputListener, customItemRegistryService).open();
 
         return true;
     }

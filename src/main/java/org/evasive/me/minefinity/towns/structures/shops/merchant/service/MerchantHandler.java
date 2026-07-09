@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.playerdata.economy.EconomyService;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.ValueComponent;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 
@@ -36,7 +36,7 @@ public class MerchantHandler {
 
             BaseCustomItem baseCustomItem = customItemRegistryService.getRegisteredBaseItem(item);
 
-            if(baseCustomItem == null)
+            if(baseCustomItem == null || item == null)
                 continue;
 
             int stackSize = item.getAmount();

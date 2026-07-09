@@ -3,9 +3,9 @@ package org.evasive.me.minefinity.customItems.registry;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.evasive.me.minefinity.core.rarity.Rarity;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
-import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.CustomItemType;
+import org.evasive.me.minefinity.customItems.itembuilder.data.components.ItemComponent;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.registry.config.ItemRegistryConfigManager;
 
 public class CustomItemLoader {

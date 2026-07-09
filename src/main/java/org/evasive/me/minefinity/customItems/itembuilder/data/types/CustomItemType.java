@@ -1,26 +1,26 @@
-package org.evasive.me.minefinity.customItems.itembuilder.data;
+package org.evasive.me.minefinity.customItems.itembuilder.data.types;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.rarity.Rarity;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.*;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BaseAxeItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePartItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.components.ItemOptions;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BaseAxeItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BasePartItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.itembuilder.factories.ItemStackFactory;
 import org.evasive.me.minefinity.customItems.itembuilder.factories.NewItemFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.evasive.me.minefinity.customItems.itembuilder.data.ItemOptions.*;
+import static org.evasive.me.minefinity.customItems.itembuilder.data.components.ItemOptions.*;
 
 public enum CustomItemType {
     CUSTOM_ITEM(BaseCustomItem::new, BaseCustomItem::new, Material.COMMAND_BLOCK),
     RESOURCE(BaseResourceItem::new, BaseResourceItem::new, Material.COPPER_ORE),
     PICKAXE(BasePickaxeItem::new, BasePickaxeItem::new, Material.WOODEN_PICKAXE, TOOL_PARTS),
     AXE(BaseAxeItem::new, BaseAxeItem::new, Material.WOODEN_AXE, TOOL_PARTS),
-    TOOL_PART(BasePartItem::new, BasePartItem::new, Material.STICK, PART_SLOT, PART_ABILITY),
+    TOOL_PART(BasePartItem::new, BasePartItem::new, Material.STICK, PART_SLOT, PART_ABILITY, ACCEPTABLE_TOOLS),
     FUEL(BaseFuelItem::new, BaseFuelItem::new, Material.CHARCOAL, FUEL_AMOUNT),
     STORAGE(BaseBackpackItem::new, BaseBackpackItem::new, Material.CHEST, STORAGE_AMOUNT, STORAGE_LIST);
 

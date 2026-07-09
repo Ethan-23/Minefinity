@@ -2,9 +2,10 @@ package org.evasive.me.minefinity.customItems.itembuilder.gui;
 
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseCustomItem;
 import org.evasive.me.minefinity.core.events.PlayerInputListener;
 
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -95,8 +96,15 @@ public class EditContext {
         }
     }
 
-    public <E extends Enum<E>> void openSelector(E[] values, OptionsGui.OptionAdapter<E> adapter) {
-        OptionsGui<E> selector = new OptionsGui<>(player, values, adapter, this::reopen);
-        selector.open();
+    public <T> void openSelector(List<T> values, OptionsGui.OptionAdapter<T> adapter, Runnable onApply) {
+        new OptionsGui<>(player, values, adapter, onApply).open();
+    }
+
+    public <T> void openSelector(List<T> values, OptionsGui.OptionAdapter<T> adapter) {
+        openSelector(values, adapter, this::reopen);
+    }
+
+    public <T> void openSelector(T[] values, OptionsGui.OptionAdapter<T> adapter) {
+        openSelector(List.of(values), adapter);
     }
 }

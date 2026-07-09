@@ -10,13 +10,16 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
-import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
-import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BaseToolItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.parts.PartSlots;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.CustomItemType;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BasePartItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BaseToolItem;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.EditContext;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.OptionsGui;
+import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +29,7 @@ import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemK
 public class ToolPartComponent implements ItemComponent, EditableComponent<Map<PartSlots, String>> {
 
     private static final Gson GSON = new Gson();
-    private static final Type MAP_TYPE = new TypeToken<Map<PartSlots, String>>() {}.getType();
+    private static final Type MAP_TYPE = new TypeToken<Map<String, String>>() {}.getType();
 
     private Map<PartSlots, String> partMap = new LinkedHashMap<>();
 
@@ -43,10 +46,17 @@ public class ToolPartComponent implements ItemComponent, EditableComponent<Map<P
         if (json == null || json.isEmpty())
             return;
 
-        Map<PartSlots, String> loaded = GSON.fromJson(json, MAP_TYPE);
-        if (loaded != null) {
-            this.partMap = new LinkedHashMap<>(loaded);
-        }
+        Map<String, String> loaded = GSON.fromJson(json, MAP_TYPE);
+        if (loaded == null)
+            return;
+
+        // Keys are read as raw strings and mapped through fromString, so unknown/legacy slot names
+        // (e.g. a pre-refactor PICKAXE_HEAD) are dropped instead of deserialising to a null key.
+        loaded.forEach((key, partId) -> {
+            PartSlots slot = PartSlots.fromString(key);
+            if (slot != null)
+                setPart(slot, partId);
+        });
     }
 
     @Override
@@ -82,9 +92,9 @@ public class ToolPartComponent implements ItemComponent, EditableComponent<Map<P
 
     @Override
     public void openEditor(EditContext ctx) {
-        PartSlots[] slots = (ctx.item() instanceof BaseToolItem tool)
-                ? tool.getToolSlots().toArray(new PartSlots[0])
-                : PartSlots.values();
+        BaseToolItem tool = (ctx.item() instanceof BaseToolItem t) ? t : null;
+        List<PartSlots> slots = tool != null ? tool.getToolSlots() : List.of(PartSlots.values());
+        CustomItemType toolType = tool != null ? tool.getCustomItemType() : null;
 
         ctx.openSelector(slots, new OptionsGui.OptionAdapter<>() {
             @Override
@@ -92,7 +102,7 @@ public class ToolPartComponent implements ItemComponent, EditableComponent<Map<P
                 String id = partMap.get(slot);
                 CustomItemBuilder icon = new CustomItemBuilder(Material.IRON_INGOT, TextConversions.formatItemName(slot.name()));
                 icon.addLore(id != null ? "<white>Part: <yellow>" + id : "<red>Empty");
-                icon.addLore("<gray>Click to set a part id (blank clears)");
+                icon.addLore("<gray>Click to choose a part");
                 if (id != null)
                     icon.addGlow();
                 return icon.build();
@@ -100,9 +110,43 @@ public class ToolPartComponent implements ItemComponent, EditableComponent<Map<P
 
             @Override
             public void onClick(PartSlots slot, ClickType click, OptionsGui<PartSlots> gui) {
-                ctx.promptString(input -> setPart(slot, input.trim()), gui::reopenSelf);
+                openPartSelector(ctx, slot, toolType, gui);
             }
         });
+    }
+
+    /**
+     * Second-level selector: lists every registered part that fits this slot on this tool type (via
+     * {@code getCompatibleParts}), plus an "Empty" option that clears the slot. Returns to the slot
+     * selector after a choice.
+     */
+    private void openPartSelector(EditContext ctx, PartSlots slot, CustomItemType toolType, OptionsGui<PartSlots> slotGui) {
+        List<BasePartItem> options = new ArrayList<>();
+        options.add(null); // sentinel: "Empty" / remove the installed part
+        if (toolType != null)
+            options.addAll(CustomItemRegistryService.get().getCompatibleParts(slot, toolType));
+
+        ctx.openSelector(options, new OptionsGui.OptionAdapter<>() {
+            @Override
+            public ItemStack render(BasePartItem part) {
+                if (part == null) {
+                    return new CustomItemBuilder(Material.BARRIER, "<red>Empty")
+                            .addLore("<gray>Click to remove the installed part")
+                            .build();
+                }
+                CustomItemBuilder icon = new CustomItemBuilder(part.buildItem());
+                icon.addLore("<gray>Click to install");
+                if (part.getID().equals(partMap.get(slot)))
+                    icon.addGlow();
+                return icon.build();
+            }
+
+            @Override
+            public void onClick(BasePartItem part, ClickType click, OptionsGui<BasePartItem> gui) {
+                setPart(slot, part == null ? null : part.getID());
+                slotGui.reopenSelf();
+            }
+        }, slotGui::reopenSelf);
     }
 
     @Override

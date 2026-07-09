@@ -8,7 +8,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
-import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.EditContext;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.OptionsGui;
 import org.evasive.me.minefinity.mining.abilities.PickaxeAbilities;

@@ -11,10 +11,10 @@ import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
-import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
-import org.evasive.me.minefinity.customItems.itembuilder.data.ItemOptions;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.CustomItemType;
+import org.evasive.me.minefinity.customItems.itembuilder.data.components.ItemComponent;
+import org.evasive.me.minefinity.customItems.itembuilder.data.components.ItemOptions;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.EditableComponent;
 import org.evasive.me.minefinity.core.events.PlayerInputListener;
 import org.evasive.me.minefinity.customItems.registry.config.RegistryConfigHandler;
@@ -42,7 +42,6 @@ public class ItemCreationGui extends BaseGui {
 
     public ItemCreationGui(Player player,
                            BaseCustomItem item,
-                           RegistryConfigHandler registryConfigHandler,
                            PlayerInputListener inputListener,
                            CustomItemRegistryService registry) {
         super(player, INVENTORY_SIZE, TextConversions.parse("CustomItemBuilder"));
@@ -197,8 +196,8 @@ public class ItemCreationGui extends BaseGui {
                 }
             });
 
-            case CUSTOM_ITEM_TYPE -> new OptionsGui<>(player, CustomItemType.values(),
-                    new OptionsGui.OptionAdapter<CustomItemType>() {
+            case CUSTOM_ITEM_TYPE -> new OptionsGui<>(player, List.of(CustomItemType.values()),
+                    new OptionsGui.OptionAdapter<>() {
                         @Override
                         public ItemStack render(CustomItemType type) {
                             CustomItemBuilder icon = new CustomItemBuilder(type.getDisplayMaterial(),

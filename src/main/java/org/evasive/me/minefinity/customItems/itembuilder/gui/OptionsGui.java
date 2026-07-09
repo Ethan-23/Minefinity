@@ -12,12 +12,12 @@ import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
 
 import java.util.List;
 
-public class OptionsGui<E extends Enum<E>> extends BaseGui {
+public class OptionsGui<T> extends BaseGui {
 
-    public interface OptionAdapter<E extends Enum<E>> {
-        ItemStack render(E value);
+    public interface OptionAdapter<T> {
+        ItemStack render(T value);
 
-        void onClick(E value, ClickType click, OptionsGui<E> gui);
+        void onClick(T value, ClickType click, OptionsGui<T> gui);
     }
 
     private static final int INVENTORY_SIZE = 54;
@@ -29,11 +29,11 @@ public class OptionsGui<E extends Enum<E>> extends BaseGui {
             37, 38, 39, 40, 41, 42, 43
     );
 
-    private final E[] values;
-    private final OptionAdapter<E> adapter;
+    private final List<T> values;
+    private final OptionAdapter<T> adapter;
     private final Runnable onApply;
 
-    public OptionsGui(Player player, E[] values, OptionAdapter<E> adapter, Runnable onApply) {
+    public OptionsGui(Player player, List<T> values, OptionAdapter<T> adapter, Runnable onApply) {
         super(player, INVENTORY_SIZE, TextConversions.parse("Options"));
         this.values = values;
         this.adapter = adapter;
@@ -44,8 +44,9 @@ public class OptionsGui<E extends Enum<E>> extends BaseGui {
     @Override
     protected void build() {
         GuiUtils.fillGui(inventory);
-        for (int i = 0; i < values.length && i < OPTION_SLOTS.size(); i++) {
-            inventory.setItem(OPTION_SLOTS.get(i), adapter.render(values[i]));
+        // NOTE: caps at OPTION_SLOTS.size() (28); anything past that is not shown. Pagination is a TODO.
+        for (int i = 0; i < values.size() && i < OPTION_SLOTS.size(); i++) {
+            inventory.setItem(OPTION_SLOTS.get(i), adapter.render(values.get(i)));
         }
         inventory.setItem(APPLY_SLOT, new CustomItemBuilder(Material.LIME_STAINED_GLASS_PANE, "<green><bold>Apply")
                 .addLore("<gray>Apply changes and return")
@@ -70,11 +71,11 @@ public class OptionsGui<E extends Enum<E>> extends BaseGui {
         }
 
         int index = OPTION_SLOTS.indexOf(slot);
-        if (index == -1 || index >= values.length) {
+        if (index == -1 || index >= values.size()) {
             return;
         }
 
-        adapter.onClick(values[index], e.getClick(), this);
+        adapter.onClick(values.get(index), e.getClick(), this);
         build();
     }
 }

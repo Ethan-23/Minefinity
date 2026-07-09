@@ -5,9 +5,8 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.evasive.me.minefinity.core.data.Stats;
-import org.evasive.me.minefinity.customItems.itembuilder.data.ToolItemData;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.EquipmentSlotComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.StatsComponent;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
@@ -53,8 +52,7 @@ public class EquipmentStatContributor implements StatContributor {
             Map<String, Integer> equipmentStatMap = baseCustomItem.getComponent(StatsComponent.class).getValue();
 
             if (baseCustomItem instanceof BasePickaxeItem basePickaxeItem) {
-                ToolItemData pickaxeData = new ToolItemData(basePickaxeItem);
-                equipmentStatMap = basePickaxeItem.getTotalStats(pickaxeData.getPickaxeParts());
+                equipmentStatMap = basePickaxeItem.getTotalStats(basePickaxeItem.getInstalledParts());
             }
 
             if (equipmentStatMap == null) continue;

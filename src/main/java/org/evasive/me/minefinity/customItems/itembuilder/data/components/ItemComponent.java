@@ -1,4 +1,4 @@
-package org.evasive.me.minefinity.customItems.itembuilder.data;
+package org.evasive.me.minefinity.customItems.itembuilder.data.components;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.persistence.PersistentDataContainer;

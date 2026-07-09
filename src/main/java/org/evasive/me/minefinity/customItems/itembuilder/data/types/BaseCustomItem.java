@@ -1,4 +1,4 @@
-package org.evasive.me.minefinity.customItems.itembuilder.data.base;
+package org.evasive.me.minefinity.customItems.itembuilder.data.types;
 
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -9,8 +9,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
-import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
+import org.evasive.me.minefinity.customItems.itembuilder.data.components.ItemComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.*;
 
 import java.util.ArrayList;
@@ -187,18 +186,6 @@ public class BaseCustomItem {
                 .filter(clazz::isInstance)
                 .findFirst()
                 .orElse(null);
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T, C extends ItemComponent> T getComponentValue(Class<C> clazz, T fallback) {
-        C component = getComponent(clazz);
-        if (component instanceof EditableComponent<?> editable) {
-            Object value = editable.getValue();
-            if (value != null) {
-                return (T) value;
-            }
-        }
-        return fallback;
     }
 
     public List<ItemComponent> getComponents() {

@@ -8,8 +8,8 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
-import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.EditContext;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.OptionsGui;
 import org.evasive.me.minefinity.core.data.Stats;
@@ -67,7 +67,7 @@ public class StatsComponent implements ItemComponent, EditableComponent<Map<Stri
 
     @Override
     public void setValue(Map<String, Integer> value) {
-        this.statsMap = value == null ? new HashMap<>() : value;
+        this.statsMap = value == null ? new HashMap<>() : new HashMap<>(value);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class StatsComponent implements ItemComponent, EditableComponent<Map<Stri
             try {
                 statsMap.put(Stats.valueOf(key).name(), statsSection.getInt(key));
             } catch (IllegalArgumentException e) {
-                Bukkit.getLogger().warning("Invalid stat found: " + key);
+                Minefinity.SendLogMessage("Invalid stat found: " + key);
             }
         }
     }

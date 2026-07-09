@@ -1,12 +1,12 @@
-package org.evasive.me.minefinity.customItems.itembuilder.data.base.tools;
+package org.evasive.me.minefinity.customItems.itembuilder.data.types.tools;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
-import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.CustomItemType;
+import org.evasive.me.minefinity.customItems.itembuilder.data.parts.PartSlots;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.StatsComponent;
 
 import java.util.HashMap;
@@ -25,7 +25,7 @@ public class BasePickaxeItem extends BaseToolItem {
 
     @Override
     public List<PartSlots> getToolSlots() {
-        return List.of(PartSlots.PICKAXE_HEAD, PartSlots.PICKAXE_CORE, PartSlots.PICKAXE_HANDLE);
+        return List.of(PartSlots.HEAD, PartSlots.CORE, PartSlots.HANDLE);
     }
 
     @Override

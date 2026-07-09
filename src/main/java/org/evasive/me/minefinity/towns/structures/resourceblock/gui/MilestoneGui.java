@@ -11,7 +11,7 @@ import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.mining.milestones.MiningMilestoneService;
 import org.evasive.me.minefinity.core.data.MilestoneTier;
@@ -102,11 +102,6 @@ public class MilestoneGui extends BaseGui {
 
             inventory.setItem(slot, milestoneItem.build());
         }
-    }
-
-    @Override
-    public @NotNull Inventory getInventory() {
-        return inventory;
     }
 
     @Override

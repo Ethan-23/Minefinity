@@ -1,12 +1,16 @@
-package org.evasive.me.minefinity.customItems.itembuilder.data.base.tools;
+package org.evasive.me.minefinity.customItems.itembuilder.data.types.tools;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.rarity.Rarity;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.parts.PartSlots;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.CustomItemType;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.components.AcceptableToolsComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.PartAbilityComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.PartSlotComponent;
+
+import java.util.Set;
 
 public class BasePartItem extends BaseCustomItem {
 
@@ -23,6 +27,7 @@ public class BasePartItem extends BaseCustomItem {
         super.registerComponents();
         addComponent(new PartSlotComponent());
         addComponent(new PartAbilityComponent());
+        addComponent(new AcceptableToolsComponent());
     }
 
     public PartAbilityComponent abilityComponent() {
@@ -31,6 +36,19 @@ public class BasePartItem extends BaseCustomItem {
 
     public PartSlotComponent slotComponent() {
         return getComponent(PartSlotComponent.class);
+    }
+
+    public AcceptableToolsComponent acceptableToolsComponent() {
+        return getComponent(AcceptableToolsComponent.class);
+    }
+
+    public Set<CustomItemType> acceptableTools() {
+        return acceptableToolsComponent().getValue();
+    }
+
+    public boolean fits(PartSlots toolCategory, CustomItemType toolType) {
+        return slotComponent().getValue().contains(toolCategory)
+                && (acceptableTools().isEmpty() || acceptableTools().contains(toolType));
     }
 
     @Override

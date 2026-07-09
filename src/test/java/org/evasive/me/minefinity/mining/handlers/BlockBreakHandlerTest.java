@@ -8,8 +8,8 @@ import org.evasive.me.minefinity.core.data.BaseBlock;
 import org.evasive.me.minefinity.core.data.CustomItemStack;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.customItems.framework.ItemPickupService;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.mining.abilities.MiningAbilityRunner;
 import org.evasive.me.minefinity.mining.context.BreakContext;
@@ -182,8 +182,8 @@ class BlockBreakHandlerTest {
 
         handler.handleBlockBreak(location, player, specialBlock(), pickaxe, stats, runner);
 
-        // Reactions now fire AFTER the roll is locked in, so an onBreak ability (e.g. MetalDetector's
-        // proc) can read the resolved special-drop flag. Chance contributions happen upstream in applyStats.
+        // Reactions now fire AFTER the roll is locked in, so an onBreak ability can read the resolved
+        // special-drop flag. Chance contributions happen upstream in applyStats.
         InOrder inOrder = inOrder(stats, runner);
         inOrder.verify(stats).setSpecialDrop(anyBoolean());
         inOrder.verify(runner).runOnBreak(eq(pickaxe), any(BreakContext.class));
@@ -192,7 +192,8 @@ class BlockBreakHandlerTest {
     @Test
     void aReactionAbilityObservesTheResolvedSpecialDropDuringOnBreak() {
         // The pay-off of the ordering: by the time runOnBreak fires, isSpecialDrop() reflects this break,
-        // so MetalDetector's proc check works. (Chance is already on the context via applyStats upstream.)
+        // so an onBreak reaction that inspects the special-drop result sees this break. (Chance is already
+        // on the context via applyStats upstream.)
         StatsContext stats = new StatsContext();
         stats.addSpecialChance(99);   // 1 + 99 == 100 -> the roll is guaranteed to be special
         BasePickaxeItem pickaxe = mock(BasePickaxeItem.class);

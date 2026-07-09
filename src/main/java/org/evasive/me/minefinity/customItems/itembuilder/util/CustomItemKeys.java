@@ -24,4 +24,5 @@ public class CustomItemKeys {
     public static final NamespacedKey SOULBOUND_KEY = new NamespacedKey(Minefinity.getCore(), "SOULBOUND");
     public static final NamespacedKey EQUIPMENT_SLOT_KEY = new NamespacedKey(Minefinity.getCore(), "EQUIPMENT_SLOT");
     public static final NamespacedKey PART_SLOT_KEY = new NamespacedKey(Minefinity.getCore(), "COMPONENT_SLOT");
+    public static final NamespacedKey ACCEPTABLE_TOOLS_KEY = new NamespacedKey(Minefinity.getCore(), "ACCEPTABLE_TOOLS");
 }

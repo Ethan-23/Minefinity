@@ -4,7 +4,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
-import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.EditContext;
 
 import java.util.List;
@@ -56,6 +55,6 @@ public class StackSizeComponent implements ItemComponent, EditableComponent<Inte
     @Override
     public void loadFromConfig(ConfigurationSection s) {
         if (s.isSet(SECTION_ID))
-            stackSize = s.getInt(SECTION_ID);
+            stackSize = Math.clamp(s.getInt(SECTION_ID), 1, 99);
     }
 }

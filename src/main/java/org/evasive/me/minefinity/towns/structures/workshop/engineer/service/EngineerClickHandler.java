@@ -14,7 +14,7 @@ import org.evasive.me.minefinity.towns.structures.workshop.engineer.recipes.Base
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.recipes.WorkshopRecipeManager;
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.tools.WorkshopToolsTiers;
 
-import static org.evasive.me.minefinity.customItems.itembuilder.util.SwapItems.swapCursor;
+import static org.evasive.me.minefinity.core.gui.GuiUtils.swapCursor;
 import static org.evasive.me.minefinity.towns.structures.workshop.engineer.gui.EngineerGui.*;
 
 public class EngineerClickHandler {
@@ -78,7 +78,7 @@ public class EngineerClickHandler {
             return;
 
         if(replacementWorkshopResource == null || currentWorkshopResource != replacementWorkshopResource){
-            swapCursor(e, noResource ? null : customItemRegistryService.getBaseItemById(engineerService.getWorkshopCurrentResource(player, workshopMode).name()), noResource ? 0 : engineerService.getWorkshopCurrentResourceCount(player, workshopMode));
+            swapCursor(e, noResource ? null : customItemRegistryService.getBaseItemById(engineerService.getWorkshopCurrentResource(player, workshopMode).name()).buildItem(), noResource ? 0 : engineerService.getWorkshopCurrentResourceCount(player, workshopMode));
             engineerService.setWorkshopCurrentResource(player, workshopMode, replacementWorkshopResource);
             engineerService.setWorkshopCurrentResourceCount(player, workshopMode, cursorItem.getAmount());
         } else {

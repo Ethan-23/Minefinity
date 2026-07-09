@@ -1,15 +1,16 @@
-package org.evasive.me.minefinity.customItems.itembuilder.data.base.tools;
+package org.evasive.me.minefinity.customItems.itembuilder.data.types.tools;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
-import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.CustomItemType;
+import org.evasive.me.minefinity.customItems.itembuilder.data.parts.PartSlots;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.ToolPartComponent;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class BaseToolItem extends BaseCustomItem {
     }
 
     public List<PartSlots> getToolSlots() {
-        return List.of(PartSlots.HEAD, PartSlots.CORE, PartSlots.HANDLE);
+        return List.of();
     }
 
     public void setPart(PartSlots slot, String partId) {
@@ -48,6 +49,18 @@ public class BaseToolItem extends BaseCustomItem {
 
     public Map<PartSlots, String> getPartMap() {
         return Collections.unmodifiableMap(partComponent().getValue());
+    }
+
+    public List<BasePartItem> getInstalledParts() {
+        List<BasePartItem> parts = new ArrayList<>();
+        for (String partId : getPartMap().values()) {
+            if (partId == null || partId.isEmpty())
+                continue;
+            BaseCustomItem resolved = CustomItemRegistryService.get().getBaseItemById(partId);
+            if (resolved instanceof BasePartItem part)
+                parts.add(part);
+        }
+        return parts;
     }
 
     @Override

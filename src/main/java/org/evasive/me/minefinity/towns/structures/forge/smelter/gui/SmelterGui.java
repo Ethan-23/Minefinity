@@ -12,8 +12,8 @@ import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.core.data.CustomItemStack;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseFuelItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseFuelItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.forge.smelter.recipes.SmelterRecipeManager;
 import org.evasive.me.minefinity.towns.structures.forge.smelter.service.SmelterHandler;
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static org.evasive.me.minefinity.customItems.itembuilder.util.SwapItems.swapCursor;
+import static org.evasive.me.minefinity.core.gui.GuiUtils.swapCursor;
 
 public class SmelterGui extends BaseGui {
 
@@ -185,7 +185,7 @@ public class SmelterGui extends BaseGui {
             if(!(customItem instanceof BaseFuelItem baseFuelItem))
                 swapCursor(e, null, 0);
             else
-                swapCursor(e, baseFuelItem, smelterService.getTotalFuel(player));
+                swapCursor(e, baseFuelItem.buildItem(), smelterService.getTotalFuel(player));
 
             smelterService.setFuel(player, replacementFuelItem == null ? null : replacementFuelItem.getID(), cursorItem.getAmount());
         } else if(Objects.equals(smelterService.getFuelId(player), replacementFuelItem.getID())){
@@ -209,7 +209,7 @@ public class SmelterGui extends BaseGui {
             if(currentCustomItemStack == null)
                 swapCursor(e, null, 0);
             else
-                swapCursor(e, customItemRegistryService.getBaseItemById(currentCustomItemStack.getCustomItem()), currentCustomItemStack.getAmount());
+                swapCursor(e, customItemRegistryService.getBaseItemById(currentCustomItemStack.getCustomItem()).buildItem(), currentCustomItemStack.getAmount());
             smelterService.setInventoryItem(player, replacementCustomItemStack, inventorySlot);
         } else {
             int currentAmount = currentCustomItemStack.getAmount();

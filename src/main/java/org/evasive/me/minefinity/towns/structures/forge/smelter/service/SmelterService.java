@@ -3,7 +3,7 @@ package org.evasive.me.minefinity.towns.structures.forge.smelter.service;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.core.data.CustomItemStack;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseFuelItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseFuelItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.FuelAmountComponent;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;
@@ -67,7 +67,7 @@ public class SmelterService {
         setLastUpdated(player);
         setFuelTier(player, fuelId);
         if(getFuelEfficiency(player) <= 0){
-            setFuelEfficiency(player, ((BaseFuelItem)customItemRegistryService.getBaseItemById(fuelId).getBaseItem()).getComponent(FuelAmountComponent.class).getValue());
+            setFuelEfficiency(player, customItemRegistryService.getBaseItemById(fuelId).getBaseItem().getComponent(FuelAmountComponent.class).getValue());
             amount--;
         }
         setTotalFuel(player, amount);
@@ -224,7 +224,7 @@ public class SmelterService {
         String fuelId = getFuelId(player);
         if(getTotalFuel(player) == 0 && getFuelEfficiency(player) == 0 || fuelId == null) return;
 
-        int totalFuelValue = getFuelEfficiency(player) + getTotalFuel(player) * ((BaseFuelItem)customItemRegistryService.getBaseItemById(fuelId).getBaseItem()).getComponent(FuelAmountComponent.class).getValue();
+        int totalFuelValue = getFuelEfficiency(player) + getTotalFuel(player) * customItemRegistryService.getBaseItemById(fuelId).getBaseItem().getComponent(FuelAmountComponent.class).getValue();
 
         for(int i = 0; i < getInventory(player).length; i++){
 

@@ -1,9 +1,8 @@
-package org.evasive.me.minefinity.customItems.itembuilder.data.base;
+package org.evasive.me.minefinity.customItems.itembuilder.data.types;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.rarity.Rarity;
-import org.evasive.me.minefinity.customItems.itembuilder.data.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.FuelAmountComponent;
 
 public class BaseFuelItem extends BaseCustomItem {

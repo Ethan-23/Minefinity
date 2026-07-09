@@ -8,7 +8,7 @@ import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.data.WorkshopMode;
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.recipes.BaseWorkshopRecipe;
@@ -68,7 +68,7 @@ public class EngineerGuiRenderer {
         this.customItemRegistryService = customItemRegistryService;
     }
 
-    public void render(Inventory inventory, int inventorySize) {
+    public void render(Inventory inventory) {
         GuiUtils.fillGui(inventory);
         renderHeader(inventory);
         renderSwapButton(inventory);

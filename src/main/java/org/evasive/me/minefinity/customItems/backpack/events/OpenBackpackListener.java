@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
 import org.evasive.me.minefinity.customItems.backpack.gui.GenericBackpackGui;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseBackpackItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseBackpackItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 
 public class OpenBackpackListener implements Listener {

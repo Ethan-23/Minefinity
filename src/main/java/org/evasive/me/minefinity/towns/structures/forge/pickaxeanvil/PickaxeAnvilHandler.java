@@ -2,9 +2,10 @@ package org.evasive.me.minefinity.towns.structures.forge.pickaxeanvil;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePartItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.parts.PartSlots;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.CustomItemType;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BasePartItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.StatsComponent;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.core.data.Stats;
@@ -28,7 +29,7 @@ public class PickaxeAnvilHandler {
 
         BasePartItem baseToolComponent = new BasePartItem(itemStack);
 
-        return PartSlots.isCompatible(baseToolComponent.slotComponent().getValue(), toolSlot);
+        return baseToolComponent.fits(toolSlot, CustomItemType.PICKAXE);
     }
 
 
@@ -92,9 +93,9 @@ public class PickaxeAnvilHandler {
         String headId = customItemRegistryService.getItemId(head);
         String coreId = customItemRegistryService.getItemId(core);
         String handleId = customItemRegistryService.getItemId(handle);
-        basePickaxeItem.setPart(PartSlots.PICKAXE_HEAD, customItemRegistryService.isRegistered(headId) ? headId : null);
-        basePickaxeItem.setPart(PartSlots.PICKAXE_CORE, customItemRegistryService.isRegistered(coreId) ? coreId : null);
-        basePickaxeItem.setPart(PartSlots.PICKAXE_HANDLE, customItemRegistryService.isRegistered(handleId) ? handleId : null);
+        basePickaxeItem.setPart(PartSlots.HEAD, customItemRegistryService.isRegistered(headId) ? headId : null);
+        basePickaxeItem.setPart(PartSlots.CORE, customItemRegistryService.isRegistered(coreId) ? coreId : null);
+        basePickaxeItem.setPart(PartSlots.HANDLE, customItemRegistryService.isRegistered(handleId) ? handleId : null);
         return customItemRegistryService.buildItem(basePickaxeItem);
     }
 

@@ -4,7 +4,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
-import org.evasive.me.minefinity.customItems.itembuilder.data.ItemComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.EditContext;
 
 import java.util.List;
@@ -59,6 +58,6 @@ public class ValueComponent implements ItemComponent, EditableComponent<Float> {
     @Override
     public void loadFromConfig(ConfigurationSection s) {
         if (s.isSet(SECTION_ID))
-            value = (float) s.getDouble(SECTION_ID);
+            value = Math.max(0f, (float) s.getDouble(SECTION_ID));
     }
 }

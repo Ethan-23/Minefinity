@@ -11,7 +11,7 @@ import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.backpack.BackpackHandler;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseBackpackItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseBackpackItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.jetbrains.annotations.NotNull;
 
@@ -75,11 +75,6 @@ public class GenericBackpackGui extends BaseGui {
             return storageBlock.addLore("<#555555>Empty backpack!").build();
         return storageBlock.addLore("<#55FFFF>Right-Click for stack!")
                 .addLore("<yellow>Click to pickup!").build();
-    }
-
-    @Override
-    public @NotNull Inventory getInventory() {
-        return inventory;
     }
 
     @Override

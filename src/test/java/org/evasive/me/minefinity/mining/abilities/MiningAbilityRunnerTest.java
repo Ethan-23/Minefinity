@@ -1,42 +1,29 @@
 package org.evasive.me.minefinity.mining.abilities;
 
 import org.bukkit.entity.Player;
-import org.evasive.me.minefinity.customItems.itembuilder.data.PartSlots;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePartItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.tools.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BasePartItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.PartAbilityComponent;
-import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.mining.context.BreakContext;
 import org.evasive.me.minefinity.mining.context.HitContext;
 import org.evasive.me.minefinity.mining.context.StatsContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.mockito.Mockito.*;
 
 class MiningAbilityRunnerTest {
 
     private MiningAbilityRegistry registry;
-    private CustomItemRegistryService service;
     private MiningAbilityRunner runner;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         registry = mock(MiningAbilityRegistry.class);
         runner = new MiningAbilityRunner(registry);
-
-        // The runner resolves a pickaxe's parts through the CustomItemRegistryService singleton
-        // (via ToolItemData). Static mocking isn't available in this environment, so we install a
-        // mock as the singleton instance and stub part resolution on it directly.
-        service = mock(CustomItemRegistryService.class);
-        Field instance = CustomItemRegistryService.class.getDeclaredField("instance");
-        instance.setAccessible(true);
-        instance.set(null, service);
     }
 
     private BasePartItem partWithAbilities(String... abilityIds) {
@@ -47,9 +34,11 @@ class MiningAbilityRunnerTest {
         return part;
     }
 
-    private BasePickaxeItem pickaxeWith(Map<PartSlots, String> parts) {
+    // The runner resolves a pickaxe's installed parts through BaseToolItem.getInstalledParts(),
+    // so the test stubs that directly rather than going through the registry service.
+    private BasePickaxeItem pickaxeWith(BasePartItem... parts) {
         BasePickaxeItem pickaxe = mock(BasePickaxeItem.class);
-        when(pickaxe.getPartMap()).thenReturn(parts);
+        when(pickaxe.getInstalledParts()).thenReturn(List.of(parts));
         return pickaxe;
     }
 
@@ -62,10 +51,9 @@ class MiningAbilityRunnerTest {
         MiningAbility ability = mock(MiningAbility.class);
         when(registry.getAbility("EARLY_BIRD")).thenReturn(ability);
         BasePartItem head = partWithAbilities("EARLY_BIRD");
-        when(service.getBaseItemById("head")).thenReturn(head);
 
         HitContext ctx = hitContext();
-        BasePickaxeItem pickaxe = pickaxeWith(Map.of(PartSlots.PICKAXE_HEAD, "head"));
+        BasePickaxeItem pickaxe = pickaxeWith(head);
 
         runner.runOnHit(pickaxe, ctx);
 
@@ -78,13 +66,9 @@ class MiningAbilityRunnerTest {
         when(registry.getAbility("EARLY_BIRD")).thenReturn(ability);
         BasePartItem head = partWithAbilities("EARLY_BIRD");
         BasePartItem core = partWithAbilities("EARLY_BIRD");
-        when(service.getBaseItemById("head")).thenReturn(head);
-        when(service.getBaseItemById("core")).thenReturn(core);
 
         HitContext ctx = hitContext();
-        BasePickaxeItem pickaxe = pickaxeWith(Map.of(
-                PartSlots.PICKAXE_HEAD, "head",
-                PartSlots.PICKAXE_CORE, "core"));
+        BasePickaxeItem pickaxe = pickaxeWith(head, core);
 
         runner.runOnHit(pickaxe, ctx);
 
@@ -96,10 +80,9 @@ class MiningAbilityRunnerTest {
         MiningAbility ability = mock(MiningAbility.class);
         when(registry.getAbility("METAL_DETECT")).thenReturn(ability);
         BasePartItem core = partWithAbilities("METAL_DETECT");
-        when(service.getBaseItemById("core")).thenReturn(core);
 
         BreakContext ctx = new BreakContext(mock(Player.class), null, new StatsContext());
-        BasePickaxeItem pickaxe = pickaxeWith(Map.of(PartSlots.PICKAXE_CORE, "core"));
+        BasePickaxeItem pickaxe = pickaxeWith(core);
 
         runner.runOnBreak(pickaxe, ctx);
 
@@ -111,10 +94,9 @@ class MiningAbilityRunnerTest {
         MiningAbility ability = mock(MiningAbility.class);
         when(registry.getAbility("METAL_DETECT")).thenReturn(ability);
         BasePartItem core = partWithAbilities("METAL_DETECT");
-        when(service.getBaseItemById("core")).thenReturn(core);
 
         HitContext ctx = hitContext();
-        BasePickaxeItem pickaxe = pickaxeWith(Map.of(PartSlots.PICKAXE_CORE, "core"));
+        BasePickaxeItem pickaxe = pickaxeWith(core);
 
         runner.runApplyStats(pickaxe, ctx);
 
@@ -123,7 +105,7 @@ class MiningAbilityRunnerTest {
 
     @Test
     void aPickaxeWithNoPartsInvokesNoAbilities() {
-        BasePickaxeItem pickaxe = pickaxeWith(Map.of());
+        BasePickaxeItem pickaxe = pickaxeWith();
 
         runner.runOnHit(pickaxe, hitContext());
 
@@ -134,9 +116,8 @@ class MiningAbilityRunnerTest {
     void anAbilityIdWithNoRegisteredImplementationIsSkipped() {
         // registry.getAbility returns null (unstubbed) -> the runner must skip without throwing.
         BasePartItem head = partWithAbilities("EARLY_BIRD");
-        when(service.getBaseItemById("head")).thenReturn(head);
 
-        BasePickaxeItem pickaxe = pickaxeWith(Map.of(PartSlots.PICKAXE_HEAD, "head"));
+        BasePickaxeItem pickaxe = pickaxeWith(head);
 
         runner.runOnHit(pickaxe, hitContext());   // must not throw
 

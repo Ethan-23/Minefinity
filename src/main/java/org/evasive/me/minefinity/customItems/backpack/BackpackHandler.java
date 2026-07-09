@@ -3,8 +3,8 @@ package org.evasive.me.minefinity.customItems.backpack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseBackpackItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.base.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseBackpackItem;
+import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 
 import java.util.List;
@@ -93,7 +93,7 @@ public class BackpackHandler {
 
             String itemId = customItemRegistryService.getItemId(item);
 
-            if(!storedItemIds.contains(itemId)) continue;
+            if(!storedItemIds.contains(itemId) || item == null) continue;
 
             int amount = item.getAmount();
             int currentStorage = backpackService.getBackpackStoredItemAmount(player, itemId);
