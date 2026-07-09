@@ -62,7 +62,7 @@ public class CustomItemModule {
 
         //Commands
         new MineGive(customItemRegistryService);
-        new CreateCustomItem(customItemRegistryService, registryConfigHandler, playerInputListener);
+        new CreateCustomItem(customItemRegistryService, playerInputListener);
         new DeleteCustomItem(customItemRegistryService, registryConfigHandler);
     }
 

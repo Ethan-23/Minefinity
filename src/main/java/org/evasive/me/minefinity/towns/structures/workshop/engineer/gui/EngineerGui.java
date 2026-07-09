@@ -41,7 +41,7 @@ public class EngineerGui extends BaseGui {
 
     @Override
     protected void build() {
-        renderer.render(inventory, INVENTORY_SIZE);
+        renderer.render(inventory);
     }
 
     public void rebuildDynamic(){
