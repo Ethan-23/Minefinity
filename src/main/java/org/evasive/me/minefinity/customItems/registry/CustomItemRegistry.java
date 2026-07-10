@@ -13,7 +13,7 @@ public class CustomItemRegistry {
 
     public CustomItemRegistry() {
         for (BaseCustomItem item : getAllItems()) {
-            item.getBaseItem().buildItem();
+            item.buildItem();
         }
     }
 

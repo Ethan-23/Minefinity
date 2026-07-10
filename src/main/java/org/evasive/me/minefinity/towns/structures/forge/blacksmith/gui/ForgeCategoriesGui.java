@@ -3,7 +3,6 @@ package org.evasive.me.minefinity.towns.structures.forge.blacksmith.gui;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.gui.BaseGui;
 import org.evasive.me.minefinity.core.gui.GuiUtils;
@@ -18,7 +17,6 @@ import org.evasive.me.minefinity.towns.structures.forge.blacksmith.data.ForgeCat
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.recipes.BaseForgeRecipe;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.recipes.ForgeRecipeManager;
 import org.evasive.me.minefinity.towns.structures.forge.blacksmith.service.ForgeService;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,11 +127,9 @@ public class ForgeCategoriesGui extends BaseGui {
 
                     if(customItem != null){
 
-                        BaseCustomItem baseCustomItem = customItem.getBaseItem();
-
                         int amount = entry.getValue();
-                        String name = baseCustomItem.getDisplayName();
-                        forgeItem.addLore(TextConversions.setRarityColor(name, baseCustomItem.getRarity()) + "<white> x" + amount).build();
+                        String name = customItem.getDisplayName();
+                        forgeItem.addLore(TextConversions.setRarityColor(name, customItem.getRarity()) + "<white> x" + amount).build();
                     }else {
                         forgeItem.addLore("<red>Unknown Item <bold>" +  entry.getKey());
                     }

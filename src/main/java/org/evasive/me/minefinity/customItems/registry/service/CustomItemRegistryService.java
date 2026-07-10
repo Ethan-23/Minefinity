@@ -64,7 +64,7 @@ public class CustomItemRegistryService {
         if(!customItemRegistry.isRegistered(itemId)){
             return new BaseCustomItem(itemId, Material.YELLOW_STAINED_GLASS, itemId, Rarity.MINOR);
         }
-        return customItemRegistry.getByID(itemId).getBaseItem().copy();
+        return customItemRegistry.getByID(itemId).copy();
     }
 
     public BaseCustomItem getRegisteredBaseItem(ItemStack itemStack){
@@ -74,7 +74,7 @@ public class CustomItemRegistryService {
         if(id == null || !customItemRegistry.isRegistered(id))
             return null;
 
-        BaseCustomItem item = customItemRegistry.getByID(id).getBaseItem().copy();
+        BaseCustomItem item = customItemRegistry.getByID(id).copy();
         PersistentDataContainer pdc = itemStack.getItemMeta().getPersistentDataContainer();
 
         for (ItemComponent c : item.getComponents())
@@ -90,7 +90,7 @@ public class CustomItemRegistryService {
         if(!customItemRegistry.isRegistered(itemId)){
             return getUnregisteredItem(itemId);
         }
-        return customItemRegistry.getByID(itemId).getBaseItem().copy();
+        return customItemRegistry.getByID(itemId).copy();
     }
 
     public ItemStack getRegisteredItemStack(String itemId){
@@ -100,7 +100,7 @@ public class CustomItemRegistryService {
         BaseCustomItem baseCustomItem = getRegisteredBaseItem(itemId);
         if(baseCustomItem instanceof BasePickaxeItem pickaxe)
             return pickaxe.buildItem();
-        return customItemRegistry.getByID(itemId).getBaseItem().buildItem();
+        return customItemRegistry.getByID(itemId).buildItem();
 
     }
 
@@ -143,7 +143,7 @@ public class CustomItemRegistryService {
     public boolean isPickaxe(ItemStack itemStack) {
         String id = getItemId(itemStack);
         if (id == null || !customItemRegistry.isRegistered(id)) return false;
-        return customItemRegistry.getByID(id).getBaseItem().getCustomItemType() == CustomItemType.PICKAXE;
+        return customItemRegistry.getByID(id).getCustomItemType() == CustomItemType.PICKAXE;
     }
 
     public List<BasePartItem> getCompatibleParts(PartSlots category, CustomItemType toolType){

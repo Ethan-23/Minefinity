@@ -128,7 +128,7 @@ public class SmelterGui extends BaseGui {
 
             BaseCustomItem customItem = customItemRegistryService.getRegisteredBaseItem(entry.getKey());
 
-            itemBuilder.addLore(customItemRegistryService.isRegistered(entry.getKey()) ? TextConversions.buildRarityColor(customItem.getID(), customItem.getBaseItem().getRarity()) + " <gray>x" + entry.getValue() : "<bold><red>Null (" + entry.getKey()+")" + " x" + entry.getValue());
+            itemBuilder.addLore(customItemRegistryService.isRegistered(entry.getKey()) ? TextConversions.buildRarityColor(customItem.getID(), customItem.getRarity()) + " <gray>x" + entry.getValue() : "<bold><red>Null (" + entry.getKey()+")" + " x" + entry.getValue());
         }
         inventory.setItem(OUTPUT_SLOT, itemBuilder.build());
     }

@@ -67,7 +67,7 @@ public class SmelterService {
         setLastUpdated(player);
         setFuelTier(player, fuelId);
         if(getFuelEfficiency(player) <= 0){
-            setFuelEfficiency(player, customItemRegistryService.getBaseItemById(fuelId).getBaseItem().getComponent(FuelAmountComponent.class).getValue());
+            setFuelEfficiency(player, customItemRegistryService.getBaseItemById(fuelId).getComponent(FuelAmountComponent.class).getValue());
             amount--;
         }
         setTotalFuel(player, amount);
@@ -184,7 +184,7 @@ public class SmelterService {
 
         if(remainingFuel <= 0){
             setTotalFuel(player, getTotalFuel(player) - 1);
-            setFuelEfficiency(player, ((BaseFuelItem)customItemRegistryService.getBaseItemById(getFuelId(player))).getComponent(FuelAmountComponent.class).getValue());
+            setFuelEfficiency(player, (customItemRegistryService.getBaseItemById(getFuelId(player))).getComponent(FuelAmountComponent.class).getValue());
             remainingFuel = getFuelEfficiency(player);
         }
         return remainingFuel;
@@ -224,7 +224,7 @@ public class SmelterService {
         String fuelId = getFuelId(player);
         if(getTotalFuel(player) == 0 && getFuelEfficiency(player) == 0 || fuelId == null) return;
 
-        int totalFuelValue = getFuelEfficiency(player) + getTotalFuel(player) * customItemRegistryService.getBaseItemById(fuelId).getBaseItem().getComponent(FuelAmountComponent.class).getValue();
+        int totalFuelValue = getFuelEfficiency(player) + getTotalFuel(player) * customItemRegistryService.getBaseItemById(fuelId).getComponent(FuelAmountComponent.class).getValue();
 
         for(int i = 0; i < getInventory(player).length; i++){
 

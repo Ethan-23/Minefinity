@@ -51,7 +51,7 @@ public class ForgeService {
     }
 
     public ItemStack getForgeItemStack(Player player, int slot){
-        return customItemRegistryService.getBaseItemById(getForgeItem(player, slot).getResultItemId()).getBaseItem().buildItem().clone();
+        return customItemRegistryService.getBaseItemById(getForgeItem(player, slot).getResultItemId()).buildItem().clone();
     }
 
     public void setSelectedForge(Player player, int forgeSlot){

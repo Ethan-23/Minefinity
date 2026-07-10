@@ -85,7 +85,7 @@ public class BackpackHandler {
 
         Inventory inventory = player.getInventory();
 
-        BaseBackpackItem baseBackpackItem = (BaseBackpackItem) customItemRegistryService.getBaseItemById(backPackId).getBaseItem();
+        BaseBackpackItem baseBackpackItem = (BaseBackpackItem) customItemRegistryService.getBaseItemById(backPackId);
         List<String> storedItemIds = baseBackpackItem.storageListComponent().getValue();
 
         for(ItemStack item : inventory.getContents()){

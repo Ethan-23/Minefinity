@@ -20,6 +20,8 @@ public class CriticalMap {
     }
 
     public void removeCritical(UUID uuid) {
+        if(!criticalMap.containsKey(uuid))
+            return;
         BukkitTask particleTask = criticalMap.get(uuid).getRepeatingTask();
         if(particleTask != null)
             particleTask.cancel();

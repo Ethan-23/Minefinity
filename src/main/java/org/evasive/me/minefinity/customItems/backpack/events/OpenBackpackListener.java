@@ -35,7 +35,7 @@ public class OpenBackpackListener implements Listener {
 
         String itemId = customItemRegistryService.getItemId(item);
 
-       if(!(customItemRegistryService.getBaseItemById(itemId).getBaseItem() instanceof BaseBackpackItem))
+       if(!(customItemRegistryService.getBaseItemById(itemId) instanceof BaseBackpackItem))
            return;
 
         Player player = event.getPlayer();
