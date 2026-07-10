@@ -10,11 +10,10 @@ import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.Minefinity;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.CustomItemType;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.types.CustomItemType;
+import org.evasive.me.minefinity.customItems.types.BaseCustomItem;
 import org.evasive.me.minefinity.core.events.PlayerInputListener;
 import org.evasive.me.minefinity.customItems.itembuilder.gui.ItemCreationGui;
-import org.evasive.me.minefinity.customItems.registry.config.RegistryConfigHandler;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.jetbrains.annotations.NotNull;
 

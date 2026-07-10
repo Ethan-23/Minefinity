@@ -3,7 +3,7 @@ package org.evasive.me.minefinity.towns.structures.mines.miner.service;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.utils.TextConversions;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.types.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.StatsComponent;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.mining.utils.MiningProgress;

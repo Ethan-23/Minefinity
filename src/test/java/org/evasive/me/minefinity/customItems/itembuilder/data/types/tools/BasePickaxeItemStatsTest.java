@@ -4,6 +4,8 @@ import org.bukkit.Material;
 import org.evasive.me.minefinity.core.data.Stats;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.StatsComponent;
+import org.evasive.me.minefinity.customItems.types.tools.BasePartItem;
+import org.evasive.me.minefinity.customItems.types.tools.BasePickaxeItem;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

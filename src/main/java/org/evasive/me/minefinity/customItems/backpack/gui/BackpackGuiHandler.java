@@ -6,7 +6,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.customItems.backpack.BackpackHandler;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseBackpackItem;
+import org.evasive.me.minefinity.customItems.types.BaseBackpackItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 
 public class BackpackGuiHandler {

@@ -8,7 +8,7 @@ import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.types.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.data.WorkshopMode;
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.recipes.BaseWorkshopRecipe;

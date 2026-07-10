@@ -3,7 +3,7 @@ package org.evasive.me.minefinity.towns.structures.forge.smelter.service;
 import org.bukkit.entity.Player;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.core.data.CustomItemStack;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseFuelItem;
+import org.evasive.me.minefinity.customItems.types.BaseFuelItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.FuelAmountComponent;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 import org.evasive.me.minefinity.playerdata.service.PlayerDataService;

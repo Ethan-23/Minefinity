@@ -11,13 +11,12 @@ import org.evasive.me.minefinity.core.gui.GuiUtils;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.CustomItemType;
+import org.evasive.me.minefinity.customItems.types.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.ItemComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.ItemOptions;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.types.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.EditableComponent;
 import org.evasive.me.minefinity.core.events.PlayerInputListener;
-import org.evasive.me.minefinity.customItems.registry.config.RegistryConfigHandler;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 
 import java.util.List;
@@ -132,18 +131,17 @@ public class ItemCreationGui extends BaseGui {
         int slot = e.getSlot();
 
         if (slot == REGISTRY_SAVE_SLOT && e.isLeftClick()) {
-            new ConfirmationGui(player, this, p -> {
-                registry.saveCustomItem(baseCustomItem);
-                reopen();
-            }).open();
+            handleRegistrySave();
             return;
         }
 
         int index = OPTION_SLOTS.indexOf(slot);
-        if (index == -1) return;
+        if (index == -1)
+            return;
 
         List<ItemOptions> options = customItemType.getAllOptions();
-        if (index >= options.size()) return;
+        if (index >= options.size())
+            return;
 
         ItemOptions option = options.get(index);
 
@@ -162,59 +160,82 @@ public class ItemCreationGui extends BaseGui {
         EditContext ctx = new EditContext(player, baseCustomItem, inputListener, this);
 
         switch (option) {
-            case MINEFINITY_ID -> ctx.promptString(input -> {
-                if (input.contains(" ")) {
-                    player.sendMessage(TextConversions.parse("<red>Minefinity ID cannot contain spaces"));
-                    return;
-                }
-                baseCustomItem.setId(input);
-            });
+            case MINEFINITY_ID -> handleId(ctx);
 
             case DISPLAY_NAME -> ctx.promptString(baseCustomItem::setDisplayName);
 
-            case MATERIAL -> ctx.promptString(input -> {
-                Material material = Material.matchMaterial(input.trim());
-                if (material == null || material == Material.AIR) {
-                    player.sendMessage(TextConversions.parse("<red>Invalid Material Type"));
-                    return;
-                }
-                baseCustomItem.setMaterial(material);
-            });
+            case MATERIAL -> handleMaterial(ctx);
 
-            case RARITY -> ctx.openSelector(Rarity.values(), new OptionsGui.OptionAdapter<>() {
-                @Override
-                public ItemStack render(Rarity rarity) {
-                    CustomItemBuilder icon = new CustomItemBuilder(rarity.getRarityBuilder().material(),
-                            TextConversions.buildRarityColor(rarity.name(), rarity));
-                    if (baseCustomItem.getRarity() == rarity) icon.addGlow();
-                    return icon.build();
-                }
+            case RARITY -> handleRarityOption(ctx);
 
-                @Override
-                public void onClick(Rarity rarity, org.bukkit.event.inventory.ClickType click, OptionsGui<Rarity> gui) {
-                    baseCustomItem.setRarity(rarity);
-                }
-            });
-
-            case CUSTOM_ITEM_TYPE -> new OptionsGui<>(player, List.of(CustomItemType.values()),
-                    new OptionsGui.OptionAdapter<>() {
-                        @Override
-                        public ItemStack render(CustomItemType type) {
-                            CustomItemBuilder icon = new CustomItemBuilder(type.getDisplayMaterial(),
-                                    "<gold>" + TextConversions.formatItemName(type.name()));
-                            if (baseCustomItem.getCustomItemType() == type) icon.addGlow();
-                            return icon.build();
-                        }
-
-                        @Override
-                        public void onClick(CustomItemType type, org.bukkit.event.inventory.ClickType click, OptionsGui<CustomItemType> gui) {
-                            changeItemType(type);
-                            reopen();
-                        }
-                    }, this::reopen).open();
+            case CUSTOM_ITEM_TYPE -> handleCustomItemType();
 
             default -> { }
         }
+    }
+
+    private void handleRarityOption(EditContext ctx){
+        ctx.openSelector(Rarity.values(), new OptionsGui.OptionAdapter<>() {
+            @Override
+            public ItemStack render(Rarity rarity) {
+                CustomItemBuilder icon = new CustomItemBuilder(rarity.getRarityBuilder().material(),
+                        TextConversions.buildRarityColor(rarity.name(), rarity));
+                if (baseCustomItem.getRarity() == rarity) icon.addGlow();
+                return icon.build();
+            }
+
+            @Override
+            public void onClick(Rarity rarity, org.bukkit.event.inventory.ClickType click, OptionsGui<Rarity> gui) {
+                baseCustomItem.setRarity(rarity);
+            }
+        });
+    }
+
+    private void handleId(EditContext ctx){
+        ctx.promptString(input -> {
+            if (input.contains(" ")) {
+                player.sendMessage(TextConversions.parse("<red>Minefinity ID cannot contain spaces"));
+                return;
+            }
+            baseCustomItem.setId(input.toUpperCase());
+        });
+    }
+
+    private void handleMaterial(EditContext ctx){
+        ctx.promptString(input -> {
+            Material material = Material.matchMaterial(input.trim());
+            if (material == null || material == Material.AIR) {
+                player.sendMessage(TextConversions.parse("<red>Invalid Material Type"));
+                return;
+            }
+            baseCustomItem.setMaterial(material);
+        });
+    }
+
+    private void handleCustomItemType(){
+        new OptionsGui<>(player, List.of(CustomItemType.values()),
+                new OptionsGui.OptionAdapter<>() {
+                    @Override
+                    public ItemStack render(CustomItemType type) {
+                        CustomItemBuilder icon = new CustomItemBuilder(type.getDisplayMaterial(),
+                                "<gold>" + TextConversions.formatItemName(type.name()));
+                        if (baseCustomItem.getCustomItemType() == type) icon.addGlow();
+                        return icon.build();
+                    }
+
+                    @Override
+                    public void onClick(CustomItemType type, org.bukkit.event.inventory.ClickType click, OptionsGui<CustomItemType> gui) {
+                        changeItemType(type);
+                        reopen();
+                    }
+                }, this::reopen).open();
+    }
+
+    private void handleRegistrySave(){
+        new ConfirmationGui(player, this, p -> {
+            registry.saveCustomItem(baseCustomItem);
+            reopen();
+        }).open();
     }
 
     private void changeItemType(CustomItemType type) {

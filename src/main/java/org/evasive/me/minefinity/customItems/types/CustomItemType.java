@@ -1,12 +1,12 @@
-package org.evasive.me.minefinity.customItems.itembuilder.data.types;
+package org.evasive.me.minefinity.customItems.types;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.ItemOptions;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BaseAxeItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BasePartItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.types.tools.BaseAxeItem;
+import org.evasive.me.minefinity.customItems.types.tools.BasePartItem;
+import org.evasive.me.minefinity.customItems.types.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.itembuilder.factories.ItemStackFactory;
 import org.evasive.me.minefinity.customItems.itembuilder.factories.NewItemFactory;
 
