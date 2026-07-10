@@ -1,8 +1,8 @@
 package org.evasive.me.minefinity.mining.abilities;
 
 import org.bukkit.entity.Player;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BasePartItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.types.tools.BasePartItem;
+import org.evasive.me.minefinity.customItems.types.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.PartAbilityComponent;
 import org.evasive.me.minefinity.mining.context.BreakContext;
 import org.evasive.me.minefinity.mining.context.HitContext;

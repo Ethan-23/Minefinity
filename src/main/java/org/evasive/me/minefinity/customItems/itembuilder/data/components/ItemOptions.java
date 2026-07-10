@@ -2,7 +2,7 @@ package org.evasive.me.minefinity.customItems.itembuilder.data.components;
 
 import org.bukkit.Material;
 import org.evasive.me.minefinity.core.rarity.Rarity;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.CustomItemType;
+import org.evasive.me.minefinity.customItems.types.CustomItemType;
 
 public enum ItemOptions {
 

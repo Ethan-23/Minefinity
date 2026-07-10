@@ -1,6 +1,6 @@
 package org.evasive.me.minefinity.customItems.itembuilder.data.components;
 
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.CustomItemType;
+import org.evasive.me.minefinity.customItems.types.CustomItemType;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

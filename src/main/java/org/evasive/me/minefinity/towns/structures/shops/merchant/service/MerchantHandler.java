@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.playerdata.economy.EconomyService;
 import org.evasive.me.minefinity.core.utils.TextConversions;
 import org.evasive.me.minefinity.customItems.backpack.BackpackService;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.types.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.ValueComponent;
 import org.evasive.me.minefinity.customItems.registry.service.CustomItemRegistryService;
 

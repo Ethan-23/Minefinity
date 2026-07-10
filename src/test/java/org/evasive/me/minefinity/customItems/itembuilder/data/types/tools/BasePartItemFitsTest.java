@@ -3,7 +3,8 @@ package org.evasive.me.minefinity.customItems.itembuilder.data.types.tools;
 import org.bukkit.Material;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.customItems.itembuilder.data.parts.PartSlots;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.CustomItemType;
+import org.evasive.me.minefinity.customItems.types.CustomItemType;
+import org.evasive.me.minefinity.customItems.types.tools.BasePartItem;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;

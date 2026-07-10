@@ -5,7 +5,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.EquipmentSlot;
 import org.evasive.me.minefinity.core.data.Stats;
 import org.evasive.me.minefinity.customItems.itembuilder.data.parts.PartSlots;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.CustomItemType;
+import org.evasive.me.minefinity.customItems.types.CustomItemType;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

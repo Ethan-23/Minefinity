@@ -1,4 +1,4 @@
-package org.evasive.me.minefinity.customItems.itembuilder.data.types;
+package org.evasive.me.minefinity.customItems.types;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

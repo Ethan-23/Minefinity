@@ -1,4 +1,4 @@
-package org.evasive.me.minefinity.customItems.itembuilder.data.types;
+package org.evasive.me.minefinity.customItems.types;
 
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.evasive.me.minefinity.core.utils.TextConversions.buildItemRarity;
-import static org.evasive.me.minefinity.core.utils.TextConversions.buildRarityColor;
 import static org.evasive.me.minefinity.customItems.itembuilder.util.CustomItemKeys.*;
 
 public class BaseCustomItem {
@@ -85,7 +84,7 @@ public class BaseCustomItem {
         }
     }
 
-    public <T> T getOrDefault(PersistentDataContainer pdc, NamespacedKey key, PersistentDataType<?, T> type, T def) {
+    private static <T> T getOrDefault(PersistentDataContainer pdc, NamespacedKey key, PersistentDataType<?, T> type, T def) {
         T value = pdc.get(key, type);
         return value == null ? def : value;
     }
@@ -128,10 +127,6 @@ public class BaseCustomItem {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
-    }
-
-    protected String getName() {
-        return buildRarityColor(this.id, this.rarity);
     }
 
     public ItemStack buildItem() {
@@ -190,10 +185,6 @@ public class BaseCustomItem {
 
     public List<ItemComponent> getComponents() {
         return components;
-    }
-
-    public BaseCustomItem getBaseItem() {
-        return this;
     }
 
     public BaseCustomItem copy() {

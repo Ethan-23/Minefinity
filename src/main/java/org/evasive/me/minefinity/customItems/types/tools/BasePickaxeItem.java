@@ -1,12 +1,12 @@
-package org.evasive.me.minefinity.customItems.itembuilder.data.types.tools;
+package org.evasive.me.minefinity.customItems.types.tools;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.evasive.me.minefinity.core.rarity.Rarity;
 import org.evasive.me.minefinity.customItems.itembuilder.CustomItemBuilder;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.CustomItemType;
+import org.evasive.me.minefinity.customItems.types.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.parts.PartSlots;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.types.BaseCustomItem;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.StatsComponent;
 
 import java.util.HashMap;

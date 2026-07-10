@@ -5,13 +5,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.evasive.me.minefinity.core.rarity.Rarity;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.CustomItemType;
+import org.evasive.me.minefinity.customItems.types.CustomItemType;
 import org.evasive.me.minefinity.customItems.itembuilder.data.components.ItemComponent;
 import org.evasive.me.minefinity.customItems.itembuilder.data.parts.PartSlots;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BasePartItem;
+import org.evasive.me.minefinity.customItems.types.tools.BasePartItem;
 import org.evasive.me.minefinity.customItems.registry.CustomItemRegistry;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.BaseCustomItem;
-import org.evasive.me.minefinity.customItems.itembuilder.data.types.tools.BasePickaxeItem;
+import org.evasive.me.minefinity.customItems.types.BaseCustomItem;
+import org.evasive.me.minefinity.customItems.types.tools.BasePickaxeItem;
 import org.evasive.me.minefinity.customItems.registry.config.RegistryConfigHandler;
 
 import java.util.ArrayList;
