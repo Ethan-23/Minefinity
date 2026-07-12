@@ -31,13 +31,9 @@ public class StructureService {
 
     public int getStructureLevel(Player player, Structure structure) {
         TownData townData = getTownData(player.getUniqueId());
-        return switch (structure.id()) {
-            case Regions.MERCHANT -> townData.getMerchantLevel();
-            case Regions.WORKSHOP -> townData.getWorkshopLevel();
-            case Regions.FORGE    -> townData.getForgeLevel();
-            case Regions.TOWNHALL -> townData.getTownhallLevel();
-            default -> throw new IllegalStateException("Unexpected value: " + structure.id());
-        };
+
+        return townData.getStructureLevel(structure);
+
     }
 
     public void setStructureLevel(Player player, Structure structure, int level){
@@ -86,8 +82,11 @@ public class StructureService {
         if(region == null)
             return;
 
-        massBlockPacketSender.showSchematic(player, structure.id(), region.getMinimumPoint());
-        //massBlockPacketSender.createBlockReplacementMap(player, world, region, StructurePallets.values()[getStructureLevel(player, structure)].replacementMap);
+        int level = getTownData(player.getUniqueId()).getStructureLevel(structure);
+
+        String schematicName = structure.id() + "_" + level;
+
+        massBlockPacketSender.showSchematic(player, schematicName, region.getMinimumPoint());
     }
 
     public Collection<Structure> getStructures() {

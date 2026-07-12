@@ -53,7 +53,17 @@ public class MineData implements CommandExecutor {
                 return true;
             }
 
-            structureService.setStructureLevel(player, structureService.getStructure(structureName), Integer.parseInt(strings[2]));
+            int level;
+
+            try{
+                level = Integer.parseInt(strings[2]);
+            } catch (NumberFormatException e) {
+                commandSender.sendMessage(CommandFeedback.INVALID_NUMBER);
+                return true;
+            }
+
+            commandSender.sendMessage(player.getName() + " " + structureName + " has been set to level: " + level);
+            structureService.setStructureLevel(player, structureService.getStructure(structureName), level);
             return true;
         }
 

@@ -1,5 +1,6 @@
 package org.evasive.me.minefinity.core.events;
 
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -8,6 +9,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.evasive.me.minefinity.core.admin.service.VanishService;
 import org.evasive.me.minefinity.core.utils.TextConversions;
+
+import java.util.Objects;
 
 public class ServerJoinEvent implements Listener {
 
@@ -24,6 +27,14 @@ public class ServerJoinEvent implements Listener {
     public void onJoin(PlayerJoinEvent event){
         Player player = event.getPlayer();
         event.joinMessage(vanishService.isVanished(player) ? null : TextConversions.parse(PLAYER_JOIN + player.getName()));
+        setPlayerMiningAttribute(player);
+    }
+
+    private void setPlayerMiningAttribute(Player player){
+        if(player.getAttribute(Attribute.BLOCK_BREAK_SPEED) == null){
+            player.registerAttribute(Attribute.BLOCK_BREAK_SPEED);
+        }
+        Objects.requireNonNull(player.getAttribute(Attribute.BLOCK_BREAK_SPEED)).setBaseValue(0);
     }
 
     @EventHandler

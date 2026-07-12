@@ -54,7 +54,7 @@ import org.evasive.me.minefinity.towns.structures.workshop.engineer.recipes.conf
 import org.evasive.me.minefinity.towns.structures.workshop.engineer.service.EngineerService;
 import org.evasive.me.minefinity.towns.worldPackets.events.ChunkLoadingEvents;
 import org.evasive.me.minefinity.towns.worldPackets.events.PlayerMoveListener;
-import org.evasive.me.minefinity.towns.worldPackets.events.PlayerMovePacketEvents;
+
 
 public class TownModule {
 
@@ -137,9 +137,6 @@ public class TownModule {
 
     public void enable(JavaPlugin plugin) {
         //Events
-
-        com.github.retrooper.packetevents.PacketEvents.getAPI().getEventManager().registerListener(new PlayerMovePacketEvents());
-
         PluginManager pm = plugin.getServer().getPluginManager();
         pm.registerEvents(new ChunkLoadingEvents(structureService, blockTierService), plugin);
         pm.registerEvents(new AutoMinerEvents(autoMinerService), plugin);
